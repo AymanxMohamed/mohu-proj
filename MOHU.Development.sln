@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.32630.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{5C77B026-66FE-48CE-8BF7-545E303654C7}"
-	ProjectSection(SolutionItems) = preProject
-		CustomStep\LinDev.MOHU.Utilites\MOHU.Key.snk = CustomStep\LinDev.MOHU.Utilites\MOHU.Key.snk
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomSteps", "CustomSteps", "{C8AEB806-6294-4FAE-ADBE-0A1C3FF36D34}"
 EndProject

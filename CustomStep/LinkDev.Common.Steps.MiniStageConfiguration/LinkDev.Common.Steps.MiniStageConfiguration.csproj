@@ -37,7 +37,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>MOHU.Key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>MOHUKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -126,7 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="MOHU.Key.snk" />
+    <None Include="MOHUKey.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
