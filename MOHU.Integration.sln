@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32630.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.FunctionApp", "Test.FunctionApp\Test.FunctionApp.csproj", "{B686B1B6-94C1-4BFC-B774-CD794D1F174D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.FunctionApp", "Test.FunctionApp\Test.FunctionApp.csproj", "{B686B1B6-94C1-4BFC-B774-CD794D1F174D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureFunctions", "AzureFunctions", "{9C9AFBAD-2FE8-444E-9B16-52050DFBFE98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
