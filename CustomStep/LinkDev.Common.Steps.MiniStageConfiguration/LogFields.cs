@@ -19,9 +19,7 @@ namespace LinkDev.Common.Steps.MiniStageConfiguration
         [Input("Schema name of Fields To Be Logged (Comma separate)")]
         public InArgument<string> FieldsToBeLogged { get; set; }
 
-        [Input("Incubation Application")]
-        [ReferenceTarget("ldv_incubationapplication")]
-        public InArgument<EntityReference> IncubationApplication { get; set; }
+        
         [Input("EntityLogicalName")]
         public InArgument<string> EntityLogicalName { get; set; }
         [Input("EntityId")]

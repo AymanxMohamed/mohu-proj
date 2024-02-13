@@ -37,16 +37,8 @@ namespace LinkDev.Common.Steps.MiniStageConfiguration.Logic
             log.LogInfo($" isTwoOption {isTwoOption} with value {twoOptionValue}");
             tracingService.Trace($" isTwoOption {isTwoOption} with value {twoOptionValue}");
 
-            EntityReference entity = new EntityReference();
-            if (codeActivity.IncubationApplication.Get(executionContext) != null)
-            {
-                entity = codeActivity.IncubationApplication.Get(executionContext);
-            }
-            else
-            {
-                entity = new EntityReference(codeActivity.EntityLogicalName.Get(executionContext), new Guid(codeActivity.EntityId.Get(executionContext)));
-            }
-
+            EntityReference entity = new EntityReference(codeActivity.EntityLogicalName.Get(executionContext), new Guid(codeActivity.EntityId.Get(executionContext)));
+           
             Guid id = Guid.Empty;
             string entitySchemaName = string.Empty;
             if (entity != null && entity?.Id != null && entity?.Id != Guid.Empty)
