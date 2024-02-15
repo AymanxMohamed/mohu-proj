@@ -9,6 +9,7 @@ namespace MOHU.Integration.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddSingleton<ICrmContext, CrmContext>();
+            services.AddScoped<IConfigurationService, IConfigurationService>();
             return services;
         }
     }

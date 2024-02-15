@@ -1,4 +1,5 @@
 
+using MOHU.Integration.Application;
 using MOHU.Integration.Infrastructure;
 
 namespace MOHU.Integration.WebApi
@@ -11,6 +12,7 @@ namespace MOHU.Integration.WebApi
 
             // Add services to the container.
             builder.Services.AddInfrastructure();
+            builder.Services.AddApplication();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
