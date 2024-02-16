@@ -36,40 +36,52 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                     newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Regarding, targetEntity.ToEntityReference());
 
 
-                    if (targetEntity.LogicalName.ToLower().Equals("msdyn_workorder"))
-                    {
-                        if (targetEntity.Attributes.Contains("msdyn_name"))
-                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes["msdyn_name"]);
+                    //if (targetEntity.LogicalName.ToLower().Equals("msdyn_workorder"))
+                    //{
+                    //    if (targetEntity.Attributes.Contains("msdyn_name"))
+                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes["msdyn_name"]);
 
-                    }
-                    else
-                    {
-                        if (targetEntity.Attributes.Contains(RequestEntity.Name))
-                        {
-                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes[RequestEntity.Name]);
-                        }
-                        else if (targetEntity.Attributes.Contains(RequestEntity.RenwalName))
-                        {
-                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes[RequestEntity.RenwalName]);
-                        }
-                    }
+                    //}
+                    //else
+                    //{
+                    //    if (targetEntity.Attributes.Contains(RequestEntity.Name))
+                    //    {
+                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes[RequestEntity.Name]);
+                    //    }
+                    //    else if (targetEntity.Attributes.Contains(RequestEntity.RenwalName))
+                    //    {
+                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes[RequestEntity.RenwalName]);
+                    //    }
+                    //}
 
 
 
                     if (targetEntity.LogicalName == IncidentEntity.LogicalName)
                     {
+
+                        if (targetEntity.Attributes.Contains(RequestEntity.Customer))
+                        {
+                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Customer, new EntityReference( ( (EntityReference)targetEntity.Attributes[RequestEntity.Customer]).LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Customer]).Id));
+                        }
+                       
+                        if (((EntityReference)targetEntity.Attributes[RequestEntity.Customer]).LogicalName == "account")
+                        {
+                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(ContactEntity.LogicalName, ((EntityReference)targetEntity.Attributes["customerid"]).Id));
+
+                        }
                         //adding  contact of the Request to application header 
-                        if (targetEntity.Attributes.Contains(IncidentEntity.Contact))
+
+                        else if (((EntityReference)targetEntity.Attributes[RequestEntity.Customer]).LogicalName == "contact")
                         {
                             newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, new EntityReference(ContactEntity.LogicalName, ((EntityReference)targetEntity.Attributes["customerid"]).Id));
                         }
                     }
                     else
-                    //adding  contact of the Request to application header 
-                    if (targetEntity.Attributes.Contains(RequestEntity.Contact))
-                    {
-                        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, new EntityReference(ContactEntity.LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Contact]).Id));
-                    }
+                        //adding  contact of the Request to application header 
+                        if (targetEntity.Attributes.Contains(RequestEntity.Contact))
+                        {
+                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, new EntityReference(ContactEntity.LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Contact]).Id));
+                        }
 
                     // adding for Violation Request in GEA 
                     if (targetEntity.LogicalName.ToLower().Equals("ldv_violationrequest"))
@@ -148,7 +160,10 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                             newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(AccountEntity.LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Account]).Id));
                         }
                     }
-
+ 
+                  
+                       
+                     
 
                     //adding  service to application header 
                     if (targetEntity.Attributes.Contains(RequestEntity.Service))

@@ -12,6 +12,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.Entities
         public const string LogicalName = "ldv_applicationheader";
         public const string ldv_servicesubstatusidName = "ldv_servicesubstatusidname";
         public const string Account = "ldv_accountid";
+        public const string Customer = "ldv_customerid";
+
         public const string ApplicationHeaderId = "activityid";
         public const string Contact = "ldv_contactid";
         public const string CreatedBy = "createdby";
