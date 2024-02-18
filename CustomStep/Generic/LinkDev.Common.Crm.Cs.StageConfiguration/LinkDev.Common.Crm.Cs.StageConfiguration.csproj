@@ -151,6 +151,7 @@
     <Compile Include="CreateTask.cs" />
     <Compile Include="DAL\CrmAccessLayer.cs" />
     <Compile Include="BLL\StageConfigurationBLL.cs" />
+    <Compile Include="Entities\QueueItem.cs" />
     <Compile Include="Old\DeactiveRequestAndFinalizeInstance.cs" />
     <Compile Include="Old\DeleteInstanceRecord.cs" />
     <Compile Include="Entities\AccountEntity.cs" />

@@ -1,4 +1,5 @@
 ﻿using LinkDev.Common.Crm.Cs.Base;
+using LinkDev.Common.Crm.Cs.StageConfiguration.Entities;
 using LinkDev.Common.Crm.Logger;
 using LinkDev.Common.Crm.Utilities;
 using LinkDev.CRM.Library.DAL;
@@ -176,7 +177,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
 
             Entity queueItem = new Entity("queueitem");
             queueItem.Attributes.Add("queueid", targetAssigningOwning);
-            queueItem.Attributes.Add("regardingid", targetEntity);
+            queueItem.Attributes.Add(QueueItem.Regarding, targetEntity);
 
             DAL.CreateEntity(queueItem);
 

@@ -42,7 +42,9 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
             List<ChangedFieldTriggers> changedFieldTriggers = logicLayer.RetrieveChangedStageFields(stageConfiguration.Id, GridType.FieldsToBeChanged, request, tracingService);
             if (!changedFieldTriggers.Any()) return;
             List<StageFields> stageFields = ValidStageFieldsList(changedFieldTriggers, request, tracingService);
-            if (stageFields.Count <= 0) return;
+            if (stageFields.Count <= 0) {
+                tracingService.Trace($"stageFields.Count = {stageFields.Count}");
+                return; }
             tracingService.Trace($"stageFields.Count = {stageFields.Count}");
             foreach (StageFields fieldsToBeChanged in stageFields)
             {
