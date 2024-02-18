@@ -232,7 +232,7 @@
       <Project>{06237ec4-e1f1-4dcb-ae15-f9b8921d22af}</Project>
       <Name>LinkDev.Common.Crm.Bll.BpfStageSwitching</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LinkDev.Common.Crm.Bll.MessageLocalization\LinkDev.Common.Crm.Bll.MessageLocalization.csproj">
+    <ProjectReference Include="..\LinkDev.Common.Crm.Bll.MessageLocalization\LinkDev.Common.Crm.Bll.MessageLocalization\LinkDev.Common.Crm.Bll.MessageLocalization.csproj">
       <Project>{D742C828-335C-412E-A230-C2BF4A5522CF}</Project>
       <Name>LinkDev.Common.Crm.Bll.MessageLocalization</Name>
     </ProjectReference>
