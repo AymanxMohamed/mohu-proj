@@ -15,6 +15,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
         #region Input Parameter
         [RequiredArgument]
         [Input("RequestId")]
+
         public InArgument<string> RequestId { get; set; }
 
         [RequiredArgument]
