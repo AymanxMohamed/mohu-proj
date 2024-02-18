@@ -68,6 +68,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                 }
                 else if (fieldsToBeChanged.FieldType.Id == (int)FieldType.Lookup)
                 {
+                    tracingService.Trace($"Field is lookup ");
                     string fieldschemaName = fieldsToBeChanged.FieldSchemaName;
                     string lookupEntitySchemaname = fieldsToBeChanged.LookupEntitySchemaName;
                     int codeValue = Int32.Parse(fieldsToBeChanged.CodeValue);
@@ -81,6 +82,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                 }
                 else if (fieldsToBeChanged.FieldType.Id == (int)FieldType.Optionset)
                 {
+                    tracingService.Trace($"Field is Optionset ");
+
                     if (fieldsToBeChanged.CodeValue != string.Empty)
                     {
                         request.Attributes[fieldsToBeChanged.FieldSchemaName] = new OptionSetValue(Int32.Parse(fieldsToBeChanged.CodeValue));
@@ -89,6 +92,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                 }
                 else if (fieldsToBeChanged.FieldType.Id == (int)FieldType.TwoOption)
                 {
+                    tracingService.Trace($"Field is TwoOption ");
+
                     if (fieldsToBeChanged.CodeValue != string.Empty)
                     {
                         request.Attributes[fieldsToBeChanged.FieldSchemaName] = bool.Parse(fieldsToBeChanged.CodeValue);
