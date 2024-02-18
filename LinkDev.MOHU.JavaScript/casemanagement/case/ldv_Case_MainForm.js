@@ -1,18 +1,28 @@
 var formContext;
 
 var caseFields = {
-    Origin: "CaseOriginCode",
-    ComplainType: "ContractServiceLevelCode",
+    complainType: "ContractServiceLevelCode",
     customerid: "customerid",
-    AgentEmployeeDecision: "ldv_AgentEmployeeDecisioncode",
+    ldv_serviceid:"ldv_serviceid",      //Request Type
+    ldv_maincategoryid: "ldv_maincategoryid",
+    ldv_subcategoryid: "ldv_subcategoryid",
+    ldv_secondarysubcategoryid:"ldv_secondarysubcategoryid"
 }
 
 function OnLoad(executionContext) {
     const formContext = executionContext.getFormContext();
 
-    formContext.getAttribute(caseFields.c).addOnChange(function () {
-    RestrictApplicantToBeOrganizationOnly(formContext);
+    //unlock categories based on request type
+    formContext.getAttribute(caseFields.ldv_serviceid).addOnChange(function () {
+        CommonGeneric.LockUnlock_field1_BasedOn_field2_Emptiness(formContext, caseFields.ldv_maincategoryid, caseFields.ldv_serviceid);
     });
+    formContext.getAttribute(caseFields.ldv_maincategoryid).addOnChange(function () {
+        CommonGeneric.LockUnlock_field1_BasedOn_field2_Emptiness(formContext, caseFields.ldv_subcategoryid, caseFields.ldv_maincategoryid);
+    });
+    formContext.getAttribute(caseFields.ldv_subcategoryid).addOnChange(function () {
+        CommonGeneric.LockUnlock_field1_BasedOn_field2_Emptiness(formContext, caseFields.ldv_secondarysubcategoryid, caseFields.ldv_subcategoryid);
+    });
+
 }
 
 
@@ -20,13 +30,6 @@ function OnSave(executionContext) {
     var saveEvent = executionContext.getEventArgs();
 }
 
-function RestrictApplicantToBeOrganizationOnly(formContext) {
-    const applicant = formContext.getControl(caseFields.customerid);
 
-    if (!applicant) return;
-    // in case applicant is customer lookup (allowing account and contact)
-    if (applicant.getEntityTypes().length > 1)
-        applicant.setEntityTypes(["contact"]); // restrict applicant to allow only accounts
-}
 
 

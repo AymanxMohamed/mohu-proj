@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CaseManagement\Case\ldv_Case_MainForm.js" />
+    <Content Include="Common\ldv_CommonGenericBPM.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
