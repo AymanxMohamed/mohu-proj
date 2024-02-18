@@ -13,13 +13,16 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
     {
         private IOrganizationService OrganizationService;
         private CRMAccessLayer crmAccess;
-        public CreateApplicationHeaderBLL(IOrganizationService service)
+        ITracingService tracingService;
+        public CreateApplicationHeaderBLL(IOrganizationService service, ITracingService tracingServices)
         {
             OrganizationService = service;
             crmAccess = new CRMAccessLayer(OrganizationService);
+            tracingService = tracingServices;
         }
         public EntityReference CreateAppHeaderFromRequest(Entity target)
         {
+            tracingService.Trace(" CreateAppHeaderFromRequest ");
             Guid applicationHeaderId = Guid.Empty;
             try
             {
@@ -35,30 +38,9 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                     //adding  application id to application header 
                     newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Regarding, targetEntity.ToEntityReference());
 
-
-                    //if (targetEntity.LogicalName.ToLower().Equals("msdyn_workorder"))
-                    //{
-                    //    if (targetEntity.Attributes.Contains("msdyn_name"))
-                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes["msdyn_name"]);
-
-                    //}
-                    //else
-                    //{
-                    //    if (targetEntity.Attributes.Contains(RequestEntity.Name))
-                    //    {
-                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes[RequestEntity.Name]);
-                    //    }
-                    //    else if (targetEntity.Attributes.Contains(RequestEntity.RenwalName))
-                    //    {
-                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Name, targetEntity.Attributes[RequestEntity.RenwalName]);
-                    //    }
-                    //}
-
-
-
                     if (targetEntity.LogicalName == IncidentEntity.LogicalName)
                     {
-
+                        tracingService.Trace(" IncidentEntity ");
                         if (targetEntity.Attributes.Contains(RequestEntity.Customer))
                         {
                             newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Customer, new EntityReference( ( (EntityReference)targetEntity.Attributes[RequestEntity.Customer]).LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Customer]).Id));
@@ -67,7 +49,6 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                         if (((EntityReference)targetEntity.Attributes[RequestEntity.Customer]).LogicalName == "account")
                         {
                             newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(ContactEntity.LogicalName, ((EntityReference)targetEntity.Attributes["customerid"]).Id));
-
                         }
                         //adding  contact of the Request to application header 
 
@@ -84,82 +65,82 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                         }
 
                     // adding for Violation Request in GEA 
-                    if (targetEntity.LogicalName.ToLower().Equals("ldv_violationrequest"))
-                    {
-                        if (targetEntity.Attributes.Contains("ldv_offender"))
-                        {
-                            var Customer = (EntityReference)targetEntity["ldv_offender"];
-                            if (Customer.LogicalName == AccountEntity.LogicalName)
-                            {
-                                newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, Customer);
-                            }
-                            else if (Customer.LogicalName == ContactEntity.LogicalName)
-                            {
-                                newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, Customer);
-                            }
-                        }
-                    }
+                    //if (targetEntity.LogicalName.ToLower().Equals("ldv_violationrequest"))
+                    //{
+                    //    if (targetEntity.Attributes.Contains("ldv_offender"))
+                    //    {
+                    //        var Customer = (EntityReference)targetEntity["ldv_offender"];
+                    //        if (Customer.LogicalName == AccountEntity.LogicalName)
+                    //        {
+                    //            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, Customer);
+                    //        }
+                    //        else if (Customer.LogicalName == ContactEntity.LogicalName)
+                    //        {
+                    //            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, Customer);
+                    //        }
+                    //    }
+                    //}
 
                     // adding for Contract Submission Request in GEA 
-                    if (targetEntity.LogicalName.ToLower().Equals("ldv_contractsubmissionlanddepartment"))
-                    {
-                        if (targetEntity.Attributes.Contains("ldv_investor"))
-                        {
-                            var Customer = (EntityReference)targetEntity["ldv_investor"];
-                            if (Customer.LogicalName == AccountEntity.LogicalName)
-                            {
-                                newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, Customer);
-                                if (targetEntity.Attributes.Contains("ldv_representativeid"))
-                                {
-                                    var representativeCustomer = (EntityReference)targetEntity["ldv_representativeid"];
-                                    newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, representativeCustomer);
-                                }
-                            }
-                            else if (Customer.LogicalName == ContactEntity.LogicalName)
-                            {
-                                newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, Customer);
-                            }
-                        }
-                    }
+                    //if (targetEntity.LogicalName.ToLower().Equals("ldv_contractsubmissionlanddepartment"))
+                    //{
+                    //    if (targetEntity.Attributes.Contains("ldv_investor"))
+                    //    {
+                    //        var Customer = (EntityReference)targetEntity["ldv_investor"];
+                    //        if (Customer.LogicalName == AccountEntity.LogicalName)
+                    //        {
+                    //            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, Customer);
+                    //            if (targetEntity.Attributes.Contains("ldv_representativeid"))
+                    //            {
+                    //                var representativeCustomer = (EntityReference)targetEntity["ldv_representativeid"];
+                    //                newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, representativeCustomer);
+                    //            }
+                    //        }
+                    //        else if (Customer.LogicalName == ContactEntity.LogicalName)
+                    //        {
+                    //            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, Customer);
+                    //        }
+                    //    }
+                    //}
 
                     // adding for Contract Renewal in GEA 
-                    if (targetEntity.LogicalName.ToLower().Equals("ldv_contractrenewalrequest") || targetEntity.LogicalName.ToLower().Equals("ldv_contractmodification"))
-                    {
-                        if (targetEntity.Attributes.Contains("ldv_investorid"))
-                        {
-                            var Customer = (EntityReference)targetEntity["ldv_investorid"];
-                            if (Customer.LogicalName == AccountEntity.LogicalName)
-                            {
-                                newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, Customer);
-                                if (targetEntity.Attributes.Contains("ldv_representativeid"))
-                                {
-                                    var representativeCustomer = (EntityReference)targetEntity["ldv_representativeid"];
-                                    newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, representativeCustomer);
-                                }
-                            }
-                            else if (Customer.LogicalName == ContactEntity.LogicalName)
-                            {
-                                newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, Customer);
-                            }
+                    //if (targetEntity.LogicalName.ToLower().Equals("ldv_contractrenewalrequest") || targetEntity.LogicalName.ToLower().Equals("ldv_contractmodification"))
+                    //{
+                    //    if (targetEntity.Attributes.Contains("ldv_investorid"))
+                    //    {
+                    //        var Customer = (EntityReference)targetEntity["ldv_investorid"];
+                    //        if (Customer.LogicalName == AccountEntity.LogicalName)
+                    //        {
+                    //            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, Customer);
+                    //            if (targetEntity.Attributes.Contains("ldv_representativeid"))
+                    //            {
+                    //                var representativeCustomer = (EntityReference)targetEntity["ldv_representativeid"];
+                    //                newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, representativeCustomer);
+                    //            }
+                    //        }
+                    //        else if (Customer.LogicalName == ContactEntity.LogicalName)
+                    //        {
+                    //            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, Customer);
+                    //        }
 
-                        }
-                    }
+                    //    }
+                    //}
 
                     //adding  account to application header 
 
-                    if (targetEntity.LogicalName.ToLower().Equals("msdyn_workorder"))
-                    {
-                        if (targetEntity.Attributes.Contains("msdyn_serviceaccount"))
-                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(AccountEntity.LogicalName, ((EntityReference)targetEntity.Attributes["msdyn_serviceaccount"]).Id));
+                    //if (targetEntity.LogicalName.ToLower().Equals("msdyn_workorder"))
+                    //{
+                    //    if (targetEntity.Attributes.Contains("msdyn_serviceaccount"))
+                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(AccountEntity.LogicalName, ((EntityReference)targetEntity.Attributes["msdyn_serviceaccount"]).Id));
 
-                    }
-                    else
-                    {
-                        if (targetEntity.Attributes.Contains(RequestEntity.Account))
-                        {
-                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(AccountEntity.LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Account]).Id));
-                        }
-                    }
+                    //}
+                    //else
+                    //{
+                    //    if (targetEntity.Attributes.Contains(RequestEntity.Account))
+                    //    {
+                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(AccountEntity.LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Account]).Id));
+                    //    }
+                    //}
  
                   
                        

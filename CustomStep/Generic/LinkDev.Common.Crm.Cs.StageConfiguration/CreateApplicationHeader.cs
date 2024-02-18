@@ -48,9 +48,10 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
             IWorkflowContext context = executionContext.GetExtension<IWorkflowContext>();
             IOrganizationServiceFactory serviceFactory = executionContext.GetExtension<IOrganizationServiceFactory>();
             IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
-            createApplicationHeader = new CreateApplicationHeaderBLL(service);
             DAL = new CRMAccessLayer(service);
             ITracingService tracingService = executionContext.GetExtension<ITracingService>();
+            createApplicationHeader = new CreateApplicationHeaderBLL(service, tracingService);
+
             logicLayer = new StageConfigurationBLL(service,tracingService,executionContext);
             try
             {
@@ -65,6 +66,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
                     Entity target = DAL.RetrivePrimaryEntityOfBpf(entityLogicalName,new Guid( entityId));
                     if (target?.Id!=Guid.Empty)
                     {
+                        tracingService.Trace(" Final ");
                         EntityReference applicationHeader = createApplicationHeader.CreateAppHeaderFromRequest(target);
                         if (applicationHeader != null)
                         {
