@@ -12,10 +12,10 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
 {
     public class CheckCurrentProcess : CodeActivity
     {
-         
+        [RequiredArgument]
         [Input("InstanceId")]
         public InArgument<string> EntityReferenceId { get; set; }
-        // [RequiredArgument]
+        [RequiredArgument]
         [Input("InstanceName")]
         public InArgument<string> EntityReferenceName { get; set; }
 
