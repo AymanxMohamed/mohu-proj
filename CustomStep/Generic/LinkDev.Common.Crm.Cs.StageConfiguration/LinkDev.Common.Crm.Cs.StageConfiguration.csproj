@@ -151,8 +151,8 @@
     <Compile Include="CreateTask.cs" />
     <Compile Include="DAL\CrmAccessLayer.cs" />
     <Compile Include="BLL\StageConfigurationBLL.cs" />
-    <Compile Include="DeactiveRequestAndFinalizeInstance.cs" />
-    <Compile Include="DeleteInstanceRecord.cs" />
+    <Compile Include="Old\DeactiveRequestAndFinalizeInstance.cs" />
+    <Compile Include="Old\DeleteInstanceRecord.cs" />
     <Compile Include="Entities\AccountEntity.cs" />
     <Compile Include="Entities\ApplicationHeaderEntity.cs" />
     <Compile Include="Entities\ConfigurationEntity.cs" />
@@ -172,7 +172,7 @@
     <Compile Include="GetStageConfiguration.cs" />
     <Compile Include="Enum\Enum.cs" />
     <Compile Include="HistoricallyStageFields.cs" />
-    <Compile Include="PerformAction.cs" />
+    <Compile Include="Old\PerformAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +184,7 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
