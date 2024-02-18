@@ -55,6 +55,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
             logicLayer = new StageConfigurationBLL(service,tracingService,executionContext);
             try
             {
+                tracingService.Trace(" in code ");
+
                 ApplicationHeader.Set(executionContext,null);
                 string entityId = EntityReferenceId.Get(executionContext);
                 string entityLogicalName = EntityReferenceName.Get(executionContext);
@@ -66,7 +68,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
                     Entity target = DAL.RetrivePrimaryEntityOfBpf(entityLogicalName,new Guid( entityId));
                     if (target?.Id!=Guid.Empty)
                     {
-                        tracingService.Trace(" Final ");
+                        tracingService.Trace("  before craete application ");
                         EntityReference applicationHeader = createApplicationHeader.CreateAppHeaderFromRequest(target);
                         if (applicationHeader != null)
                         {
