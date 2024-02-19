@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Domain.Entitiy;
 
 namespace MOHU.Integration.Infrastructure.Service

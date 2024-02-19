@@ -1,6 +1,6 @@
 ﻿using MOHU.Integration.Contracts.Dto.Common;
 
-namespace MOHU.Integration.Contracts.Interface
+namespace MOHU.Integration.Contracts.Interface.Common
 {
     public interface IMessageService
     {

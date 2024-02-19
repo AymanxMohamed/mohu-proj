@@ -1,6 +1,7 @@
 
 using MOHU.Integration.Application;
 using MOHU.Integration.Infrastructure;
+using MOHU.Integration.WebApi.Extension;
 
 namespace MOHU.Integration.WebApi
 {
@@ -28,7 +29,7 @@ namespace MOHU.Integration.WebApi
             }
 
             app.UseHttpsRedirection();
-
+            app.UseLanguageMiddleware();
             app.UseAuthorization();
 
 

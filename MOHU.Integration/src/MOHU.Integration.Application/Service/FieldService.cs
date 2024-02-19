@@ -4,6 +4,7 @@ using MOHU.Integration.Contracts.Dto.Field;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Domain.Entitiy;
 using MOHU.Integration.Domain.Enum;
+using MOHU.Integration.Shared;
 
 namespace MOHU.Integration.Application.Service
 {
@@ -18,54 +19,66 @@ namespace MOHU.Integration.Application.Service
 
         public async Task<IEnumerable<FieldDto>> GetFieldsBySubCategoryAsync(string subCategoryId)
         {
-            var entityCollection = new List<Entity>();
+            var result = new List<FieldDto>();
+            var query = GetFieldsQueryForSubCategoryId(subCategoryId);
 
-            var query = new QueryExpression(ldv_field.EntityLogicalName)
+            var fieldEntities = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query)).Entities;
+
+            foreach (var field in fieldEntities)           
+                result.Add(await MapField(field));
+
+            return result;
+        }
+        private QueryExpression GetFieldsQueryForSubCategoryId(string subCategoryId)
+        {
+            var query = new QueryExpression(ldv_categoryfields.EntityLogicalName)
             {
-                ColumnSet = new ColumnSet(
-               ldv_field.Fields.ldv_fieldId,
-               ldv_field.Fields.ldv_fieldschemaname,
-               ldv_field.Fields.ldv_displaynamear,
-               ldv_field.Fields.ldv_displaynameen,
-               ldv_field.Fields.ldv_ismandatory,
-               ldv_field.Fields.ldv_regexpression,
-               ldv_field.Fields.ldv_typecode,
-               ldv_field.Fields.ldv_Xmlquery,
-               ldv_field.Fields.StateCode,
-               ldv_field.Fields.ldv_messageid,
-               ldv_field.Fields.ldv_validationquery,
-               ldv_field.Fields.ldv_calldependentfields)
+                NoLock = true
             };
 
-            var filter = new FilterExpression(LogicalOperator.And);
-            filter.AddCondition(
-                new ConditionExpression(ldv_field.Fields.StateCode, ConditionOperator.Equal, 0));
-            query.Criteria.AddFilter(filter);
+            var andFilter = new FilterExpression(LogicalOperator.And);
+            query.Criteria.AddFilter(andFilter);
+            andFilter.AddCondition(ldv_categoryfields.Fields.ldv_subcategoryid, ConditionOperator.Equal, subCategoryId);
+            andFilter.AddCondition(ldv_categoryfields.Fields.ldv_showonportalcode,ConditionOperator.In, (int)ShowOnPortal.Both, (int)ShowOnPortal.Portal);
 
-            var messageLink = query.AddLink(ldv_message.EntityLogicalName,
-                                            ldv_message.Fields.ldv_messageId,
-                                            ldv_field.Fields.ldv_messageid, JoinOperator.LeftOuter);
+            var fieldLink = query.AddLink(ldv_field.EntityLogicalName, ldv_categoryfields.Fields.ldv_fieldid, ldv_field.Fields.Id);
+            fieldLink.EntityAlias = Globals.FieldEntityLink;
 
-            messageLink.Columns.AddColumns(ldv_message.Fields.ldv_arabicmessage, ldv_message.Fields.ldv_englishmessage);
+            fieldLink.Columns.AddColumns(
+               ldv_field.Fields.ldv_displaynamear,
+               ldv_field.Fields.ldv_displaynameen,
+               ldv_field.Fields.ldv_entitylookuplogicalname,
+               ldv_field.Fields.ldv_fieldschemaname,
+               ldv_field.Fields.ldv_regexpression,
+               ldv_field.Fields.ldv_typecode
+                );
 
+            var messageLink = fieldLink.AddLink(ldv_message.EntityLogicalName, ldv_field.Fields.ldv_messageid, ldv_message.Fields.Id, JoinOperator.LeftOuter);
+            messageLink.EntityAlias = Globals.MessageEntityLink;
 
+            messageLink.Columns.AddColumns(ldv_message.Fields.ldv_arabicmessage,ldv_message.Fields.ldv_englishmessage);
 
-            var categoryFieldsLink = query.AddLink(ldv_categoryfields.EntityLogicalName, ldv_categoryfields.Fields.ldv_fieldid, ldv_categoryfields.Fields.ldv_fieldid);
+            return query;
 
-            categoryFieldsLink.Columns.AddColumns(ldv_categoryfields.Fields.ldv_mandatorycode, ldv_categoryfields.Fields.ldv_showonportalcode, ldv_categoryfields.Fields.ldv_portaldisplayorder);
-            categoryFieldsLink.LinkCriteria.FilterOperator = LogicalOperator.And;
-            categoryFieldsLink.LinkCriteria.AddCondition(ldv_categoryfields.Fields.ldv_subcategoryid, ConditionOperator.Equal, subCategoryId);
-            categoryFieldsLink.LinkCriteria.AddCondition(ldv_categoryfields.Fields.ldv_showonportalcode, ConditionOperator.In, (int)ShowOnPortal.Both, (int)ShowOnPortal.Portal);
+        }
+        private async Task<FieldDto> MapField(Entity entity)
+        {
+            var field = new FieldDto()
+            {
+                Mandatory = entity.GetAttributeValue<bool>(ldv_categoryfields.Fields.ldv_mandatorycode),
+                PortalDisplayOrder = Convert.ToInt32(entity.GetAttributeValue<string>(ldv_categoryfields.Fields.ldv_portaldisplayorder)),
+            };
+            if (entity.Attributes.ContainsKey($"{Globals.FieldEntityLink}.{ldv_field.Fields.Id}"))
+                field.Id = entity.GetAttributeValue<string>($"{Globals.FieldEntityLink}.{ldv_field.Fields.Id}");
 
+            if (entity.Attributes.ContainsKey($"{Globals.FieldEntityLink}.{ldv_field.Fields.ldv_regexpression}"))
+                field.Regex = entity.GetAttributeValue<string>($"{Globals.FieldEntityLink}.{ldv_field.Fields.ldv_regexpression}");
 
-            categoryFieldsLink.EntityAlias = "categoryfieldsLink";
+            if (entity.Attributes.ContainsKey($"{Globals.MessageEntityLink}.{ldv_message.Fields.ldv_arabicmessage}"))
+                field.RegexErrorMessage = entity.GetAttributeValue<string>($"{Globals.MessageEntityLink}.{ldv_message.Fields.ldv_arabicmessage}");
 
-
-            var collRecords = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query)).Entities;
-
-            entityCollection.AddRange(collRecords);
-
-            throw new NotImplementedException();
+            //field.Name
+            return field;
         }
     }
 }

@@ -14,6 +14,7 @@
     <ProjectReference Include="..\MOHU.Integration.Contracts\MOHU.Integration.Contracts.csproj" />
     <ProjectReference Include="..\MOHU.Integration.Domain\MOHU.Integration.Domain.csproj" />
     <ProjectReference Include="..\MOHU.Integration.Infrastructure\MOHU.Integration.Infrastructure.csproj" />
+    <ProjectReference Include="..\MOHU.Integration.Shared\MOHU.Integration.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Localization;
-using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Contracts.Interface.Common;
 using System.Globalization;
 
 namespace MOHU.Integration.Infrastructure.Localization
