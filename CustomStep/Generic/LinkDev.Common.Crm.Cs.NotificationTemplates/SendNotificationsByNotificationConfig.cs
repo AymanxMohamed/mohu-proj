@@ -15,7 +15,7 @@ using LinkDev.Common.Crm.Cs.Base;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 {
-    public class SendNotificationsByNotificationConfig : CustomStepBase
+    public class SendNotificationsByNotificationConfig : CodeActivity
     {
         #region input parameter : 
         [Input("Stage Configuration")]
@@ -25,57 +25,59 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 
         [Input("Application Header")]
         [ReferenceTarget("ldv_applicationheader")]
+        [RequiredArgument]
         public InArgument<EntityReference> applicationHeader { get; set; }
+        #endregion
+       
 
-        public override void ExtendedExecute()
+        protected override void Execute(CodeActivityContext context)
         {
-            EntityReference stageConfiguration = this.stageConfiguration != null ? this.stageConfiguration.Get(ExecutionContext) : null;
-            EntityReference applicationHeader = this.applicationHeader != null ? this.applicationHeader.Get(ExecutionContext) : null;
+          
+            SendNotificationsFromStageConfigurationLogic SendNotificationsLogic = new SendNotificationsFromStageConfigurationLogic(stageConfiguration, applicationHeader );
+            SendNotificationsLogic.ExecuteLogic( context );
 
-            SendNotificationsFromStageConfigurationLogic SendNotificationsLogic = new SendNotificationsFromStageConfigurationLogic(stageConfiguration, applicationHeader,OrganizationService,Tracer,LanguageCode);
-            SendNotificationsLogic.Execute(new EntityReference(Context.PrimaryEntityName, Context.PrimaryEntityId));
         }
 
-        #endregion
+
 
     }
 
 
-public class SendNotificationsFromStageConfigurationLogic : LinkDev.Common.Crm.Bll.Base.BllBase
+public class SendNotificationsFromStageConfigurationLogic 
     {
-        
+
         #region variables:
-        
+        public InArgument<EntityReference> StageConfiguration { get; set; }
+        public InArgument<EntityReference> ApplicationHeader { get; set; }
         public NotificationTemplatesBLL NotificationTemplatesBLL;
         public EntityReference RegardingObject;
-        EntityReference stageConfiguration;
-        EntityReference applicationHeader;
+       // protected CRMAccessLayer DAL;
         CommonBLL commonBLL;
         #endregion
 
         #region constructors:
-        public SendNotificationsFromStageConfigurationLogic(EntityReference stageConfiguration, EntityReference applicationHeader, IOrganizationService _orgService,  Logger.ILogger tracer, string languageCode)
-            :base(_orgService,tracer, languageCode)
+        public SendNotificationsFromStageConfigurationLogic(InArgument<EntityReference> stageConfiguration, InArgument<EntityReference> applicationHeader)
         {
-            this.applicationHeader = applicationHeader;
-            this.stageConfiguration = stageConfiguration;
+            ApplicationHeader = applicationHeader;
+            StageConfiguration = stageConfiguration;
             RegardingObject = new EntityReference();
-            
         }
         #endregion
 
         #region methods:
-        public void Execute(EntityReference primaryEntity)
+        public void ExecuteLogic(CodeActivityContext executionContext)
         {
-            if (applicationHeader == null)
-                RegardingObject = new EntityReference(primaryEntity.LogicalName, primaryEntity.Id);
-            else
-            {
-                // retrieve the related application and par
-                commonBLL = new CommonBLL(OrganizationService,Logger,LanguageCode);
-                RegardingObject = commonBLL.RetrieveRelatedApplicationByApplicationHeader(applicationHeader);
-            }
-            StageConfigurationsNotificationsBLL BLL = new StageConfigurationsNotificationsBLL(OrganizationService,Logger,LanguageCode, RegardingObject);
+            IWorkflowContext context = executionContext.GetExtension<IWorkflowContext>();
+            IOrganizationServiceFactory serviceFactory = executionContext.GetExtension<IOrganizationServiceFactory>();
+            IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
+            ITracingService tracingService = executionContext.GetExtension<ITracingService>();
+            EntityReference stageConfiguration = StageConfiguration.Get(executionContext);
+            EntityReference applicationHeader = ApplicationHeader.Get(executionContext);
+            //  DAL = new CRMAccessLayer(service);
+            // retrieve the related application and par
+            commonBLL = new CommonBLL(service, tracingService);
+             RegardingObject = commonBLL.RetrieveRelatedApplicationByApplicationHeader(applicationHeader);
+            StageConfigurationsNotificationsBLL BLL = new StageConfigurationsNotificationsBLL(service, tracingService, RegardingObject);
             BLL.SendStageNotification(stageConfiguration.Id);
         }
         #endregion

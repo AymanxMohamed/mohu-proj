@@ -13,20 +13,22 @@ using LinkDev.Common.Crm.Logger;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 {
-    public class SendNotificationCommonBLL : BllBase
+    public class SendNotificationCommonBLL //: BllBase
     {
         #region Variables
         CRMAccessLayer CRMAccessLayer;
         CommonBLL CommonBLL;
         NotificationConfigurations NotificationConfigrecipients;
+        ITracingService tracingService;
         #endregion
 
         #region constructor
-        public SendNotificationCommonBLL(IOrganizationService service, ILogger logger,string languageCode)
-            :base(service,logger, languageCode)
+        public SendNotificationCommonBLL(IOrganizationService service, ITracingService TracingService  )
+            
         {
             CRMAccessLayer = new CRMAccessLayer(service);
-            CommonBLL = new CommonBLL(service, logger, languageCode);
+            CommonBLL = new CommonBLL(service, tracingService );
+            tracingService = TracingService;
         }
         #endregion
 
@@ -70,7 +72,9 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                
+                tracingService.Trace($"SendNotificationTemplate ex {ex}");
+
             }
         }
         /// <summary>
@@ -119,7 +123,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"GetNotificationRecipientsList ex {ex}");
+
             }
             return NotificationConfigrecipients;
         }
@@ -191,7 +196,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"GetValidEmailToPartyAndSMSRecipient ex {ex}");
+
             }
 
             return toParty;
@@ -234,7 +240,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"GetValidEmailCCParty ex {ex}");
+
             }
             return ccParty;
         }

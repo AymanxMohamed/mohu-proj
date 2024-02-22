@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LinkDev.Common.Crm.Cs.StageConfiguration</RootNamespace>
-    <AssemblyName>LinkDev.Common.Crm.Cs.StageConfiguration</AssemblyName>
+    <AssemblyName>LinkDev.Common.Crm.Cs.StageConfigurationv2</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

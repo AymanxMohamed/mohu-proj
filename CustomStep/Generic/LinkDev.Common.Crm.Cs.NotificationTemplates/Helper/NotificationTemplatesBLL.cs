@@ -19,21 +19,26 @@ using LinkDev.Common.Crm.Logger;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 {
-    public class NotificationTemplatesBLL : BllBase
+    public class NotificationTemplatesBLL //: BllBase
     {
         #region Variables
         CRMAccessLayer CRMAccessLayer;
         Language language ;
         CommonBLL commonBLL;
+        ITracingService tracingService;
+        IOrganizationService OrganizationService;
+        
         #endregion
 
         #region Constructor
 
-        public NotificationTemplatesBLL(IOrganizationService service, ILogger logger,string languageCode)
-            :base(service,logger,languageCode)
-        {           
+        public NotificationTemplatesBLL(IOrganizationService service, ITracingService TracingService)
+            
+        {
+            tracingService = TracingService;
+            OrganizationService = service;
             CRMAccessLayer = new CRMAccessLayer(service);
-            commonBLL = new CommonBLL(service, logger,languageCode);
+            commonBLL = new CommonBLL(service,   TracingService );
         }
         #endregion
 
@@ -156,7 +161,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"SendNotificationTemplate ex {ex}");
             }
         }
         public void SendNotificationToRepresintatives(EntityReference Notifications, EntityReference Account,EntityReference regardingObject,string startingPattern,string endingPattern )

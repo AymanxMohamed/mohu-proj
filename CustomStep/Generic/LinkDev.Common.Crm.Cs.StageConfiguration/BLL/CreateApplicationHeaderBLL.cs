@@ -43,14 +43,12 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                         if (targetEntity.Attributes.Contains(RequestEntity.Customer))
                         {
                             tracingService.Trace($" LogicalName { ( (EntityReference)targetEntity.Attributes[RequestEntity.Customer]).LogicalName} , Id { ((EntityReference)targetEntity.Attributes[RequestEntity.Customer]).Id } ");
-
                             newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Customer, new EntityReference( ( (EntityReference)targetEntity.Attributes[RequestEntity.Customer]).LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Customer]).Id));
                         }
                        
                         if (((EntityReference)targetEntity.Attributes[RequestEntity.Customer]).LogicalName == "account")
                         {
                             tracingService.Trace(" account ");
-
                             newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(ContactEntity.LogicalName, ((EntityReference)targetEntity.Attributes["customerid"]).Id));
                         }
                         //adding  contact of the Request to application header 
@@ -61,28 +59,12 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
 
                             newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Contact, new EntityReference(ContactEntity.LogicalName, ((EntityReference)targetEntity.Attributes["customerid"]).Id));
                         }
+                        //    //adding  name of the Request to application header 
+                        if (targetEntity.Attributes.Contains(RequestEntity.Name))
+                        {
+                            newApplicationHeader.Attributes.Add("subject", targetEntity.Attributes[RequestEntity.Name]);
+                        }
                     }
-
-                    //    //adding  name of the Request to application header 
-                    if (targetEntity.Attributes.Contains(RequestEntity.Name))
-                    {
-                        newApplicationHeader.Attributes.Add("subject", targetEntity.Attributes[RequestEntity.Name]  );
-                    }
-
-                    //adding  account to application header 
-                    //if (targetEntity.LogicalName.ToLower().Equals("msdyn_workorder"))
-                    //{
-                    //    if (targetEntity.Attributes.Contains("msdyn_serviceaccount"))
-                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(AccountEntity.LogicalName, ((EntityReference)targetEntity.Attributes["msdyn_serviceaccount"]).Id));
-
-                    //}
-                    //else
-                    //{
-                    //    if (targetEntity.Attributes.Contains(RequestEntity.Account))
-                    //    {
-                    //        newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Account, new EntityReference(AccountEntity.LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.Account]).Id));
-                    //    }
-                    //}
 
 
 

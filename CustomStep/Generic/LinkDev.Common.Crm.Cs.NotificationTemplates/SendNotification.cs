@@ -17,7 +17,7 @@ using LinkDev.Common.Crm.Logger;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 {
-    public class SendNotification : CustomStepBase
+    public class SendNotification : CodeActivity//: CustomStepBase
     {
 
         #region "Input Parameters"
@@ -62,7 +62,6 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         #endregion
         public override void ExtendedExecute()
         {
-            SendNotificationLogic SendNotificationLogic = new SendNotificationLogic(OrganizationService,Tracer,LanguageCode,new EntityReference(Context.PrimaryEntityName,Context.PrimaryEntityId));
 
 
             #region inout parameters:
@@ -81,23 +80,28 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 
         }
 
+        protected override void Execute(CodeActivityContext context)
+        {
+            SendNotificationLogic SendNotificationLogic = new SendNotificationLogic(OrganizationService,Tracer,new EntityReference(Context.PrimaryEntityName,Context.PrimaryEntityId));
+            SendNotificationLogic.ExecuteLogic(context);
+        }
     }
 
-    public class SendNotificationLogic : BllBase
+    public class SendNotificationLogic //: BllBase
     {
         #region variables:
         public NotificationTemplatesBLL NotificationTemplatesBLL;
         public EntityReference RegardingObject;
-        
+        ITracingService TracingService;
         #endregion
 
         #region constructor
-        public SendNotificationLogic(IOrganizationService organizationService, ILogger logger, string languageCode, EntityReference primaryEntity)
-            :base(organizationService,  logger,  languageCode)
+        public SendNotificationLogic(IOrganizationService organizationService, ITracingService TracingService, EntityReference primaryEntity)
+         //   :base(organizationService,  logger,  languageCode)
         {
             // Get the context service.
              RegardingObject = new EntityReference(primaryEntity.LogicalName, primaryEntity.Id);
-            NotificationTemplatesBLL = new NotificationTemplatesBLL(OrganizationService, Logger,LanguageCode);
+            NotificationTemplatesBLL = new NotificationTemplatesBLL(organizationService, TracingService);
         }
 
         #endregion

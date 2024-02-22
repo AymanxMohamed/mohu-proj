@@ -39,7 +39,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
             //List<StageFields> stageFields = logicLayer.RetrieveStageFields(stageConfiguration.Id, GridType.FieldsToBeChanged, request, tracingService);
 
             ////Get Stage Fieldslisted per SchemaName
-            List<ChangedFieldTriggers> changedFieldTriggers = logicLayer.RetrieveChangedStageFields(stageConfiguration.Id, GridType.FieldsToBeChanged, request, tracingService);
+            List<ChangedFieldTriggers> changedFieldTriggers = logicLayer.RetrieveChangedStageFields(stageConfiguration.Id, GridType.FieldsToBeChanged, request , tracingService);
             if (!changedFieldTriggers.Any()) return;
             List<StageFields> stageFields = ValidStageFieldsList(changedFieldTriggers, request, tracingService);
             if (stageFields.Count <= 0) {
@@ -71,8 +71,13 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                     tracingService.Trace($"Field is lookup ");
                     string fieldschemaName = fieldsToBeChanged.FieldSchemaName;
                     string lookupEntitySchemaname = fieldsToBeChanged.LookupEntitySchemaName;
-                    int codeValue = Int32.Parse(fieldsToBeChanged.CodeValue);
-                    Guid lookupGuid = logicLayer.GetEntityByCode(codeValue, lookupEntitySchemaname);
+                    // int codeValue = Int32.Parse(fieldsToBeChanged.CodeValue);
+                    string codeValue = fieldsToBeChanged.CodeValue;
+                    tracingService.Trace($"logicLayer {logicLayer} ,codeValue {codeValue} lookupEntitySchemaname {lookupEntitySchemaname} ");
+
+                    Guid lookupGuid = logicLayer.GetEntityByCode(codeValue, lookupEntitySchemaname,   tracingService);
+                    tracingService.Trace($"fieldschemaName {fieldschemaName},lookupEntitySchemaname {lookupEntitySchemaname} , codeValue {codeValue} ,lookupGuid {lookupGuid} ");
+
                     //set it
                     if (lookupGuid != Guid.Empty && lookupEntitySchemaname != string.Empty && lookupGuid != null && lookupEntitySchemaname != null)
                     {

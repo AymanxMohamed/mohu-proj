@@ -18,20 +18,22 @@ using LinkDev.Common.Crm.Logger;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 {
-    public class StageConfigurationsNotificationsBLL : BllBase
+    public class StageConfigurationsNotificationsBLL //: BllBase
     {
 
         #region Variables
         CRMAccessLayer CRMAccessLayer;
         EntityReference RegardingObject;
-        List<NotificationConfigurations> NotificationConfigtLst; 
+        List<NotificationConfigurations> NotificationConfigtLst;
+        ITracingService tracingService;
+        IOrganizationService OrganizationService;
         #endregion
 
         #region Constructor
-        public StageConfigurationsNotificationsBLL(IOrganizationService service, ILogger logger, string languageCode, EntityReference RegardingObject)
-            : base(service, logger, languageCode)
+        public StageConfigurationsNotificationsBLL(IOrganizationService Service, ITracingService tracing, EntityReference RegardingObject)
         {
-            CRMAccessLayer = new CRMAccessLayer(service);
+            OrganizationService = Service;
+            CRMAccessLayer = new CRMAccessLayer(OrganizationService);
             this.RegardingObject = RegardingObject;
         }
 
@@ -51,13 +53,15 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 
                 if (NotificationConfigtLst != null && NotificationConfigtLst.Count > 0)
                 {
-                    SendNotificationCommonBLL SendNotificationCommonBLL = new SendNotificationCommonBLL(OrganizationService, Logger, LanguageCode);
+                    SendNotificationCommonBLL SendNotificationCommonBLL = new SendNotificationCommonBLL(OrganizationService, tracingService );
                     SendNotificationCommonBLL.SendNotificationTemplate(NotificationConfigtLst, new EntityReference(RegardingObject.LogicalName, RegardingObject.Id));
                 }
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"SendStageNotification ex {ex}");
+
+               
             }
         }
 
@@ -91,10 +95,11 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 }
             }
             catch (Exception ex)
-            {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+            { 
+                tracingService.Trace($"RetrieveValidNotificationConfigByStageConfig ex {ex}");
+
             }
-           
+
 
             return NotificationConfigtLst;
         }
@@ -177,9 +182,10 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"ParseNotificationConfigValues ex {ex}");
+
             }
-           
+
             // create own class :
             return NotificationConfigurations;
             #endregion
@@ -218,9 +224,10 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"RetrieveRoleConfiguration ex {ex}");
+
             }
-           
+
 
             return To;
         }
@@ -285,10 +292,11 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"RetrieveFieldValues ex {ex}");
+
             }
-            
-           
+
+
             return lookupFieldValue;
         }
         /// <summary>
@@ -318,9 +326,10 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"ValidateCondition ex {ex}");
+
             }
-          
+
             return isConditionMet;
         }
         #endregion

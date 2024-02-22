@@ -731,6 +731,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
 
         public List<ChangedFieldTriggers> RetrieveChangedStageFields(Guid stageConfigurationId, GridType gridType, Entity request, ITracingService tracingService)
         {
+            tracingService.Trace($" in RetrieveChangedStageFields methods");
             List<ChangedFieldTriggers> changedFieldTriggersList = new List<ChangedFieldTriggers>();
 
             if (stageConfigurationId != Guid.Empty)
@@ -841,18 +842,45 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
             }
             return changedFieldTriggersList;
         }
-        public Guid GetEntityByCode(int code, string entitySchemaName)
+        public Guid GetEntityByCode(string code, string entitySchemaName, ITracingService tracingService)
         {
+            tracingService.Trace($"in GetEntityByCode");
+
             Guid id = Guid.Empty;
-            if (code <= 0 && entitySchemaName == string.Empty) return Guid.Empty;
-            var serviceSubStatusQuery = new QueryExpression(entitySchemaName);
-            serviceSubStatusQuery.Distinct = true;
-            serviceSubStatusQuery.ColumnSet.AddColumns(entitySchemaName + "id");
-            serviceSubStatusQuery.Criteria.AddCondition("ldv_code", ConditionOperator.Equal, code);
-            EntityCollection entityCollection = crmAccess.RetrieveMultipleRequest(serviceSubStatusQuery);
-            if (entityCollection.Entities.Any())
-                id = entityCollection.Entities[0].Contains(entitySchemaName + "id") ? entityCollection.Entities[0].GetAttributeValue<Guid>(entitySchemaName + "id") : Guid.Empty;
+            if (string.IsNullOrEmpty( code)&& entitySchemaName == string.Empty) return Guid.Empty;
+            //var serviceSubStatusQuery = new QueryExpression(entitySchemaName);
+            //serviceSubStatusQuery.Distinct = true;
+            //serviceSubStatusQuery.ColumnSet.AddColumns(entitySchemaName + "id");
+            //serviceSubStatusQuery.Criteria.AddCondition("ldv_code", ConditionOperator.Equal, code.ToString() );
+            //EntityCollection entityCollection = crmAccess.RetrieveMultiple(serviceSubStatusQuery);
+            //tracingService.Trace($"entityCollection.Entities.Count {entityCollection.Entities.Count} ");
+
+            //if (entityCollection.Entities.Count > 0)
+            //    if (entityCollection.Entities[0].Contains(entitySchemaName + "id"))
+            //    {
+            //        id = entityCollection.Entities[0].GetAttributeValue<Guid>(entitySchemaName + "id");
+            //    }
+            //return id;
+            tracingService.Trace($"in entitySchemaName {entitySchemaName}, code {code}");
+
+            var query = new QueryExpression(entitySchemaName);
+            query.ColumnSet.AddColumns(entitySchemaName + "id", "createdon");
+            query.AddOrder("ldv_code", OrderType.Descending);
+            query.Criteria.AddCondition("ldv_code", ConditionOperator.Equal, code.ToString());
+            EntityCollection entityCollection = OrganizationService.RetrieveMultiple(query);
+            tracingService.Trace($"entityCollection.Entities.Count {entityCollection.Entities.Count} ");
+
+            if (entityCollection.Entities.Count > 0)
+                if (entityCollection.Entities[0].Contains(entitySchemaName + "id"))
+                {
+                    id = entityCollection.Entities[0].GetAttributeValue<Guid>(entitySchemaName + "id");
+                }
             return id;
+
+
+
+
+
         }
 
         #endregion

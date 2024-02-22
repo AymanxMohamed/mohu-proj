@@ -5,9 +5,11 @@ using LinkDev.Common.Crm.Utilities;
 using LinkDev.CRM.Library.DAL;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Workflow;
 using System;
 using System.Activities;
+using System.Collections.Generic;
 
 namespace LinkDev.Common.Crm.Cs.StageConfiguration
 {
@@ -77,7 +79,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
         public InArgument<EntityReference> Queue { get; set; }
         public InArgument<EntityReference> Team { get; set; }
         protected CRMAccessLayer DAL;
-
+        ITracingService tracingService;
         public AssignTheRequestLogic(InArgument<string> requestId,
                                      InArgument<string> requestSchemaName,
                                      InArgument<bool> assignToUser,
@@ -107,6 +109,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
             IWorkflowContext context = executionContext.GetExtension<IWorkflowContext>();
             IOrganizationServiceFactory serviceFactory = executionContext.GetExtension<IOrganizationServiceFactory>();
             IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
+            tracingService = executionContext.GetExtension<ITracingService>();
             DAL = new CRMAccessLayer(service);
 
             try
@@ -115,6 +118,11 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
                 string requestSchemaName = RequestSchemaName.Get(executionContext);
                 bool assignToUser = AssignToUser.Get(executionContext);
 
+                tracingService.Trace($"ExecuteLogic");
+
+                tracingService.Trace($"is assign User: {AssignToUser.Get<bool>(executionContext)}");
+                tracingService.Trace($"is assign Team  : {AssignToTeam.Get<bool>(executionContext)}");
+                tracingService.Trace($"is assign Queue : {AssignToUser.Get<bool>(executionContext)}");
 
                 #region Assign to user
                 if (AssignToUser.Get<bool>(executionContext) && User.Get<EntityReference>(executionContext) == null)
@@ -142,9 +150,10 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
                     throw new Exception($"Queue is null while you choose Assign to Team");
 
                 if (AssignToQueue.Get<bool>(executionContext) && Queue.Get<EntityReference>(executionContext) != null)
-                    AssignRequestToQueue(new EntityReference(RequestSchemaName.Get<string>(executionContext),
-                                new Guid(RequestId.Get<string>(executionContext))), Team.Get<EntityReference>(executionContext));
+                    AssignRequestToQueue2(new EntityReference(RequestSchemaName.Get<string>(executionContext),
+                                new Guid(RequestId.Get<string>(executionContext))), Queue.Get<EntityReference>(executionContext));
 
+                
                 #endregion
 
             }
@@ -158,6 +167,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
         private void AssignRecord(EntityReference targetEntity, EntityReference targetAssigningOwning)
         {
 
+            tracingService.Trace($"in assign User ,will assign to {targetAssigningOwning.Id}  ");
 
             if (targetAssigningOwning?.Id != null && targetAssigningOwning?.Id != Guid.Empty &&
                 targetEntity?.Id != null && targetEntity?.Id != Guid.Empty)
@@ -167,7 +177,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
                 DAL.UpdateEntity(request);
 
             }
-
+            tracingService.Trace($"  User Assigned  ");
 
         }
 
@@ -182,8 +192,48 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
             DAL.CreateEntity(queueItem);
 
         }
+
+        private void AssignRequestToQueue2(EntityReference targetEntity, EntityReference queue)
+        {
+            tracingService.Trace($"in assign queue ,will assign to {queue.Id}  ");
+
+            //check if there is an active queue item
+            // Define Condition Values
+            var query_statecode = 0;
+            var query = new QueryExpression("queueitem");
+            query.ColumnSet.AddColumns("objectid", "queueid", "workerid");
+            query.AddOrder("createdon", OrderType.Descending);
+            query.Criteria.AddCondition("statecode", ConditionOperator.Equal, query_statecode);
+            query.Criteria.AddCondition("objectid", ConditionOperator.Equal, targetEntity.Id);
+
+            List<Entity> relatedEntities = DAL.RetrieveMultipleByQueryExpression(query);
+
+            // tracingService.Trace($"  relatedEntities Count {relatedEntities.Count}");
+
+            if (relatedEntities.Count > 0)
+
+            {
+                tracingService.Trace($"  relatedEntities.Entities.Count {  relatedEntities.Count}");
+                Entity queueItemRelated = relatedEntities[0];
+
+                DAL.DeleteEntity(queueItemRelated.LogicalName, queueItemRelated.Id);
+            }
+
+                tracingService.Trace($" before create queue");
+
+            Entity queueItem = new Entity("queueitem");
+                queueItem.Attributes.Add("queueid", queue);
+                queueItem.Attributes.Add("objectid", targetEntity);
+                DAL.CreateEntity(queueItem);
+              
+                tracingService.Trace($" queueitem has been created to  {targetEntity.LogicalName} with queue id {queue.Id}");
+                
+        }
+
+
         private void AssignRequestToTeam(EntityReference targetEntity, EntityReference targetAssigningOwning)
         {
+            tracingService.Trace($"in assign Team ,will assign to {targetAssigningOwning.Id}  ");
 
             // Create the Request Object and Set the Request Object's Properties
             if (targetAssigningOwning?.Id != null && targetAssigningOwning?.Id != Guid.Empty &&
@@ -192,6 +242,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
                 Entity request = new Entity(targetEntity.LogicalName, targetEntity.Id);
                 request.Attributes.Add("ownerid", targetAssigningOwning);
                 DAL.UpdateEntity(request);
+                tracingService.Trace($"  Team Assigned  ");
 
             }
         }

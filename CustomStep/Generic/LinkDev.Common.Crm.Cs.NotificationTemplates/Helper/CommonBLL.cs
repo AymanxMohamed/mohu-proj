@@ -17,17 +17,23 @@ using LinkDev.Common.Crm.Cs.StageConfiguration.Entities;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 {
-    public class CommonBLL : LinkDev.Common.Crm.Bll.Base.BllBase
+    public class CommonBLL //: LinkDev.Common.Crm.Bll.Base.BllBase
     {
         #region Variables
         CRMAccessLayer CRMAccessLayer;
         Language language;
+        ITracingService tracingService;
+        IOrganizationService OrganizationService;
         #endregion
-        public CommonBLL(IOrganizationService service, ILogger logger, string languageCode)
-            : base(service, logger, languageCode)
+        public CommonBLL(IOrganizationService service, ITracingService TracingService)
+
         {
             CRMAccessLayer = new CRMAccessLayer(service);
             language = Language.Arabic;
+            tracingService = TracingService;
+            OrganizationService = service;
+
+
         }
         public void CreateAndSendEmail(EntityReference From, Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, List<EntityReference> toParty, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig)
         {
@@ -57,7 +63,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"CreateAndSendEmail ex {ex}");
+
             }
         }
 
@@ -78,7 +85,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"CreateSMS ex {ex}");
+
             }
 
         }
@@ -98,7 +106,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"CreatePortalNotifications ex {ex}");
+
             }
 
         }
@@ -454,7 +463,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"CreateSms ex {ex}");
+
                 throw;
             }
 
@@ -491,7 +501,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
             catch (Exception ex)
             {
-                Logger.LogException(LoggerHandler.GetMethodFullName(), ex);
+                tracingService.Trace($"CreatePortalNotification ex {ex}");
+
                 throw;
             }
 

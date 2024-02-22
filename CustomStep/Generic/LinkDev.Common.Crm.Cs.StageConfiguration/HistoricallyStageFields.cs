@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LinkDev.Common.Crm.Cs.StageConfiguration
 {
-    public class HistoricallyStageFields : CustomStepBase
+    public class HistoricallyStageFields : CodeActivity
     {
         [RequiredArgument]
         [Input("Stages Configuration")]
@@ -23,14 +23,52 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
         [ReferenceTarget("ldv_applicationheader")]
         public InArgument<EntityReference> ApplicationHeader { get; set; }
 
-        public override void ExtendedExecute()
-        {
-            var bll = new HistoricallyStageFieldsBLL(OrganizationService, Tracer, LanguageCode, tracingService);
-            if (StageConfiguration.Get(ExecutionContext) != null && ApplicationHeader.Get(ExecutionContext) != null)
-            {
-                bll.FieldsToBeHistorically(StageConfiguration.Get(ExecutionContext), ApplicationHeader.Get(ExecutionContext));
-            }
+     
 
+        protected override void Execute(CodeActivityContext context)
+        {
+            HistoricallyStageFieldsLogic bll = new HistoricallyStageFieldsLogic(StageConfiguration, ApplicationHeader);
+            bll.ExecuteLogic(context); 
+        }
+    }
+    public class HistoricallyStageFieldsLogic
+    {
+        public InArgument<EntityReference> StageConfiguration { get; set; }
+        public InArgument<EntityReference> ApplicationHeader { get; set; }
+        HistoricallyStageFieldsBLL logicLayer;
+        public HistoricallyStageFieldsLogic(InArgument<EntityReference> stageConfiguration, InArgument<EntityReference> applicationHeader)
+        {
+            StageConfiguration = stageConfiguration;
+            ApplicationHeader = applicationHeader;
+        }
+        public void ExecuteLogic(CodeActivityContext executionContext)
+        {
+            IWorkflowContext context = executionContext.GetExtension<IWorkflowContext>();
+            IOrganizationServiceFactory serviceFactory = executionContext.GetExtension<IOrganizationServiceFactory>();
+            IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
+            //Create the tracing service
+            ITracingService tracingService = executionContext.GetExtension<ITracingService>();
+            logicLayer = new HistoricallyStageFieldsBLL(service, tracingService);
+            try
+            {
+                tracingService.Trace("In execute ");
+                EntityReference stageConfiguration = StageConfiguration.Get(executionContext);
+                EntityReference applicationHeader = ApplicationHeader.Get(executionContext);
+                if (stageConfiguration != null && applicationHeader != null)
+                {
+                    logicLayer.FieldsToBeHistorically(stageConfiguration, applicationHeader);
+                }
+            }
+            catch (Exception e)
+            {
+                tracingService.Trace($"Error : {e.Message}");
+                throw e;
+            }
+            finally
+            {
+                tracingService.Trace(" Final ");
+                //log.LogExecutionEnd();
+            }
         }
     }
 }

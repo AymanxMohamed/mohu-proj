@@ -18,22 +18,24 @@ using Microsoft.Xrm.Sdk.Metadata;
 
 namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
 {
-    public class HistoricallyStageFieldsBLL : BllBase
+    public class HistoricallyStageFieldsBLL  
     {
+        private IOrganizationService OrganizationService;
         private CRMAccessLayer crmAccess;
-        StageConfigurationBLL logicLayer;
         ITracingService tracingService;
-
-        public HistoricallyStageFieldsBLL(IOrganizationService service, Logger.ILogger logger, string languageCode, ITracingService _tracingService)
-            : base(service, logger, languageCode)
+        StageConfigurationBLL logicLayer;
+        public HistoricallyStageFieldsBLL(IOrganizationService service, ITracingService tracingServices)
         {
+            OrganizationService = service;
             crmAccess = new CRMAccessLayer(OrganizationService);
-            logicLayer = new StageConfigurationBLL(service);
-            this.tracingService = _tracingService;
+            tracingService = tracingServices;
+            logicLayer = new StageConfigurationBLL(OrganizationService);
         }
 
         public void FieldsToBeHistorically(EntityReference stageConfiguration, EntityReference applicationHeader)
         {
+            tracingService.Trace("In FieldsToBeHistorically ");
+
             if (stageConfiguration?.Id == Guid.Empty && applicationHeader?.Id == Guid.Empty) return;
 
             //Get application Header
@@ -44,20 +46,26 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
             EntityReference Regarding = applicationHeaderEntity.Contains(ApplicationHeaderEntity.Regarding) ? applicationHeaderEntity.GetAttributeValue<EntityReference>(ApplicationHeaderEntity.Regarding) : null;
             if (Regarding == null) return;
             Entity requestEntity = new Entity(Regarding.LogicalName, Regarding.Id);
-
+            tracingService.Trace($"requestEntity {requestEntity.LogicalName} , {requestEntity.Id}");
 
             // commented and replaced to accept condition AMR Ezzat
             //List<StageFields> stageFields = logicLayer.RetrieveStageFields(stageConfiguration.Id, GridType.FieldsToBeHistorically, requestEntity);
             //if (stageFields.Count <= 0) return;
 
             //Logger.LogComment(LoggerHandler.GetMethodFullName(), $"stageFields.Count = {stageFields.Count}", SeverityLevel.Info);
+            tracingService.Trace($"stageConfiguration.Id {stageConfiguration.Id} , GridType.FieldsToBeHistorically {GridType.FieldsToBeHistorically} ,requestEntity {requestEntity.LogicalName} , {requestEntity.Id} ");
+
+            tracingService.Trace($" 1 ");
+
             //Get Stage Fields
             List<ChangedFieldTriggers> changedFieldTriggers = logicLayer.RetrieveChangedStageFields(stageConfiguration.Id, GridType.FieldsToBeHistorically, requestEntity, tracingService);
-            if (!changedFieldTriggers.Any()) return;
+            tracingService.Trace($" changedFieldTriggers.Count");
+
+            if (changedFieldTriggers.Count<1) return;
+            tracingService.Trace($"changedFieldTriggers.Count = {changedFieldTriggers.Count}");
             List<StageFields> stageFields = ValidStageFieldsList(changedFieldTriggers, requestEntity, tracingService);
             if (stageFields.Count <= 0) return;
             tracingService.Trace($"stageFields.Count = {stageFields.Count}");
-
 
             //get all fields that need to be historically from request
             string[] historicallyColumns = new string[stageFields.Count + 1];
@@ -68,8 +76,12 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
             {
                 if (historicallyFields.FieldSchemaName != string.Empty)
                 {
+                    tracingService.Trace($"historicallyFields.FieldSchemaName = {historicallyFields.FieldSchemaName }");
+
                     //check if field exist in request first
                     bool doesFieldExistInTargetEntity = crmAccess.DoesFieldExist(Regarding.LogicalName, historicallyFields.FieldSchemaName);
+                    tracingService.Trace($"doesFieldExistInTargetEntity = {doesFieldExistInTargetEntity}");
+
                     if (doesFieldExistInTargetEntity)
                     {
                         historicallyColumns[columnsCount] = historicallyFields.FieldSchemaName;
@@ -88,64 +100,118 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                     currentTask = new Entity(TaskEntity.LogicalName, task.Id);
                     foreach (StageFields historicallyFieldsValue in stageFields)
                     {
+                        tracingService.Trace($"historicallyFieldsValue = {historicallyFieldsValue.FieldSchemaName } , historicallyFieldsValue.FieldType.Id {historicallyFieldsValue.FieldType.Id} , historicallyFieldsValue.TaskFieldSchemaName  {historicallyFieldsValue.TaskFieldSchemaName }");
+                        tracingService.Trace($"currentTask.Attributes.Count {currentTask.Attributes.Count}");
+
                         if (historicallyFieldsValue.FieldType.Id == (int)FieldType.Lookup) //Decision Made By, user 
                         {
+                            tracingService.Trace($"Lookup");
+
                             if (request.Contains(historicallyFieldsValue.FieldSchemaName))
                             {
                                 if (historicallyFieldsValue.TaskFieldSchemaName != string.Empty)
                                 {
-                                    currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName,
-                                        request.Contains(historicallyFieldsValue.FieldSchemaName)
-                                        ? request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName) : null);
+                                    if (request.Contains(historicallyFieldsValue.FieldSchemaName))
+                                    {
+                                        currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName,
+                                       request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName));
+
+                                        tracingService.Trace($" logical name {(request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)).LogicalName} , id : {(request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)).Id }");
+                                        tracingService.Trace($"lookup value: {   request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)  }  ");
+
+                                    }
 
                                 }
                             }
                         }
-                        else if (historicallyFieldsValue.FieldType.Id == (int)FieldType.Optionset) //decision
+                        else  if (historicallyFieldsValue.FieldType.Id == (int)FieldType.Optionset) //decision
                         {
+                            tracingService.Trace($"Optionset");
+
                             if (historicallyFieldsValue.TaskFieldSchemaName != string.Empty)
                             {
+
                                 // changed to retrive arabic values 
                                 //var desicion = request.Contains(historicallyFieldsValue.FieldSchemaName) ? request.FormattedValues[historicallyFieldsValue.FieldSchemaName] : null;// request.FormattedValues[historicallyFieldsValue.FieldSchemaName];
                                 var desicion = GetAttributeArabicValueRequest(request.GetAttributeValue<OptionSetValue>(historicallyFieldsValue.FieldSchemaName).Value, 1025, request.LogicalName, historicallyFieldsValue.FieldSchemaName);
-                                currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName, desicion);
+                                if (string.IsNullOrEmpty( desicion))
+                                {
+                                      desicion = GetAttributeArabicValueRequest(request.GetAttributeValue<OptionSetValue>(historicallyFieldsValue.FieldSchemaName).Value, 1033, request.LogicalName, historicallyFieldsValue.FieldSchemaName);
+                                }
+                                tracingService.Trace($"desicion {desicion}");
+                                if (!string.IsNullOrEmpty(desicion))
+                                {
+                                    currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName, desicion);
+                                }
                             }
                         }
                         else //comment string
                         {
+                            tracingService.Trace($" string");
                             if (historicallyFieldsValue.TaskFieldSchemaName != string.Empty)
                             {
-                                var comment =
-                                   request.Contains(historicallyFieldsValue.FieldSchemaName) ? request.Attributes[historicallyFieldsValue.FieldSchemaName] : null;
-                                currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName, comment);
-
+                               if (request.Contains(historicallyFieldsValue.FieldSchemaName))
+                                {
+                                    var comment =  request.Attributes[historicallyFieldsValue.FieldSchemaName]  ;
+                                    currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName, comment);
+                                    tracingService.Trace($"comment {comment}");
+                                }
                             }
                         }
                     }
                 }
-
             }
+            tracingService.Trace($"before update task ");
+            tracingService.Trace( LoggerHandler.CommentAttributeCollection(currentTask.Attributes));
 
             crmAccess.UpdateEntity(currentTask);
-
-            Logger.LogComment(LoggerHandler.GetMethodFullName(), $"'{currentTask.LogicalName}' with Id '{currentTask.Id}' updated with historical data as following {LoggerHandler.CommentAttributeCollection(currentTask.Attributes)}", SeverityLevel.Info);
+            tracingService.Trace($"'{currentTask.LogicalName}' with Id '{currentTask.Id}' updated with historical data as following { LoggerHandler.CommentAttributeCollection(currentTask.Attributes)} ");
         }
 
         public string GetAttributeArabicValueRequest(int optSetValue, int LanguageCode, string entityLogicalName, string attributeName)
         {
-            RetrieveAttributeRequest attributeRequest = new RetrieveAttributeRequest
+            tracingService.Trace($" in GetAttributeArabicValueRequest ");
+            var value = OptionSetMetaData(entityLogicalName, attributeName, optSetValue);
+            //RetrieveAttributeRequest attributeRequest = new RetrieveAttributeRequest
+            //{
+            //    EntityLogicalName = entityLogicalName,
+            //    LogicalName = attributeName,
+            //    RetrieveAsIfPublished = true
+            //};
+
+            //var response = (RetrieveAttributeResponse)OrganizationService.Execute(attributeRequest);
+            //var optionList = ((EnumAttributeMetadata)response.AttributeMetadata).OptionSet.Options;
+            //tracingService.Trace($"optionList {optionList} ,LanguageCode {LanguageCode}");
+            //var value= optionList.FirstOrDefault(o => o.Value == optSetValue).Label.LocalizedLabels.First(l => l.LanguageCode == LanguageCode).Label;
+            //tracingService.Trace($"value {value}");
+
+            return value;
+        }
+        string  OptionSetMetaData(string logicalName, string fieldInApplication, int fieldOptionNumber)
+        {
+            string outPutValue = "";
+            RetrieveAttributeRequest raRequest = new RetrieveAttributeRequest
             {
-                EntityLogicalName = entityLogicalName,
-                LogicalName = attributeName,
+                EntityLogicalName = logicalName,
+                LogicalName = fieldInApplication,
                 RetrieveAsIfPublished = true
             };
-
-            var response = (RetrieveAttributeResponse)OrganizationService.Execute(attributeRequest);
-            var optionList = ((EnumAttributeMetadata)response.AttributeMetadata).OptionSet.Options;
-
-            return optionList.FirstOrDefault(o => o.Value == optSetValue).Label.LocalizedLabels.First(l => l.LanguageCode == LanguageCode).Label;
+            RetrieveAttributeResponse raResponse = (RetrieveAttributeResponse)OrganizationService.Execute(raRequest);
+            PicklistAttributeMetadata paMetadata = (PicklistAttributeMetadata)raResponse.AttributeMetadata;
+            OptionMetadata[] optionList = paMetadata.OptionSet.Options.ToArray();
+            foreach (OptionMetadata oMD in optionList)
+            {
+                //int value = Int.TryParse(optionSetvalue);
+                if (oMD.Value == fieldOptionNumber)
+                {
+                    // log.LogInfo($"field Option language lcid both ");
+                    outPutValue = oMD.Label.LocalizedLabels.Where(x => x.LanguageCode == 1033).FirstOrDefault().Label.ToString();
+                    tracingService.Trace($"oMD.Value {oMD.Value} ,   field {fieldInApplication}  English  {outPutValue}, optionSetValue {outPutValue}  ");
+                }
+            }
+            return outPutValue;
         }
-        public List<StageFields> ValidStageFieldsList(List<ChangedFieldTriggers> changedFieldTriggers, Entity request, ITracingService tracingService)
+                public List<StageFields> ValidStageFieldsList(List<ChangedFieldTriggers> changedFieldTriggers, Entity request, ITracingService tracingService)
         {
             List<StageFields> stageFieldsList = new List<StageFields>();
             if (changedFieldTriggers.Any())

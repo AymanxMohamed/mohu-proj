@@ -57,7 +57,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
             }
             catch (Exception e)
             {
-                tracingService.Trace("Error : {e.Message}");
+                tracingService.Trace($"Error : {e.Message}");
                 throw e;
             }
             finally
