@@ -113,8 +113,12 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                                 {
                                     if (request.Contains(historicallyFieldsValue.FieldSchemaName))
                                     {
-                                        currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName,
-                                       request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName));
+                                        if ((request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)).LogicalName=="team")
+                                        {
+                                            currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName,
+                                                                                  request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName));
+
+                                        }
 
                                         tracingService.Trace($" logical name {(request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)).LogicalName} , id : {(request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)).Id }");
                                         tracingService.Trace($"lookup value: {   request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)  }  ");
