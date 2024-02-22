@@ -14,9 +14,9 @@ namespace MOHU.Integration.Infrastructure.Persistence
             if (_serviceClient == null)
             {
                 var authType = "ClientSecret";
-                var clientId = "";
-                var clientSecret = "";
-                var url = "";
+                var clientId = "ec070189-1252-4ba0-9b8c-7fdd2477b02d";
+                var clientSecret = "eu-8Q~gah3Lph_ye.wg.IEm1pHzaU5ndY3rQnazP";
+                var url = "https://mohudev.crm4.dynamics.com/";
                 var connectionString = $"AuthType={authType};ClientId={clientId};Url={url};ClientSecret={clientSecret};";
                 _serviceClient = new ServiceClient(connectionString);
             }
