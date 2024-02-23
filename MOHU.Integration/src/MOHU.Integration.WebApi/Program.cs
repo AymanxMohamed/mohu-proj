@@ -20,7 +20,7 @@ namespace MOHU.Integration.WebApi
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
+            app.UseGlobalExceptionHandler();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

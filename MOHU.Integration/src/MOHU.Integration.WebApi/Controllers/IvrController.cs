@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Ivr;
 using MOHU.Integration.Contracts.Interface;
 
@@ -14,6 +15,7 @@ namespace MOHU.Integration.WebApi.Controllers
         {
             _ivrService = ivrService;
             _context = context;
+            throw new BadRequestException("test");
             var s = _context.ServiceClient;
             
         }
