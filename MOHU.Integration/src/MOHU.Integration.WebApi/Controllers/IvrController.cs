@@ -8,10 +8,14 @@ namespace MOHU.Integration.WebApi.Controllers
     [ApiController]
     public class IvrController : BaseController
     {
+        private readonly ICrmContext _context;
         private readonly IIvrService _ivrService;
-        public IvrController(IIvrService ivrService)
+        public IvrController(IIvrService ivrService, ICrmContext context)
         {
             _ivrService = ivrService;
+            _context = context;
+            var s = _context.ServiceClient;
+            
         }
 
         [HttpPost]

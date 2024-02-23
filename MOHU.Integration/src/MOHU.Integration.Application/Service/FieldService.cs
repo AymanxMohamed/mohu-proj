@@ -42,7 +42,7 @@ namespace MOHU.Integration.Application.Service
             andFilter.AddCondition(ldv_categoryfields.Fields.ldv_showonportalcode,ConditionOperator.In, (int)ShowOnPortal.Both, (int)ShowOnPortal.Portal);
 
             var fieldLink = query.AddLink(ldv_field.EntityLogicalName, ldv_categoryfields.Fields.ldv_fieldid, ldv_field.Fields.Id);
-            fieldLink.EntityAlias = Globals.FieldEntityLink;
+            fieldLink.EntityAlias = Globals.LinkEntityConsts.FieldEntityLink;
 
             fieldLink.Columns.AddColumns(
                ldv_field.Fields.ldv_displaynamear,
@@ -54,7 +54,7 @@ namespace MOHU.Integration.Application.Service
                 );
 
             var messageLink = fieldLink.AddLink(ldv_message.EntityLogicalName, ldv_field.Fields.ldv_messageid, ldv_message.Fields.Id, JoinOperator.LeftOuter);
-            messageLink.EntityAlias = Globals.MessageEntityLink;
+            messageLink.EntityAlias = Globals.LinkEntityConsts.MessageEntityLink;
 
             messageLink.Columns.AddColumns(ldv_message.Fields.ldv_arabicmessage,ldv_message.Fields.ldv_englishmessage);
 
@@ -68,14 +68,14 @@ namespace MOHU.Integration.Application.Service
                 Mandatory = entity.GetAttributeValue<bool>(ldv_categoryfields.Fields.ldv_mandatorycode),
                 PortalDisplayOrder = Convert.ToInt32(entity.GetAttributeValue<string>(ldv_categoryfields.Fields.ldv_portaldisplayorder)),
             };
-            if (entity.Attributes.ContainsKey($"{Globals.FieldEntityLink}.{ldv_field.Fields.Id}"))
-                field.Id = entity.GetAttributeValue<string>($"{Globals.FieldEntityLink}.{ldv_field.Fields.Id}");
+            if (entity.Attributes.ContainsKey($"{Globals.LinkEntityConsts.FieldEntityLink}.{ldv_field.Fields.Id}"))
+                field.Id = entity.GetAttributeValue<string>($"{Globals.LinkEntityConsts.FieldEntityLink}.{ldv_field.Fields.Id}");
 
-            if (entity.Attributes.ContainsKey($"{Globals.FieldEntityLink}.{ldv_field.Fields.ldv_regexpression}"))
-                field.Regex = entity.GetAttributeValue<string>($"{Globals.FieldEntityLink}.{ldv_field.Fields.ldv_regexpression}");
+            if (entity.Attributes.ContainsKey($"{Globals.LinkEntityConsts.FieldEntityLink}.{ldv_field.Fields.ldv_regexpression}"))
+                field.Regex = entity.GetAttributeValue<string>($"{Globals.LinkEntityConsts.FieldEntityLink}.{ldv_field.Fields.ldv_regexpression}");
 
-            if (entity.Attributes.ContainsKey($"{Globals.MessageEntityLink}.{ldv_message.Fields.ldv_arabicmessage}"))
-                field.RegexErrorMessage = entity.GetAttributeValue<string>($"{Globals.MessageEntityLink}.{ldv_message.Fields.ldv_arabicmessage}");
+            if (entity.Attributes.ContainsKey($"{Globals.LinkEntityConsts.MessageEntityLink}.{ldv_message.Fields.ldv_arabicmessage}"))
+                field.RegexErrorMessage = entity.GetAttributeValue<string>($"{Globals.LinkEntityConsts.MessageEntityLink}.{ldv_message.Fields.ldv_arabicmessage}");
 
             //field.Name
             return field;

@@ -1,6 +1,12 @@
-﻿namespace MOHU.Integration.Domain.Entitiy
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MOHU.Integration.Domain.Entitiy
 {
-    public partial class ldv_casecategory
+    public class ldv_country
     {
         public static class Fields
         {
@@ -8,14 +14,13 @@
             public const string CreatedOn = "createdon";
             public const string CreatedOnBehalfBy = "createdonbehalfby";
             public const string ImportSequenceNumber = "importsequencenumber";
-            public const string ldv_casecategoryId = "ldv_casecategoryid";
-            public const string Id = "ldv_casecategoryid";
+            public const string ldv_code = "ldv_code";
+            public const string ldv_countryId = "ldv_countryid";
+            public const string Id = "ldv_countryid";
+            public const string ldv_displayorder = "ldv_displayorder";
             public const string ldv_name = "ldv_name";
-            public const string ldv_arabicname = "ldv_arabicname";
-            public const string ldv_englishname = "ldv_englishname";
-            public const string ldv_RelatedSectorid = "ldv_relatedsectorid";
-            public const string ldv_SupervisorQueueId = "ldv_supervisorqueueid";
-            public const string ldv_supervisorTeamId = "ldv_supervisorteamid";
+            public const string ldv_name_ar = "ldv_name_ar";
+            public const string ldv_name_en = "ldv_name_en";
             public const string ModifiedBy = "modifiedby";
             public const string ModifiedOn = "modifiedon";
             public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
@@ -31,17 +36,19 @@
             public const string VersionNumber = "versionnumber";
         }
 
-        public const string EntityLogicalName = "ldv_casecategory";
 
-        public const string EntitySchemaName = "ldv_casecategory";
+        public const string EntityLogicalName = "ldv_country";
 
-        public const string PrimaryIdAttribute = "ldv_casecategoryid";
+        public const string EntitySchemaName = "ldv_country";
+
+        public const string PrimaryIdAttribute = "ldv_countryid";
 
         public const string PrimaryNameAttribute = "ldv_name";
 
-        public const string EntityLogicalCollectionName = "ldv_casecategories";
+        public const string EntityLogicalCollectionName = "ldv_countries";
 
-        public const string EntitySetName = "ldv_casecategories";
+        public const string EntitySetName = "ldv_countries";
 
     }
 }
+
