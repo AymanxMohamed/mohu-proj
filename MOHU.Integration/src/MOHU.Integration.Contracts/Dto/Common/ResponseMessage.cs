@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Contracts.Enum;
+using System.Net;
 
 namespace MOHU.Integration.Contracts.Dto.Common
 {
@@ -14,7 +15,7 @@ namespace MOHU.Integration.Contracts.Dto.Common
         }
         public static ResponseMessage<T> Success(T data)
         {
-            return new ResponseMessage<T> { Status = Status.Success, Result = data };
+            return new ResponseMessage<T> { Status = Status.Success, StatusCode = (int)HttpStatusCode.OK, Result = data };
 
         }
     }
