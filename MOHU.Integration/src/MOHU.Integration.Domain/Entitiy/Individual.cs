@@ -535,6 +535,12 @@ namespace MOHU.Integration.Domain.Entitiy
             /// <summary>Type: String, RequiredLevel: None, MaxLength: 150, Format: PhoneticGuide</summary>
             public const string YomiMiddleName = "yomimiddlename";
 
+            public const string Age = "ldv_age";
+
+
+
+
+
             #endregion Attributes  
 
         }

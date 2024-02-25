@@ -145,6 +145,7 @@ namespace MOHU.Integration.Application.Service
             result = await MapTicketToDetailsDto(ticket);
             return result;
         }
+        
         private TicketDto MapTicketToDto(Entity entity)
         {
             var result = new TicketDto
@@ -160,6 +161,8 @@ namespace MOHU.Integration.Application.Service
             };
             return result;
         }
+
+
         private async Task<TicketDetailsResponse?> MapTicketToDetailsDto(Entity entity)
         {
             if (entity is null)
