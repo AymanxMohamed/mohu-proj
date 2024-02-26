@@ -12,7 +12,7 @@ namespace MOHU.Integration.Application.Service
 {
     public class TicketService : ITicketService
     {
-        bool IsArabic => true;
+        bool IsArabic => false;
         private readonly ICrmContext _crmContext;
         private readonly ICommonRepository _commonRepository;
         public TicketService(ICrmContext crmContext, ICommonRepository commonRepository)
@@ -88,7 +88,7 @@ namespace MOHU.Integration.Application.Service
             };
 
             query.ColumnSet.AddColumns(
-                Incident.Fields.TicketNumber,
+                Incident.Fields.Title,
                 Incident.Fields.ldv_serviceid,
                 Incident.Fields.ldv_MainCategoryid,
                 Incident.Fields.ldv_SubCategoryid,
@@ -98,12 +98,13 @@ namespace MOHU.Integration.Application.Service
                 Incident.Fields.ldv_Locationcode,
                 Incident.Fields.ldv_Seasoncode,
                 Incident.Fields.ldv_ClosureDate,
-                Incident.Fields.ldv_Beneficiarytypecode
+                Incident.Fields.ldv_Beneficiarytypecode,
+                Incident.Fields.CreatedOn
                 );
             var filter = new FilterExpression(LogicalOperator.And);
             query.Criteria.AddFilter(filter);
 
-            filter.AddCondition(new ConditionExpression(Incident.Fields.TicketNumber, ConditionOperator.Equal, ticketNumber));
+            filter.AddCondition(new ConditionExpression(Incident.Fields.Title, ConditionOperator.Equal, ticketNumber));
             filter.AddCondition(new ConditionExpression(Incident.Fields.CustomerId, ConditionOperator.Equal, customerId));
 
             var portalStatusLink = query.AddLink(
@@ -136,7 +137,7 @@ namespace MOHU.Integration.Application.Service
 
             secondarySubCategoryLink.Columns.AddColumns(ldv_casecategory.Fields.ldv_englishname, ldv_casecategory.Fields.ldv_arabicname);
 
-          
+
             var ticket = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query)).Entities?.FirstOrDefault();
 
             if (ticket is null)
@@ -153,6 +154,7 @@ namespace MOHU.Integration.Application.Service
 
             entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
             entity.Attributes.Add(Incident.Fields.ldv_Description, request.Description);
+            entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(1));
             entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, request.CaseType));
             entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.CategoryId));
             entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId));
@@ -166,12 +168,12 @@ namespace MOHU.Integration.Application.Service
             if (request.Location.HasValue)
                 entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
 
-            var result = await _crmContext.ServiceClient.CreateAndReturnAsync(entity);
-            if (result is not null)
-            {
-                response.TicketNumber = result.GetAttributeValue<string>(Incident.Fields.TicketNumber);
-                response.TicketId = result.Id;
-            }
+            var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
+
+            var caseEntity = await _crmContext.ServiceClient.RetrieveAsync(Contact.EntityLogicalName, caseId, new ColumnSet(Incident.Fields.Title));
+            response.TicketNumber = caseEntity.GetAttributeValue<string>(Incident.Fields.Title);
+            response.TicketId = caseId;
+
             return response;
         }
         private TicketDto MapTicketToDto(Entity entity)
@@ -197,10 +199,10 @@ namespace MOHU.Integration.Application.Service
             var result = new TicketDetailsResponse
             {
                 Id = entity.Id,
-                TicketNumber = entity.GetAttributeValue<string>(Incident.Fields.TicketNumber),
+                TicketNumber = entity.GetAttributeValue<string>(Incident.Fields.Title),
                 CreatedOn = entity.GetAttributeValue<DateTime>(Incident.Fields.CreatedOn),
                 Resolution = entity.GetAttributeValue<string>(Incident.Fields.ldv_ClosureReason),
-                ResolutionDate = entity.GetAttributeValue<DateTime>(Incident.Fields.ldv_ClosureDate),
+                ResolutionDate = entity.GetAttributeValue<DateTime?>(Incident.Fields.ldv_ClosureDate),
                 TicketType = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_ar}")?.Value?.ToString() :
                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_en}")?.Value?.ToString(),
                 Status = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_ar}")?.Value?.ToString() :
@@ -213,11 +215,12 @@ namespace MOHU.Integration.Application.Service
                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SecondarySubCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
             };
             if (entity.Contains(Incident.Fields.ldv_Locationcode))
-                result.Location = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Locationcode, "ar");
+                result.Location = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Locationcode, "en");
             
             if (entity.Contains(Incident.Fields.ldv_Beneficiarytypecode))
-                result.BeneficiaryType = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Beneficiarytypecode, "ar");
-
+                result.BeneficiaryType = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Beneficiarytypecode, "en");
+            if (entity.Contains(Incident.Fields.ldv_ClosureDate))
+                result.ResolutionDate = entity.GetAttributeValue<DateTime>(Incident.Fields.ldv_ClosureDate);
             return result;
         }
         private async Task<string> GetNameFromOptionSetAsync(Entity entity, string fieldLogicalName, string language)

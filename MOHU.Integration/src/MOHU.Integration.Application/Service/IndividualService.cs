@@ -2,6 +2,7 @@
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Domain.Entitiy;
 
 namespace MOHU.Integration.Application.Service
 {
@@ -16,12 +17,14 @@ namespace MOHU.Integration.Application.Service
 
         public async Task<LookupDto?> GetIndividualByMobileNumberAsync(string mobileNumber)
         {
-            var query = new QueryExpression("contact")
+            var query = new QueryExpression(Contact.EntityLogicalName)
             {
                 NoLock = true
             };
             var filter = new FilterExpression(LogicalOperator.And);
+            filter.AddCondition(new ConditionExpression(Contact.Fields.MobilePhone, ConditionOperator.Equal, mobileNumber));
             query.Criteria.AddFilter(filter);
+            
             var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
             
             if (result.Entities.Any())

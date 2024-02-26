@@ -15,6 +15,7 @@ namespace MOHU.Integration.Application
             services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IFieldService, FieldService>();
             services.AddTransient<ITicketService, TicketService>();
+            services.AddTransient<IUserService, UserService>();
             return services;
         }
     }

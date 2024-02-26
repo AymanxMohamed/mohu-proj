@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Contracts.Dto.Activity;
+﻿using MOHU.Integration.Application.Exceptions;
+using MOHU.Integration.Contracts.Dto.Activity;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Ivr;
 using MOHU.Integration.Contracts.Interface;
@@ -12,12 +13,14 @@ namespace MOHU.Integration.Application.Service
         private readonly IIndividualService _individualService;
         private readonly IActivityService _activityService;
         private readonly IConfigurationService _configurationService;
+        private readonly IUserService _userService;
 
-        public IvrService(IIndividualService individualService, IActivityService activityService, IConfigurationService configurationService)
+        public IvrService(IIndividualService individualService, IActivityService activityService, IConfigurationService configurationService, IUserService userService)
         {
             _individualService = individualService;
             _activityService = activityService;
             _configurationService = configurationService;
+            _userService = userService;
         }
         public async Task<string> GetCustomerProfileUrlAsync(GetCustomerProfileRequest request)
         {
@@ -25,13 +28,19 @@ namespace MOHU.Integration.Application.Service
 
             individual ??= await _individualService.CreateIndividualAsync(request.MobileNumber);
 
+            var agent = await _userService.GetUserByUsernameAsync(request.AgentUserName)
+                ?? throw new NotFoundException($"Agent with the following name {request.AgentUserName} does not exist");
+            
             var createActivityRequest = new CreateActivityRequest()
             {
                 ActivityName = PhoneCall.EntityLogicalName,
-                Owner = new LookupDto(Guid.Parse("eacc971e-11c1-ee11-9079-6045bd895c76"), "systemuser"),
+                Owner = agent,
                 From = new LookupDto(individual.Id, Contact.EntityLogicalName),
             };
-            //createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.IvrInteractionNumber, request.IvrInteractionNumber);
+            createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.ldv_IvrInteractionNumber, request.IvrInteractionNumber);
+            createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.Subject, $"{request.MobileNumber} - {request.IvrInteractionNumber}");
+            createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.DirectionCode, false);
+            createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.PhoneNumber, request.MobileNumber);
 
             var phoneCall = await _activityService.CreateActivityAsync(createActivityRequest);
 

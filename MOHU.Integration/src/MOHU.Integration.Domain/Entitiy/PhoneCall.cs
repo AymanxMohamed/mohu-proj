@@ -48,6 +48,7 @@ namespace MOHU.Integration.Domain.Entitiy
             public const string ScheduledEnd = "scheduledend";
             public const string ScheduledStart = "scheduledstart";
             public const string ServiceId = "serviceid";
+            public const string ldv_IvrInteractionNumber = "ldv_ivrinteractionnumber";
             public const string SLAId = "slaid";
             public const string SLAInvokedId = "slainvokedid";
             public const string SortDate = "sortdate";
