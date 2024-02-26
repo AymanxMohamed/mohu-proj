@@ -43,10 +43,10 @@ namespace Linkdev.MOE.CRM.DAL
         /// CRM data service
         /// </summary>
         private IOrganizationService OrganizationService;
-        private CrmLog Logger;
+        //private CrmLog Logger;
         // private CachedOrganizationService cachedService;
         private IOrganizationService cachedService;
-
+        ITracingService tracingService;
 
 
         public IOrganizationService ServiceProxy
@@ -104,7 +104,7 @@ namespace Linkdev.MOE.CRM.DAL
                     serviceProxy.EnableProxyTypes();
                     OrganizationService = (IOrganizationService)serviceProxy;
                     // 1- logger
-                    Logger = new CrmLog(OrganizationService);
+                   // Logger = new CrmLog(OrganizationService);
                     // cachedService = new CachedOrganizationService(OrganizationService);
                 }
                 else
@@ -132,20 +132,24 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+               //                     tracingService.Trace($" Err {Err}");
                 if (Err.InnerException != null)
                 {
-                    Logger.Log(Err);
+                    //                     tracingService.Trace($" Err {Err}");
+                    tracingService.Trace($" Err {Err}");
+
                 }
                 throw;
             }
         }
 
-        public CRMAccessLayer(IOrganizationService service)
+        public CRMAccessLayer(IOrganizationService service, ITracingService TracingService)
         {
             OrganizationService = service;
-            Logger = new CrmLog(OrganizationService);
+            // Logger = new CrmLog(OrganizationService);
             // cachedService = new CachedOrganizationService(OrganizationService);
+            tracingService = TracingService;
+
         }
 
         #endregion
@@ -207,7 +211,9 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                //                    tracingService.Trace($" Err {Err}");
+                tracingService.Trace($" Err {Err}");
+
                 throw;
             }
 
@@ -234,7 +240,9 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                //                    tracingService.Trace($" Err {Err}");
+                tracingService.Trace($" Err {Err}");
+
                 throw;
             }
 
@@ -341,7 +349,9 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                //                    tracingService.Trace($" Err {Err}");
+                tracingService.Trace($" Err {Err}");
+
                 throw;
             }
         }
@@ -425,7 +435,9 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                //                    tracingService.Trace($" Err {Err}");
+                tracingService.Trace($" Err {Err}");
+
                 throw;
             }
         }
@@ -497,7 +509,9 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                //                    tracingService.Trace($" Err {Err}");
+                tracingService.Trace($" Err {Err}");
+
                 throw;
             }
         }
@@ -605,7 +619,9 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                //                    tracingService.Trace($" Err {ex}");
+                tracingService.Trace($" Err {ex}");
+
                 throw;
             }
         }
@@ -633,10 +649,13 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                tracingService.Trace($" Err {ex}");
+
                 if (ex.InnerException != null)
                 {
-                    Logger.Log(ex);
+                    //                    tracingService.Trace($" Err {ex}");
+                    tracingService.Trace($" Err {ex}");
+
                 }
                 throw;
             }
@@ -665,10 +684,13 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                //                    tracingService.Trace($" Err {ex}");
+                tracingService.Trace($" Err {ex}");
+
                 if (ex.InnerException != null)
                 {
-                    Logger.Log(ex);
+                    tracingService.Trace($" Err {ex}");
+
                 }
                 throw;
             }
@@ -700,10 +722,12 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                tracingService.Trace($" Err {ex}");
+
                 if (ex.InnerException != null)
                 {
-                    Logger.Log(ex);
+                    tracingService.Trace($" Err {ex}");
+
                 }
                 throw;
             }
@@ -733,10 +757,10 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 if (ex.InnerException != null)
                 {
-                    Logger.Log(ex);
+                                        tracingService.Trace($" Err {ex}");
                 }
                 throw;
             }
@@ -754,10 +778,10 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 if (ex.InnerException != null)
                 {
-                    Logger.Log(ex);
+                                        tracingService.Trace($" Err {ex}");
                 }
                 throw;
             }
@@ -788,10 +812,10 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 if (ex.InnerException != null)
                 {
-                    Logger.Log(ex);
+                                        tracingService.Trace($" Err {ex}");
                 }
                 throw;
             }
@@ -822,10 +846,10 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 if (ex.InnerException != null)
                 {
-                    Logger.Log(ex);
+                                        tracingService.Trace($" Err {ex}");
                 }
                 throw;
             }
@@ -851,7 +875,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 throw;
             }
         }
@@ -877,7 +901,7 @@ namespace Linkdev.MOE.CRM.DAL
 
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 throw;
             }
         }
@@ -946,7 +970,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
         }
@@ -993,7 +1017,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
         }
@@ -1013,7 +1037,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
         }
@@ -1047,7 +1071,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
         }
@@ -1106,7 +1130,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
         }
@@ -1136,7 +1160,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 throw;
             }
         }
@@ -1209,11 +1233,13 @@ namespace Linkdev.MOE.CRM.DAL
                 email.Attributes.Add("ldv_notificationconfigurationid", notificationConfig);
 
                 Guid emailGuid = OrganizationService.Create(email);
+                tracingService.Trace($" emailGuid {emailGuid} ");
+
                 return emailGuid;
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 throw;
             }
         }
@@ -1236,7 +1262,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
             }
         }
 
@@ -1273,7 +1299,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
 
@@ -1366,7 +1392,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                                    tracingService.Trace($" Err {ex}");
                 throw;
             }
         }
@@ -1403,7 +1429,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
         }
@@ -1425,7 +1451,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
         }
@@ -1782,17 +1808,19 @@ namespace Linkdev.MOE.CRM.DAL
         {
             try
             {
-                Logger.Log("in fn. RetriveColumnValueFromEntity", LogLevel.Debug);
+                
+
+                tracingService.Trace($"in fn. RetriveColumnValueFromEntity" );
                 if (entityId == Guid.Empty)
                 {
-                    Logger.Log("  entityId:  " + entityId, LogLevel.Debug);
+                    tracingService.Trace($"  entityId:  " + entityId );
 
                     return null;
                 }
                 Entity result = OrganizationService.Retrieve(entitySchemaName, entityId, new ColumnSet(column));
-                Logger.Log("result id :  " + result.Id +
-                        "  , result name :  " + result.LogicalName, LogLevel.Debug);
-                Logger.Log(" , field value : " + result.Attributes[column].ToString(), LogLevel.Debug);
+                tracingService.Trace($"result id :  " + result.Id +
+                        "  , result name :  " + result.LogicalName );
+                tracingService.Trace($" , field value : " + result.Attributes[column].ToString() );
 
                 if (result.Id == Guid.Empty)
                 {
@@ -1802,7 +1830,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log($"ExecuteLogic hass been finished with Error:'{ex.Message}'", LogLevel.Error);
+                tracingService.Trace($"ExecuteLogic hass been finished with Error:'{ex.Message}'", LogLevel.Error);
                 throw;// new InvalidWorkflowException($"ExecuteLogic hass been finished with Error:'{ex.Message}'");
             }
             finally
@@ -1852,26 +1880,26 @@ namespace Linkdev.MOE.CRM.DAL
         {
             try
             {
-                Logger.Log("in fn. DoesFieldExist", LogLevel.Debug);
+                tracingService.Trace($"in fn. DoesFieldExist" );
                 RetrieveEntityRequest request = new RetrieveEntityRequest
                 {
                     EntityFilters = Microsoft.Xrm.Sdk.Metadata.EntityFilters.Attributes,
                     LogicalName = entityName
                 };
-                Logger.Log("EntityFilters : " + request.EntityFilters, LogLevel.Debug);
+                tracingService.Trace($"EntityFilters : " + request.EntityFilters );
 
                 RetrieveEntityResponse response
                     = (RetrieveEntityResponse)OrganizationService.Execute(request);
-                Logger.Log("response : " + response.Results, LogLevel.Debug);
-                Logger.Log("return : " +
-                        response.EntityMetadata.Attributes.FirstOrDefault(element => element.LogicalName == fieldName), LogLevel.Debug);
+                tracingService.Trace($"response : " + response.Results );
+                tracingService.Trace($"return : " +
+                        response.EntityMetadata.Attributes.FirstOrDefault(element => element.LogicalName == fieldName) );
 
                 return response.EntityMetadata.Attributes.FirstOrDefault(element => element.LogicalName == fieldName) !=
                        null;
             }
             catch (Exception ex)
             {
-                Logger.Log($"ExecuteLogic hass been finished with Error:'{ex.Message}'", LogLevel.Error);
+                tracingService.Trace($"ExecuteLogic hass been finished with Error:'{ex.Message}'", LogLevel.Error);
                 throw;// new InvalidWorkflowException($"ExecuteLogic hass been finished with Error:'{ex.Message}'");
             }
             finally
@@ -1906,15 +1934,13 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log($"ExecuteLogic hass been finished with Error:'{ex.Message}'", LogLevel.Error);
+                tracingService.Trace($"ExecuteLogic hass been finished with Error:'{ex.Message}'", LogLevel.Error);
                 throw;// new InvalidWorkflowException($"ExecuteLogic hass been finished with Error:'{ex.Message}'");
             }
             finally
             {
-                Logger.LogFunctionEnd();
+                tracingService.Trace($" End");
             }
-
-
         }
 
         /// <summary>
@@ -1928,7 +1954,7 @@ namespace Linkdev.MOE.CRM.DAL
         {
             try
             {
-                Logger.Log("in RetrivePrimaryEntityOfBPF fn.", LogLevel.Debug);
+                tracingService.Trace($"in RetrivePrimaryEntityOfBPF fn." );
                 //  var bpfEntityLogicalName = "ldv_bpftestcustomstep";
                 //string bpfEntityId = "{25DA21C8-5DFD-E811-8119-000D3A393005}";
                 string entityLogicalName = String.Empty;
@@ -1944,7 +1970,7 @@ namespace Linkdev.MOE.CRM.DAL
                     if (attribute.LogicalName.Contains("bpf_ldv_") && !attribute.LogicalName.Contains("idname"))
                     {
                         entityLogicalName = attribute.LogicalName;
-                        Logger.Log(" entityLogicalName : " + entityLogicalName, LogLevel.Debug);
+                        tracingService.Trace($" entityLogicalName : " + entityLogicalName );
                     }
                 }
 
@@ -1970,30 +1996,32 @@ namespace Linkdev.MOE.CRM.DAL
                             //    : null;
                             if (primaryEntity != null)
                             {
-                                Logger.Log(" primaryEntity : " + primaryEntity, LogLevel.Debug);
+                                tracingService.Trace($" primaryEntity : " + primaryEntity );
                                 return primaryEntity;
                             }
                         }
                         else
                         {
-                            Logger.Log("primaryEntity is  null ", LogLevel.Debug);
+                            tracingService.Trace($"primaryEntity is  null " );
                         }
                     }
                     else
                     {
-                        Logger.Log("target is  null ", LogLevel.Debug);
+                        tracingService.Trace($"target is  null " );
                     }
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                Logger.Log($"ExecuteLogic hass been finished with Error:'{ex.Message}'", LogLevel.Error);
+                tracingService.Trace($"ExecuteLogic hass been finished with Error:'{ex.Message}'", LogLevel.Error);
                 throw;// new InvalidWorkflowException($"ExecuteLogic hass been finished with Error:'{ex.Message}'");
             }
             finally
             {
-                Logger.LogFunctionEnd();
+               
+                tracingService.Trace($" end");
+
             }
 
 
@@ -2010,7 +2038,7 @@ namespace Linkdev.MOE.CRM.DAL
         {
             try
             {
-                Logger.Log("in RetrieveEntityWithColumns ", LogLevel.Info);
+                tracingService.Trace($"in RetrieveEntityWithColumns ", LogLevel.Info);
 
                 Entity targetEntity = new Entity(entity.LogicalName);
                 ColumnSet attributes;
@@ -2020,12 +2048,12 @@ namespace Linkdev.MOE.CRM.DAL
                     attributes = new ColumnSet() { AllColumns = true };
 
                 targetEntity = OrganizationService.Retrieve(entity.LogicalName, entity.Id, attributes);
-                Logger.Log("entity id: " + targetEntity.Id);
+                tracingService.Trace($"entity id: " + targetEntity.Id);
                 return targetEntity;
             }
             catch (Exception ex)
             {
-                Logger.Log($"ExecuteLogic hass been finished with Error:'{ex.Message}'");
+                tracingService.Trace($"ExecuteLogic hass been finished with Error:'{ex.Message}'");
                 throw;// new InvalidWorkflowException($"ExecuteLogic hass been finished with Error:'{ex.Message}'");
             }
             finally
@@ -2064,11 +2092,12 @@ namespace Linkdev.MOE.CRM.DAL
 
 
             }
-            catch (Exception)
+            catch (Exception ex )
             {
 
+                tracingService.Trace($" Err {ex}");
 
-                throw;
+               // throw;
             }
 
             return optionList;
@@ -2198,7 +2227,7 @@ namespace Linkdev.MOE.CRM.DAL
 
               catch (Exception Err)
             {
-                Logger.Log(Err);
+                                    tracingService.Trace($" Err {Err}");
                 throw;
             }
         }

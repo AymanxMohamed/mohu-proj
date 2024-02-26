@@ -13,6 +13,7 @@ using LinkDev.Libraries.Common;
 using LinkDev.Common.Crm.Cs.Base;
 using LinkDev.Common.Crm.Bll.Base;
 using LinkDev.Common.Crm.Logger;
+using LinkDev.Common.Crm.Cs.NotificationTemplates.Helper;
 //using LinkDev.MOE
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates
@@ -26,12 +27,9 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         [RequiredArgument]
         public InArgument<EntityReference> Notification { get; set; }
 
-
         [Input("TO(User)")]
         [ReferenceTarget("systemuser")]
         public InArgument<EntityReference> ToUser { get; set; }
-
-       
 
         [Input("To(Contact)")]
         [ReferenceTarget("contact")]
@@ -41,9 +39,9 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         [ReferenceTarget("account")]
         public InArgument<EntityReference> ToAccount { get; set; }
 
-       [Input("To (Records URLs)")]
+        [Input("To (Records URLs)")]
         [Default("")]
-        public InArgument<String> ToRecordsURLs { get; set; }
+        public InArgument<string> ToRecordsURLs { get; set; }
 
         [Input("To (Specific Queue)")]
         [ReferenceTarget("queue")]
@@ -51,60 +49,105 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 
         [Input("CC (Records URLs)")]
         [Default("")]
-        public InArgument<String> CCRecordsURLs { get; set; }
+        public InArgument<string> CCRecordsURLs { get; set; }
 
         [Input("BCC (Records URLs)")]
         [Default("")]
-        public InArgument<String> BCCRecordsURLs { get; set; }
+        public InArgument<string> BCCRecordsURLs { get; set; }
+
+        #endregion
+
+        protected override void Execute(CodeActivityContext executionContext)
+        {
+            SendNotificationLogics BL = new SendNotificationLogics(Notification, ToUser, ToAccount, ToContact, ToQueue, CCRecordsURLs, BCCRecordsURLs, ToRecordsURLs);
+            BL.ExecuteLogic(executionContext);
+        }
+    }
+
+    public class SendNotificationLogics
+    {
+        #region variables:
+
+        #region inout parameters:
+
+        public InArgument<EntityReference> Notifications { get; set; }
+        public InArgument<EntityReference> Users { get; set; }
+        public InArgument<EntityReference> Accounts { get; set; }
+        public InArgument<EntityReference> Contacts { get; set; }
+        public InArgument<EntityReference> Queues { get; set; }
+        public InArgument<string> CCRecordsURLs { get; set; }
+        public InArgument<string> ToRecordsURLs { get; set; }
+        public InArgument<string> BCCRecordsURLs { get; set; }
 
 
 
         #endregion
-        public override void ExtendedExecute()
+      
+
+        public SendNotificationLogics(
+           InArgument<EntityReference> notification, InArgument<EntityReference> toUser, InArgument<EntityReference> toAccount, InArgument<EntityReference> toContact,
+           InArgument<EntityReference> toQueue, InArgument<string> cCRecordsURLs, InArgument<string> bCCRecordsURLs, InArgument<string> toRecordsURLs
+            )
         {
+            Notifications = notification;
+            Users = toUser;
+            Accounts = toAccount;
+            Contacts = toContact;
+            Queues = toQueue;
+            CCRecordsURLs = cCRecordsURLs;
+            ToRecordsURLs = toRecordsURLs;
+            BCCRecordsURLs = bCCRecordsURLs;
+        }
+
+        public void ExecuteLogic(CodeActivityContext executionContext)
+        {
+            //Create the context
+            IWorkflowContext context = executionContext.GetExtension<IWorkflowContext>();
+            IOrganizationServiceFactory serviceFactory = executionContext.GetExtension<IOrganizationServiceFactory>();
+            IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
+            ITracingService tracingService = executionContext.GetExtension<ITracingService>();
+           // NotificationTemplatesBLL logicLayer;
+            EntityReference RegardingObject;
+          //  logicLayer = new NotificationTemplatesBLL(service, tracingService);
+            RegardingObject = new EntityReference(context.PrimaryEntityName, context.PrimaryEntityId);
+          
+            try
+            {
+                EntityReference notifications = Notifications.Get(executionContext);
+                EntityReference user = Users.Get(executionContext);
+                EntityReference account = Accounts.Get(executionContext);
+                EntityReference contact =  Contacts.Get(executionContext);
+                EntityReference queue =  Queues.Get(executionContext);
+                string cCRecordsURL = CCRecordsURLs.Get(executionContext);
+                string toRecordsURL = ToRecordsURLs.Get(executionContext);
+                string bCCRecordsURL = BCCRecordsURLs.Get(executionContext);
+                tracingService.Trace($" after RetrieveRelatedApplicationByApplicationHeader  ");
+                StageConfigurationsNotificationsBLL BLL = new StageConfigurationsNotificationsBLL(service, tracingService, RegardingObject);
+
+                BLL.SendNotificationTemplate(user, account, contact, queue, cCRecordsURL, bCCRecordsURL, toRecordsURL, notifications, RegardingObject);
+          } 
+            catch (Exception ex)
+            {
+                throw ex;
+                // log.Log($"ExecuteLogic has been finished with Error:'{ex.Message}'");
+                // log.ExecutionFailed();
+            }
+            finally
+            {
+                //log.LogFunctionEnd();
+            }
 
 
-            #region inout parameters:
-            EntityReference Notifications = this.Notification != null ? this.Notification.Get(ExecutionContext) : null;
-            EntityReference User = this.ToUser != null ? this.ToUser.Get(ExecutionContext) : null;
-            EntityReference Account = this.ToAccount != null ? this.ToAccount.Get(ExecutionContext) : null;
-            EntityReference Contact = this.ToContact != null ? this.ToContact.Get(ExecutionContext) : null;
-            EntityReference Queue = this.ToQueue != null ? this.ToQueue.Get(ExecutionContext) : null;
-            string CCRecordsURL = this.CCRecordsURLs != null ? this.CCRecordsURLs.Get(ExecutionContext) : string.Empty;
-            string ToRecordsURL = this.ToRecordsURLs != null ? this.ToRecordsURLs.Get(ExecutionContext) : string.Empty;
-            string BCCRecordsURL = this.BCCRecordsURLs != null ? this.BCCRecordsURLs.Get(ExecutionContext) : string.Empty;
+
+
             #endregion
 
 
-            SendNotificationLogic.NotificationTemplatesBLL.SendNotificationTemplate(User, Account, Contact, Queue, CCRecordsURL, BCCRecordsURL, ToRecordsURL, Notifications, SendNotificationLogic.RegardingObject);
 
-        }
 
-        protected override void Execute(CodeActivityContext context)
-        {
-            SendNotificationLogic SendNotificationLogic = new SendNotificationLogic(OrganizationService,Tracer,new EntityReference(Context.PrimaryEntityName,Context.PrimaryEntityId));
-            SendNotificationLogic.ExecuteLogic(context);
+
+
+
         }
     }
-
-    public class SendNotificationLogic //: BllBase
-    {
-        #region variables:
-        public NotificationTemplatesBLL NotificationTemplatesBLL;
-        public EntityReference RegardingObject;
-        ITracingService TracingService;
-        #endregion
-
-        #region constructor
-        public SendNotificationLogic(IOrganizationService organizationService, ITracingService TracingService, EntityReference primaryEntity)
-         //   :base(organizationService,  logger,  languageCode)
-        {
-            // Get the context service.
-             RegardingObject = new EntityReference(primaryEntity.LogicalName, primaryEntity.Id);
-            NotificationTemplatesBLL = new NotificationTemplatesBLL(organizationService, TracingService);
-        }
-
-        #endregion
-
-    }
- }
+}

@@ -29,7 +29,7 @@ namespace LinkDev.Common.Crm.Utilities
         Node parent;
 
         IOrganizationService OrganizationService { get; set; }
-
+        ITracingService tracingService;
         #endregion
 
         #region Constructors
@@ -43,6 +43,7 @@ namespace LinkDev.Common.Crm.Utilities
             csharp_ending_pattern = '@';
             variables_separator = ':';
             OrganizationService = organizationService;
+         //   tracingService = TracingService;
         }
 
 
@@ -50,10 +51,10 @@ namespace LinkDev.Common.Crm.Utilities
 
         #region public
 
-        public static string Substitute(EntityReference context_entity, string input,IOrganizationService organizationService)
+        public static string Substitute(EntityReference context_entity, string input,IOrganizationService organizationService )
         {
             var parameters_to_eveluate = new Dictionary<Tuple<string, Guid>, Entity>();
-            var manger = new CrmStringHandler(context_entity, organizationService);
+            var manger = new CrmStringHandler(context_entity, organizationService );
             string output = string.Empty;
 
             var match_valid_special_parameters =
@@ -179,7 +180,7 @@ namespace LinkDev.Common.Crm.Utilities
                     break;
                 }
 
-                var substitutedSentence = Substitute(context_entity, extractedSentence, organizationService);
+                var substitutedSentence = Substitute(context_entity, extractedSentence, organizationService );
                 if(!string.IsNullOrEmpty(substitutedSentence))
                     input = input.Replace(startingPattern + extractedSentence + endingPattern, substitutedSentence);
             }

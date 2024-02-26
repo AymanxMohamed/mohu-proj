@@ -22,39 +22,29 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         [ReferenceTarget("ldv_stageconfiguration")]
         [RequiredArgument]
         public InArgument<EntityReference> stageConfiguration { get; set; }
-
         [Input("Application Header")]
         [ReferenceTarget("ldv_applicationheader")]
         [RequiredArgument]
         public InArgument<EntityReference> applicationHeader { get; set; }
         #endregion
-       
-
         protected override void Execute(CodeActivityContext context)
         {
-          
             SendNotificationsFromStageConfigurationLogic SendNotificationsLogic = new SendNotificationsFromStageConfigurationLogic(stageConfiguration, applicationHeader );
             SendNotificationsLogic.ExecuteLogic( context );
-
         }
-
-
-
     }
 
 
 public class SendNotificationsFromStageConfigurationLogic 
     {
-
         #region variables:
         public InArgument<EntityReference> StageConfiguration { get; set; }
         public InArgument<EntityReference> ApplicationHeader { get; set; }
-        public NotificationTemplatesBLL NotificationTemplatesBLL;
+    
         public EntityReference RegardingObject;
        // protected CRMAccessLayer DAL;
-        CommonBLL commonBLL;
+      //  CommonBLL commonBLL;
         #endregion
-
         #region constructors:
         public SendNotificationsFromStageConfigurationLogic(InArgument<EntityReference> stageConfiguration, InArgument<EntityReference> applicationHeader)
         {
@@ -63,7 +53,6 @@ public class SendNotificationsFromStageConfigurationLogic
             RegardingObject = new EntityReference();
         }
         #endregion
-
         #region methods:
         public void ExecuteLogic(CodeActivityContext executionContext)
         {
@@ -75,14 +64,22 @@ public class SendNotificationsFromStageConfigurationLogic
             EntityReference applicationHeader = ApplicationHeader.Get(executionContext);
             //  DAL = new CRMAccessLayer(service);
             // retrieve the related application and par
-            commonBLL = new CommonBLL(service, tracingService);
-             RegardingObject = commonBLL.RetrieveRelatedApplicationByApplicationHeader(applicationHeader);
+            tracingService.Trace($" in ExecuteLogic  ");
+            //  commonBLL = new CommonBLL(service, tracingService);
+
+            tracingService.Trace($" after RetrieveRelatedApplicationByApplicationHeader  ");
             StageConfigurationsNotificationsBLL BLL = new StageConfigurationsNotificationsBLL(service, tracingService, RegardingObject);
+
+            tracingService.Trace($" before RetrieveRelatedApplicationByApplicationHeader  ");
+            RegardingObject = BLL.RetrieveRelatedApplicationByApplicationHeader(applicationHeader);
+            tracingService.Trace($"RegardingObject {RegardingObject.LogicalName} , RegardingObject {RegardingObject.Id}   ");
+             tracingService.Trace($" before SendStageNotification , stage id : {stageConfiguration.Id}  ");
+            tracingService.Trace($" BLL : {BLL}  ");
+
             BLL.SendStageNotification(stageConfiguration.Id);
+            tracingService.Trace($" after SendStageNotification  ");
+
         }
         #endregion
-
-
     }
-
 }
