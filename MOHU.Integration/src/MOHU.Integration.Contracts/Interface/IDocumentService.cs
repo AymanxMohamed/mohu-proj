@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MOHU.Integration.Contracts.Interface
+﻿namespace MOHU.Integration.Contracts.Interface
 {
     public interface IDocumentService
     {
-        
-    }
+        Task Initialize();
+        Task<(Stream fileStream, string fileName)> DownloadAttachmentByFileIdAsync(string fileId, string libraryName);    }
 }
