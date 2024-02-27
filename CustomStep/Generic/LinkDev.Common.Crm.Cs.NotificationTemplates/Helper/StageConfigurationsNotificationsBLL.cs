@@ -851,9 +851,17 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                     MailWithFields = notificationTemplate.Attributes.Contains("ldv_arabicemailmessage") ? notificationTemplate.Attributes["ldv_arabicemailmessage"].ToString() : "";
                 }
 
+                tracingService.Trace($"   MailTitleWithFields {MailTitleWithFields}");
+                tracingService.Trace($"   MailWithFields {MailWithFields}");
+
+
                 #region send and create email
                 MailTitle = GetMessageWithValues(MailTitleWithFields, OrganizationService, regardingObject);
+                tracingService.Trace($"   MailTitle {MailTitle}");
+
                 MailMessage = GetMessageWithValues(MailWithFields, OrganizationService, regardingObject);
+                tracingService.Trace($"   MailMessage {MailMessage}");
+
                 tracingService.Trace($" before CreateEmail ");
 
                 Guid emailID = CRMAccessLayer.CreateEmail(From, toParty, regardingObject, MailTitle, MailMessage, ccList, bccList, notificationConfig);
@@ -1059,7 +1067,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         public string GetMessageWithValues(string Message, IOrganizationService crmService, EntityReference regardingObject)
         {
             tracingService.Trace($" in GetMessageWithValues ");
-            CrmStringHandler crmStringHandler = new CrmStringHandler(regardingObject, crmService, tracingService);
+            CrmStringHandler crmStringHandler = new CrmStringHandler(regardingObject, crmService);
             var substitutedString = CrmStringHandler.Substitute(regardingObject, Message, crmService );
             return substitutedString;
         }

@@ -1178,10 +1178,13 @@ namespace Linkdev.MOE.CRM.DAL
         {
             try
             {
+                tracingService.Trace($"  in CreateEmail");
+
                 Entity[] toPartyList = new Entity[partyIds.Count];
                 Entity[] frompartyList = new Entity[1];
 
                 Entity email = new Entity("email");
+                tracingService.Trace($"  email {email}");
 
                 for (var i = 0; i < frompartyList.Length; i++)
                 {
@@ -1239,7 +1242,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                                    tracingService.Trace($" Err {ex}");
+                tracingService.Trace($" Err {ex}");
                 throw;
             }
         }
@@ -1251,6 +1254,8 @@ namespace Linkdev.MOE.CRM.DAL
         {
             try
             {
+                tracingService.Trace($"  in SendEmail");
+
                 // Create a SendEmail request.
                 SendEmailRequest requestSendEmail = new SendEmailRequest();
                 requestSendEmail.EmailId = EmailID;
@@ -1262,7 +1267,7 @@ namespace Linkdev.MOE.CRM.DAL
             }
             catch (Exception ex)
             {
-                                    tracingService.Trace($" Err {ex}");
+             tracingService.Trace($" Err {ex}");
             }
         }
 
