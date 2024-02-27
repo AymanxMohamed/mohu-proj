@@ -25,13 +25,12 @@ namespace Linkdev.Common.Moq
         {
             Dictionary<string, object> inputs;
             Guid PrimaryEntityID = new Guid("{33854c3b-2a63-ec11-a9f0-6045bd8810e2}");
-            string PrimaryEntitySchemaName = /*"contact";  */ "incident";  
-                                                        
+            string PrimaryEntitySchemaName = "incident";   /*"contact";  */
+
             //Guid processstage = Guid.Empty;
-          
+
             Activity activity = new SendNotificationsByNotificationConfig();
             
-
              
             #region Variables Intializations Admin
             // Crm  AdminUserId  
@@ -50,9 +49,9 @@ namespace Linkdev.Common.Moq
             //var connection = CrmConnection.Parse(@"Url=" + Credential.Url + "; Username=" + Credential.UserName + "; Password=" + Credential.Password + ";");
 
 
-            IOrganizationService service = GetCrmConnection("https://stc-dev-v9.linkdev.com/XRMServices/2011/Organization.svc", @"CRM365DC\crmadmin", "linkP@ss");
+            //IOrganizationService service = GetCrmConnection("https://stc-dev-v9.linkdev.com/XRMServices/2011/Organization.svc", @"CRM365DC\crmadmin", "linkP@ss");
 
-
+            IOrganizationService service = getCRMAccess();
 
             //IOrganizationService service = new CRMAccess().GetAccessToCRM();
             //set up a mock workflowcontext
@@ -553,11 +552,11 @@ namespace Linkdev.Common.Moq
             //    {"EntityLogicalId","A97A3897-F2B2-E911-A9C1-000D3A23DFA3" },
             //    {"EntityRefrenceFieldLogicalName","ldv_accountid" }
             //    };
-            inputs = new Dictionary<string, object>
-            {
-                {"CustId","291497" },
+            //inputs = new Dictionary<string, object>
+            //{
+            //    {"CustId","291497" },
 
-            };
+            //};
 
 
             #endregion
@@ -728,7 +727,7 @@ namespace Linkdev.Common.Moq
 
         public static CrmServiceClient getCRMAccess()
         {
-            string ConnectionString = WebConfigurationManager.AppSettings["MaanDev"];
+            string ConnectionString = WebConfigurationManager.AppSettings["MOHJ"];
             CrmServiceClient createdConnetion = new CrmServiceClient(ConnectionString);
             return createdConnetion;
         }
