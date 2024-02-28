@@ -145,35 +145,6 @@ namespace MOHU.Integration.Application.Service
             result = await MapTicketToDetailsDto(ticket);
             return result;
         }
-        public async Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
-        {
-            var response = new SubmitTicketResponse();
-
-            var entity = new Entity(Incident.EntityLogicalName);
-
-            entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
-            entity.Attributes.Add(Incident.Fields.ldv_Description, request.Description);
-            entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, request.CaseType));
-            entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.CategoryId));
-            entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId));
-
-            if (request.SubCategoryId1.HasValue)
-                entity.Attributes.Add(Incident.Fields.ldv_SecondarySubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId1.Value));
-
-            if (request.BeneficiaryType.HasValue)
-                entity.Attributes.Add(Incident.Fields.ldv_Beneficiarytypecode, new OptionSetValue(request.BeneficiaryType.Value));
-
-            if (request.Location.HasValue)
-                entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
-
-            var result = await _crmContext.ServiceClient.CreateAndReturnAsync(entity);
-            if (result is not null)
-            {
-                response.TicketNumber = result.GetAttributeValue<string>(Incident.Fields.TicketNumber);
-                response.TicketId = result.Id;
-            }
-            return response;
-        }
         private TicketDto MapTicketToDto(Entity entity)
         {
             var result = new TicketDto
@@ -189,6 +160,8 @@ namespace MOHU.Integration.Application.Service
             };
             return result;
         }
+
+
         private async Task<TicketDetailsResponse?> MapTicketToDetailsDto(Entity entity)
         {
             if (entity is null)
