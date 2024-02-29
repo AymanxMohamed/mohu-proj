@@ -28,6 +28,7 @@ using System.Diagnostics.Eventing.Reader;
 using Azure;
 using MOHU.Integration.Infrastructure.Service;
 using MOHU.Integration.Shared;
+using System.Linq.Expressions;
 
 namespace MOHU.Integration.Application.Service
 {
@@ -250,14 +251,15 @@ namespace MOHU.Integration.Application.Service
                  ConditionOperator.Equal,
                  t.Id));  /// category its parent is ticket type 
 
-                var MainCategoryLink = categoryQuery.AddLink(
-                 ldv_casecategory.EntityLogicalName,
-                 ldv_casecategory.Fields.TicketType, /// ldv_subcategoryid
-                 ldv_casecategory.Fields.Id,
-                 JoinOperator.LeftOuter);
-                MainCategoryLink.EntityAlias = "MainCategoryLink";
-                MainCategoryLink.Columns.AddColumns(ldv_casecategory.Fields.
-                    ldv_englishname, ldv_casecategory.Fields.ldv_arabicname);
+                //var MainCategoryLink = categoryQuery.AddLink(
+                // ldv_casecategory.EntityLogicalName,
+                // ldv_casecategory.Fields.TicketType, /// ldv_subcategoryid
+                // ldv_casecategory.Fields.Id,
+                // JoinOperator.LeftOuter);
+                //MainCategoryLink.EntityAlias = "MainCategoryLink";
+                //MainCategoryLink.Columns.AddColumns(ldv_casecategory.Fields.
+                //    ldv_englishname, ldv_casecategory.Fields.ldv_arabicname);
+
                 executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
 
 
@@ -328,7 +330,7 @@ namespace MOHU.Integration.Application.Service
                             ColumnSet = new ColumnSet(
                                 ldv_casecategory.Fields.TicketType,
                                 ldv_casecategory.Fields.ldv_arabicname,
-                                 ldv_casecategory.Fields.ldv_englishname,
+                                ldv_casecategory.Fields.ldv_englishname,
                                ldv_casecategory.Fields.ParentCategory
 
                             ),
@@ -339,25 +341,14 @@ namespace MOHU.Integration.Application.Service
                             ConditionOperator.Equal, ticketType.Id));
                         filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal,
                               ConditionOperator.Equal, true));
+
                         filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory,
-                             ConditionOperator.NotEqual, null));
+                             ConditionOperator.Equal, ticketCategory.Id));
 
-                      
-
-
-
-                       var SubCategoryLink = subCategoryQuery.
-                            AddLink(
-                            ldv_casecategory.EntityLogicalName,
-                            ldv_casecategory.Fields.ParentCategory,
-                            ldv_casecategory.Fields.Id,
-                            JoinOperator.LeftOuter);
-
-                        SubCategoryLink.EntityAlias = "SubCategoryLink";
-                        SubCategoryLink.Columns.AddColumns(ldv_casecategory.Fields.ldv_englishname, ldv_casecategory.Fields.ldv_arabicname);
+                        
 
 
-
+                
 
                         executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = subCategoryQuery });
 
@@ -370,14 +361,14 @@ namespace MOHU.Integration.Application.Service
 
                 if (!executeMultipleRequest.Requests.Any())
                     return;
+                
+                    var categoryResponse = (ExecuteMultipleResponse)_crmContext.ServiceClient
+                  .Execute(executeMultipleRequest);
 
-                var categoryResponse = (ExecuteMultipleResponse)_crmContext.ServiceClient
-                    .Execute(executeMultipleRequest);
-
-                if (categoryResponse.IsFaulted)
-                    return;
-
-                var entitiesList = new List<Entity>();
+                    if (categoryResponse.IsFaulted)   
+                        return;
+                
+            var entitiesList = new List<Entity>();
 
                 foreach (var t in categoryResponse.Responses)
                 {
@@ -397,19 +388,18 @@ namespace MOHU.Integration.Application.Service
                     {
                         Id = e.Id,
                         Name = IsArabic ?
-                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname) ://ldv_englishname
-                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname), // ldv_arabicname
+                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname) :
+                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname), 
                                                                                                  //  ParentCategoryId = e.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.Id).Id,
                         ParentCategoryId = e.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.ParentCategory).Id,
 
                     }).ToList();
 
                     (ticketTypes.FirstOrDefault(c => c.Id == subCategories?.FirstOrDefault().TicketTypeId)?.Categories)
-
                         .FirstOrDefault(c => c.Id == subCategories.FirstOrDefault()?.ParentCategoryId)
                        ?.SubCategories.AddRange(subCategories);
 
-                    GetAllSecondarySubTypesBySubCategory(subCategories);
+                   GetAllSecondarySubTypesBySubCategory(subCategories);
                 }
 
 
@@ -451,17 +441,17 @@ namespace MOHU.Integration.Application.Service
                 };
                 query.Criteria.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Equal, subCategory.Id));
                
-                var SecondarySubLink = 
-                    query.AddLink(
-                    ldv_casecategory.EntityLogicalName,
-                    ldv_casecategory.Fields.SubCategory, 
-                    ldv_casecategory.Fields.Id,
-                    JoinOperator.LeftOuter);
+                //var SecondarySubLink = 
+                //    query.AddLink(
+                //    ldv_casecategory.EntityLogicalName,
+                //    ldv_casecategory.Fields.SubCategory, 
+                //    ldv_casecategory.Fields.Id,
+                //    JoinOperator.LeftOuter);
 
-                SecondarySubLink.EntityAlias = "SecondarySubLink";
-                SecondarySubLink.Columns.AddColumns
-                    (ldv_casecategory.Fields.ldv_englishname
-                    , ldv_casecategory.Fields.ldv_arabicname);
+                //SecondarySubLink.EntityAlias = "SecondarySubLink";
+                //SecondarySubLink.Columns.AddColumns
+                //    (ldv_casecategory.Fields.ldv_englishname
+                //    , ldv_casecategory.Fields.ldv_arabicname);
 
 
                 executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest
@@ -504,10 +494,8 @@ namespace MOHU.Integration.Application.Service
                         {
                             Id = item.Id,
                             Name = IsArabic ?
-                            item.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname) :
+                            item.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname) :
                             item.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname),
-
-
 
                         };
 
