@@ -1,15 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Ticket;
+using MOHU.Integration.Contracts.Interface.CreateProfile;
 using MOHU.Integration.Contracts.Interface.Ticket;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
     [Route("api/{customerId}/[controller]")]
     [ApiController]
-    public class TicketsController(ITicketService ticketService) : BaseController
+    public class TicketsController(ITicketService ticketService, ICreateProfileService createProfileService) : BaseController
     {
         private readonly ITicketService _ticketService = ticketService;
+
+        private readonly ICreateProfileService _createProfileService;
 
         [HttpGet("{ticketNumber}")]
         public async Task<ResponseMessage<TicketDetailsResponse>> Get(Guid customerId, string ticketNumber)
@@ -29,5 +33,12 @@ namespace MOHU.Integration.WebApi.Controllers
             var result = await _ticketService.SubmitTicketAsync(customerId, request);
             return new ResponseMessage<SubmitTicketResponse> { StatusCode = StatusCodes.Status200OK, Result = result };
         }
+
+       
+
+
+
+
+
     }
 }

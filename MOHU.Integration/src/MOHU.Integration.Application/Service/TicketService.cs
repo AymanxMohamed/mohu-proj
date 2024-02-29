@@ -68,7 +68,7 @@ namespace MOHU.Integration.Application.Service
             var mainCategoryLink = query.AddLink(ldv_casecategory.EntityLogicalName, Incident.Fields.ldv_MainCategoryid, ldv_casecategory.Fields.Id, JoinOperator.LeftOuter);
             mainCategoryLink.EntityAlias = Globals.LinkEntityConsts.MainCategoryLink;
 
-            mainCategoryLink.Columns.AddColumn(ldv_casecategory.Fields.ldv_name) ;
+            mainCategoryLink.Columns.AddColumn(ldv_casecategory.Fields.ldv_name);
 
             var ticketCollection = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
             result.TotalRecords = ticketCollection.TotalRecordCount;
@@ -199,6 +199,11 @@ namespace MOHU.Integration.Application.Service
             var options = await _commonRepository.GetOptionSet(entity.LogicalName, fieldLogicalName, language);
             name = options.FirstOrDefault(x => x.Value == entity.GetAttributeValue<OptionSetValue>(Incident.Fields.ldv_Locationcode)?.Value)?.Name;
             return name;
+        }
+
+        public Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

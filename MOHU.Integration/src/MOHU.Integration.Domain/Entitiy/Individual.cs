@@ -6,6 +6,8 @@
 // Filename   : C:\Users\Hossam.Moustafa\Desktop\Mohaj individual\Individual.cs
 // Created    : 2024-02-22 16:00:37
 // *********************************************************************
+using System.Diagnostics.Metrics;
+
 namespace MOHU.Integration.Domain.Entitiy
 {
     /// <summary>OwnershipType: UserOwned, IntroducedVersion: 5.0.0.0</summary>
@@ -537,8 +539,9 @@ namespace MOHU.Integration.Domain.Entitiy
 
             public const string Age = "ldv_age";
 
+            //ldv_mobilecountrycode
 
-
+            public const string MobileCountryCode = "ldv_mobilecountrycode";
 
 
             #endregion Attributes  

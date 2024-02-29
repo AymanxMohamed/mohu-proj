@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -39,10 +40,16 @@ namespace MOHU.Integration.Contracts.Dto.CreateProfile
 
 
         [Required]
-        public string DateOfBirth { get; set; }  
+        public string MobileCountryCode { get; set; }
 
 
-        public string HijriDateofBirth { get; set; }
+
+
+        [Required]
+        public DateTime DateOfBirth { get; set; }  
+
+
+        public DateTime HijriDateofBirth { get; set; }
 
         [Required]
         public GenderEnum Gender { get; set; }
@@ -59,8 +66,12 @@ namespace MOHU.Integration.Contracts.Dto.CreateProfile
         [Required]
         public IdTypeEnum IdType { get; set; }
 
-        public string IdNumber { get; set; } 
 
+        [Required]
+        public string IdNumber { get; set; }
+
+
+        [Required]
         public string PassportNumber { get; set; }
 
 

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
+using MOHU.Integration.Contracts.Dto.Ticket;
 using MOHU.Integration.Contracts.Interface.CreateProfile;
 using System.Runtime.InteropServices;
 
@@ -19,22 +21,27 @@ namespace MOHU.Integration.WebApi.Controllers
         }
 
 
-
-      
-
-
+       
         [HttpPost]
         [Route(nameof(CreateProfile))]
-        public async Task<bool> CreateProfile(CreateProfileResponse model, string number)
+        public async Task<ResponseMessage<bool>> CreateProfile(CreateProfileResponse model)
         {
-              return  await _createProfileService.CreateProfile(model, number);
+              var result =  await _createProfileService.CreateProfile(model);
+            return new ResponseMessage<bool> { StatusCode = StatusCodes.Status200OK, Result = result };
 
         }
 
 
-       
+        [HttpGet]
+        [Route(nameof(GetAllTicketTypes))]
+        public async Task<ResponseMessage<List<TicketType>>> GetAllTicketTypes()
+        {
+            var ticketTypes = await _createProfileService.GetTicketTypes();
+            return new ResponseMessage<List<TicketType>> { StatusCode = StatusCodes.Status200OK, Result = ticketTypes };
 
-        
+        }
+
+
 
 
 
