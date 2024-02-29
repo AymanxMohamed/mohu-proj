@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace MOHU.Integration.Contracts.Dto.CaseTypes
 {
-    public class TicketSubCategory
+    public class TicketSubCategoryDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<SecondarySubCategory> secondarySubCategories { get; set; }
+        public List<SecondarySubCategoryDto> secondarySubCategories { get; set; }
 
 
         public Guid ParentCategoryId { get; set; }
         public Guid TicketTypeId { get; set; }
-        public TicketSubCategory()
+        public TicketSubCategoryDto()
         {
-            secondarySubCategories = new List<SecondarySubCategory>();
+            secondarySubCategories = new List<SecondarySubCategoryDto>();
         }
 
     }

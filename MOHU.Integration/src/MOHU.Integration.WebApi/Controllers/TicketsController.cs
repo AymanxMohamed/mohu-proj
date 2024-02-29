@@ -9,11 +9,11 @@ namespace MOHU.Integration.WebApi.Controllers
 {
     [Route("api/{customerId}/[controller]")]
     [ApiController]
-    public class TicketsController(ITicketService ticketService, ICreateProfileService createProfileService) : BaseController
+    public class TicketsController(ITicketService ticketService) : BaseController
     {
         private readonly ITicketService _ticketService = ticketService;
 
-        private readonly ICreateProfileService _createProfileService;
+       
 
         [HttpGet("{ticketNumber}")]
         public async Task<ResponseMessage<TicketDetailsResponse>> Get(Guid customerId, string ticketNumber)
@@ -34,7 +34,14 @@ namespace MOHU.Integration.WebApi.Controllers
             return new ResponseMessage<SubmitTicketResponse> { StatusCode = StatusCodes.Status200OK, Result = result };
         }
 
-       
+        [HttpGet]
+        [Route(nameof(GetAllTicketTypes))]
+        public async Task<ResponseMessage<List<TicketTypeResponse>>> GetAllTicketTypes()
+        {
+            var ticketTypes = await _ticketService.GetTicketTypes();
+            return new ResponseMessage<List<TicketTypeResponse>> { StatusCode = StatusCodes.Status200OK, Result = ticketTypes };
+
+        }
 
 
 

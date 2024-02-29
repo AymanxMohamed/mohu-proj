@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace MOHU.Integration.Contracts.Dto.CaseTypes
 {
-    public  class TicketType
+    public  class TicketTypeResponse
     {
 
         public Guid Id { get; set; }
 
         public string Name { get; set; }
 
-        public List<TicketCategory> Categories { get; set; } // MainCategories 
+        public List<TicketCategoryDto> Categories { get; set; } // MainCategories 
 
-        public TicketType()
+        public TicketTypeResponse()
         {
-            Categories = new List<TicketCategory>();
+            Categories = new List<TicketCategoryDto>();
 
         }
 

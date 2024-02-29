@@ -12,11 +12,9 @@ namespace MOHU.Integration.Contracts.Interface.CreateProfile
     {
 
         Task<bool> CreateProfile(CreateProfileResponse model);
-        // Task<Guid> CreateProfile(CreateProfileResponse model);
-        // Task<bool> CreateProfile(CreateProfileResponse model, string number);
+       
 
-
-        Task<List<TicketType>> GetTicketTypes(); 
+     
 
 
 

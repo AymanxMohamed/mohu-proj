@@ -32,14 +32,6 @@ namespace MOHU.Integration.WebApi.Controllers
         }
 
 
-        [HttpGet]
-        [Route(nameof(GetAllTicketTypes))]
-        public async Task<ResponseMessage<List<TicketType>>> GetAllTicketTypes()
-        {
-            var ticketTypes = await _createProfileService.GetTicketTypes();
-            return new ResponseMessage<List<TicketType>> { StatusCode = StatusCodes.Status200OK, Result = ticketTypes };
-
-        }
 
 
 

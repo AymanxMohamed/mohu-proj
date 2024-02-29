@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Application.Exceptions;
+using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Ticket;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Common;
@@ -205,5 +207,360 @@ namespace MOHU.Integration.Application.Service
         {
             throw new NotImplementedException();
         }
+
+
+        public async Task<List<TicketTypeResponse>> GetTicketTypes()
+        {
+            var ticketTypes = new List<TicketTypeResponse>();
+
+            ticketTypes.AddRange(await GetTypes());
+
+            GetTypesCategories(ticketTypes);
+
+            GetTypeCategorySubCategories(ticketTypes);
+
+            return await Task.FromResult(ticketTypes);
+        }
+        bool _IsArabic => true;
+        private async Task<List<TicketTypeResponse>> GetTypes()
+        {
+
+            var result = new List<TicketTypeResponse>();
+
+
+            result = new List<TicketTypeResponse>();
+
+            var ticketTypeQuery = new QueryExpression(RequestType.EntityLogicalName);
+
+            ticketTypeQuery.ColumnSet = new ColumnSet(
+                        RequestType.Fields.PrimaryKey,
+                        RequestType.Fields.ServiceArabicName,
+                        RequestType.Fields.ServiceEnglishName,
+                        RequestType.Fields.PrimaryName
+
+                );
+            var filter = new FilterExpression(LogicalOperator.And);
+            ticketTypeQuery.Criteria.AddFilter(filter);
+            filter.AddCondition(new ConditionExpression(RequestType.Fields.ShowonPortal, ConditionOperator.Equal, true));
+            var response = _crmContext.ServiceClient.RetrieveMultiple(ticketTypeQuery).Entities.ToList();
+            if (response != null && response.Any())
+            {
+
+                result.AddRange(response.Select(t => new TicketTypeResponse
+                {
+                    Id = t.Id,
+                    Name = _IsArabic ? t.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname)
+                    : t.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname),
+
+                }));
+
+            }
+
+
+            return await Task.FromResult(result);
+        }
+
+        ///get category 
+        private void GetTypesCategories(List<TicketTypeResponse> ticketTypes)
+        {
+
+
+            var executeMultipleRequest = new ExecuteMultipleRequest
+            {
+                Requests = new OrganizationRequestCollection(),
+                Settings = new ExecuteMultipleSettings
+                {
+                    ContinueOnError = false,
+                    ReturnResponses = true
+                }
+            };
+            ticketTypes.ForEach(t =>
+            {
+
+
+                var categoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+                {
+                    NoLock = true,
+                    ColumnSet = new ColumnSet(
+
+                       ldv_casecategory.Fields.TicketType,
+                            ldv_casecategory.Fields.ldv_arabicname,
+                             ldv_casecategory.Fields.ldv_englishname
+                            ),
+                };
+                var filter = new FilterExpression(LogicalOperator.And);
+                categoryQuery.Criteria.AddFilter(filter);
+                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
+                 ConditionOperator.Equal,
+                 t.Id));
+
+                executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
+
+            });
+
+            if (!executeMultipleRequest.Requests.Any())
+                return;
+            var categoryResponse = (ExecuteMultipleResponse)_crmContext.ServiceClient
+                .Execute(executeMultipleRequest);
+
+            if (categoryResponse.IsFaulted)
+                return;
+
+            for (var i = 0; i < categoryResponse.Responses.Count; i++)
+            {
+                var responseItem =
+                    (EntityCollection)categoryResponse.Responses[i]?.Response.Results.Values.FirstOrDefault();
+                if (responseItem.Entities != null)
+                {
+                    var categories = responseItem.Entities.Select(c => new Contracts.Dto.CaseTypes.TicketCategoryDto
+                    {
+
+                        Id = c.Id,
+                        Name = _IsArabic ?
+                        c.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname) :
+                        c.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname)
+                    });
+                    var ticketTypeId = responseItem.Entities.FirstOrDefault()
+                       ?.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.TicketType).Id;
+                    if (ticketTypeId != null)
+                    {
+                        ticketTypes.FirstOrDefault(t => t.Id == ticketTypeId).Categories = categories.ToList();
+                    }
+
+
+                }
+
+            }
+
+
+        }
+
+
+        private void GetTypeCategorySubCategories(List<TicketTypeResponse> ticketTypes)
+        {
+
+            try
+            {
+                var executeMultipleRequest = new ExecuteMultipleRequest
+                {
+                    Requests = new OrganizationRequestCollection(),
+                    Settings = new ExecuteMultipleSettings
+                    {
+                        ContinueOnError = false,
+                        ReturnResponses = true
+                    }
+                };
+
+                foreach (var ticketType in ticketTypes)
+                {
+                    foreach (var ticketCategory in ticketType.Categories)
+                    {
+
+                        var subCategoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+                        {
+                            NoLock = true,
+                            ColumnSet = new ColumnSet(
+                                ldv_casecategory.Fields.TicketType,
+                                ldv_casecategory.Fields.ldv_arabicname,
+                                ldv_casecategory.Fields.ldv_englishname,
+                               ldv_casecategory.Fields.ParentCategory
+
+                            ),
+                        };
+                        var filter = new FilterExpression(LogicalOperator.And);
+                        subCategoryQuery.Criteria.AddFilter(filter);
+                        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
+                            ConditionOperator.Equal, ticketType.Id));
+                        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal,
+                              ConditionOperator.Equal, true));
+
+                        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory,
+                             ConditionOperator.Equal, ticketCategory.Id));
+
+                        executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = subCategoryQuery });
+
+
+                        //  }
+
+
+                    }
+                }
+
+                if (!executeMultipleRequest.Requests.Any())
+                    return;
+
+                var categoryResponse = (ExecuteMultipleResponse)_crmContext.ServiceClient
+              .Execute(executeMultipleRequest);
+
+                if (categoryResponse.IsFaulted)
+                    return;
+
+                var entitiesList = new List<Entity>();
+
+                foreach (var t in categoryResponse.Responses)
+                {
+                    var responseItem =
+                        (EntityCollection)t?.Response.Results.Values.FirstOrDefault();
+                    entitiesList.AddRange(responseItem.Entities);
+
+                }
+                if (entitiesList.Count == 0)
+                    return;
+                var subCategoriesGroupedByCategory = entitiesList.
+                    GroupBy(c => c.Attributes[ldv_casecategory.Fields.ParentCategory]);
+
+                foreach (var group in subCategoriesGroupedByCategory)
+                {
+                    var subCategories = group.Select(e => new TicketSubCategoryDto
+                    {
+                        Id = e.Id,
+                        Name = _IsArabic ?
+                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname) :
+                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname),
+                        //  ParentCategoryId = e.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.Id).Id,
+                        ParentCategoryId = e.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.ParentCategory).Id,
+
+                    }).ToList();
+
+                    (ticketTypes.FirstOrDefault(c => c.Id == subCategories?.FirstOrDefault().TicketTypeId)?.Categories)
+                        .FirstOrDefault(c => c.Id == subCategories.FirstOrDefault()?.ParentCategoryId)
+                       ?.SubCategories.AddRange(subCategories);
+
+                    GetAllSecondarySubTypesBySubCategory(subCategories);
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred isssss : " + ex.Message);
+            }
+
+
+        }
+
+        ///secondary sub 
+        private void GetAllSecondarySubTypesBySubCategory(List<TicketSubCategoryDto> ticketSubCategories)
+        {
+
+            var executeMultipleRequest = new ExecuteMultipleRequest
+            {
+                Requests = new OrganizationRequestCollection(),
+                Settings = new ExecuteMultipleSettings
+                {
+                    ContinueOnError = false,
+                    ReturnResponses = true
+                }
+            };
+            foreach (var subCategory in ticketSubCategories)
+            {
+                var query = new QueryExpression(ldv_casecategory.EntityLogicalName)
+                {
+                    NoLock = true,
+                    ColumnSet = new ColumnSet(
+                           ldv_casecategory.Fields.TicketType,
+                            ldv_casecategory.Fields.ldv_arabicname,
+                             ldv_casecategory.Fields.ldv_englishname
+
+
+                        ),
+                };
+                query.Criteria.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Equal, subCategory.Id));
+                executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest
+                {
+                    Query = query
+                });
+
+            }
+
+            if (!executeMultipleRequest.Requests.Any())
+                return;
+
+            var SecondarySubResponse = (ExecuteMultipleResponse)_crmContext.ServiceClient.Execute(executeMultipleRequest);
+            var entitiesList = new List<Entity>();
+            foreach (var t in SecondarySubResponse.Responses)
+            {
+                if (t.Fault == null)
+                {
+                    var responseItem = (EntityCollection)t?.Response.Results.Values.FirstOrDefault();
+                    entitiesList.AddRange(responseItem.Entities);
+                }
+                else
+                {
+                    throw new NotFoundException();
+                }
+            }
+            foreach (var item in entitiesList)
+            {
+                if (item.Attributes.Contains(ldv_casecategory.Fields.SubCategory))
+                {
+                    var subCategory = ticketSubCategories.
+                   Where(e => e.Id == item.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.SubCategory).Id).FirstOrDefault();
+
+
+                    if (subCategory != null)
+                    {
+                        var secondarysubcategory = new SecondarySubCategoryDto
+                        {
+                            Id = item.Id,
+                            Name = IsArabic ?
+                            item.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname) :
+                            item.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname),
+
+                        };
+
+                        subCategory.secondarySubCategories.Add(secondarysubcategory);
+
+                    }
+                }
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
