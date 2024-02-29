@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Ticket;
+using MOHU.Integration.Contracts.Interface.CreateProfile;
 using MOHU.Integration.Contracts.Interface.Ticket;
 
 namespace MOHU.Integration.WebApi.Controllers
@@ -39,5 +41,19 @@ namespace MOHU.Integration.WebApi.Controllers
             var result = await _ticketService.SubmitTicketAsync(customerId, request);
             return new ResponseMessage<SubmitTicketResponse> { StatusCode = StatusCodes.Status200OK, Result = result };
         }
+
+        [HttpGet]
+        [Route(nameof(GetAllTicketTypes))]
+        public async Task<ResponseMessage<List<TicketTypeResponse>>> GetAllTicketTypes()
+        {
+            var ticketTypes = await _ticketService.GetTicketTypes();
+            return new ResponseMessage<List<TicketTypeResponse>> { StatusCode = StatusCodes.Status200OK, Result = ticketTypes };
+
+        }
+
+
+
+
+
     }
 }

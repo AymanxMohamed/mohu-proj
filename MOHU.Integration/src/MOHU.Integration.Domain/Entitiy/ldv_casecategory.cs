@@ -29,6 +29,13 @@
             public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
             public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
             public const string VersionNumber = "versionnumber";
+            public const string TicketType = "ldv_tickettypeid";
+            public const string ParentCategory = "ldv_parentcategoryid";
+            public const string SubCategory = "ldv_subcategoryid";
+            public const string ShowOnPortal = "ldv_isshowonportal";
+            public const string SecondarySubCategory = "ldv_secondarysubcategoryid";
+            public const string MainCategory = "ldv_maincategoryid";
+
         }
 
         public const string EntityLogicalName = "ldv_casecategory";

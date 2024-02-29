@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Contracts.Interface.Cache;
 
@@ -11,7 +12,7 @@ namespace MOHU.Integration.Infrastructure.Service
         private readonly MemoryCacheConfig _config;
         public CacheService(IMemoryCache cache, IOptions<MemoryCacheConfig> memoryCacheConfig)
         {
-            _cache = cache;
+            _cache = cache;    
             _config = memoryCacheConfig.Value;
         }
         public Task Clear()
@@ -32,6 +33,8 @@ namespace MOHU.Integration.Infrastructure.Service
 
             return Task.FromResult(default(T));
         }
+
+       
 
         public Task Remove(string key)
         {
