@@ -30,9 +30,9 @@ namespace MOHU.Integration.WebApi.Controllers
         //}
         [Consumes("application/json")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ResponseMessage<TicketDetailsResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseMessage<TicketDetailsResponse>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ResponseMessage<TicketDetailsResponse>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ResponseMessage<SubmitTicketResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<SubmitTicketResponse>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseMessage<SubmitTicketResponse>), StatusCodes.Status404NotFound)]
         [HttpPost]
         public async Task<ResponseMessage<SubmitTicketResponse>> Post(Guid customerId, [FromBody] SubmitTicketRequest request)
         {

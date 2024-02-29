@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MOHU.Integration.Contracts.Dto.Document
+﻿namespace MOHU.Integration.Contracts.Dto.Document
 {
     public class UploadDocumentResponse
     {
+        public ICollection<DocumentDto> UploadedDocuments { get; set; }
+        public ICollection<FailedDocumentUploadDto> FailedDocuments { get; set; }
+        public UploadDocumentResponse()
+        {
+            UploadedDocuments = new List<DocumentDto>();
+            FailedDocuments = new List<FailedDocumentUploadDto>();
+        }
     }
 }
