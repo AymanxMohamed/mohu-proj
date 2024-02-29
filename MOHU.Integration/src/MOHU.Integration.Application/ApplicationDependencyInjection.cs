@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MOHU.Integration.Application.Service;
 using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.CreateProfile;
+using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Contracts.Interface.Ticket;
 
 namespace MOHU.Integration.Application
@@ -17,10 +17,7 @@ namespace MOHU.Integration.Application
             services.AddTransient<IFieldService, FieldService>();
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<IUserService, UserService>();
-          //  services.AddTransient<ITicketService, TicketService>();
-
-           
-            services.AddTransient<ICreateProfileService, CreateProfileService>();
+            services.AddTransient<ICustomerService, CustomerService>();
 
 
             return services;

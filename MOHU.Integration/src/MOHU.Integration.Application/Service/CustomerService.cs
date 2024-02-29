@@ -1,60 +1,29 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Application.Exceptions;
-using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.CreateProfile;
 using MOHU.Integration.Domain.Entitiy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
-
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using System.Xml.Linq;
 using MOHU.Integration.Contracts.Enum;
-using MOHU.Integration.Contracts.Dto.CaseTypes;
-using Microsoft.Xrm.Sdk.Messages;
-using MOHU.Integration.Contracts.Interface.Cache;
-using static Azure.Core.HttpHeader;
-using System.Collections;
-using System.Globalization;
-using System.Diagnostics.Eventing.Reader;
-using Azure;
-using MOHU.Integration.Infrastructure.Service;
-using MOHU.Integration.Shared;
-using System.Linq.Expressions;
+using MOHU.Integration.Contracts.Interface.Customer;
+using MOHU.Integration.Application.Exceptions;
 
 namespace MOHU.Integration.Application.Service
 {
-
-    /// <summary>
-    ///  implementation here 
-    /// </summary>
-    public class CreateProfileService : ICreateProfileService
+    public class CustomerService : ICustomerService
     {
 
         private readonly ICrmContext _crmContext;
         
 
-        public CreateProfileService(ICrmContext crmContext)
+        public CustomerService(ICrmContext crmContext)
         {
             _crmContext = crmContext;
             
         }
 
-        public async Task<bool> CreateProfile(CreateProfileResponse model)
+        public async Task<Guid> CreateProfile(CreateProfileResponse model)
         {
-
-
-
             var isExist = await CheckPassportNumberExist(model.PassportNumber);
-
 
             var entity = new Entity(Individual.EntityLogicalName);
 
@@ -99,14 +68,14 @@ namespace MOHU.Integration.Application.Service
                 }
 
 
-                _crmContext.ServiceClient.Create(entity);
-                return true;
+                var customerId = await _crmContext.ServiceClient.CreateAsync(entity);
+                return customerId;
 
             }
-            return false;
+            throw new BadRequestException("Customer already exists");
 
         }
-        public async Task<bool> CheckPassportNumberExist(string number)
+        private async Task<bool> CheckPassportNumberExist(string number)
         {
             var queryContact = new QueryExpression
             {
@@ -116,7 +85,7 @@ namespace MOHU.Integration.Application.Service
             var filter = new FilterExpression(LogicalOperator.And);
             filter.AddCondition(new ConditionExpression(Individual.Fields.PassportNumber, ConditionOperator.Equal, number));
             queryContact.Criteria.AddFilter(filter);
-            var response = _crmContext.ServiceClient.RetrieveMultiple(queryContact).Entities?.FirstOrDefault()?.ToString();
+            var response = (await _crmContext.ServiceClient.RetrieveMultipleAsync(queryContact)).Entities?.FirstOrDefault()?.ToString();
             if (response != null)
             {
                 return true;
@@ -124,32 +93,7 @@ namespace MOHU.Integration.Application.Service
             return false;
         }
 
-
-
-      
-       
-
-
-
-
-        
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
-
-
 }
 
 

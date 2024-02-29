@@ -15,6 +15,7 @@ namespace MOHU.Integration.Application.Service
     public class TicketService : ITicketService
     {
         bool IsArabic => false;
+        bool _IsArabic => true;
         private readonly ICrmContext _crmContext;
         private readonly ICommonRepository _commonRepository;
         public TicketService(ICrmContext crmContext, ICommonRepository commonRepository)
@@ -177,83 +178,19 @@ namespace MOHU.Integration.Application.Service
             response.TicketId = caseId;
 
             return response;
-        }
-        private TicketDto MapTicketToDto(Entity entity)
-        {
-            var result = new TicketDto
-            {
-                Id = entity.Id,
-                TicketNumber = entity.GetAttributeValue<string>(Incident.Fields.TicketNumber),
-                TicketType = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_ar}")?.Value.ToString() :
-                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_en}")?.Value.ToString(),
-                Status = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_ar}")?.Value.ToString() :
-                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_en}")?.Value.ToString(),
-                Category = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_arabicname}")?.Value.ToString() :
-                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value.ToString(),
-            };
-            return result;
-        }
-
-
-        private async Task<TicketDetailsResponse?> MapTicketToDetailsDto(Entity entity)
-        {
-            if (entity is null)
-                return null;
-
-            var result = new TicketDetailsResponse
-            {
-                Id = entity.Id,
-                TicketNumber = entity.GetAttributeValue<string>(Incident.Fields.Title),
-                CreatedOn = entity.GetAttributeValue<DateTime>(Incident.Fields.CreatedOn),
-                Resolution = entity.GetAttributeValue<string>(Incident.Fields.ldv_ClosureReason),
-                ResolutionDate = entity.GetAttributeValue<DateTime?>(Incident.Fields.ldv_ClosureDate),
-                TicketType = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_ar}")?.Value?.ToString() :
-                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_en}")?.Value?.ToString(),
-                Status = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_ar}")?.Value?.ToString() :
-                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_en}")?.Value?.ToString(),
-                Category = IsArabic ? entity?.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_arabicname}")?.Value?.ToString() :
-                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
-                SubCategory = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SubCategoryLink}.{ldv_casecategory.Fields.ldv_arabicname}")?.Value?.ToString() :
-                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SubCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
-                SecondarySubCategory = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SecondarySubCategoryLink}.{ldv_casecategory.Fields.ldv_arabicname}")?.Value?.ToString() :
-                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SecondarySubCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
-            };
-            if (entity.Contains(Incident.Fields.ldv_Locationcode))
-                result.Location = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Locationcode, "en");
-            
-            if (entity.Contains(Incident.Fields.ldv_Beneficiarytypecode))
-                result.BeneficiaryType = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Beneficiarytypecode, "en");
-            if (entity.Contains(Incident.Fields.ldv_ClosureDate))
-                result.ResolutionDate = entity.GetAttributeValue<DateTime>(Incident.Fields.ldv_ClosureDate);
-            return result;
-        }
-        private async Task<string> GetNameFromOptionSetAsync(Entity entity, string fieldLogicalName, string language)
-        {
-            var name = string.Empty;
-            var options = await _commonRepository.GetOptionSet(entity.LogicalName, fieldLogicalName, language);
-            name = options.FirstOrDefault(x => x.Value == entity.GetAttributeValue<OptionSetValue>(Incident.Fields.ldv_Locationcode)?.Value)?.Name;
-            return name;
-        }
-
-        public Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
-
+        }   
         public async Task<List<TicketTypeResponse>> GetTicketTypes()
         {
             var ticketTypes = new List<TicketTypeResponse>();
 
             ticketTypes.AddRange(await GetTypes());
 
-            GetTypesCategories(ticketTypes);
+            await GetTypesCategories(ticketTypes);
 
-            GetTypeCategorySubCategories(ticketTypes);
+            GetCategorySubCategories(ticketTypes);
 
-            return await Task.FromResult(ticketTypes);
+            return ticketTypes;
         }
-        bool _IsArabic => true;
         private async Task<List<TicketTypeResponse>> GetTypes()
         {
 
@@ -291,9 +228,7 @@ namespace MOHU.Integration.Application.Service
 
             return await Task.FromResult(result);
         }
-
-        ///get category 
-        private void GetTypesCategories(List<TicketTypeResponse> ticketTypes)
+        private async Task GetTypesCategories(List<TicketTypeResponse> ticketTypes)
         {
 
 
@@ -332,8 +267,8 @@ namespace MOHU.Integration.Application.Service
 
             if (!executeMultipleRequest.Requests.Any())
                 return;
-            var categoryResponse = (ExecuteMultipleResponse)_crmContext.ServiceClient
-                .Execute(executeMultipleRequest);
+            var categoryResponse = (ExecuteMultipleResponse) await _crmContext.ServiceClient
+                .ExecuteAsync(executeMultipleRequest);
 
             if (categoryResponse.IsFaulted)
                 return;
@@ -358,17 +293,10 @@ namespace MOHU.Integration.Application.Service
                     {
                         ticketTypes.FirstOrDefault(t => t.Id == ticketTypeId).Categories = categories.ToList();
                     }
-
-
                 }
-
             }
-
-
         }
-
-
-        private void GetTypeCategorySubCategories(List<TicketTypeResponse> ticketTypes)
+        private async Task GetCategorySubCategories(List<TicketTypeResponse> ticketTypes)
         {
 
             try
@@ -421,8 +349,8 @@ namespace MOHU.Integration.Application.Service
                 if (!executeMultipleRequest.Requests.Any())
                     return;
 
-                var categoryResponse = (ExecuteMultipleResponse)_crmContext.ServiceClient
-              .Execute(executeMultipleRequest);
+                var categoryResponse = (ExecuteMultipleResponse) await _crmContext.ServiceClient
+              .ExecuteAsync(executeMultipleRequest);
 
                 if (categoryResponse.IsFaulted)
                     return;
@@ -458,7 +386,7 @@ namespace MOHU.Integration.Application.Service
                         .FirstOrDefault(c => c.Id == subCategories.FirstOrDefault()?.ParentCategoryId)
                        ?.SubCategories.AddRange(subCategories);
 
-                    GetAllSecondarySubTypesBySubCategory(subCategories);
+                    //GetAllSecondarySubTypesBySubCategory(subCategories);
                 }
 
 
@@ -471,8 +399,6 @@ namespace MOHU.Integration.Application.Service
 
 
         }
-
-        ///secondary sub 
         private void GetAllSecondarySubTypesBySubCategory(List<TicketSubCategoryDto> ticketSubCategories)
         {
 
@@ -550,49 +476,59 @@ namespace MOHU.Integration.Application.Service
             }
 
         }
+        private TicketDto MapTicketToDto(Entity entity)
+        {
+            var result = new TicketDto
+            {
+                Id = entity.Id,
+                TicketNumber = entity.GetAttributeValue<string>(Incident.Fields.TicketNumber),
+                TicketType = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_ar}")?.Value.ToString() :
+                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_en}")?.Value.ToString(),
+                Status = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_ar}")?.Value.ToString() :
+                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_en}")?.Value.ToString(),
+                Category = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_arabicname}")?.Value.ToString() :
+                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value.ToString(),
+            };
+            return result;
+        }
+        private async Task<TicketDetailsResponse?> MapTicketToDetailsDto(Entity entity)
+        {
+            if (entity is null)
+                return null;
 
+            var result = new TicketDetailsResponse
+            {
+                Id = entity.Id,
+                TicketNumber = entity.GetAttributeValue<string>(Incident.Fields.Title),
+                CreatedOn = entity.GetAttributeValue<DateTime>(Incident.Fields.CreatedOn),
+                Resolution = entity.GetAttributeValue<string>(Incident.Fields.ldv_ClosureReason),
+                ResolutionDate = entity.GetAttributeValue<DateTime?>(Incident.Fields.ldv_ClosureDate),
+                TicketType = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_ar}")?.Value?.ToString() :
+                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.CaseTypeLink}.{ldv_service.Fields.ldv_name_en}")?.Value?.ToString(),
+                Status = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_ar}")?.Value?.ToString() :
+                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.PortalStatusLink}.{ldv_servicesubstatus.Fields.ldv_name_en}")?.Value?.ToString(),
+                Category = IsArabic ? entity?.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_arabicname}")?.Value?.ToString() :
+                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
+                SubCategory = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SubCategoryLink}.{ldv_casecategory.Fields.ldv_arabicname}")?.Value?.ToString() :
+                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SubCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
+                SecondarySubCategory = IsArabic ? entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SecondarySubCategoryLink}.{ldv_casecategory.Fields.ldv_arabicname}")?.Value?.ToString() :
+                           entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SecondarySubCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
+            };
+            if (entity.Contains(Incident.Fields.ldv_Locationcode))
+                result.Location = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Locationcode, "en");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            if (entity.Contains(Incident.Fields.ldv_Beneficiarytypecode))
+                result.BeneficiaryType = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Beneficiarytypecode, "en");
+            if (entity.Contains(Incident.Fields.ldv_ClosureDate))
+                result.ResolutionDate = entity.GetAttributeValue<DateTime>(Incident.Fields.ldv_ClosureDate);
+            return result;
+        }
+        private async Task<string> GetNameFromOptionSetAsync(Entity entity, string fieldLogicalName, string language)
+        {
+            var name = string.Empty;
+            var options = await _commonRepository.GetOptionSet(entity.LogicalName, fieldLogicalName, language);
+            name = options.FirstOrDefault(x => x.Value == entity.GetAttributeValue<OptionSetValue>(Incident.Fields.ldv_Locationcode)?.Value)?.Name;
+            return name;
+        }
     }
 }
