@@ -1034,6 +1034,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                     object filedName = null;
                     if (typeValue == (int)RoutingConfigurationType.RoleConfiguration)
                     {
+                        tracingService.Trace($"in   RoleConfiguration  ");
+
                         EntityReference roleConfigurationLookup = stageRoutingConfigurationRecords[index].Contains("routingconfiguration.ldv_roleconfigurationid") ?
                             (EntityReference)((Microsoft.Xrm.Sdk.AliasedValue)stageRoutingConfigurationRecords[index].Attributes["routingconfiguration.ldv_roleconfigurationid"]).Value : null;
                         if (roleConfigurationLookup != null)
@@ -1044,18 +1046,24 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                     }
                     else if (typeValue == (int)RoutingConfigurationType.FieldName)
                     {
+                        tracingService.Trace($"in   Type.FieldName  ");
+
                         filedName = stageRoutingConfigurationRecords[index].Contains("routingconfiguration.ldv_fieldname") ?
                             ((Microsoft.Xrm.Sdk.AliasedValue)stageRoutingConfigurationRecords[index].Attributes["routingconfiguration.ldv_fieldname"]).Value : null;
                         ////   get fieldschema Name and check if it exist in entity
                         if (filedName != null)
                         {
                             var substituted = Utilities.CrmStringHandler.SubstituteToAttribute(targetRequest.ToEntityReference(), filedName.ToString(), OrganizationService);
+                        tracingService.Trace($"in  substituted {substituted}  ");
+
                             if (substituted != null)
                                 assingingLookup = (EntityReference)substituted;
                         }
                     }
                     else if (typeValue == (int)RoutingConfigurationType.CurrentStageOwner)
                     {
+                        tracingService.Trace($"in   Type.CurrentStageOwner  ");
+
                         List<Entity> task = RetrieveStageTaskRelatedToTargetFetch(stageConfigurationId, targetRequest.Id);
                         if (task.Count > 0)
                         {

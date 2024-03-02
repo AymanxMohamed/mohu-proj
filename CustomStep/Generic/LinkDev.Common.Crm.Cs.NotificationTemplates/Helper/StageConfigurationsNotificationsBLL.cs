@@ -37,12 +37,12 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         #endregion
 
         #region Constructor
-        public StageConfigurationsNotificationsBLL(IOrganizationService Service, ITracingService tracing, EntityReference RegardingObject)
+        public StageConfigurationsNotificationsBLL(IOrganizationService Service, ITracingService tracing, EntityReference regardingObject)
         {
 
             OrganizationService = Service;
             CRMAccessLayer = new CRMAccessLayer(OrganizationService, tracing);
-            this.RegardingObject = RegardingObject;
+             RegardingObject = regardingObject;
             tracingService = tracing;
             tracingService.Trace($" in StageConfigurationsNotificationsBLL constractor ");
             language = Language.Arabic;
@@ -56,8 +56,9 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         /// get all info about configuration notification by stage config id
         /// </summary>
         /// <param name="stageConfigurationId"></param> syage config id
-        public void SendStageNotification(Guid stageConfigurationId) 
+        public void SendStageNotification(Guid stageConfigurationId, EntityReference regardingObject) 
         {
+            RegardingObject = regardingObject;
             tracingService.Trace($" in SendStageNotification 1 ");
             try
             {
@@ -863,6 +864,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 tracingService.Trace($"   MailMessage {MailMessage}");
 
                 tracingService.Trace($" before CreateEmail ");
+
+             
 
                 Guid emailID = CRMAccessLayer.CreateEmail(From, toParty, regardingObject, MailTitle, MailMessage, ccList, bccList, notificationConfig);
              

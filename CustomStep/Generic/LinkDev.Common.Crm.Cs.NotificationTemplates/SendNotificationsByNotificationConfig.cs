@@ -76,7 +76,7 @@ public class SendNotificationsFromStageConfigurationLogic
              tracingService.Trace($" before SendStageNotification , stage id : {stageConfiguration.Id}  ");
             tracingService.Trace($" BLL : {BLL}  ");
 
-            BLL.SendStageNotification(stageConfiguration.Id);
+            BLL.SendStageNotification(stageConfiguration.Id, RegardingObject);
             tracingService.Trace($" after SendStageNotification  ");
 
         }

@@ -1195,9 +1195,42 @@ namespace Linkdev.MOE.CRM.DAL
 
                 for (int i = 0; i < partyIds.Count; i++)
                 {
-                    Entity toParty = new Entity("activityparty");
-                    toParty.Attributes.Add("partyid", partyIds[i]);
-                    toPartyList[i] = toParty;
+                    if (partyIds[i].LogicalName=="team")
+                    {
+                        tracingService.Trace($"  in party is team ");
+
+                        //get all members in the teams
+                        // Define Condition Values
+                        var ab_teamid = partyIds[i].Id;
+
+                        // Instantiate QueryExpression query
+                        var query = new QueryExpression("systemuser");
+                        query.Distinct = true;
+                        query.ColumnSet.AddColumns("fullname", "businessunitid", "title", "address1_telephone1", "positionid", "systemuserid");
+                        query.AddOrder("fullname", OrderType.Ascending);
+                        var query_teammembership = query.AddLink("teammembership", "systemuserid", "systemuserid");
+                        var ab = query_teammembership.AddLink("team", "teamid", "teamid");
+                        ab.EntityAlias = "ab";
+                        ab.LinkCriteria.AddCondition("teamid", ConditionOperator.Equal, ab_teamid);
+
+                        EntityCollection memebers= OrganizationService.RetrieveMultiple(query);
+                        if (memebers.Entities.Count>0)
+                        {
+                            tracingService.Trace($"  # members = {memebers.Entities.Count}");
+                            foreach (var member in memebers.Entities)
+                            {
+                                Entity toParty = new Entity("activityparty");
+                                toParty.Attributes.Add("partyid", member.ToEntityReference());
+                                toPartyList[i] = toParty;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Entity toParty = new Entity("activityparty");
+                        toParty.Attributes.Add("partyid", partyIds[i]);
+                        toPartyList[i] = toParty;
+                    }
                 }
 
                 #region send email to cc ids if there is cc 
