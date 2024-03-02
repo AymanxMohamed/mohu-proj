@@ -26,15 +26,17 @@ namespace MOHU.Integration.WebApi.Controllers
         public async Task<ResponseMessage<string>> ProfileUrl(GetCustomerProfileRequest reqest)
         {
             var result = await _ivrService.GetCustomerProfileUrlAsync(reqest);
-            return new ResponseMessage<string> { Result = result,Status = Contracts.Enum.Status.Success,StatusCode = StatusCodes.Status200OK};
+            return Ok(result);
         }
-
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<Guid?>), StatusCodes.Status400BadRequest)]
         [HttpPost]
         public async Task<ResponseMessage<Guid>> Post(CreateProfileResponse model)
         {
             var result = await _customerService.CreateProfile(model);
-            return new ResponseMessage<Guid> { StatusCode = StatusCodes.Status200OK, Result = result };
-
+            return Ok(result);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto.Common;
 
 namespace MOHU.Integration.WebApi.Controllers
@@ -8,5 +7,26 @@ namespace MOHU.Integration.WebApi.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
+
+       protected ResponseMessage<T> Ok<T>(T result)
+        {
+            return new ResponseMessage<T>
+            {
+                Status = Contracts.Enum.Status.Success,
+                Result = result,
+                StatusCode = StatusCodes.Status200OK,
+
+            };
+        }
+        protected ResponseMessage<T> Created<T>(T result)
+        {
+            return new ResponseMessage<T>
+            {
+                Status = Contracts.Enum.Status.Success,
+                Result = result,
+                StatusCode = StatusCodes.Status201Created,
+            };
+        }
+
     }
 }

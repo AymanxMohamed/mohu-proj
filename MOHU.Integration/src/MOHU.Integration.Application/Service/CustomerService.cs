@@ -11,16 +11,12 @@ namespace MOHU.Integration.Application.Service
 {
     public class CustomerService : ICustomerService
     {
-
         private readonly ICrmContext _crmContext;
-        
-
         public CustomerService(ICrmContext crmContext)
         {
             _crmContext = crmContext;
             
         }
-
         public async Task<Guid> CreateProfile(CreateProfileResponse model)
         {
             var isExist = await CheckPassportNumberExist(model.PassportNumber);

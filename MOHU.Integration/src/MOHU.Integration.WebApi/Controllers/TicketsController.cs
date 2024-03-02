@@ -20,14 +20,19 @@ namespace MOHU.Integration.WebApi.Controllers
         public async Task<ResponseMessage<TicketDetailsResponse>> Get(Guid customerId, string ticketNumber)
         {
             var result = await _ticketService.GetTicketDetailsAsync(customerId, ticketNumber);
-            return new ResponseMessage<TicketDetailsResponse> { StatusCode = StatusCodes.Status200OK, Result = result, Status = Contracts.Enum.Status.Success };
+            return Ok(result);
         }
-        //[HttpGet]
-        //public async Task<ResponseMessage<TicketListResponse>> GetAll(Guid customerId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
-        //{
-        //    var result = await _ticketService.GetAllTicketsAsync(customerId, pageNumber, pageSize);
-        //    return new ResponseMessage<TicketListResponse> { StatusCode = StatusCodes.Status200OK, Result = result };
-        //}
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ResponseMessage<TicketListResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<TicketListResponse>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseMessage<TicketListResponse>), StatusCodes.Status404NotFound)]
+        [HttpGet]
+        public async Task<ResponseMessage<TicketListResponse>> GetAll(Guid customerId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            var result = await _ticketService.GetAllTicketsAsync(customerId, pageNumber, pageSize);
+            return Ok(result);
+        }
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ResponseMessage<SubmitTicketResponse>), StatusCodes.Status200OK)]
@@ -37,7 +42,8 @@ namespace MOHU.Integration.WebApi.Controllers
         public async Task<ResponseMessage<SubmitTicketResponse>> Post(Guid customerId, [FromBody] SubmitTicketRequest request)
         {
             var result = await _ticketService.SubmitTicketAsync(customerId, request);
-            return new ResponseMessage<SubmitTicketResponse> { StatusCode = StatusCodes.Status200OK, Result = result };
+            return Ok(result);
+           
         }
 
     }

@@ -9,14 +9,5 @@ namespace MOHU.Integration.Contracts.Dto.Common
         public int StatusCode { get; set; }
         public string? ErrorMessage { get; set; }
         public T? Result { get; set; }
-        public static ResponseMessage<T> Failure(string message, T? data = default)
-        {
-            return new ResponseMessage<T> { Status = Status.Failure, Result = data };
-        }
-        public static ResponseMessage<T> Success(T data)
-        {
-            return new ResponseMessage<T> { Status = Status.Success, StatusCode = (int)HttpStatusCode.OK, Result = data };
-
-        }
     }
 }

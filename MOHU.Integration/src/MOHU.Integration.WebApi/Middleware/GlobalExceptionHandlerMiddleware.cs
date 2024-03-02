@@ -1,5 +1,6 @@
 ﻿using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Common;
+using MOHU.Integration.Contracts.Logging;
 using System.Net;
 
 namespace MOHU.Integration.WebApi.Middleware
@@ -7,10 +8,11 @@ namespace MOHU.Integration.WebApi.Middleware
     public class GlobalExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
-
-        public GlobalExceptionHandlerMiddleware(RequestDelegate next)
+        private readonly IAppLogger _logger;
+        public GlobalExceptionHandlerMiddleware(RequestDelegate next , IAppLogger logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -21,6 +23,7 @@ namespace MOHU.Integration.WebApi.Middleware
             }
             catch (Exception ex)
             {
+                await _logger.LogError(ex);
                 await HandleExceptionAsync(context, ex);
             }
         }
