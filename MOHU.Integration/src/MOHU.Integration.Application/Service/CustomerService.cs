@@ -6,6 +6,7 @@ using MOHU.Integration.Domain.Entitiy;
 using MOHU.Integration.Contracts.Enum;
 using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Application.Exceptions;
+using MOHU.Integration.Contracts.Dto.Common;
 
 namespace MOHU.Integration.Application.Service
 {
@@ -70,6 +71,32 @@ namespace MOHU.Integration.Application.Service
             }
             throw new BadRequestException("Customer already exists");
 
+        }
+
+        public async Task<LookupDto?> GetIndividualByMobileNumberAsync(string mobileNumber)
+        {
+            var query = new QueryExpression(Contact.EntityLogicalName)
+            {
+                NoLock = true
+            };
+            var filter = new FilterExpression(LogicalOperator.And);
+            filter.AddCondition(new ConditionExpression(Contact.Fields.MobilePhone, ConditionOperator.Equal, mobileNumber));
+            query.Criteria.AddFilter(filter);
+
+            var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
+
+            if (result.Entities.Any())
+                return new LookupDto { Id = result.Entities.FirstOrDefault().Id, EntityLogicalName = result.Entities.FirstOrDefault().LogicalName };
+
+            return null;
+        }
+
+        public async Task<LookupDto> CreateIndividualAsync(string mobileNumber)
+        {
+            var entity = new Entity(Contact.EntityLogicalName);
+            entity.Attributes.Add(Contact.Fields.MobilePhone, mobileNumber);
+            var individualId = await _crmContext.ServiceClient.CreateAsync(entity);
+            return new LookupDto { Id = individualId, EntityLogicalName = entity.LogicalName };
         }
         private async Task<bool> CheckPassportNumberExist(string number)
         {

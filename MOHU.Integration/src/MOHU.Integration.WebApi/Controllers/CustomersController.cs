@@ -38,5 +38,15 @@ namespace MOHU.Integration.WebApi.Controllers
             var result = await _customerService.CreateProfile(model);
             return Ok(result);
         }
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<Guid?>), StatusCodes.Status400BadRequest)]
+        [HttpPost(nameof(CreatePhoneCall))]
+        public async Task<ResponseMessage<Guid>> CreatePhoneCall(CreatePhoneCallRequest request)
+        {
+            var result = await _ivrService.CreatePhoneCall(request);
+            return Ok(result);
+        }
     }
 }

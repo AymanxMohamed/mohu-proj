@@ -4,33 +4,34 @@ using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Ivr;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Common;
+using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Domain.Entitiy;
 
 namespace MOHU.Integration.Application.Service
 {
     public class IvrService : IIvrService
     {
-        private readonly IIndividualService _individualService;
+        private readonly ICustomerService _individualService;
         private readonly IActivityService _activityService;
         private readonly IConfigurationService _configurationService;
         private readonly IUserService _userService;
 
-        public IvrService(IIndividualService individualService, IActivityService activityService, IConfigurationService configurationService, IUserService userService)
+        public IvrService(ICustomerService individualService, IActivityService activityService, IConfigurationService configurationService, IUserService userService)
         {
             _individualService = individualService;
             _activityService = activityService;
             _configurationService = configurationService;
             _userService = userService;
         }
-        public async Task<string> GetCustomerProfileUrlAsync(GetCustomerProfileRequest request)
-        {
-            var individual = await _individualService.GetIndividualByMobileNumberAsync(request.MobileNumber);
 
-            individual ??= await _individualService.CreateIndividualAsync(request.MobileNumber);
+        public async Task<Guid> CreatePhoneCall(CreatePhoneCallRequest request)
+        {
+            var individual = await _individualService.GetIndividualByMobileNumberAsync(request.MobileNumber)
+                ?? throw new NotFoundException("Customer with mobile number does not exist");
 
             var agent = await _userService.GetUserByUsernameAsync(request.AgentUserName)
-                ?? throw new NotFoundException($"Agent with the following name {request.AgentUserName} does not exist");
-            
+              ?? throw new NotFoundException($"Agent with the following name {request.AgentUserName} does not exist");
+
             var createActivityRequest = new CreateActivityRequest()
             {
                 ActivityName = PhoneCall.EntityLogicalName,
@@ -44,6 +45,15 @@ namespace MOHU.Integration.Application.Service
 
             var phoneCall = await _activityService.CreateActivityAsync(createActivityRequest);
 
+            throw new NotImplementedException();
+        }
+
+        public async Task<string> GetCustomerProfileUrlAsync(GetCustomerProfileRequest request)
+        {
+            var individual = await _individualService.GetIndividualByMobileNumberAsync(request.MobileNumber);
+
+            individual ??= await _individualService.CreateIndividualAsync(request.MobileNumber);
+            
             var applicationId = await _configurationService.GetConfigurationValueAsync("CallCenterAppId");
 
             return string.Format(await _configurationService.GetConfigurationValueAsync("IndividualProfileUrl"), applicationId, individual.Id);

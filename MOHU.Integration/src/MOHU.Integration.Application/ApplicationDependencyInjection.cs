@@ -12,13 +12,11 @@ namespace MOHU.Integration.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddTransient<IIvrService, IvrService>();
-            services.AddTransient<IIndividualService, IndividualService>();
             services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IFieldService, FieldService>();
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICustomerService, CustomerService>();
-
 
             return services;
         }

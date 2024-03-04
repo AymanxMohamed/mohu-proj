@@ -7,6 +7,7 @@ using MOHU.Integration.Contracts.Dto.Ticket;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Contracts.Interface.Ticket;
+using MOHU.Integration.Contracts.Logging;
 using MOHU.Integration.Domain.Entitiy;
 using MOHU.Integration.Shared;
 using System.Net.Sockets;
@@ -17,10 +18,12 @@ namespace MOHU.Integration.Application.Service
     {
         private readonly ICrmContext _crmContext;
         private readonly ICommonRepository _commonRepository;
-        public TicketService(ICrmContext crmContext, ICommonRepository commonRepository)
+        private readonly IAppLogger _logger;
+        public TicketService(ICrmContext crmContext, ICommonRepository commonRepository, IAppLogger logger)
         {
             _crmContext = crmContext;
             _commonRepository = commonRepository;
+            _logger = logger;
         }
         public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
         {
@@ -185,7 +188,7 @@ namespace MOHU.Integration.Application.Service
 
             ticketTypes.AddRange(await GetTypes());
 
-            await GetTypesCategories(ticketTypes);
+            await GetTypesCategoriesAsync(ticketTypes);
 
             await GetCategorySubCategories(ticketTypes);
 
@@ -216,17 +219,15 @@ namespace MOHU.Integration.Application.Service
                 {
                     Id = t.Id,
                     Name = LanguageHelper.IsArabic ? t.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname)
-                    : t.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname),
+                    : t.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname),
 
                 }));
 
             }
             return await Task.FromResult(result);
         }
-        private async Task GetTypesCategories(List<TicketTypeResponse> ticketTypes)
+        private async Task GetTypesCategoriesAsync(List<TicketTypeResponse> ticketTypes)
         {
-
-
             var executeMultipleRequest = new ExecuteMultipleRequest
             {
                 Requests = new OrganizationRequestCollection(),
@@ -255,6 +256,8 @@ namespace MOHU.Integration.Application.Service
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
                  ConditionOperator.Equal,
                  t.Id));
+                filter.AddCondition(new ConditionExpression("ldv_isshowonportal", ConditionOperator.Equal, true));
+
 
                 executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
 
@@ -274,7 +277,7 @@ namespace MOHU.Integration.Application.Service
                     (EntityCollection)categoryResponse.Responses[i]?.Response.Results.Values.FirstOrDefault();
                 if (responseItem.Entities != null)
                 {
-                    var categories = responseItem.Entities.Select(c => new Contracts.Dto.CaseTypes.TicketCategoryDto
+                    var categories = responseItem.Entities.Select(c => new TicketCategoryDto
                     {
 
                         Id = c.Id,
@@ -293,7 +296,6 @@ namespace MOHU.Integration.Application.Service
         }
         private async Task GetCategorySubCategories(List<TicketTypeResponse> ticketTypes)
         {
-
             try
             {
                 var executeMultipleRequest = new ExecuteMultipleRequest
@@ -348,7 +350,7 @@ namespace MOHU.Integration.Application.Service
               .ExecuteAsync(executeMultipleRequest);
 
                 if (categoryResponse.IsFaulted)
-                    return;
+                    throw new Exception(categoryResponse.Responses?.FirstOrDefault()?.Fault?.Message);
 
                 var entitiesList = new List<Entity>();
 
@@ -370,9 +372,9 @@ namespace MOHU.Integration.Application.Service
                     {
                         Id = e.Id,
                         Name = LanguageHelper.IsArabic ?
-                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname) :
-                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname),
-                        //  ParentCategoryId = e.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.Id).Id,
+                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname) :
+                            e.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname),
+                        TicketTypeId = e.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.TicketType).Id,
                         ParentCategoryId = e.GetAttributeValue<EntityReference>(ldv_casecategory.Fields.ParentCategory).Id,
 
                     }).ToList();
@@ -389,9 +391,8 @@ namespace MOHU.Integration.Application.Service
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred isssss : " + ex.Message);
+                await _logger.LogError(ex);
             }
-
 
         }
         private void GetAllSecondarySubTypesBySubCategory(List<TicketSubCategoryDto> ticketSubCategories)
