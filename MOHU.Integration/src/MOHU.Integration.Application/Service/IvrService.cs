@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Application.Exceptions;
+﻿using Microsoft.BusinessData.MetadataModel;
+using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Activity;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Ivr;
@@ -44,15 +45,14 @@ namespace MOHU.Integration.Application.Service
             createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.PhoneNumber, request.MobileNumber);
 
             var phoneCall = await _activityService.CreateActivityAsync(createActivityRequest);
-
-            throw new NotImplementedException();
+            return phoneCall.Id;
         }
 
-        public async Task<string> GetCustomerProfileUrlAsync(GetCustomerProfileRequest request)
+        public async Task<string> GetCustomerProfileUrlAsync(string mobileNumber)
         {
-            var individual = await _individualService.GetIndividualByMobileNumberAsync(request.MobileNumber);
+            var individual = await _individualService.GetIndividualByMobileNumberAsync(mobileNumber);
 
-            individual ??= await _individualService.CreateIndividualAsync(request.MobileNumber);
+            individual ??= await _individualService.CreateIndividualAsync(mobileNumber);
             
             var applicationId = await _configurationService.GetConfigurationValueAsync("CallCenterAppId");
 

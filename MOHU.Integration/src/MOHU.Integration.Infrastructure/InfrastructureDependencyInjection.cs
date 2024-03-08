@@ -22,6 +22,7 @@ namespace MOHU.Integration.Infrastructure
             services.AddSingleton<Contracts.Logging.IAppLogger, SerilogLogger>();
             services.AddSingleton<ICrmContext, CrmContext>();
             services.AddScoped<IConfigurationService, ConfigurationService>();
+            services.AddSingleton<ICorrelationIdService, CorrelationIdService>();
             services.AddTransient<ICommonRepository, CommonRepository>();
             services.AddMemoryCache();
             services.AddScoped(typeof(ICacheService<>), typeof(CacheService<>));

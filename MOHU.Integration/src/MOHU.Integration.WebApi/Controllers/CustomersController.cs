@@ -22,10 +22,10 @@ namespace MOHU.Integration.WebApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(ResponseMessage<string>),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseMessage<string>),StatusCodes.Status400BadRequest)]
-        [HttpPost(nameof(ProfileUrl))]
-        public async Task<ResponseMessage<string>> ProfileUrl(GetCustomerProfileRequest reqest)
+        [HttpGet(nameof(ProfileUrl))]
+        public async Task<ResponseMessage<string>> ProfileUrl(string mobileNumber)
         {
-            var result = await _ivrService.GetCustomerProfileUrlAsync(reqest);
+            var result = await _ivrService.GetCustomerProfileUrlAsync(mobileNumber);
             return Ok(result);
         }
         [Consumes("application/json")]

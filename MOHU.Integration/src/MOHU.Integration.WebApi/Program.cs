@@ -1,7 +1,9 @@
 
+using Microsoft.AspNetCore.HttpLogging;
 using MOHU.Integration.Application;
 using MOHU.Integration.Infrastructure;
 using MOHU.Integration.WebApi.Extension;
+using MOHU.Integration.WebApi.HttpInterceptor;
 
 namespace MOHU.Integration.WebApi
 {
@@ -17,8 +19,19 @@ namespace MOHU.Integration.WebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddHttpLogging(logging =>
+            {
+                logging.LoggingFields = HttpLoggingFields.All;
+                logging.RequestBodyLogLimit = 4096;
+                logging.ResponseBodyLogLimit = 4096;
+                logging.CombineLogs = true;
+            });
+            builder.Services.AddHttpLoggingInterceptor<CorrelationIdHttpLoggingInterceptor>();
+
             var app = builder.Build();
+            app.UseHttpLogging();
             app.UseGlobalExceptionHandler();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
