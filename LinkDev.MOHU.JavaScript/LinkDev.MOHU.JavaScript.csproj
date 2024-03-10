@@ -41,14 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Content Include="caseTest - Copy.js" />
+    <Content Include="caseTest.js" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CaseManagement\Case\" />
-    <Folder Include="CaseManagement\Category\" />
-    <Folder Include="Profile\Company\" />
-    <Folder Include="Profile\Individual\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
