@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MOHU.Integration.Application.common;
 using MOHU.Integration.Application.Service;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Customer;
@@ -18,6 +19,8 @@ namespace MOHU.Integration.Application
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IHttpExceptionService, HttpExceptionService>();
+
 
 
             return services;

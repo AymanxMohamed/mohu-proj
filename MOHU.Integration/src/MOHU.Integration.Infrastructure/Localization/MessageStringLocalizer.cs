@@ -35,5 +35,8 @@ namespace MOHU.Integration.Infrastructure.Localization
             // Implement logic to switch to a different culture
             throw new NotImplementedException();
         }
+
+
+
     }
 }

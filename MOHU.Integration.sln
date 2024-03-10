@@ -19,6 +19,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MOHU.Integration.Infrastruc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MOHU.Integration.Shared", "MOHU.Integration\src\MOHU.Integration.Shared\MOHU.Integration.Shared.csproj", "{964891D8-9B04-4934-B76B-A87AC5979981}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "externalintegration", "externalintegration", "{82782FB1-349A-4EB2-9ACE-DB84EDD79B1F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MOHU.ExternalIntegration.WebApi", "C:\Users\Hossam.Moustafa\source\repos\MOHU.ExternalIntegration\MOHU.ExternalIntegration\MOHU.ExternalIntegration.WebApi.csproj", "{1ACA96CB-35B0-4B7C-A5F1-B89D9A1C89E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MOHU.ExternalIntegration.Application", "C:\Users\Hossam.Moustafa\source\repos\MOHU.ExternalIntegration\MOHU.ExternalIntegration.Application\MOHU.ExternalIntegration.Application.csproj", "{4FA77351-8160-447A-86F2-8A2993E3E792}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MOHU.ExternalIntegration.Contracts", "C:\Users\Hossam.Moustafa\source\repos\MOHU.ExternalIntegration\MOHU.ExternalIntegration.Contracts\MOHU.ExternalIntegration.Contracts.csproj", "{04BC0D55-5829-465B-9DC9-D4D6A5798A5B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MOHU.ExternalIntegration.Domain", "C:\Users\Hossam.Moustafa\source\repos\MOHU.ExternalIntegration\MOHU.ExternalIntegration.Domain\MOHU.ExternalIntegration.Domain.csproj", "{0F1C8EFF-FFC5-43F0-806A-881F8B41E53A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MOHU.ExternalIntegration.Infrastructure", "C:\Users\Hossam.Moustafa\source\repos\MOHU.ExternalIntegration\MOHU.ExternalIntegration.Infrastructure\MOHU.ExternalIntegration.Infrastructure.csproj", "{981F6B3B-78E0-4DB9-9254-CA55A0ED3877}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MOHU.ExternalIntegration.Shared", "C:\Users\Hossam.Moustafa\source\repos\MOHU.ExternalIntegration\MOHU.ExternalIntegration.Shared\MOHU.ExternalIntegration.Shared.csproj", "{F32B79E2-7426-4556-AC2B-AFAED1B45E20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +63,30 @@ Global
 		{964891D8-9B04-4934-B76B-A87AC5979981}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{964891D8-9B04-4934-B76B-A87AC5979981}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{964891D8-9B04-4934-B76B-A87AC5979981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ACA96CB-35B0-4B7C-A5F1-B89D9A1C89E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ACA96CB-35B0-4B7C-A5F1-B89D9A1C89E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ACA96CB-35B0-4B7C-A5F1-B89D9A1C89E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ACA96CB-35B0-4B7C-A5F1-B89D9A1C89E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FA77351-8160-447A-86F2-8A2993E3E792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FA77351-8160-447A-86F2-8A2993E3E792}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FA77351-8160-447A-86F2-8A2993E3E792}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FA77351-8160-447A-86F2-8A2993E3E792}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04BC0D55-5829-465B-9DC9-D4D6A5798A5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04BC0D55-5829-465B-9DC9-D4D6A5798A5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04BC0D55-5829-465B-9DC9-D4D6A5798A5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04BC0D55-5829-465B-9DC9-D4D6A5798A5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F1C8EFF-FFC5-43F0-806A-881F8B41E53A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F1C8EFF-FFC5-43F0-806A-881F8B41E53A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F1C8EFF-FFC5-43F0-806A-881F8B41E53A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F1C8EFF-FFC5-43F0-806A-881F8B41E53A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{981F6B3B-78E0-4DB9-9254-CA55A0ED3877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{981F6B3B-78E0-4DB9-9254-CA55A0ED3877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{981F6B3B-78E0-4DB9-9254-CA55A0ED3877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{981F6B3B-78E0-4DB9-9254-CA55A0ED3877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F32B79E2-7426-4556-AC2B-AFAED1B45E20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F32B79E2-7426-4556-AC2B-AFAED1B45E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F32B79E2-7426-4556-AC2B-AFAED1B45E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F32B79E2-7426-4556-AC2B-AFAED1B45E20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +98,12 @@ Global
 		{3F770D97-9F4F-4F7A-B57C-85A45F8C684E} = {BDF6F2C1-A091-4AF4-8B7E-211F8FBF9589}
 		{DA306D4A-2BC8-4B28-8691-79DCA1B981AC} = {BDF6F2C1-A091-4AF4-8B7E-211F8FBF9589}
 		{964891D8-9B04-4934-B76B-A87AC5979981} = {BDF6F2C1-A091-4AF4-8B7E-211F8FBF9589}
+		{1ACA96CB-35B0-4B7C-A5F1-B89D9A1C89E0} = {82782FB1-349A-4EB2-9ACE-DB84EDD79B1F}
+		{4FA77351-8160-447A-86F2-8A2993E3E792} = {82782FB1-349A-4EB2-9ACE-DB84EDD79B1F}
+		{04BC0D55-5829-465B-9DC9-D4D6A5798A5B} = {82782FB1-349A-4EB2-9ACE-DB84EDD79B1F}
+		{0F1C8EFF-FFC5-43F0-806A-881F8B41E53A} = {82782FB1-349A-4EB2-9ACE-DB84EDD79B1F}
+		{981F6B3B-78E0-4DB9-9254-CA55A0ED3877} = {82782FB1-349A-4EB2-9ACE-DB84EDD79B1F}
+		{F32B79E2-7426-4556-AC2B-AFAED1B45E20} = {82782FB1-349A-4EB2-9ACE-DB84EDD79B1F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97544989-0147-44D8-8E22-0DDF06BA8253}
