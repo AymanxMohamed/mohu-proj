@@ -8,6 +8,8 @@ using FluentValidation.Results;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
+
 
 namespace MOHU.Integration.Application.common
 {
@@ -22,18 +24,31 @@ namespace MOHU.Integration.Application.common
             throw new NotFoundException(message);
         }
 
-        public async Task<FluentValidation.Results.ValidationResult> ValidateModelAsync<TModel, TValidator>(TModel model) where TValidator : FluentValidation.IValidator<TModel>, new()
+        //public async Task<FluentValidation.Results.ValidationResult> ValidateModelAsync<TModel, TValidator>(TModel model) where TValidator : FluentValidation.IValidator<TModel>, new()
+        //{
+        //    if (model == null)
+        //    {
+
+        //        return new FluentValidation.Results.ValidationResult { Errors = { new ValidationFailure("Model", "model cannot be null.") } };
+
+        //    }
+        //    var validator = new TValidator();
+        //    var results = await validator.ValidateAsync(model);
+
+        //    return await Task.FromResult(results);
+        //}
+
+        // new method 
+        public async Task<FluentValidation.Results.ValidationResult> ValidateModelAsync<TModel, TValidator>(TModel model, TValidator validator)
+                   where TValidator : IValidator<TModel>
         {
             if (model == null)
             {
-
                 return new FluentValidation.Results.ValidationResult { Errors = { new ValidationFailure("Model", "model cannot be null.") } };
-
             }
-            var validator = new TValidator();
-            var results = await validator.ValidateAsync(model);
 
-            return await Task.FromResult(results);
+            var results = await validator.ValidateAsync(model);
+            return results;
         }
 
         public bool ValidateModel(object model, out List<string> errorMessages)

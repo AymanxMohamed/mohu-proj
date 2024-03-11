@@ -19,7 +19,7 @@ namespace MOHU.ExternalIntegration.Application
             services.AddScoped<ICreateProfileService, CreateProfileService>();
             services.AddScoped<ITaasherUpdateStatusService, TaasherUpdateStatusService>();
             services.AddScoped<IServiceDiskUpdateStatusService, ServiceDiskUpdateStatusService>();
-             services.AddScoped<IKedanaUpdateStatusService, KedanaUpdateStatusService>();
+            services.AddScoped<IKedanaUpdateStatusService, KedanaUpdateStatusService>();
 
             return services;
         }

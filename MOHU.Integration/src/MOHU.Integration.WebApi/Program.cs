@@ -25,8 +25,9 @@ namespace MOHU.Integration.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+           
             app.UseHttpsRedirection();
+           
             app.UseLanguageMiddleware();
             app.UseAuthorization();
 

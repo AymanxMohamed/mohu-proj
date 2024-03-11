@@ -16,7 +16,9 @@ namespace MOHU.Integration.Contracts.Interface
         void ThrowNotFoundError(string message);
         bool ValidateModel(object model, out List<string> errorMessages);
 
-        Task<ValidationResult> ValidateModelAsync<TModel, TValidator>(TModel model) where TValidator : IValidator<TModel>, new();
+        //   Task<ValidationResult> ValidateModelAsync<TModel, TValidator>(TModel model) where TValidator : IValidator<TModel>, new();
+        Task<FluentValidation.Results.ValidationResult> ValidateModelAsync<TModel, TValidator>(TModel model, TValidator validator)
+       where TValidator : IValidator<TModel>;
 
     }
 }

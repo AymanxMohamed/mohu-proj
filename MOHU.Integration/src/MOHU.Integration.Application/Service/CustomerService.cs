@@ -10,6 +10,8 @@ using MOHU.Integration.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using MOHU.Integration.Contracts.Interface.Common;
+using Microsoft.Extensions.Localization;
+using MOHU.Integration.Shared;
 
 namespace MOHU.Integration.Application.Service
 {
@@ -18,15 +20,16 @@ namespace MOHU.Integration.Application.Service
         private readonly ICrmContext _crmContext;
         private readonly IHttpExceptionService _httpExceptionService;
         private readonly IMessageService _messageService;
+        private readonly IStringLocalizer _localizer;
 
         public CustomerService(ICrmContext crmContext , 
-            IHttpExceptionService httpExceptionService
-            
+            IHttpExceptionService httpExceptionService, 
+            IStringLocalizer localizer
             )
         {
             _crmContext = crmContext;
             _httpExceptionService = httpExceptionService;
-            
+            _localizer = localizer;
         }
 
 
@@ -35,29 +38,34 @@ namespace MOHU.Integration.Application.Service
 
         public async Task<Guid> CreateProfile(CreateProfileResponse model)
         {
+            var validator = new CreateProfileValidator(_localizer); 
+            var results = await _httpExceptionService.ValidateModelAsync(model, validator);
 
 
-            var results = await _httpExceptionService.ValidateModelAsync<CreateProfileResponse, CreateProfileValidator>(model);
+           // var results = await _httpExceptionService.ValidateModelAsync<CreateProfileResponse, CreateProfileValidator>(model);
 
             if (results?.IsValid == false)
             {
+                //_httpExceptionService.ThrowBadRequestError(results.ToString(", "));
+
                 _httpExceptionService.ThrowBadRequestError(results.ToString(", "));
+
             }
 
-            var entity = new Entity(Individual.EntityLogicalName);
 
+            var entity = new Entity(Individual.EntityLogicalName);
 
             var isEmailExist = await CheckEmailAddressExist(model.Email);
             if (isEmailExist == true)
             {
-                
-                _httpExceptionService.ThrowBadRequestError("This Email is existing Before ");
+               
+                _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.EmailisexistingBefore]);// 
             }
             var IsMobileExist = await CheckMobileNumberDuplication(model.MobileNumber);
             if (IsMobileExist == true)
             {
                
-                _httpExceptionService.ThrowBadRequestError("This Phone is already registered ");
+                _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.PhoneisexistingBefore]);
 
             }
 
@@ -88,14 +96,18 @@ namespace MOHU.Integration.Application.Service
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
-                        _httpExceptionService.ThrowBadRequestError("National identity need " +
-                            "to add with it id number only with optional passport no.");
+                        //107
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.NationalIdentityWithidnumber]); 
+                        
+                        //_httpExceptionService.ThrowBadRequestError("National identity need " +
+                        //    "to add with it id number only with optional passport no.");
                     }
 
                     var IsIdnumberExist = await CheckIDNumberIsExsting(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
-                        _httpExceptionService.ThrowBadRequestError("This Id Number is existing Before ");
+                        // 108 
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.IdNumberisexistingBefore]);
                     }
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
 
@@ -104,14 +116,16 @@ namespace MOHU.Integration.Application.Service
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
-                       
-                        _httpExceptionService.ThrowBadRequestError("Accommodation need to add with it" +
-                            " id number only with optional passport no. ");
+                        //AccommodationWithIdNumber
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.AccommodationWithIdNumber]); 
+                           
+                        //_httpExceptionService.ThrowBadRequestError("Accommodation need to add with it" +
+                        //    " id number only with optional passport no. ");
                     }
                     var IsIdnumberExist = await CheckIDNumberIsExsting(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
-                        _httpExceptionService.ThrowBadRequestError("This Id Number is existing Before ");
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.IdNumberisexistingBefore]);
                     }
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
 
@@ -120,24 +134,33 @@ namespace MOHU.Integration.Application.Service
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
+                        //GulfcitizenWithIdNumber
 
-                        _httpExceptionService.ThrowBadRequestError("IdNumber is Required with IdType of Gulfcitizen "); 
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.GulfcitizenWithIdNumber]); 
+
+                      //  _httpExceptionService.ThrowBadRequestError("IdNumber is Required with IdType of Gulfcitizen "); 
                           
                     }
                     if (string.IsNullOrEmpty(model.PassportNumber))
                     {
-                        _httpExceptionService.ThrowBadRequestError("PassportNumber is Required with IdType of Gulfcitizen ");
+                        //GulfcitizenWithPassportNumber
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.GulfcitizenWithPassportNumber]);
+
+                       // _httpExceptionService.ThrowBadRequestError("PassportNumber is Required with IdType of Gulfcitizen ");
                     }
 
                     var IsIdnumberExist = await CheckIDNumberIsExsting(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
-                        _httpExceptionService.ThrowBadRequestError("This Id Number is existing Before ");
+
+
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.IdNumberisexistingBefore]);
                     }
                     var IsPassportExsting = await CheckPassportNumberIsExsting(model.PassportNumber);
                     if (IsPassportExsting == true)
                     {
-                        _httpExceptionService.ThrowBadRequestError("This Passport Number is existing Before ");
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.PassportNumberDuplication]);
+                        //_httpExceptionService.ThrowBadRequestError("This Passport Number is existing Before ");
                     }
 
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
@@ -147,12 +170,15 @@ namespace MOHU.Integration.Application.Service
                 {
                     if (string.IsNullOrEmpty(model.PassportNumber))
                     {
-                        _httpExceptionService.ThrowBadRequestError("Id Type of passport need to enter with it passport number ");
+                       
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]);
+                        //  _httpExceptionService.ThrowBadRequestError("Id Type of passport need to enter with it passport number ");
+
                     }
                     var IsPassportExsting = await CheckPassportNumberIsExsting(model.PassportNumber);
                     if (IsPassportExsting == true)
                     {
-                        _httpExceptionService.ThrowBadRequestError("This Passport Number is existing Before ");
+                        _httpExceptionService.ThrowBadRequestError(_localizer[ErrorMessageCodes.PassportNumberDuplication]);
                     }
                     else
                     {

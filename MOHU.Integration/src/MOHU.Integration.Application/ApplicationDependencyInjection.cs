@@ -1,9 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MOHU.Integration.Application.common;
 using MOHU.Integration.Application.Service;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Contracts.Interface.Ticket;
+using MOHU.Integration.Infrastructure.Localization;
 
 namespace MOHU.Integration.Application
 {
@@ -21,7 +24,10 @@ namespace MOHU.Integration.Application
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IHttpExceptionService, HttpExceptionService>();
 
+            
+           services.AddTransient<IMessageService, MessageService>();// right
 
+             services.AddTransient<IStringLocalizer, MessageStringLocalizer>();
 
             return services;
         }

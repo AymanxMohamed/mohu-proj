@@ -6,60 +6,63 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
 
 namespace MOHU.Integration.Contracts.Dto.CreateProfile
 {
-    public  class CreateProfileValidator : AbstractValidator<CreateProfileResponse>
+    public class CreateProfileValidator : AbstractValidator<CreateProfileResponse>
     {
-        
-        public CreateProfileValidator() 
-        {
+        private readonly IStringLocalizer _localizer;
 
-            
+        public CreateProfileValidator(IStringLocalizer localizer)
+        {
+            _localizer = localizer;
+
+
             RuleFor(x => x.FirstName)
-            .NotEmpty().WithMessage("")
-            .MaximumLength(75).WithMessage("")
-            .Matches("^[a-zA-Z]*$").WithMessage("");
+            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FirstnameFieldisRequired])
+            .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.FirstnameExceedingcharacter])
+            .Matches("^[a-zA-Z]*$").WithMessage(_localizer[ErrorMessageCodes.EnglishLettersValidator]);
 
             RuleFor(x => x.LastName)
-          .NotEmpty().WithMessage("")
-          .MaximumLength(75).WithMessage("")
-          .Matches("^[a-zA-Z]*$").WithMessage("");
+          .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.LastNameReuired])
+          .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.LastNameExceeding])
+          .Matches("^[a-zA-Z]*$").WithMessage(_localizer[ErrorMessageCodes.EnglishLettersValidator]);
 
 
-            //ArabicName for arabic character only 
-              RuleFor(x => x.ArabicName)
-             .NotEmpty().WithMessage("Arabic name is required.")
-             .Matches(@"^[\u0600-\u06FF\s]*$").WithMessage("Arabic name must contain only Arabic characters.")
-             .MaximumLength(150).WithMessage("Arabic name cannot exceed 150 characters.");
+            RuleFor(x => x.ArabicName)
+             .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.ArabicNameisRequired])
+             .Matches(@"^[\u0600-\u06FF\s]*$").WithMessage(_localizer[ErrorMessageCodes.ArabicLettersValidator])
+             .MaximumLength(150).WithMessage(_localizer[ErrorMessageCodes.ArabicNameExceeding]);
 
             RuleFor(x => x.Email)
-           .NotEmpty().WithMessage("Email is required.")
-           .MaximumLength(100).WithMessage("Email must not exceed 100 characters.")
-           .EmailAddress().WithMessage("Please enter a valid email address");
+           .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.EmailRequired])
+           .MaximumLength(100).WithMessage(_localizer[ErrorMessageCodes.EmailExceeding])
+           .EmailAddress().WithMessage(_localizer[ErrorMessageCodes.EmailValidator]);
 
             RuleFor(x => x.MobileCountryCode)
-            .NotEmpty().WithMessage("MobileCountryCode is required.");
+            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired]);
 
-             RuleFor(x => x.DateOfBirth)
-            .NotEmpty().WithMessage("Date of birth is required.")
-            .LessThanOrEqualTo(DateTime.Today).WithMessage("Date of birth cannot be in the future.");
+            RuleFor(x => x.DateOfBirth)
+            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired])
+            .LessThanOrEqualTo(DateTime.Today).WithMessage(_localizer[ErrorMessageCodes.DateOfBirth]);
 
             RuleFor(x => x.MobileNumber)
-            .NotEmpty().WithMessage("Phone number is required.").MaximumLength(20)
-            .Matches(@"^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$").WithMessage("Invalid phone number format.");
+            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired]).MaximumLength(20)
+            .Matches(@"^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$").WithMessage(_localizer[ErrorMessageCodes.MobilePhoneValidator]);
 
             RuleFor(x => x.Nationality)
-            .NotEmpty().WithMessage("Nationality Field is required.");
+            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired]);
 
             RuleFor(x => x.CountryOfResidence)
-            .NotEmpty().WithMessage("CountryOfResidence Field is required.");
+            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired]);
 
             RuleFor(x => x.IdType)
-           .NotEmpty().WithMessage("IdType Field is required.");
+           .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired]);
 
 
         }
+
 
 
     }
