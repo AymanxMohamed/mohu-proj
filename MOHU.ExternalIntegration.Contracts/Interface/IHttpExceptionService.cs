@@ -1,14 +1,13 @@
-﻿
-
-using FluentValidation;
-using FluentValidation.Results;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.Results;
 
-namespace MOHU.Integration.Contracts.Interface
+namespace MOHU.ExternalIntegration.Contracts.Interface
 {
     public interface IHttpExceptionService
     {
@@ -16,7 +15,7 @@ namespace MOHU.Integration.Contracts.Interface
         void ThrowNotFoundError(string message);
         bool ValidateModel(object model, out List<string> errorMessages);
 
-        Task<ValidationResult> ValidateModelAsync<TModel, TValidator>(TModel model) where TValidator : IValidator<TModel>, new();
+        Task<FluentValidation.Results.ValidationResult> ValidateModelAsync<TModel, TValidator>(TModel model) where TValidator : IValidator<TModel>, new();
 
     }
 }

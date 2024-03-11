@@ -1,17 +1,19 @@
-﻿
-using MOHU.Integration.Application.Exceptions;
-using MOHU.Integration.Contracts.Interface;
+﻿//using FluentValidation;
+using FluentValidation.Results;
+using MOHU.ExternalIntegration.Application.Exceptions;
+using MOHU.ExternalIntegration.Contracts.Interface;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation.Results;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MOHU.Integration.Application.common
+using System.ComponentModel.DataAnnotations;
+
+namespace MOHU.ExternalIntegration.Application.common
 {
-    public class HttpExceptionService: IHttpExceptionService
+
+    public class HttpExceptionService : IHttpExceptionService
     {
         public void ThrowBadRequestError(string message)
         {
@@ -56,4 +58,5 @@ namespace MOHU.Integration.Application.common
 
 
     }
+
 }
