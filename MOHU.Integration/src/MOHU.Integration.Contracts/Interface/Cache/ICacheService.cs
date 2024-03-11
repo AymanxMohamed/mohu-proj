@@ -1,9 +1,9 @@
 ﻿namespace MOHU.Integration.Contracts.Interface.Cache
 {
-    public interface ICacheService<T>
+    public interface ICacheService
     {
-        Task<T> GetAsync(string key);
-        Task SetAsync(string key, T value);
+        Task<object> GetAsync(string key);
+        Task SetAsync(string key, object value);
         Task Clear();
         Task Remove(string key);
     }

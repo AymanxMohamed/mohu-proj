@@ -1,6 +1,6 @@
 ﻿using MOHU.Integration.Contracts.Interface;
 
-namespace MOHU.Integration.Infrastructure.Service
+namespace MOHU.Integration.Infrastructure.Logging
 {
     public class CorrelationIdService : ICorrelationIdService
     {

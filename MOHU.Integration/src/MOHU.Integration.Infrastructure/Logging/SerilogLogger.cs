@@ -1,11 +1,11 @@
 ﻿using MOHU.Integration.Contracts.Logging;
 using Serilog;
 
-namespace MOHU.Integration.Infrastructure.Service
+namespace MOHU.Integration.Infrastructure.Logging
 {
     public class SerilogLogger : IAppLogger
     {
-        
+
         public async Task LogError(string message, params object[] args)
         {
             Log.Error(message, args);

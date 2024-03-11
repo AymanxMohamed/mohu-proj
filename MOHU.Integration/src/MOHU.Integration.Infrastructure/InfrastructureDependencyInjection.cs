@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Interface.Common;
+using MOHU.Integration.Infrastructure.Logging;
 using MOHU.Integration.Infrastructure.Persistence;
-using MOHU.Integration.Infrastructure.Repository;
 using MOHU.Integration.Infrastructure.Service;
 using Serilog;
 
@@ -23,9 +23,8 @@ namespace MOHU.Integration.Infrastructure
             services.AddSingleton<ICrmContext, CrmContext>();
             services.AddScoped<IConfigurationService, ConfigurationService>();
             services.AddSingleton<ICorrelationIdService, CorrelationIdService>();
-            services.AddTransient<ICommonRepository, CommonRepository>();
+            services.AddScoped<ICacheService, CacheService>();
             services.AddMemoryCache();
-            services.AddScoped(typeof(ICacheService<>), typeof(CacheService<>));
 
             return services;
         }

@@ -3,22 +3,28 @@ using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Interface.Common;
 
 namespace MOHU.Integration.Infrastructure.Repository
 {
-    public class CommonRepository : ICommonRepository
+    public class CommonService : ICommonService
     {
         private readonly ICrmContext _crmContext;
-
-        public CommonRepository(ICrmContext crmContext)
+        private readonly ICacheService _cacheService;
+        private readonly ICacheKeyGeneratorService _cacheKeyGeneratorService;
+        public CommonService(ICrmContext crmContext, ICacheService cacheService, ICacheKeyGeneratorService cacheKeyGeneratorService)
         {
             _crmContext = crmContext;
+            _cacheService = cacheService;
+            _cacheKeyGeneratorService = cacheKeyGeneratorService;
         }
 
         public async Task<IEnumerable<LookupValueDto>> GetLookups(string entityName, string language)
         {
             var primaryField = await GetEntityPrimaryField(entityName);
+
+            
             var query = new QueryExpression(entityName)
             {
                 ColumnSet = new ColumnSet(primaryField),

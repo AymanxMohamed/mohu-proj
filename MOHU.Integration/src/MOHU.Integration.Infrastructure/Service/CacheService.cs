@@ -6,7 +6,7 @@ using MOHU.Integration.Contracts.Interface.Cache;
 
 namespace MOHU.Integration.Infrastructure.Service
 {
-    public class CacheService<T> : ICacheService<T>
+    public class CacheService : ICacheService
     {
         private readonly IMemoryCache _cache;
         private readonly MemoryCacheConfig _config;
@@ -24,14 +24,14 @@ namespace MOHU.Integration.Infrastructure.Service
             return Task.CompletedTask;
         }
 
-        public Task<T> GetAsync(string key)
+        public Task<object> GetAsync(string key)
         {
-            var keyExists = _cache.TryGetValue(key, out T value);
+            var keyExists = _cache.TryGetValue(key, out var value);
 
             if (keyExists)
                 return Task.FromResult(value);
 
-            return Task.FromResult(default(T));
+            return Task.FromResult(key as object);
         }
 
        
@@ -42,7 +42,7 @@ namespace MOHU.Integration.Infrastructure.Service
             return Task.CompletedTask;
         }
 
-        public Task SetAsync(string key, T value)
+        public Task SetAsync(string key, object value)
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions()
            .SetAbsoluteExpiration(TimeSpan.FromMinutes(_config.ExpirationInMinutes));

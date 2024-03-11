@@ -17,9 +17,9 @@ namespace MOHU.Integration.Application.Service
     public class TicketService : ITicketService
     {
         private readonly ICrmContext _crmContext;
-        private readonly ICommonRepository _commonRepository;
+        private readonly ICommonService _commonRepository;
         private readonly IAppLogger _logger;
-        public TicketService(ICrmContext crmContext, ICommonRepository commonRepository, IAppLogger logger)
+        public TicketService(ICrmContext crmContext, ICommonService commonRepository, IAppLogger logger)
         {
             _crmContext = crmContext;
             _commonRepository = commonRepository;
