@@ -26,9 +26,13 @@ namespace MOHU.ExternalIntegration.Application
 
             services.AddTransient<ITicketService, TicketService>();//
             services.AddTransient<ICreateProfileService, CreateProfileService>();//
-            services.AddTransient<ITaasherUpdateStatusService, TaasherUpdateStatusService>();//
-            services.AddTransient<IServiceDiskUpdateStatusService, ServiceDiskUpdateStatusService>();//
-            services.AddTransient<IKedanaUpdateStatusService, KedanaUpdateStatusService>();//
+          //  services.AddTransient<ITaasherUpdateStatusService, TaasherUpdateStatusService>();//
+          //  services.AddTransient<IServiceDiskUpdateStatusService, ServiceDiskUpdateStatusService>();//
+           // services.AddTransient<IKedanaUpdateStatusService, KedanaUpdateStatusService>();//
+            // general update status 
+           // KedanaUpdateStatusService : IUpdateStatusService
+           services.AddTransient<IUpdateStatusService, KedanaUpdateStatusService>();
+
             services.AddTransient<ICommonMethod, CommonMethod>();
             services.AddValidatorsFromAssembly(typeof(CreateProfileValidator).Assembly);
             services.AddTransient<IMessageService, MessageService>();
