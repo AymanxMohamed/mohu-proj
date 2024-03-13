@@ -77,6 +77,8 @@ namespace MOHU.ExternalIntegration.Shared
         
         public static string CustomerExist = "132";
 
+        public static string CustomerIdRquired = "129";
+
 
     }
 }

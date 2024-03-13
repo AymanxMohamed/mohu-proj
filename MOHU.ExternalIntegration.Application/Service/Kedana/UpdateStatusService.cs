@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Extensions.Localization;
+using MOHU.ExternalIntegration.Shared;
 
 
 namespace MOHU.ExternalIntegration.Application.Service.Kedana
@@ -21,16 +23,17 @@ namespace MOHU.ExternalIntegration.Application.Service.Kedana
 
         private readonly ICommonMethod _commonMethod;
 
-       
+        private readonly IStringLocalizer _localizer;
         public KedanaUpdateStatusService(ICrmContext crmContext,
-            ICommonMethod commonMethod
-           
+            ICommonMethod commonMethod,
+            IStringLocalizer localizer
+
             )
 
         {
             this.crmContext = crmContext;
             _commonMethod = commonMethod;
-         
+            _localizer= localizer;
 
 
 
@@ -41,11 +44,11 @@ namespace MOHU.ExternalIntegration.Application.Service.Kedana
 
             if (model.CustId == Guid.Empty)
             {
-                throw new NotFoundException("Customer Id is Required ");
+                throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
             }
             if (model.TicketId == Guid.Empty)
             {
-                throw new NotFoundException("Ticket Id is Required ");
+                throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
             }
 
             var TicketidExist = await _commonMethod.CheckTicketIdExist(model.TicketId);
@@ -53,7 +56,7 @@ namespace MOHU.ExternalIntegration.Application.Service.Kedana
             var isCustExist = await _commonMethod.CheckCustomerExist(model.CustId);
             if (!isCustExist)
             {
-                throw new NotFoundException("This Customer is not Exist  ");
+                throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerExist]);
             }
             var query = new QueryExpression()
             {
@@ -68,14 +71,14 @@ namespace MOHU.ExternalIntegration.Application.Service.Kedana
                 {
                     Id = model.TicketId
                 };
-                // Ticket.Attributes.Add(Incident.Fields.ldv_ClosureReason, model.Resolution);
+               
                 Ticket.Attributes.Add(Incident.Fields.IntegrationClosureReason, model.Resolution);
                 Ticket.Attributes.Add(Incident.Fields.IntegrationClosureDate, model.ResolutionDate);
                 Ticket.Attributes.Add(Incident.Fields.IntegrationStatus,
               new OptionSetValue(Convert.ToInt32(model.IntegrationStatus)));
 
 
-                //  Ticket.Attributes.Add(Incident.Fields.IsKadanaUpdated, model.IsKadanaUpdated);
+               
                 Ticket.Attributes.Add(Incident.Fields.IsKadanaUpdated, true);
 
 

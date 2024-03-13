@@ -17,4 +17,9 @@
     <ProjectReference Include="..\MOHU.ExternalIntegration.Shared\MOHU.ExternalIntegration.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dto\Kedana\" />
+    <Folder Include="Dto\ServiceDisk\" />
+  </ItemGroup>
+
 </Project>

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOHU.ExternalIntegration.Contracts.Dto;
 using MOHU.ExternalIntegration.Contracts.Dto.Common;
-using MOHU.ExternalIntegration.Contracts.Dto.Kedana;
+
 using MOHU.ExternalIntegration.Contracts.Interface;
 
 namespace MOHU.Externalintegration.WebApi.Controllers
@@ -12,13 +12,13 @@ namespace MOHU.Externalintegration.WebApi.Controllers
     public class KedanaController : ControllerBase
     {
 
-        private readonly IKedanaUpdateStatusService _kedanaUpdateStatusService;
+        
 
         public readonly IUpdateStatusService _updateStatusService;
-        public KedanaController(IKedanaUpdateStatusService kedanaUpdateStatusService  , IUpdateStatusService updateStatusService)
+        public KedanaController( IUpdateStatusService updateStatusService)
         {
 
-            _kedanaUpdateStatusService = kedanaUpdateStatusService;
+           
             _updateStatusService = updateStatusService;
         }
 
