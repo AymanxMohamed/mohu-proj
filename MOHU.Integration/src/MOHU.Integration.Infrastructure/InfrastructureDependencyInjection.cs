@@ -31,10 +31,7 @@ namespace MOHU.Integration.Infrastructure
             services.AddTransient<IStringLocalizer, MessageStringLocalizer>();
 
 
-            // Register IMessageService and MessageStringLocalizer
-          //  services.AddScoped<IMessageService, MessageService>();
-          // Replace YourMessageServiceImplementation with your actual implementation
-            services.AddTransient<IStringLocalizer, MessageStringLocalizer>();
+         
 
 
             return services;

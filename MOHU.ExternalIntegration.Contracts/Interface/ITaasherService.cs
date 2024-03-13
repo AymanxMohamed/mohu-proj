@@ -1,4 +1,5 @@
 ﻿//using MOHU.ExternalIntegration.Contracts.Dto;
+//using MOHU.ExternalIntegration.Contracts.Dto.Taasher;
 //using System;
 //using System.Collections.Generic;
 //using System.Linq;
@@ -7,10 +8,9 @@
 
 //namespace MOHU.ExternalIntegration.Contracts.Interface
 //{
-//    public  interface IUpdateStatusService
+//    public interface ITaasherService
 //    {
 
-//        Task<bool> DeskUpdateStatus(UpdateStatusRequest model);
-
+//        Task<bool> TasheerUpdateStatus(UpdateStatusRequest model);
 //    }
 //}

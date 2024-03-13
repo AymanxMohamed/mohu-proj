@@ -11,14 +11,14 @@ namespace MOHU.Externalintegration.WebApi.Controllers
     [ApiController]
     public class TaasherController : ControllerBase
     {
-        private readonly ICreateProfileService _createProfileService;
+       // private readonly ICreateProfileService _createProfileService;
 
         private readonly ITaasherUpdateStatusService _taasherUpdateStatusService;
-        public TaasherController(ICreateProfileService createProfileService,
+        public TaasherController(/*ICreateProfileService createProfileService,*/
 
             ITaasherUpdateStatusService taasherUpdateStatusService)
         {
-            _createProfileService = createProfileService;
+           // _createProfileService = createProfileService;
             _taasherUpdateStatusService = taasherUpdateStatusService;
         }
 
@@ -66,19 +66,19 @@ namespace MOHU.Externalintegration.WebApi.Controllers
         [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseMessage<Guid?>), StatusCodes.Status400BadRequest)]
         [HttpPost]
-        public async Task<ActionResult<ResponseMessage<Guid>>> Post(CreateProfileResponse model)
-        {
-            try
-            {
-                var result = await _createProfileService.CreateProfile(model);
-                return Ok(result);
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(new ResponseMessage<Guid?> { StatusCode = StatusCodes.Status400BadRequest, ErrorMessage = ex.Message });
-            }
+        //public async Task<ActionResult<ResponseMessage<Guid>>> Post(CreateProfileResponse model)
+        //{
+        //    try
+        //    {
+        //        var result = await _createProfileService.CreateProfile(model);
+        //        return Ok(result);
+        //    }
+        //    catch (BadRequestException ex)
+        //    {
+        //        return BadRequest(new ResponseMessage<Guid?> { StatusCode = StatusCodes.Status400BadRequest, ErrorMessage = ex.Message });
+        //    }
 
-        }
+        //}
 
         #endregion 
 

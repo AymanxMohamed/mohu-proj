@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Common;
-using MOHU.Integration.Domain.Entitiy;
+using MOHU.ExternalIntegration.Contracts.Interface;
+using MOHU.ExternalIntegration.Contracts.Interface.Common;
+using MOHU.ExternalIntegration.Domain.Entitiy;
 using System;
 using System.Collections.Generic;
 using System.Linq;

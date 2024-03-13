@@ -11,11 +11,11 @@
     <ProjectReference Include="..\MOHU.ExternalIntegration.Domain\MOHU.ExternalIntegration.Domain.csproj" />
     <ProjectReference Include="..\MOHU.ExternalIntegration.Infrastructure\MOHU.ExternalIntegration.Infrastructure.csproj" />
     <ProjectReference Include="..\MOHU.ExternalIntegration.Shared\MOHU.ExternalIntegration.Shared.csproj" />
-    <ProjectReference Include="..\MOHU.Integration\src\MOHU.Integration.Contracts\MOHU.Integration.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.2" />
     <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.24614.12000" />
   </ItemGroup>

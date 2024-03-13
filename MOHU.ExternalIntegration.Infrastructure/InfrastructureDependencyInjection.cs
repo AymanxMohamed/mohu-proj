@@ -1,12 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using MOHU.ExternalIntegration.Contracts.Interface;
+using MOHU.ExternalIntegration.Contracts.Interface.Cache;
+using MOHU.ExternalIntegration.Contracts.Interface.Common;
+using MOHU.ExternalIntegration.Contracts.Logging;
+using MOHU.ExternalIntegration.Infrastructure.Localization;
 using MOHU.ExternalIntegration.Infrastructure.Persistence;
 using MOHU.ExternalIntegration.Infrastructure.Repository;
 using MOHU.ExternalIntegration.Infrastructure.Service;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Cache;
-using MOHU.Integration.Contracts.Interface.Common;
-using MOHU.Integration.Contracts.Logging;
+
 using Serilog;
 
 namespace MOHU.ExternalIntegration.Infrastructure
@@ -27,9 +30,9 @@ namespace MOHU.ExternalIntegration.Infrastructure
             services.AddMemoryCache();
             services.AddScoped(typeof(ICacheService<>), typeof(CacheService<>));
 
+           services.AddTransient<IStringLocalizer, MessageStringLocalizer>();
 
-
-
+         
             return services;
         }
     }

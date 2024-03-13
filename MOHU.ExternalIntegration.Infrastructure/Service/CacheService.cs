@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using MOHU.Integration.Contracts.Dto.Config;
-using MOHU.Integration.Contracts.Interface.Cache;
+using MOHU.ExternalIntegration.Contracts.Dto.Config;
+using MOHU.ExternalIntegration.Contracts.Interface.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.ExternalIntegration.Application.Exceptions;
 using MOHU.ExternalIntegration.Contracts.Dto.Taasher;
+using MOHU.ExternalIntegration.Contracts.Enum;
 using MOHU.ExternalIntegration.Contracts.Interface;
 using MOHU.ExternalIntegration.Domain.Entitiy;
+using MOHU.ExternalIntegration.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,54 +19,52 @@ namespace MOHU.ExternalIntegration.Application.Service.Taasher
     public class CreateProfileService : ICreateProfileService
     {
         private readonly ICrmContext crmContext;
-        private readonly IHttpExceptionService _httpExceptionService;
-        private readonly IStringLocalizer _stringLocalizer;
+
+        private readonly IStringLocalizer _localizer;
+        private readonly ICommonMethod _commonMethod;
+        private readonly IValidator<CreateProfileResponse> _validator;
 
         public CreateProfileService(ICrmContext crmContext,
-            IHttpExceptionService httpExceptionService, IStringLocalizer stringLocalizer)
+            IStringLocalizer localizer,
+            ICommonMethod commonMethod,
+          IValidator<CreateProfileResponse> validator
+            )
         {
             this.crmContext = crmContext;
-            _httpExceptionService = httpExceptionService;
+            _localizer = localizer;
+            _commonMethod = commonMethod;
 
-            _stringLocalizer = stringLocalizer;
         }
 
-
-
-
-        #region Validation msg 
 
         public async Task<Guid> CreateProfile(CreateProfileResponse model)
         {
 
+            var results = await _validator.ValidateAsync(model);
 
-            var results = await _httpExceptionService.ValidateModelAsync<CreateProfileResponse, CreateProfileValidator>(model);
 
             if (results?.IsValid == false)
             {
-                _httpExceptionService.ThrowBadRequestError(results.ToString(", "));
+
+                throw new BadRequestException(results.Errors.FirstOrDefault().ErrorMessage);
             }
 
             var entity = new Entity(Individual.EntityLogicalName);
 
 
-            var isEmailExist = await CheckEmailAddressExist(model.PrimaryEmail);
+            var isEmailExist = await _commonMethod.CheckEmailAddressExist(model.PrimaryEmail);
             if (isEmailExist == true)
             {
-                //model.ErrorMessage = "This Email is existing Before.";
-                //throw new BadRequestException(model.ErrorMessage);
 
-                //  _httpExceptionService.ThrowBadRequestError("This Email is existing Before");
-
-                _httpExceptionService.ThrowBadRequestError(_stringLocalizer["EmailMsg"]);
+                throw new BadRequestException(_localizer[ErrorMessageCodes.EmailisexistingBefore]);
 
 
             }
-            var IsMobileExist = await CheckMobileNumberDuplication(model.Phone1);
+            var IsMobileExist = await _commonMethod.CheckMobileNumberDuplication(model.Phone1);
             if (IsMobileExist == true)
             {
-                model.ErrorMessage = "This Phone is already registered.";
-                throw new BadRequestException(model.ErrorMessage);
+
+                throw new BadRequestException(_localizer[ErrorMessageCodes.PhoneisexistingBefore]);
             }
 
             if (isEmailExist == false && IsMobileExist == false)
@@ -71,19 +72,12 @@ namespace MOHU.ExternalIntegration.Application.Service.Taasher
                 entity.Attributes.Add(Individual.Fields.FirstName, model.FirstName);
                 entity.Attributes.Add(Individual.Fields.LastName, model.LastName);
                 entity.Attributes.Add(Individual.Fields.MobileNumber, model.Phone1);
-
-
                 entity.Attributes.Add(Individual.Fields.Email, model.PrimaryEmail);
-                // entity.Attributes.Add(Individual.Fields.PreferredLanguage,
-                //new OptionSetValue(Convert.ToInt32(model.PreferredLanguage)));
                 entity.Attributes.Add(Individual.Fields.TaasherRecID, model.RecID);
                 entity.Attributes.Add(Individual.Fields.Origin, model.Origin);
                 entity.Attributes.Add(Individual.Fields.Nationality,
               new EntityReference(Individual.EntityLogicalName, model.Nationality));
 
-                // not required on rsd 
-                // entity.Attributes.Add(Individual.Fields.CountryofResidence,
-                //new EntityReference(Individual.EntityLogicalName, model.CountryOfResidence));
 
                 entity.Attributes.Add(Individual.Fields.IDType,
                  new OptionSetValue(Convert.ToInt32(model.IdType)));
@@ -92,15 +86,15 @@ namespace MOHU.ExternalIntegration.Application.Service.Taasher
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
-                        model.ErrorMessage = "National identity need to add with it id number only with optional passport no. ";
-                        throw new BadRequestException(model.ErrorMessage);
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.NationalIdentityWithidnumber]));
                     }
 
-                    var IsIdnumberExist = await CheckIDNumberIsExsting(model.IdNumber);
+                    var IsIdnumberExist = await _commonMethod.CheckIDNumberIsExsting(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
-                        model.ErrorMessage = "This Id Number is existing Before.";
-                        throw new BadRequestException(model.ErrorMessage);
+
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
+
                     }
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
 
@@ -109,14 +103,15 @@ namespace MOHU.ExternalIntegration.Application.Service.Taasher
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
-                        model.ErrorMessage = "Accommodation need to add with it id number only with optional passport no. ";
-                        throw new BadRequestException(model.ErrorMessage);
+
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.AccommodationWithIdNumber]));
+
                     }
-                    var IsIdnumberExist = await CheckIDNumberIsExsting(model.IdNumber);
+                    var IsIdnumberExist = await _commonMethod.CheckIDNumberIsExsting(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
-                        model.ErrorMessage = "This Id Number is existing Before.";
-                        throw new BadRequestException(model.ErrorMessage);
+
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
                     }
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
 
@@ -125,24 +120,24 @@ namespace MOHU.ExternalIntegration.Application.Service.Taasher
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
-                        _httpExceptionService.ThrowBadRequestError("IdNumber is Required with IdType of Gulfcitizen ");
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.GulfcitizenWithIdNumber]));
                     }
                     if (string.IsNullOrEmpty(model.PassportNumber))
                     {
-                        _httpExceptionService.ThrowBadRequestError("PassportNumber is Required with IdType of Gulfcitizen ");
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.GulfcitizenWithPassportNumber]));
                     }
 
-                    var IsIdnumberExist = await CheckIDNumberIsExsting(model.IdNumber);
+                    var IsIdnumberExist = await _commonMethod.CheckIDNumberIsExsting(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
-                        model.ErrorMessage = "This Id Number is existing Before.";
-                        throw new BadRequestException(model.ErrorMessage);
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
                     }
-                    var IsPassportExsting = await CheckPassportNumberIsExsting(model.PassportNumber);
+                    var IsPassportExsting = await _commonMethod.CheckPassportNumberIsExsting(model.PassportNumber);
                     if (IsPassportExsting == true)
                     {
-                        model.ErrorMessage = "This Passport Number is existing Before.";
-                        throw new BadRequestException(model.ErrorMessage);
+
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.PassportNumberDuplication]));
+
                     }
 
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
@@ -152,14 +147,13 @@ namespace MOHU.ExternalIntegration.Application.Service.Taasher
                 {
                     if (string.IsNullOrEmpty(model.PassportNumber))
                     {
-                        model.ErrorMessage = "Id Type of passport need to enter with it passport number.";
-                        throw new BadRequestException(model.ErrorMessage);
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]));
                     }
-                    var IsPassportExsting = await CheckPassportNumberIsExsting(model.PassportNumber);
+                    var IsPassportExsting = await _commonMethod.CheckPassportNumberIsExsting(model.PassportNumber);
                     if (IsPassportExsting == true)
                     {
-                        model.ErrorMessage = "This Passport Number is existing Before.";
-                        throw new BadRequestException(model.ErrorMessage);
+
+                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]));
                     }
                     else
                     {
@@ -172,90 +166,8 @@ namespace MOHU.ExternalIntegration.Application.Service.Taasher
             }
 
 
-            throw new BadRequestException("Customer already exist");
+            throw new BadRequestException(_localizer[ErrorMessageCodes.CustomerExist]);
 
-        }
-
-
-
-        #endregion
-
-
-
-
-
-
-        public async Task<bool> CheckEmailAddressExist(string Email)
-        {
-            var queryContact = new QueryExpression
-            {
-                EntityName = Individual.EntityLogicalName,
-                NoLock = true
-            };
-            var filter = new FilterExpression(LogicalOperator.And);
-            filter.AddCondition(new ConditionExpression(Individual.Fields.Email, ConditionOperator.Equal, Email));
-            queryContact.Criteria.AddFilter(filter);
-            var response = crmContext.ServiceClient.RetrieveMultiple(queryContact).Entities?.FirstOrDefault()?.ToString();
-            if (response != null)
-            {
-                return true;
-            }
-            return false;
-        }
-
-
-        public async Task<bool> CheckMobileNumberDuplication(string MobileNo)
-        {
-            var queryContact = new QueryExpression
-            {
-                EntityName = Individual.EntityLogicalName,
-                NoLock = true
-            };
-            var filter = new FilterExpression(LogicalOperator.And);
-            filter.AddCondition(new ConditionExpression(Individual.Fields.MobileNumber, ConditionOperator.Equal, MobileNo));
-            queryContact.Criteria.AddFilter(filter);
-            var response = crmContext.ServiceClient.RetrieveMultiple(queryContact).Entities?.FirstOrDefault()?.ToString();
-            if (response != null)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> CheckPassportNumberIsExsting(string PassportNo)
-        {
-            var queryContact = new QueryExpression
-            {
-                EntityName = Individual.EntityLogicalName,
-                NoLock = true
-            };
-            var filter = new FilterExpression(LogicalOperator.And);
-            filter.AddCondition(new ConditionExpression(Individual.Fields.PassportNumber, ConditionOperator.Equal, PassportNo));
-            queryContact.Criteria.AddFilter(filter);
-            var response = crmContext.ServiceClient.RetrieveMultiple(queryContact).Entities?.FirstOrDefault()?.ToString();
-            if (response != null)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> CheckIDNumberIsExsting(string IDNumber)
-        {
-            var queryContact = new QueryExpression
-            {
-                EntityName = Individual.EntityLogicalName,
-                NoLock = true
-            };
-            var filter = new FilterExpression(LogicalOperator.And);
-            filter.AddCondition(new ConditionExpression(Individual.Fields.IDNumber, ConditionOperator.Equal, IDNumber));
-            queryContact.Criteria.AddFilter(filter);
-            var response = crmContext.ServiceClient.RetrieveMultiple(queryContact).Entities?.FirstOrDefault()?.ToString();
-            if (response != null)
-            {
-                return true;
-            }
-            return false;
         }
 
 

@@ -16,9 +16,12 @@ namespace MOHU.ExternalIntegration.Application.Service.Kedana
     public class KedanaUpdateStatusService : IKedanaUpdateStatusService
     {
         private readonly ICrmContext crmContext;
-        public KedanaUpdateStatusService(ICrmContext crmContext)
+        private readonly ICommonMethod _commonMethod;
+     //   ICommonMethod commonMethod
+        public KedanaUpdateStatusService(ICrmContext crmContext, ICommonMethod commonMethod)
         {
             this.crmContext = crmContext;
+            _commonMethod= commonMethod;
         }
 
         public async Task<bool> KedanaUpdateStatus(KedanaUpdateStatusResponse model)
@@ -33,9 +36,9 @@ namespace MOHU.ExternalIntegration.Application.Service.Kedana
                 throw new NotFoundException("Ticket Id is Required ");
             }
 
-            var TicketidExist = await CheckTicketIdExist(model.TicketId);
+            var TicketidExist = await _commonMethod.CheckTicketIdExist(model.TicketId);
 
-            var isCustExist = await CheckCustomerExist(model.CustId);
+            var isCustExist = await _commonMethod.CheckCustomerExist(model.CustId);
             if (!isCustExist)
             {
                 throw new NotFoundException("This Customer is not Exist  ");
@@ -60,8 +63,8 @@ namespace MOHU.ExternalIntegration.Application.Service.Kedana
               new OptionSetValue(Convert.ToInt32(model.IntegrationStatus)));
 
 
-                Ticket.Attributes.Add(Incident.Fields.IsKadanaUpdated, model.IsKadanaUpdated);
-
+                //Ticket.Attributes.Add(Incident.Fields.IsKadanaUpdated, model.IsKadanaUpdated);
+                Ticket.Attributes.Add(Incident.Fields.IsKadanaUpdated, true);
 
 
                 crmContext.ServiceClient.Update(Ticket);
@@ -73,44 +76,7 @@ namespace MOHU.ExternalIntegration.Application.Service.Kedana
 
         }
 
-        // //check CustomerExist 
-        public async Task<bool> CheckCustomerExist(Guid CustId)
-        {
-            var queryContact = new QueryExpression
-            {
-                EntityName = Incident.EntityLogicalName,
-                NoLock = true
-            };
-            var filter = new FilterExpression(LogicalOperator.And);
-            filter.AddCondition(new ConditionExpression(Incident.Fields.CustomerId, ConditionOperator.Equal, CustId));
-            queryContact.Criteria.AddFilter(filter);
-            var response = crmContext.ServiceClient.RetrieveMultiple(queryContact).Entities?.FirstOrDefault()?.ToString();
-            if (response != null)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> CheckTicketIdExist(Guid TicketId)
-        {
-            var queryContact = new QueryExpression
-            {
-                EntityName = Incident.EntityLogicalName,
-                NoLock = true
-            };
-            var filter = new FilterExpression(LogicalOperator.And);
-            filter.AddCondition(new ConditionExpression(ldv_Incident.Fields.Id, ConditionOperator.Equal, TicketId));
-            queryContact.Criteria.AddFilter(filter);
-            var response = crmContext.ServiceClient.RetrieveMultiple(queryContact).Entities?.FirstOrDefault()?.ToString();
-            if (response != null)
-            {
-                return true;
-            }
-            return false;
-        }
-
-
+     
 
 
 

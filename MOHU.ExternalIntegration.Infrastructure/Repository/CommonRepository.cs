@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
-
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Common;
+using MOHU.ExternalIntegration.Contracts.Dto.Common;
+using MOHU.ExternalIntegration.Contracts.Interface;
+using MOHU.ExternalIntegration.Contracts.Interface.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MOHU.ExternalIntegration.Contracts\MOHU.ExternalIntegration.Contracts.csproj" />
-    <ProjectReference Include="..\MOHU.Integration\src\MOHU.Integration.Contracts\MOHU.Integration.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

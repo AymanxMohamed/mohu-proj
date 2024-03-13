@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MOHU.ExternalIntegration.Domain\MOHU.ExternalIntegration.Domain.csproj" />
+    <ProjectReference Include="..\MOHU.ExternalIntegration.Shared\MOHU.ExternalIntegration.Shared.csproj" />
   </ItemGroup>
 
 </Project>

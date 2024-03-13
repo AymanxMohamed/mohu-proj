@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Contracts.Logging;
+﻿
+using MOHU.ExternalIntegration.Contracts.Logging;
 using Serilog;
 using System;
 using System.Collections.Generic;

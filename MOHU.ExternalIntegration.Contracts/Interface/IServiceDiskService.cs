@@ -7,7 +7,7 @@
 
 //namespace MOHU.ExternalIntegration.Contracts.Interface
 //{
-//    public  interface IUpdateStatusService
+//    public interface IServiceDiskService
 //    {
 
 //        Task<bool> DeskUpdateStatus(UpdateStatusRequest model);

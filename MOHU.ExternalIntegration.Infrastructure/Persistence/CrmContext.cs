@@ -1,5 +1,5 @@
 ﻿using Microsoft.PowerPlatform.Dataverse.Client;
-using MOHU.Integration.Contracts.Interface;
+using MOHU.ExternalIntegration.Contracts.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;

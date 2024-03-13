@@ -7,10 +7,9 @@
 
 //namespace MOHU.ExternalIntegration.Contracts.Interface
 //{
-//    public  interface IUpdateStatusService
+//    public interface IKedanaaService
 //    {
-
-//        Task<bool> DeskUpdateStatus(UpdateStatusRequest model);
+//        Task<bool> KedanaaUpdateStatusService(UpdateStatusRequest model);
 
 //    }
 //}
