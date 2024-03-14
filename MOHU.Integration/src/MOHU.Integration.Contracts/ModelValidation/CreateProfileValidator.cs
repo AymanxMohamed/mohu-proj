@@ -25,12 +25,6 @@ namespace MOHU.Integration.Contracts.ModelValidation
             .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.FirstnameExceedingcharacter])
             .Matches("^[a-zA-Z]*$").WithMessage(_localizer[ErrorMessageCodes.EnglishLettersValidator]);
 
-
-            //RuleFor(x => x.FirstName)
-            //.NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired])
-            //.MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired])
-            //.Matches("^[a-zA-Z]*$").WithMessage(_localizer[ErrorMessageCodes.FieldIsRequired]);
-
             RuleFor(x => x.LastName)
           .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.LastNameReuired])
           .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.LastNameExceeding])
@@ -42,13 +36,18 @@ namespace MOHU.Integration.Contracts.ModelValidation
              .Matches(@"^[\u0600-\u06FF\s]*$").WithMessage(_localizer[ErrorMessageCodes.ArabicLettersValidator])
              .MaximumLength(150).WithMessage(_localizer[ErrorMessageCodes.ArabicNameExceeding]);
 
-            // RuleFor(x => x.Email)
-            //.NotEmpty().WithMessage(_localizer[ErrorMessageCodes.EmailRequired])
-            //.MaximumLength(100).WithMessage(_localizer[ErrorMessageCodes.EmailExceeding])
-            //.EmailAddress().WithMessage(_localizer[ErrorMessageCodes.EmailValidator]);
+           
+
+                RuleFor(x => x.Email)
+               .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.EmailRequired])
+                .Matches(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+               .WithMessage(_localizer[ErrorMessageCodes.EmailValidator]);
+
+         
 
             RuleFor(x => x.MobileCountryCode)
             .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.MobileCountryCodeRequired]);
+
 
             RuleFor(x => x.DateOfBirth)
             .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.DateofBirthRequired])
@@ -58,8 +57,14 @@ namespace MOHU.Integration.Contracts.ModelValidation
             .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.MobileNumberRequired]).MaximumLength(20)
             .Matches(@"^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$").WithMessage(_localizer[ErrorMessageCodes.MobilePhoneValidator]);
 
+
             RuleFor(x => x.Nationality)
-            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.NationalityisRequired]);
+          .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.NationalityisRequired]);
+
+            RuleFor(x => x.Nationality)
+                .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.NationalityisRequired])
+                .Must(BeValidGuid).WithMessage(_localizer[ErrorMessageCodes.InvalidNationality]);
+
 
             RuleFor(x => x.CountryOfResidence)
             .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.CountryOfResidenceisrequired]);
@@ -71,5 +76,9 @@ namespace MOHU.Integration.Contracts.ModelValidation
         }
 
 
+        private bool BeValidGuid(Guid nationality)
+        {
+            return nationality != Guid.Empty;
+        }
     }
 }

@@ -6,8 +6,8 @@
         public Guid CaseType { get; set; }
         public Guid CategoryId { get; set; }
         public Guid SubCategoryId { get; set; }
-        public Guid? SubCategoryId1 { get; set; }
+        public Guid? SubCategoryId1 { get; set; } 
         public int? BeneficiaryType { get; set; }
         public int? Location { get; set; }
     }
-}
+} 

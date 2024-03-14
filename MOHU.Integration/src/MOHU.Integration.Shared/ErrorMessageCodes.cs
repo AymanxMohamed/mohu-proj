@@ -81,6 +81,23 @@ namespace MOHU.Integration.Shared
 
         public static string CustomerExist = "132";
 
+        public static string CustomerIdRquired = "129";
+
+
+        public static string InvalidNationality = "133";
+       
+        public static string DescriptionisRequired = "134";
+        
+        public static string CaseTypeisRequired = "135";
+       
+        public static string CategoryRequired = "137";
+       
+        public static string SubCategoryIdRequired = "138";
+       
+        public static string SubCategoryId1isRequired = "139";
+        //AgeCannotBeNegative
+        public static string AgeCannotBeNegative = "140";
+
 
 
     }

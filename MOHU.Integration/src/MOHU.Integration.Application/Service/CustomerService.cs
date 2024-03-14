@@ -46,12 +46,16 @@ namespace MOHU.Integration.Application.Service
       
         public async Task<Guid> CreateProfile(CreateProfileResponse model)
         {
-           var results = await _validator.ValidateAsync(model);
+          
+            
+
+            var results = await _validator.ValidateAsync(model);
 
             if (results?.IsValid == false )
             {
                 throw new BadRequestException(results.Errors.FirstOrDefault().ErrorMessage);
             }
+            
             var entity = new Entity(Individual.EntityLogicalName);
 
             var isEmailExist = await _commonmethod.CheckEmailAddressExist(model.Email);

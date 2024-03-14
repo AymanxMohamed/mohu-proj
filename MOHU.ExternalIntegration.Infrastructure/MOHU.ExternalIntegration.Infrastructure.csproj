@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.2" />
     <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client.Dynamics" Version="1.1.17" />
+    <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.24614.12000" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageReference Include="Serilog.Sinks.AzureLogAnalytics" Version="6.2.0" />
   </ItemGroup>

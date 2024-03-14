@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using FluentValidation;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Application.Exceptions;
@@ -17,10 +18,16 @@ namespace MOHU.Integration.Application.Service
     {
         private readonly ICrmContext _crmContext;
         private readonly ICommonRepository _commonRepository;
-        public TicketService(ICrmContext crmContext, ICommonRepository commonRepository)
+        private readonly IValidator<SubmitTicketRequest> _validator;
+        public TicketService(ICrmContext crmContext, 
+            ICommonRepository commonRepository,
+            IValidator<SubmitTicketRequest> validator
+            )
         {
             _crmContext = crmContext;
             _commonRepository = commonRepository;
+            _validator= validator;
+
         }
         public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
         {
@@ -150,7 +157,16 @@ namespace MOHU.Integration.Application.Service
         }
         public async Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
         {
+            
+
             var response = new SubmitTicketResponse();
+
+            var results = await _validator.ValidateAsync(request);
+
+            if (results?.IsValid == false)
+            {
+                throw new BadRequestException(results.Errors.FirstOrDefault().ErrorMessage);
+            }
 
             var entity = new Entity(Incident.EntityLogicalName);
 
@@ -389,7 +405,7 @@ namespace MOHU.Integration.Application.Service
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred isssss : " + ex.Message);
+                Console.WriteLine("An error occurred is : " + ex.Message);
             }
 
 
@@ -485,7 +501,7 @@ namespace MOHU.Integration.Application.Service
                             entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value.ToString(),
                 CreationOn = entity.GetAttributeValue<DateTime>(Incident.Fields.CreatedOn)
             };
-            return result;
+            return result; 
         }
         private async Task<TicketDetailsResponse?> MapTicketToDetailsDto(Entity entity)
         {

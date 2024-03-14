@@ -1,4 +1,8 @@
-﻿using MOHU.Integration.Contracts.Enum;
+﻿using Microsoft.Extensions.Localization;
+
+using MOHU.Integration.Contracts.Enum;
+using MOHU.Integration.Shared;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,16 +20,14 @@ namespace MOHU.Integration.Contracts.Dto.CreateProfile
     public class CreateProfileResponse
 
     {
-
+        
         public string FirstName { get; set; }
-
-       
+ 
         public string LastName { get; set; }
-
-       
+        
         public string ArabicName { get; set; }
 
-        public string Email { get; set; }
+        public string Email { get; set; }   
 
         public string MobileNumber  { get; set; }
 
@@ -36,18 +38,17 @@ namespace MOHU.Integration.Contracts.Dto.CreateProfile
 
         public GenderEnum? Gender { get; set; }
 
-
-        public int? Age { get; set; } 
+        public int? Age { get; set; } = null; 
 
         public Guid Nationality { get; set; }
 
-        public Guid CountryOfResidence { get; set; }
+        public Guid CountryOfResidence { get; set; } 
 
         public IdTypeEnum IdType { get; set; }
 
         public string IdNumber { get; set; }= string.Empty;
 
-        public string PassportNumber { get; set; } = string.Empty;
+        public string PassportNumber { get; set; } = string.Empty;    
 
 
 

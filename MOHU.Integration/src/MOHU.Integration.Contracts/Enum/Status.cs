@@ -3,6 +3,7 @@
     public enum Status
     {
         Failure =1,
-        Success
+        Success,
+        Error
     }
 }
