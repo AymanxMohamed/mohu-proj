@@ -2,6 +2,6 @@
 {
     public interface ICacheKeyGeneratorService
     {
-        Task<string> GenerateKey(string key, string language);
+        string GenerateKey(string key, string language);
     }
 }

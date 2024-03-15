@@ -24,14 +24,9 @@ namespace MOHU.Integration.Infrastructure.Service
             return Task.CompletedTask;
         }
 
-        public Task<object> GetAsync(string key)
+        public async Task<T> GetAsync<T>(string key)
         {
-            var keyExists = _cache.TryGetValue(key, out var value);
-
-            if (keyExists)
-                return Task.FromResult(value);
-
-            return Task.FromResult(key as object);
+            return await Task.FromResult(_cache.TryGetValue(key, out T value) ? value : default);
         }
 
        
@@ -42,10 +37,10 @@ namespace MOHU.Integration.Infrastructure.Service
             return Task.CompletedTask;
         }
 
-        public Task SetAsync(string key, object value)
+        public Task SetAsync<T>(string key, T value)
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions()
-           .SetAbsoluteExpiration(TimeSpan.FromMinutes(_config.ExpirationInMinutes));
+           .SetAbsoluteExpiration(TimeSpan.FromMinutes(10)); //TimeSpan.FromMinutes(_config.ExpirationInMinutes)
             _cache.Set(key, value,cacheEntryOptions);
             return Task.CompletedTask ;
         }

@@ -18,15 +18,17 @@ namespace MOHU.Integration.Application.Service
     public class TicketService : ITicketService
     {
         private readonly ICrmContext _crmContext;
-        private readonly ICommonRepository _commonRepository;
+        private readonly ICommonService _commonService;
         private readonly IValidator<SubmitTicketRequest> _validator;
-        public TicketService(ICrmContext crmContext, 
-            ICommonRepository commonRepository,
+        private readonly IAppLogger _logger;
+        public TicketService(ICrmContext crmContext,
+            IAppLogger logger,
+            ICommonService commonService,
             IValidator<SubmitTicketRequest> validator
             )
         {
             _crmContext = crmContext;
-            _commonRepository = commonRepository;
+            _commonService = commonService;
             _validator= validator;
 
             _logger = logger;
@@ -538,7 +540,7 @@ namespace MOHU.Integration.Application.Service
         private async Task<string> GetNameFromOptionSetAsync(Entity entity, string fieldLogicalName, string language)
         {
             var name = string.Empty;
-            var options = await _commonRepository.GetOptionSet(entity.LogicalName, fieldLogicalName, language);
+            var options = await _commonService.GetOptionSet(entity.LogicalName, fieldLogicalName, language);
             name = options.FirstOrDefault(x => x.Value == entity.GetAttributeValue<OptionSetValue>(Incident.Fields.ldv_Locationcode)?.Value)?.Name;
             return name;
         }

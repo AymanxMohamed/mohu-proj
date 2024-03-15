@@ -13,69 +13,83 @@ namespace MOHU.Integration.Infrastructure.Repository
         private readonly ICrmContext _crmContext;
         private readonly ICacheService _cacheService;
         private readonly ICacheKeyGeneratorService _cacheKeyGeneratorService;
-        public CommonService(ICrmContext crmContext, ICacheService cacheService, ICacheKeyGeneratorService cacheKeyGeneratorService)
+        public CommonService(ICrmContext crmContext, ICacheService cacheService /*,ICacheKeyGeneratorService cacheKeyGeneratorService*/)
         {
             _crmContext = crmContext;
             _cacheService = cacheService;
-            _cacheKeyGeneratorService = cacheKeyGeneratorService;
+            //_cacheKeyGeneratorService = cacheKeyGeneratorService;
         }
 
         public async Task<IEnumerable<LookupValueDto>> GetLookups(string entityName, string language)
         {
             var primaryField = await GetEntityPrimaryField(entityName);
 
-            
-            var query = new QueryExpression(entityName)
-            {
-                ColumnSet = new ColumnSet(primaryField),
-                NoLock = true
-            };
+            var cacheKey = $"{entityName}-{primaryField}_{language}";
 
-            var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
-            var lookups = new List<LookupValueDto>();
-
-            foreach (var record in result.Entities)
+            var resultFromCache = await _cacheService.GetAsync<IEnumerable<LookupValueDto>>(cacheKey);
+            if(resultFromCache is null)
             {
-                var lookup = new LookupValueDto
+                var query = new QueryExpression(entityName)
                 {
-                    Id = record.Id,
-                    Name = record.GetAttributeValue<string>(primaryField)
+                    ColumnSet = new ColumnSet(primaryField),
+                    NoLock = true
                 };
 
-                lookups.Add(lookup);
-            }
+                var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
+                var lookups = new List<LookupValueDto>();
 
-            return lookups;
+                foreach (var record in result.Entities)
+                {
+                    var lookup = new LookupValueDto
+                    {
+                        Id = record.Id,
+                        Name = record.GetAttributeValue<string>(primaryField)
+                    };
+
+                    lookups.Add(lookup);
+                }
+                await _cacheService.SetAsync(cacheKey, lookups);
+                resultFromCache = lookups;
+            }
+           return resultFromCache;
         }
 
         public async Task<IEnumerable<OptionDto>> GetOptionSet(string entityName, string optionSetName, string language)
         {
-            var result = new List<OptionDto>();
-            var attributeRequest = new RetrieveAttributeRequest
+            var cacheKey = $"{entityName}-{optionSetName}_{language}";
+            var resumtFromCache = await _cacheService.GetAsync<IEnumerable<OptionDto>>(cacheKey);
+            if(resumtFromCache is null)
             {
-                EntityLogicalName = entityName,
-                LogicalName = optionSetName,
-                RetrieveAsIfPublished = true
-            };
-
-            var attributeResponse = (RetrieveAttributeResponse)await _crmContext.ServiceClient.ExecuteAsync(attributeRequest);
-            var attributeMetadata = (EnumAttributeMetadata)attributeResponse.AttributeMetadata;
-
-            var optionList = (from o in attributeMetadata.OptionSet.Options
-                              select new { o.Value, Text = o.Label }).ToList();
-            foreach (var item in optionList)
-            {
-                var data = new OptionDto
+                var result = new List<OptionDto>();
+                var attributeRequest = new RetrieveAttributeRequest
                 {
-                    Name = language.Contains("ar") && item.Text.LocalizedLabels.FirstOrDefault(x => x.LanguageCode == 1025) is not null
-                        ? item.Text.LocalizedLabels.FirstOrDefault(x => x.LanguageCode == 1025)?.Label
-                        : item.Text.LocalizedLabels.FirstOrDefault(x => x.LanguageCode == 1033)?.Label,
-
-                    Value = item.Value
+                    EntityLogicalName = entityName,
+                    LogicalName = optionSetName,
+                    RetrieveAsIfPublished = true
                 };
-                result.Add(data);
+
+                var attributeResponse = (RetrieveAttributeResponse)await _crmContext.ServiceClient.ExecuteAsync(attributeRequest);
+                var attributeMetadata = (EnumAttributeMetadata)attributeResponse.AttributeMetadata;
+
+                var optionList = (from o in attributeMetadata.OptionSet.Options
+                                  select new { o.Value, Text = o.Label }).ToList();
+                foreach (var item in optionList)
+                {
+                    var data = new OptionDto
+                    {
+                        Name = language.Contains("ar") && item.Text.LocalizedLabels.FirstOrDefault(x => x.LanguageCode == 1025) is not null
+                            ? item.Text.LocalizedLabels.FirstOrDefault(x => x.LanguageCode == 1025)?.Label
+                            : item.Text.LocalizedLabels.FirstOrDefault(x => x.LanguageCode == 1033)?.Label,
+
+                        Value = item.Value
+                    };
+                    result.Add(data);
+                }
+               await _cacheService.SetAsync(cacheKey, result);
+                resumtFromCache = result;
             }
-            return result;
+     
+            return resumtFromCache;
         }
 
         private async Task<string> GetEntityPrimaryField(string entityName)

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.ExternalIntegration.Contracts.Dto;
 using MOHU.ExternalIntegration.Contracts.Dto.Common;
 
@@ -9,31 +8,20 @@ namespace MOHU.Externalintegration.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KedanaController : ControllerBase
+    public class KedanaController : BaseController
     {
-
-        
-
-        public readonly IUpdateStatusService _updateStatusService;
-        public KedanaController( IUpdateStatusService updateStatusService)
+        public readonly ITicketService _ticketService;
+        public KedanaController(ITicketService ticketService)
         {
-
-           
-            _updateStatusService = updateStatusService;
+            _ticketService = ticketService;
         }
-
-
 
         [HttpPost]
         [Route(nameof(UpdateStatus))]
-        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest model)
+        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest request)
         {
-            var result = await _updateStatusService.UpdateStatus(model);
-            return new ResponseMessage<bool> { StatusCode = StatusCodes.Status200OK, Result = result };
-
+            await _ticketService.UpdateStatus(request);
+            return Ok(true);
         }
-
-
-
     }
 }

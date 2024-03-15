@@ -8,12 +8,12 @@ namespace MOHU.Integration.Contracts.Interface
 {
     public interface ICommonMethod
     {
-        Task<bool> CheckEmailAddressExist(string Email);
-        Task<bool> CheckIDNumberIsExsting(string IDNumber);
+        Task<bool> IsProfileWithSameEmailExists(string email);
+        Task<bool> IsProfileWithSameIdNumberIExists(string idNumber);
 
-        Task<bool> CheckPassportNumberIsExsting(string PassportNo);
+        Task<bool> IsProfileWithSamePassportExists(string passportNumber);
 
-        Task<bool> CheckMobileNumberDuplication(string MobileNo); 
+        Task<bool> IsProfileWithSameMobileNumberExists(string mobileNumber); 
 
 
 

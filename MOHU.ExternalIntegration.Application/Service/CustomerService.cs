@@ -1,17 +1,15 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Contracts.Dto.CreateProfile;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Domain.Entitiy;
-using MOHU.Integration.Contracts.Enum;
-using MOHU.Integration.Contracts.Interface.Customer;
-using MOHU.Integration.Application.Exceptions;
+﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
-using MOHU.Integration.Shared;
-using FluentValidation;
-using MOHU.Integration.Contracts.Dto.Common;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using MOHU.ExternalIntegration.Application.Exceptions;
+using MOHU.ExternalIntegration.Contracts.Dto.Taasher;
+using MOHU.ExternalIntegration.Contracts.Enum;
+using MOHU.ExternalIntegration.Contracts.Interface;
+using MOHU.ExternalIntegration.Domain.Entitiy;
+using MOHU.ExternalIntegration.Shared;
 
-namespace MOHU.Integration.Application.Service
+namespace MOHU.ExternalIntegration.Application.Service
 {
     public class CustomerService : ICustomerService
     {
@@ -22,139 +20,131 @@ namespace MOHU.Integration.Application.Service
 
         public CustomerService(ICrmContext crmContext,
             IStringLocalizer localizer,
-            IValidator<CreateProfileRequest> validator)
+          IValidator<CreateProfileRequest> validator
+            )
         {
             _crmContext = crmContext;
             _localizer = localizer;
-            _validator = validator;
-
 
         }
 
+
         public async Task<Guid> CreateProfile(CreateProfileRequest model)
         {
+
             var results = await _validator.ValidateAsync(model);
 
             if (results?.IsValid == false)
             {
+
                 throw new BadRequestException(results?.Errors?.FirstOrDefault()?.ErrorMessage);
             }
 
             var entity = new Entity(Individual.EntityLogicalName);
 
-            var isEmailExist = await IsProfileWithSameEmailExists(model.Email);
+
+            var isEmailExist = await IsProfileWithSameEmailExists(model.PrimaryEmail);
             if (isEmailExist == true)
             {
 
                 throw new BadRequestException(_localizer[ErrorMessageCodes.EmailisexistingBefore]);
 
+
             }
-            var IsMobileExist = await IsProfileWithSameMobileNumberExists(model.MobileNumber);
+            var IsMobileExist = await IsProfileWithSameMobileNumberExists(model.Phone1);
             if (IsMobileExist == true)
             {
 
                 throw new BadRequestException(_localizer[ErrorMessageCodes.PhoneisexistingBefore]);
-
             }
 
             if (isEmailExist == false && IsMobileExist == false)
             {
                 entity.Attributes.Add(Individual.Fields.FirstName, model.FirstName);
                 entity.Attributes.Add(Individual.Fields.LastName, model.LastName);
-                entity.Attributes.Add(Individual.Fields.Age, model.Age);
-                entity.Attributes.Add(Individual.Fields.ArabicName, model.ArabicName);
-                entity.Attributes.Add(Individual.Fields.Email, model.Email);
-                entity.Attributes.Add(Individual.Fields.MobileCountryCode, model.MobileCountryCode);
-                entity.Attributes.Add(Individual.Fields.MobileNumber, model.MobileNumber);
-                entity.Attributes.Add(Individual.Fields.BirthDate, model.DateOfBirth);
-                entity.Attributes.Add(Individual.Fields.Gender,
-                      new OptionSetValue(Convert.ToInt32(model.Gender)));
-
+                entity.Attributes.Add(Individual.Fields.MobileNumber, model.Phone1);
+                entity.Attributes.Add(Individual.Fields.Email, model.PrimaryEmail);
+                entity.Attributes.Add(Individual.Fields.TaasherRecID, model.RecID);
+                entity.Attributes.Add(Individual.Fields.Origin, model.Origin);
                 entity.Attributes.Add(Individual.Fields.Nationality,
-               new EntityReference(Individual.EntityLogicalName, model.Nationality));
-                entity.Attributes.Add(Individual.Fields.CountryofResidence,
-               new EntityReference(Individual.EntityLogicalName, model.CountryOfResidence));
+              new EntityReference(Individual.EntityLogicalName, model.Nationality));
+
 
                 entity.Attributes.Add(Individual.Fields.IDType,
                  new OptionSetValue(Convert.ToInt32(model.IdType)));
 
-                if (model.IdType == IdTypeEnum.NationalIdentity)
+                if (model.IdType == IdType.NationalIdentity)
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
-
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.NationalIdentityWithidnumber]));
-
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.NationalIdentityWithidnumber]);
                     }
 
                     var IsIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
 
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.IdNumberisexistingBefore]);
 
                     }
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
 
                 }
-                else if (model.IdType == IdTypeEnum.Accommodation)
+                else if (model.IdType == IdType.Accommodation)
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
 
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.AccommodationWithIdNumber]));
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.AccommodationWithIdNumber]);
+
                     }
                     var IsIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
 
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.IdNumberisexistingBefore]);
                     }
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
 
                 }
-                else if (model.IdType == IdTypeEnum.Gulfcitizen)
+                else if (model.IdType == IdType.Gulfcitizen)
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
                     {
-
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.GulfcitizenWithIdNumber]));
-
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.GulfcitizenWithIdNumber]);
                     }
                     if (string.IsNullOrEmpty(model.PassportNumber))
                     {
-
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.GulfcitizenWithPassportNumber]));
-
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.GulfcitizenWithPassportNumber]);
                     }
 
                     var IsIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
                     if (IsIdnumberExist == true)
                     {
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.IdNumberisexistingBefore]);
                     }
                     var IsPassportExsting = await IsProfileWithSamePassportExists(model.PassportNumber);
                     if (IsPassportExsting == true)
                     {
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.PassportNumberDuplication]));
+
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.PassportNumberDuplication]);
 
                     }
 
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
                     entity.Attributes.Add(Individual.Fields.PassportNumber, model.PassportNumber);
                 }
-                else if (model.IdType == IdTypeEnum.Passport)
+                else if (model.IdType == IdType.Passport)
                 {
                     if (string.IsNullOrEmpty(model.PassportNumber))
                     {
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]));
-
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]);
                     }
                     var IsPassportExsting = await IsProfileWithSamePassportExists(model.PassportNumber);
                     if (IsPassportExsting == true)
                     {
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]));
 
+                        throw new BadRequestException(_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]);
                     }
                     else
                     {
@@ -171,31 +161,6 @@ namespace MOHU.Integration.Application.Service
 
         }
 
-        public async Task<LookupDto?> GetIndividualByMobileNumberAsync(string mobileNumber)
-        {
-            var query = new QueryExpression(Contact.EntityLogicalName)
-            {
-                NoLock = true
-            };
-            var filter = new FilterExpression(LogicalOperator.And);
-            filter.AddCondition(new ConditionExpression(Contact.Fields.MobilePhone, ConditionOperator.Equal, mobileNumber));
-            query.Criteria.AddFilter(filter);
-
-            var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
-
-            if (result.Entities.Any())
-                return new LookupDto { Id = result.Entities.FirstOrDefault().Id, EntityLogicalName = result.Entities.FirstOrDefault().LogicalName };
-
-            return null;
-        }
-
-        public async Task<LookupDto> CreateIndividualAsync(string mobileNumber)
-        {
-            var entity = new Entity(Contact.EntityLogicalName);
-            entity.Attributes.Add(Contact.Fields.MobilePhone, mobileNumber);
-            var individualId = await _crmContext.ServiceClient.CreateAsync(entity);
-            return new LookupDto { Id = individualId, EntityLogicalName = entity.LogicalName };
-        }
         public async Task<bool> IsProfileWithSameEmailExists(string Email)
         {
             var queryContact = new QueryExpression
@@ -270,7 +235,3 @@ namespace MOHU.Integration.Application.Service
 
     }
 }
-
-
-
-

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MOHU.ExternalIntegration.Contracts.Dto.Taasher
 {
-    public class CreateProfileResponse
+    public class CreateProfileRequest
     {
 
         
@@ -33,7 +33,7 @@ namespace MOHU.ExternalIntegration.Contracts.Dto.Taasher
         public string? RecID { get; set; }
 
 
-        public IdTypeEnum IdType { get; set; } 
+        public IdType IdType { get; set; } 
 
 
         public string IdNumber { get; set; } = string.Empty;  
@@ -43,8 +43,8 @@ namespace MOHU.ExternalIntegration.Contracts.Dto.Taasher
 
        
         [IgnoreDataMember]
-        [EnumDataType(typeof(OriginEnum))]
-        public int Origin { get; private set; } = (int)OriginEnum.Taasher;
+        [EnumDataType(typeof(Origin))]
+        public int Origin { get; private set; } = (int)Enum.Origin.Taasher;
 
 
     }

@@ -3,15 +3,10 @@ using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Domain.Entitiy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MOHU.Integration.Application.common
+namespace MOHU.Integration.Application.Localization
 {
-    public  class MessageService: IMessageService
+    public class MessageService : IMessageService
     {
         private readonly ICrmContext _crmContext;
         public MessageService(ICrmContext crmContext)
@@ -34,12 +29,5 @@ namespace MOHU.Integration.Application.common
                 ErrorMessage = entityCollection?.Entities?.FirstOrDefault()?.GetAttributeValue<string>(ldv_message.Fields.ldv_englishmessage)
             };
         }
-
-
-
-
-
-
-
     }
 }

@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MOHU.ExternalIntegration.Contracts.ModelValidation.Tasher
+namespace MOHU.ExternalIntegration.Application.Validator
 {
-    public class CreateProfileValidator : AbstractValidator<CreateProfileResponse>
+    public class CreateProfileValidator : AbstractValidator<CreateProfileRequest>
     {
         private readonly IStringLocalizer _localizer;
 

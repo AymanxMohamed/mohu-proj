@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.ExternalIntegration.Contracts.Dto;
 using MOHU.ExternalIntegration.Contracts.Dto.Common;
-//using MOHU.ExternalIntegration.Contracts.Dto.ServiceDisk; // test general 
 using MOHU.ExternalIntegration.Contracts.Interface;
 
 namespace MOHU.Externalintegration.WebApi.Controllers
@@ -11,29 +9,22 @@ namespace MOHU.Externalintegration.WebApi.Controllers
     [ApiController]
     public class ServiceDeskController : ControllerBase
     {
-
-    
-
-        public readonly IUpdateStatusService _updateStatusService;
-        public ServiceDeskController(
-              IUpdateStatusService updateStatusService
-            )
+        private readonly IServiceDeskService _serviceDeskService;
+        public ServiceDeskController(IServiceDeskService serviceDeskService)
         {
-            _updateStatusService = updateStatusService;
+            _serviceDeskService = serviceDeskService;
         }
 
-       
-
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status400BadRequest)]
         [HttpPost]
         [Route(nameof(UpdateStatus))]
         public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest model)
         {
-            var result = await _updateStatusService.UpdateStatus(model);
-            return new ResponseMessage<bool> { StatusCode = StatusCodes.Status200OK, Result = result };
+             await _serviceDeskService.UpdateStatus(model);
+            return new ResponseMessage<bool> { StatusCode = StatusCodes.Status200OK, Result = true };
         }
-
-
-
-
     }
 }

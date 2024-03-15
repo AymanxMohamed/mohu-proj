@@ -4,7 +4,9 @@ using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Dto.Ivr;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Contracts.Interface.Customer;
+using MOHU.Integration.Domain.Entitiy;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
@@ -37,10 +39,18 @@ namespace MOHU.Integration.WebApi.Controllers
         [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseMessage<Guid?>), StatusCodes.Status400BadRequest)]
         [HttpPost]
-        public async Task<ResponseMessage<Guid>> Post(CreateProfileResponse model)
+        public async Task<ActionResult<ResponseMessage<Guid>>> Post(CreateProfileRequest model)
         {
-            var result = await _customerService.CreateProfile(model);
-            return Ok(result);
+            try
+            {
+                var result = await _customerService.CreateProfile(model);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new ResponseMessage<Guid?> { StatusCode = StatusCodes.Status400BadRequest, ErrorMessage = ex.Message });
+            }
+          
         }
         [Consumes("application/json")]
         [Produces("application/json")]

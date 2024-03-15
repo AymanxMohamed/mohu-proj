@@ -17,7 +17,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MOHU.Integration.Contracts.Dto.CreateProfile
 {
-    public class CreateProfileResponse
+    public class CreateProfileRequest
 
     {
         

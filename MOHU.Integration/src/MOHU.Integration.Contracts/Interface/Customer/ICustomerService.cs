@@ -5,7 +5,7 @@ namespace MOHU.Integration.Contracts.Interface.Customer
 {
     public interface ICustomerService
     {
-        Task<Guid> CreateProfile(CreateProfileResponse model);
+        Task<Guid> CreateProfile(CreateProfileRequest model);
         Task<LookupDto?> GetIndividualByMobileNumberAsync(string mobileNumber);
         Task<LookupDto> CreateIndividualAsync(string mobileNumber);
     }

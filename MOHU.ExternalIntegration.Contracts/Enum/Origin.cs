@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace MOHU.ExternalIntegration.Contracts.Enum
 {
-    public enum PreferredLanguageEnum
+    public enum Origin
     {
+        [Display(Name = "Taasher")]
+        Taasher = 1
 
-        [Display(Name = "Arabic")]
-        Arabic = 1,
-
-        [Display(Name = "English")]
-        English = 2,
     }
 }

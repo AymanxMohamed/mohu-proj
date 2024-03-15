@@ -26,13 +26,11 @@ namespace MOHU.Integration.Infrastructure.Localization
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
         {
-            // Implement logic to retrieve localized strings
             return default;
         }
 
         public IStringLocalizer WithCulture(CultureInfo culture)
         {
-            // Implement logic to switch to a different culture
             throw new NotImplementedException();
         }
 

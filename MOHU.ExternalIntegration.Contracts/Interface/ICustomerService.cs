@@ -1,4 +1,4 @@
-﻿using MOHU.ExternalIntegration.Contracts.Dto;
+﻿using MOHU.ExternalIntegration.Contracts.Dto.Taasher;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace MOHU.ExternalIntegration.Contracts.Interface
 {
-    public interface IUpdateStatusService
+    public interface ICustomerService
     {
-        //general service 
-        Task<bool> UpdateStatus(UpdateStatusRequest model);
+
+        Task<Guid> CreateProfile(CreateProfileRequest model);
 
     }
 }

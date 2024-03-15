@@ -1,67 +1,45 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MOHU.ExternalIntegration.Application.Exceptions;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.ExternalIntegration.Contracts.Dto;
 using MOHU.ExternalIntegration.Contracts.Dto.Common;
-using MOHU.ExternalIntegration.Contracts.Dto.Taasher;
 using MOHU.ExternalIntegration.Contracts.Interface;
 
 namespace MOHU.Externalintegration.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaasherController : ControllerBase
+    public class TaasherController : BaseController
     {
-        private readonly ICreateProfileService _createProfileService;
-
-       
-
-        public readonly IUpdateStatusService _updateStatusService;
-        public TaasherController(ICreateProfileService createProfileService,
-             IUpdateStatusService updateStatusService)
+        private readonly ICustomerService _createProfileService;
+        private readonly ITicketService _ticketService;
+        public TaasherController(ICustomerService createProfileService,
+             ITicketService ticketService)
         {
              _createProfileService = createProfileService;
-          
-            _updateStatusService = updateStatusService;
+
+            _ticketService = ticketService;
         }
 
 
+        //[Consumes("application/json")]
+        //[Produces("application/json")]
+        //[ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(ResponseMessage<Guid?>), StatusCodes.Status400BadRequest)]
+        //[HttpPost("CreateProfile")]
+        //public async Task<ResponseMessage<Guid>> Post(CreateProfileResponse model)
+        //{
+        //    var result = await _createProfileService.CreateProfile(model);
+        //    return Ok(result);
+        //}
         [Consumes("application/json")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseMessage<Guid?>), StatusCodes.Status400BadRequest)]
-        [HttpPost("CreateProfile")]
-        public async Task<ActionResult<ResponseMessage<Guid>>> Post(CreateProfileResponse model)
-        {
-            try
-            {
-                var result = await _createProfileService.CreateProfile(model);
-                return Ok(result);
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(new ResponseMessage<Guid?> { StatusCode = StatusCodes.Status400BadRequest, ErrorMessage = ex.Message });
-            }
-
-        }
-
-     
-
-
-
+        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
         [HttpPost]
         [Route(nameof(UpdateStatus))]
-        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest model)
+        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest request)
         {
-            var result = await _updateStatusService.UpdateStatus(model);
-            return new ResponseMessage<bool> { StatusCode = StatusCodes.Status200OK, Result = result };
-
+             await _ticketService.UpdateStatus(request);
+            return Ok(true);
         }
-
-
-
-
-
-
     }
 }

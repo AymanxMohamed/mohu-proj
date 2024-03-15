@@ -2,15 +2,10 @@
 using Microsoft.Extensions.Localization;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MOHU.Integration.Contracts.ModelValidation
+namespace MOHU.Integration.Application.Validators
 {
-    public class CreateProfileValidator:AbstractValidator<CreateProfileResponse>
+    public class CreateProfileValidator : AbstractValidator<CreateProfileRequest>
     {
 
         private readonly IStringLocalizer _localizer;
@@ -30,20 +25,15 @@ namespace MOHU.Integration.Contracts.ModelValidation
           .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.LastNameExceeding])
           .Matches("^[a-zA-Z]*$").WithMessage(_localizer[ErrorMessageCodes.EnglishLettersValidator]);
 
-
             RuleFor(x => x.ArabicName)
              .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.ArabicNameisRequired])
              .Matches(@"^[\u0600-\u06FF\s]*$").WithMessage(_localizer[ErrorMessageCodes.ArabicLettersValidator])
              .MaximumLength(150).WithMessage(_localizer[ErrorMessageCodes.ArabicNameExceeding]);
 
-           
-
-                RuleFor(x => x.Email)
-               .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.EmailRequired])
-                .Matches(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-               .WithMessage(_localizer[ErrorMessageCodes.EmailValidator]);
-
-         
+            RuleFor(x => x.Email)
+           .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.EmailRequired])
+            .Matches(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+           .WithMessage(_localizer[ErrorMessageCodes.EmailValidator]);
 
             RuleFor(x => x.MobileCountryCode)
             .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.MobileCountryCodeRequired]);
@@ -72,10 +62,7 @@ namespace MOHU.Integration.Contracts.ModelValidation
             RuleFor(x => x.IdType)
            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.IdtypeRequired]);
 
-
         }
-
-
         private bool BeValidGuid(Guid nationality)
         {
             return nationality != Guid.Empty;

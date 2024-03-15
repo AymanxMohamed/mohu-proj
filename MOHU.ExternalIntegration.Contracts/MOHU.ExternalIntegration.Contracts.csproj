@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dto\Kedana\**" />
+    <Compile Remove="Dto\ServiceDisk\**" />
+    <EmbeddedResource Remove="Dto\Kedana\**" />
+    <EmbeddedResource Remove="Dto\ServiceDisk\**" />
+    <None Remove="Dto\Kedana\**" />
+    <None Remove="Dto\ServiceDisk\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.9.0" />
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.2" />
     <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client.Dynamics" Version="1.1.17" />
@@ -15,11 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MOHU.ExternalIntegration.Domain\MOHU.ExternalIntegration.Domain.csproj" />
     <ProjectReference Include="..\MOHU.ExternalIntegration.Shared\MOHU.ExternalIntegration.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Dto\Kedana\" />
-    <Folder Include="Dto\ServiceDisk\" />
   </ItemGroup>
 
 </Project>
