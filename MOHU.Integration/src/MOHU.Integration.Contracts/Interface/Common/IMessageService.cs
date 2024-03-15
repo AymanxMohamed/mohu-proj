@@ -6,4 +6,7 @@ namespace MOHU.Integration.Contracts.Interface.Common
     {
         Task<MessageDto> GetMessageByCodeAsync(string code);
     }
+
+   
+
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Ticket;
 using MOHU.Integration.Contracts.Interface.Ticket;
@@ -41,9 +42,9 @@ namespace MOHU.Integration.WebApi.Controllers
         [HttpPost]
         public async Task<ResponseMessage<SubmitTicketResponse>> Post(Guid customerId, [FromBody] SubmitTicketRequest request)
         {
-            var result = await _ticketService.SubmitTicketAsync(customerId, request);
-            return Ok(result);
            
+                var result = await _ticketService.SubmitTicketAsync(customerId, request);
+                return Ok(result);
         }
 
     }

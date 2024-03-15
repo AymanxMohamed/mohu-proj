@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using FluentValidation;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Application.Exceptions;
@@ -17,12 +18,17 @@ namespace MOHU.Integration.Application.Service
     public class TicketService : ITicketService
     {
         private readonly ICrmContext _crmContext;
-        private readonly ICommonService _commonRepository;
-        private readonly IAppLogger _logger;
-        public TicketService(ICrmContext crmContext, ICommonService commonRepository, IAppLogger logger)
+        private readonly ICommonRepository _commonRepository;
+        private readonly IValidator<SubmitTicketRequest> _validator;
+        public TicketService(ICrmContext crmContext, 
+            ICommonRepository commonRepository,
+            IValidator<SubmitTicketRequest> validator
+            )
         {
             _crmContext = crmContext;
             _commonRepository = commonRepository;
+            _validator= validator;
+
             _logger = logger;
         }
         public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
@@ -153,7 +159,16 @@ namespace MOHU.Integration.Application.Service
         }
         public async Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
         {
+            
+
             var response = new SubmitTicketResponse();
+
+            var results = await _validator.ValidateAsync(request);
+
+            if (results?.IsValid == false)
+            {
+                throw new BadRequestException(results.Errors.FirstOrDefault().ErrorMessage);
+            }
 
             var entity = new Entity(Incident.EntityLogicalName);
 
@@ -486,7 +501,7 @@ namespace MOHU.Integration.Application.Service
                             entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value.ToString(),
                 CreationOn = entity.GetAttributeValue<DateTime>(Incident.Fields.CreatedOn)
             };
-            return result;
+            return result; 
         }
         private async Task<TicketDetailsResponse?> MapTicketToDetailsDto(Entity entity)
         {
