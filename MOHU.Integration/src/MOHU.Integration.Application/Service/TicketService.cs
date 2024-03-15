@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.SharePoint.Client.Discovery;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
@@ -6,6 +7,7 @@ using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Ticket;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Contracts.Interface.Ticket;
 using MOHU.Integration.Contracts.Logging;
@@ -21,17 +23,20 @@ namespace MOHU.Integration.Application.Service
         private readonly ICommonService _commonService;
         private readonly IValidator<SubmitTicketRequest> _validator;
         private readonly IAppLogger _logger;
+        private readonly ICacheService _cacheService;
         public TicketService(ICrmContext crmContext,
             IAppLogger logger,
             ICommonService commonService,
             IValidator<SubmitTicketRequest> validator
-            )
+,
+            ICacheService cacheService)
         {
             _crmContext = crmContext;
             _commonService = commonService;
-            _validator= validator;
+            _validator = validator;
 
             _logger = logger;
+            _cacheService = cacheService;
         }
         public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
         {
@@ -213,35 +218,52 @@ namespace MOHU.Integration.Application.Service
         }
         private async Task<List<TicketTypeResponse>> GetTypes()
         {
-
+            var cacheKey = "CaseTypes";
+            var caseTypeEntities = await _cacheService.GetAsync<List<Entity>>(cacheKey);
             var result = new List<TicketTypeResponse>();
-            var ticketTypeQuery = new QueryExpression(RequestType.EntityLogicalName)
+            if (caseTypeEntities is null)
             {
-                ColumnSet = new ColumnSet(
-                        RequestType.Fields.PrimaryKey,
-                        RequestType.Fields.ServiceArabicName,
-                        RequestType.Fields.ServiceEnglishName,
-                        RequestType.Fields.PrimaryName
-
-                )
-            };
-            var filter = new FilterExpression(LogicalOperator.And);
-            ticketTypeQuery.Criteria.AddFilter(filter);
-            filter.AddCondition(new ConditionExpression(RequestType.Fields.ShowonPortal, ConditionOperator.Equal, true));
-            var response = _crmContext.ServiceClient.RetrieveMultiple(ticketTypeQuery).Entities.ToList();
-            if (response != null && response.Any())
-            {
-
-                result.AddRange(response.Select(t => new TicketTypeResponse
+                var ticketTypeQuery = new QueryExpression(RequestType.EntityLogicalName)
                 {
-                    Id = t.Id,
-                    Name = LanguageHelper.IsArabic ? t.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_arabicname)
-                    : t.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname),
+                    NoLock = true,
+                    ColumnSet = new ColumnSet(
+                            RequestType.Fields.PrimaryKey,
+                            RequestType.Fields.ServiceArabicName,
+                            RequestType.Fields.ServiceEnglishName
+                    )
+                };
+                var filter = new FilterExpression(LogicalOperator.And);
+                ticketTypeQuery.Criteria.AddFilter(filter);
+                filter.AddCondition(new ConditionExpression(RequestType.Fields.ShowonPortal, ConditionOperator.Equal, true));
+                var response = (await _crmContext.ServiceClient.RetrieveMultipleAsync(ticketTypeQuery)).Entities.ToList();
+                if (response != null && response.Count != 0)
+                {
 
-                }));
+                    result.AddRange(response.Select(t => new TicketTypeResponse
+                    {
+                        Id = t.Id,
+                        Name = LanguageHelper.IsArabic ? t.GetAttributeValue<string>(ldv_service.Fields.ldv_name_ar)
+    : t.GetAttributeValue<string>(ldv_service.Fields.ldv_name_en),
+
+                    }));
+
+                }
+                await _cacheService.SetAsync(cacheKey, response);
+                caseTypeEntities = response;
 
             }
-            return await Task.FromResult(result);
+            else
+            {
+                result.AddRange(caseTypeEntities.Select(t => new TicketTypeResponse
+                {
+                    Id = t.Id,
+                    Name = LanguageHelper.IsArabic ? t.GetAttributeValue<string>(ldv_service.Fields.ldv_name_ar)
+    : t.GetAttributeValue<string>(ldv_service.Fields.ldv_name_en),
+
+                }));
+            }
+
+            return result;
         }
         private async Task GetTypesCategoriesAsync(List<TicketTypeResponse> ticketTypes)
         {
@@ -254,29 +276,37 @@ namespace MOHU.Integration.Application.Service
                     ReturnResponses = true
                 }
             };
-            ticketTypes.ForEach(t =>
+            var languageKey = LanguageHelper.IsArabic ? "ar" : "en";
+
+            ticketTypes.ForEach(async t =>
             {
-
-
-                var categoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+                var cacheKey = $"CaseType-{t.Id}-Categories_{languageKey}";
+                var resultFromCache =  await _cacheService.GetAsync<List<TicketCategoryDto>>(cacheKey);
+                if (resultFromCache is not null)
+                    t.Categories.AddRange(resultFromCache);
+                else
                 {
-                    NoLock = true,
-                    ColumnSet = new ColumnSet(
+                    var categoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+                    {
+                        NoLock = true,
+                        ColumnSet = new ColumnSet(
 
-                       ldv_casecategory.Fields.TicketType,
-                            ldv_casecategory.Fields.ldv_arabicname,
-                             ldv_casecategory.Fields.ldv_englishname
-                            ),
-                };
-                var filter = new FilterExpression(LogicalOperator.And);
-                categoryQuery.Criteria.AddFilter(filter);
-                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
-                 ConditionOperator.Equal,
-                 t.Id));
-                filter.AddCondition(new ConditionExpression("ldv_isshowonportal", ConditionOperator.Equal, true));
+       ldv_casecategory.Fields.TicketType,
+            ldv_casecategory.Fields.ldv_arabicname,
+             ldv_casecategory.Fields.ldv_englishname
+            ),
+                    };
+                    var filter = new FilterExpression(LogicalOperator.And);
+                    categoryQuery.Criteria.AddFilter(filter);
+                    filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
+                     ConditionOperator.Equal,
+                     t.Id));
+                    filter.AddCondition(new ConditionExpression("ldv_isshowonportal", ConditionOperator.Equal, true));
 
 
-                executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
+                    executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
+                }
+
 
             });
 
@@ -310,11 +340,17 @@ namespace MOHU.Integration.Application.Service
                     }
                 }
             }
+            foreach (var ticketType in ticketTypes)
+            {
+                await _cacheService.SetAsync($"CaseType-{ticketType.Id}-Categories_{languageKey}", ticketType.Categories);
+            }
         }
         private async Task GetCategorySubCategories(List<TicketTypeResponse> ticketTypes)
         {
             try
             {
+                var languageKey = LanguageHelper.IsArabic ? "ar" : "en";
+
                 var executeMultipleRequest = new ExecuteMultipleRequest
                 {
                     Requests = new OrganizationRequestCollection(),
@@ -329,34 +365,32 @@ namespace MOHU.Integration.Application.Service
                 {
                     foreach (var ticketCategory in ticketType.Categories)
                     {
+                        var resultFromCache = await _cacheService.GetAsync<List<TicketSubCategoryDto>>($"CaseCategory-{ticketCategory.Id}-SubCategories_{languageKey}");
 
-                        var subCategoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+                        if (resultFromCache is not null)
+                            ticketCategory.SubCategories = resultFromCache;
+                        else
                         {
-                            NoLock = true,
-                            ColumnSet = new ColumnSet(
-                                ldv_casecategory.Fields.TicketType,
-                                ldv_casecategory.Fields.ldv_arabicname,
-                                ldv_casecategory.Fields.ldv_englishname,
-                               ldv_casecategory.Fields.ParentCategory
+                            var subCategoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+                            {
+                                NoLock = true,
+                                ColumnSet = new ColumnSet(ldv_casecategory.Fields.TicketType,
+                                                          ldv_casecategory.Fields.ldv_arabicname,
+                                                          ldv_casecategory.Fields.ldv_englishname,
+                                                          ldv_casecategory.Fields.ParentCategory),
+                            };
+                            var filter = new FilterExpression(LogicalOperator.And);
+                            subCategoryQuery.Criteria.AddFilter(filter);
+                            filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
+                                ConditionOperator.Equal, ticketType.Id));
+                            filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal,
+                                  ConditionOperator.Equal, true));
 
-                            ),
-                        };
-                        var filter = new FilterExpression(LogicalOperator.And);
-                        subCategoryQuery.Criteria.AddFilter(filter);
-                        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
-                            ConditionOperator.Equal, ticketType.Id));
-                        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal,
-                              ConditionOperator.Equal, true));
+                            filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory,
+                                 ConditionOperator.Equal, ticketCategory.Id));
 
-                        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory,
-                             ConditionOperator.Equal, ticketCategory.Id));
-
-                        executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = subCategoryQuery });
-
-
-                        //  }
-
-
+                            executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = subCategoryQuery });
+                        }
                     }
                 }
 
@@ -400,7 +434,9 @@ namespace MOHU.Integration.Application.Service
                         .FirstOrDefault(c => c.Id == subCategories.FirstOrDefault()?.ParentCategoryId)
                        ?.SubCategories.AddRange(subCategories);
 
-                    //GetAllSecondarySubTypesBySubCategory(subCategories);
+                    await _cacheService.SetAsync($"{subCategories.FirstOrDefault().ParentCategoryId}-SubCategories_{languageKey}", subCategories);
+
+                    //await GetSecondarySubCategoryBySubCategory(subCategories);
                 }
 
 
@@ -412,7 +448,7 @@ namespace MOHU.Integration.Application.Service
             }
 
         }
-        private void GetAllSecondarySubTypesBySubCategory(List<TicketSubCategoryDto> ticketSubCategories)
+        private async Task GetSecondarySubCategoryBySubCategory(List<TicketSubCategoryDto> ticketSubCategories)
         {
 
             var executeMultipleRequest = new ExecuteMultipleRequest
@@ -480,9 +516,7 @@ namespace MOHU.Integration.Application.Service
                             item.GetAttributeValue<string>(ldv_casecategory.Fields.ldv_englishname),
 
                         };
-
                         subCategory.secondarySubCategories.Add(secondarysubcategory);
-
                     }
                 }
 
