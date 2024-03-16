@@ -10,14 +10,13 @@ namespace MOHU.Integration.Contracts.Dto.CaseTypes
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<SecondarySubCategoryDto> secondarySubCategories { get; set; }
-
+        public List<SecondarySubCategoryDto> SecondarySubCategories { get; set; }
 
         public Guid ParentCategoryId { get; set; }
         public Guid TicketTypeId { get; set; }
         public TicketSubCategoryDto()
         {
-            secondarySubCategories = new List<SecondarySubCategoryDto>();
+            SecondarySubCategories = new List<SecondarySubCategoryDto>();
         }
 
     }

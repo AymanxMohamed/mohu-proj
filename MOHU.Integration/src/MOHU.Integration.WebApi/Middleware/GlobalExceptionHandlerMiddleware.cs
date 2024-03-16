@@ -98,7 +98,7 @@ namespace MOHU.Integration.WebApi.Middleware
             {
                 Status = Contracts.Enum.Status.Failure,
                 StatusCode = StatusCodes.Status500InternalServerError,
-                 ErrorMessage= "An error occurred while processing your request.",
+                 ErrorMessage= ex.Message,
                 Result = null
             };
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
