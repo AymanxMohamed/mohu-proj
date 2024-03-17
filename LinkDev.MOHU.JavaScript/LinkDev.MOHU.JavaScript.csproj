@@ -45,10 +45,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="CaseManagement\Case\" />
     <Folder Include="CaseManagement\Category\" />
     <Folder Include="Profile\Company\" />
     <Folder Include="Profile\Individual\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CaseManagement\Case\ldv_Case_MainForm.js" />
+    <Content Include="Common\ldv_CommonGenericBPM.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
