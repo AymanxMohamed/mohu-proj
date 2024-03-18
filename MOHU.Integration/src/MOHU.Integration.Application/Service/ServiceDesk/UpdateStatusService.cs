@@ -6,16 +6,10 @@ using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Domain.Entitiy;
 using MOHU.Integration.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MOHU.Integration.Application.Service.ServiceDesk
 {
-    public class ServiceDeskUpdateStatusService : IUpdateStatusService
-
+    public class ServiceDeskUpdateStatusService 
     {
         private readonly ICrmContext crmContext;
        
@@ -32,7 +26,7 @@ namespace MOHU.Integration.Application.Service.ServiceDesk
         public async Task<bool> UpdateStatus(UpdateStatusRequest model)
         {
 
-            if (model.CustId == Guid.Empty)
+            if (model.CustomerId == Guid.Empty)
             {
                 throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
             }
@@ -43,7 +37,7 @@ namespace MOHU.Integration.Application.Service.ServiceDesk
 
             var TicketidExist = await _HelperMethod.CheckTicketIdExist(model.TicketId);
 
-            var isCustExist = await _HelperMethod.CheckCustomerExist(model.CustId);
+            var isCustExist = await _HelperMethod.CheckCustomerExist(model.CustomerId);
             if (!isCustExist)
             {
                 throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerExist]);

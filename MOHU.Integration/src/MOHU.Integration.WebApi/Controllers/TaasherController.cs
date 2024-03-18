@@ -3,29 +3,32 @@ using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Contracts.Interface.Ticket;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaasherController : ControllerBase
+    public class TaasherController : BaseController
     {
-        public readonly IUpdateStatusService _updateStatusService;
+        public readonly ITicketService _ticketService;
         public TaasherController(
-             IUpdateStatusService updateStatusService)
+             ITicketService ticketService)
         {
-
-            _updateStatusService = updateStatusService;
+            _ticketService = ticketService;
         }
 
-
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
         [HttpPost]
         [Route(nameof(UpdateStatus))]
-        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest model)
+        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest request)
         {
-            var result = await _updateStatusService.UpdateStatus(model);
-            return new ResponseMessage<bool> { StatusCode = StatusCodes.Status200OK, Result = result };
-
+            await _ticketService.UpdateStatus(request);
+            return Ok(true);
         }
 
 

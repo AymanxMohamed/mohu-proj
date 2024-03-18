@@ -24,7 +24,6 @@ namespace MOHU.Integration.Infrastructure
             services.AddSerilog();
             services.AddSingleton<Contracts.Logging.IAppLogger, SerilogLogger>();
             services.AddSingleton<ICrmContext, CrmContext>();
-            services.AddScoped<IConfigurationService, ConfigurationService>();
             services.AddSingleton<ICorrelationIdService, CorrelationIdService>();
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton<ICacheKeyGeneratorService,CacheKeyGeneratorService>();

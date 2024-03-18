@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace MOHU.Integration.Application.Service.Kedana
 {
-    public class KedanaUpdateStatusService : IUpdateStatusService
+    public class KedanaUpdateStatusService 
     {
         private readonly ICrmContext crmContext;
 
@@ -37,7 +37,7 @@ namespace MOHU.Integration.Application.Service.Kedana
         public async Task<bool> UpdateStatus(UpdateStatusRequest model)
         {
 
-            if (model.CustId == Guid.Empty)
+            if (model.CustomerId == Guid.Empty)
             {
                 throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
             }
@@ -48,7 +48,7 @@ namespace MOHU.Integration.Application.Service.Kedana
 
             var TicketidExist = await _HelperMethod.CheckTicketIdExist(model.TicketId);
 
-            var isCustExist = await _HelperMethod.CheckCustomerExist(model.CustId);
+            var isCustExist = await _HelperMethod.CheckCustomerExist(model.CustomerId);
             if (!isCustExist)
             {
                 throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerExist]);

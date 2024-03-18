@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace MOHU.Integration.Contracts.Dto
 {
-    // general dto for update status 
     public class UpdateStatusRequest
     {
 
-        public Guid CustId { get; set; }
+        public Guid CustomerId { get; set; }
 
         public Guid TicketId { get; set; }
 
@@ -21,11 +17,14 @@ namespace MOHU.Integration.Contracts.Dto
 
         public DateTime? ResolutionDate { get; set; }
 
-        public IntegrationStatusEnum IntegrationStatus { get; set; }
+        public IntegrationStatus IntegrationStatus { get; set; }
+        [IgnoreDataMember]
+        [JsonIgnore]
+        public string FlagLogicalNameToUpdate { get; set; }
 
     }
 
-    public enum IntegrationStatusEnum
+    public enum IntegrationStatus
     {
         [Display(Name = "Close The Ticket")]
         CloseTheTicket = 1,

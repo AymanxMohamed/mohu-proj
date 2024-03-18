@@ -1,10 +1,12 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Microsoft.SharePoint.Client.Discovery;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Application.Exceptions;
+using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Ticket;
 using MOHU.Integration.Contracts.Interface;
@@ -26,12 +28,14 @@ namespace MOHU.Integration.Application.Service
         private readonly IAppLogger _logger;
         private readonly ICacheService _cacheService;
         private readonly IDocumentService _documentService;
+        private readonly IStringLocalizer _localizer;
         public TicketService(ICrmContext crmContext,
             IAppLogger logger,
             ICommonService commonService,
             IValidator<SubmitTicketRequest> validator,
             ICacheService cacheService,
-            IDocumentService documentService)
+            IDocumentService documentService,
+            IStringLocalizer stringLocalizer)
         {
             _crmContext = crmContext;
             _commonService = commonService;
@@ -39,6 +43,7 @@ namespace MOHU.Integration.Application.Service
             _logger = logger;
             _cacheService = cacheService;
             _documentService = documentService;
+            _localizer = stringLocalizer;
         }
         public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
         {
@@ -532,6 +537,43 @@ namespace MOHU.Integration.Application.Service
             var processId = ticketTypeEntity.GetAttributeValue<EntityReference>(ldv_service.Fields.ldv_processid).Id;
             return processId;
         }
+        private async Task<bool> IsTicketExists(Guid ticketId)
+        {
+            var ticketQuery = new QueryExpression
+            {
+                EntityName = Incident.EntityLogicalName,
+                NoLock = true
+            };
+            var filter = new FilterExpression(LogicalOperator.And);
+            filter.AddCondition(new ConditionExpression(Incident.Fields.Id, ConditionOperator.Equal, ticketId));
+            ticketQuery.Criteria.AddFilter(filter);
+            var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(ticketQuery);
+            return result.Entities.Any();
+        }
 
+        public async Task<bool> UpdateStatus(UpdateStatusRequest request)
+        {
+            if (request.CustomerId == Guid.Empty)
+                throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
+
+            if (request.TicketId == Guid.Empty)
+                throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
+
+            var isTicketExists = await IsTicketExists(request.TicketId);
+
+            if (!isTicketExists)
+                throw new NotFoundException("Ticket does not exist");
+
+            var entity = new Entity(Incident.EntityLogicalName, request.TicketId);
+
+            entity.Attributes.Add(Incident.Fields.IntegrationClosureReason, request.Resolution);
+            entity.Attributes.Add(Incident.Fields.IntegrationClosureDate, request.ResolutionDate);
+            entity.Attributes.Add(Incident.Fields.IntegrationStatus,
+               new OptionSetValue(Convert.ToInt32(request.IntegrationStatus)));
+            entity.Attributes.Add(request.FlagLogicalNameToUpdate, true);
+
+            await _crmContext.ServiceClient.UpdateAsync(entity);
+            return true;
+        }
     }
 }
