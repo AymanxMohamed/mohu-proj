@@ -157,6 +157,25 @@
             public const string Referencingincident_existingcase = "incident_existingcase";
             public const string Referencingincident_master_incident = "incident_master_incident";
             public const string Referencingincident_parent_incident = "incident_parent_incident";
+            /// <summary>Type: Lookup, RequiredLevel: None, Targets:
+            /// ldv_servicesubstatus</summary>
+            public const string StatusReason = "ldv_substatusid";
+            /// <summary>Type: Lookup, RequiredLevel: None, Targets: ldv_servicesubstatus</summary>
+            public const string PortalStatus = "ldv_portalstatusid";
+
+            //IntegrationStatus
+            public const string IntegrationStatus = "ldv_integrationstatuscode";
+
+            public const string IntegrationClosureReason = "ldv_integrationclosurereason";
+
+            public const string IntegrationClosureDate = "ldv_integrationclosuredate";
+
+            public const string IsServiceDeskUpdated = "ldv_isservicedeskupdated";
+
+            public const string IsKadanaUpdated = "ldv_iskadanaupdated";
+
+            public const string IsTashirUpdated = "ldv_istashirupdated";
+
         }
 
         public const string EntityLogicalName = "incident";
