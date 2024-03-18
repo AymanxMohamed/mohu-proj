@@ -13,7 +13,14 @@ namespace MOHU.Integration.Contracts.Interface
 
         Task<bool> IsProfileWithSamePassportExists(string passportNumber);
 
-        Task<bool> IsProfileWithSameMobileNumberExists(string mobileNumber); 
+        Task<bool> IsProfileWithSameMobileNumberExists(string mobileNumber);
+
+
+        Task<bool> CheckCustomerExist(Guid CustId);
+
+        Task<bool> CheckTicketIdExist(Guid TicketId);
+
+
 
 
 
