@@ -1,7 +1,13 @@
-﻿namespace MOHU.Integration.Contracts.Interface
+﻿using MOHU.Integration.Contracts.Dto.Document.Download;
+using MOHU.Integration.Contracts.Dto.Document.List;
+using MOHU.Integration.Contracts.Dto.Document.Upload;
+
+namespace MOHU.Integration.Contracts.Interface
 {
     public interface IDocumentService
     {
-        Task Initialize();
-        Task<(Stream fileStream, string fileName)> DownloadAttachmentByFileIdAsync(string fileId, string libraryName);    }
+        Task<UploadDocumentResponse> UploadDocumentAsync(List<UploadDocumentContentDto> documents, Guid ticketId);
+        Task<DownloadDocumentResponse> DownloadAttachmentAsync(string filePath, Guid ticketId);
+        Task<GetFilesInFolderResponse> GetFilesInFolderAsync(string ticketId);
+    }
 }

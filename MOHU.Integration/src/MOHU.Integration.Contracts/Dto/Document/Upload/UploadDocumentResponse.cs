@@ -1,4 +1,4 @@
-﻿namespace MOHU.Integration.Contracts.Dto.Document
+﻿namespace MOHU.Integration.Contracts.Dto.Document.Upload
 {
     public class UploadDocumentResponse
     {

@@ -25,19 +25,20 @@ namespace MOHU.Integration.Application.Service
         private readonly IValidator<SubmitTicketRequest> _validator;
         private readonly IAppLogger _logger;
         private readonly ICacheService _cacheService;
+        private readonly IDocumentService _documentService;
         public TicketService(ICrmContext crmContext,
             IAppLogger logger,
             ICommonService commonService,
-            IValidator<SubmitTicketRequest> validator
-,
-            ICacheService cacheService)
+            IValidator<SubmitTicketRequest> validator,
+            ICacheService cacheService,
+            IDocumentService documentService)
         {
             _crmContext = crmContext;
             _commonService = commonService;
             _validator = validator;
-
             _logger = logger;
             _cacheService = cacheService;
+            _documentService = documentService;
         }
         public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
         {
@@ -160,9 +161,15 @@ namespace MOHU.Integration.Application.Service
             var ticket = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query)).Entities?.FirstOrDefault();
 
             if (ticket is null)
-                throw new NotFoundException();
+                throw new NotFoundException("Ticket does not exist");
 
             result = await MapTicketToDetailsDto(ticket);
+
+            var documents = await _documentService.GetFilesInFolderAsync(result?.Id.ToString());
+
+            foreach (var file in documents.Files)
+                result.Documents.Add(new Contracts.Dto.Document.DocumentDto { Id = file.Path, Name = file.Name });
+
             return result;
         }
         public async Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
@@ -525,5 +532,6 @@ namespace MOHU.Integration.Application.Service
             var processId = ticketTypeEntity.GetAttributeValue<EntityReference>(ldv_service.Fields.ldv_processid).Id;
             return processId;
         }
+
     }
 }

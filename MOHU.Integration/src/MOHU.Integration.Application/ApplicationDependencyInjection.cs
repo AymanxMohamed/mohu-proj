@@ -29,6 +29,7 @@ namespace MOHU.Integration.Application
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<IStringLocalizer, MessageStringLocalizer>();
             services.AddTransient<ICommonService, CommonService>();
+            services.AddTransient<IDocumentService, DocumentService>();
 
             return services;
         }

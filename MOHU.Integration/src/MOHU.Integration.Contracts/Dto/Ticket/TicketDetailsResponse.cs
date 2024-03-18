@@ -1,4 +1,6 @@
-﻿namespace MOHU.Integration.Contracts.Dto.Ticket
+﻿using MOHU.Integration.Contracts.Dto.Document;
+
+namespace MOHU.Integration.Contracts.Dto.Ticket
 {
     public class TicketDetailsResponse
     {
@@ -14,5 +16,10 @@
         public string BeneficiaryType { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? ResolutionDate { get; set; }
+        public ICollection<DocumentDto> Documents { get; set; }
+        public TicketDetailsResponse()
+        {
+            Documents = new List<DocumentDto>();
+        }
     }
 }

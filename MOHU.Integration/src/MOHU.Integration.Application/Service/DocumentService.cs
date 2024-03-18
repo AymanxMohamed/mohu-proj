@@ -1,62 +1,117 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using MOHU.Integration.Application.Exceptions;
+using MOHU.Integration.Contracts.Dto.Document;
+using MOHU.Integration.Contracts.Dto.Document.Download;
+using MOHU.Integration.Contracts.Dto.Document.List;
+using MOHU.Integration.Contracts.Dto.Document.Upload;
 using MOHU.Integration.Contracts.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Security;
+using MOHU.Integration.Contracts.Interface.Common;
+using System.Net.Http.Json;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace MOHU.Integration.Application.Service
 {
     public class DocumentService : IDocumentService
     {
-        private readonly string _siteUrl;
-        private readonly string _username;
-        private readonly string _password;
-        private ClientContext _clientContext;
-        public DocumentService()
+        private readonly HttpClient _httpClient;
+        private readonly IConfigurationService _configurationService;
+        public DocumentService(IHttpClientFactory httpClientFactory, IConfigurationService configurationService)
         {
-            Initialize().Wait();
+            _httpClient = httpClientFactory.CreateClient();
+            _configurationService = configurationService;
         }
-        public async Task<(Stream fileStream, string fileName)> DownloadAttachmentByFileIdAsync(string fileId, string libraryName)
+
+        public async Task<DownloadDocumentResponse> DownloadAttachmentAsync(string filePath, Guid ticketId)
         {
-            if (_clientContext == null)
+            var downloadResult = await DownloadAsync(filePath);
+            if (downloadResult is not null)
+                return new DownloadDocumentResponse { Content = downloadResult.Content.FileContent, Name = downloadResult.Name, ContentType = downloadResult.Content.ContentType };
+            
+            throw new NotFoundException("File not found");
+        }
+
+        public async Task<UploadDocumentResponse> UploadDocumentAsync(List<UploadDocumentContentDto> documents, Guid ticketId)
+        {
+            var result = new UploadDocumentResponse();
+
+            foreach (var document in documents)
             {
-                throw new InvalidOperationException("SharePoint service has not been initialized.");
+                if (!IsValidExtension(document.Name))
+                {
+                    result.FailedDocuments.Add(new FailedDocumentUploadDto { Name = document.Name, Error = "Extension not allowed" });
+                    continue;
+                }
+                if (!IsValidSize())
+                {
+                    result.FailedDocuments.Add(new FailedDocumentUploadDto { Name = document.Name, Error = "File size is too big" });
+                    continue;
+                }
+                var uploadResult = await UploadAsync(document, ticketId);
+                if (uploadResult.isUploaded)
+                    result.UploadedDocuments.Add(new DocumentDto { Id = uploadResult.filePathOrErrorMessage, Name = document.Name });
             }
-
-            var library = _clientContext.Web.Lists.GetByTitle(libraryName);
-            var file = library.GetItemById(fileId);
-
-            _clientContext.Load(file, f => f.File.Name);
-            await _clientContext.ExecuteQueryAsync();
-
-            var fileName = file.File.Name;
-            var fileStream = new MemoryStream();
-            file.File.OpenBinaryStream().Value.CopyTo(fileStream);
-            fileStream.Seek(0, SeekOrigin.Begin);
-
-            return (fileStream, fileName);
+            return result;
         }
-
-
-
-        public Task Initialize()
+        public async Task<GetFilesInFolderResponse> GetFilesInFolderAsync(string ticketId)
         {
-            var securePassword = new SecureString();
-            foreach (char c in _password)
+            var result = new GetFilesInFolderResponse();
+            var url = await _configurationService.GetConfigurationValueAsync("GetFilesInFolderFlowUrl");
+            using StringContent jsonContent = new(JsonSerializer.Serialize(new { ticketId }),
+        Encoding.UTF8,
+        "application/json");
+
+            var response = await _httpClient.PostAsync(url, jsonContent);
+            if (response.IsSuccessStatusCode)
             {
-                securePassword.AppendChar(c);
+                var content = await response.Content.ReadAsStringAsync();
+                result = Newtonsoft.Json.JsonConvert.DeserializeObject<GetFilesInFolderResponse>(content);
             }
-
-            _clientContext = new ClientContext(_siteUrl)
-            {
-                Credentials = new NetworkCredential(_username, _password)
-            };
-            return Task.CompletedTask;
-
+            return result;
         }
+
+        private bool IsValidExtension(string fileName)
+        {
+            return true;
+        }
+        private bool IsValidSize()
+        {
+            return true;
+        }
+        private async Task<(bool isUploaded,string filePathOrErrorMessage)> UploadAsync(UploadDocumentContentDto documentDto, Guid ticketId)
+        {
+            var url = await _configurationService.GetConfigurationValueAsync("UploadDocumentFlowUrl");
+          using StringContent jsonContent = new ( 
+              JsonSerializer.Serialize(new {FileName = documentDto.Name,FileContent =
+              documentDto.Bytes,TicketId= ticketId}),
+         Encoding.UTF8,
+         "application/json");
+
+         var response = await _httpClient.PostAsync(url,jsonContent);
+            if (response.IsSuccessStatusCode)
+            {
+                var flowResponse = await response.Content.ReadFromJsonAsync<DocumentFlowResponse>();
+                return (true,flowResponse.Id);
+            }
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            return (false,jsonResponse);
+        }
+        private async Task<DownloadDocumentFlowResponse> DownloadAsync(string filePath)
+        {
+            var result = new DownloadDocumentFlowResponse();
+            var url = await _configurationService.GetConfigurationValueAsync("DownloadDocumentFlowUrl");
+            using StringContent jsonContent = new(JsonSerializer.Serialize(new { FileId = filePath }),
+           Encoding.UTF8,
+           "application/json");
+
+            var response = await _httpClient.PostAsync(url, jsonContent);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                result = Newtonsoft.Json.JsonConvert.DeserializeObject<DownloadDocumentFlowResponse>(content);
+            }
+            return result;
+        }
+
+       
     }
 }

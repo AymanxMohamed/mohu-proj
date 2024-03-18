@@ -1,22 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Dto.Document;
+using MOHU.Integration.Contracts.Dto.Document.Download;
+using MOHU.Integration.Contracts.Dto.Document.Upload;
+using MOHU.Integration.Contracts.Interface;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DocumentsController : ControllerBase
+    public class DocumentsController : BaseController
     {
+        private readonly IDocumentService _documentService;
+
+        public DocumentsController(IDocumentService documentService)
+        {
+            _documentService = documentService;
+        }
+
         [Consumes("application/json")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ResponseMessage<DownloadAttachmentResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseMessage<DownloadAttachmentResponse>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ResponseMessage<DownloadAttachmentResponse>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ResponseMessage<DownloadDocumentResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<DownloadDocumentResponse>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseMessage<DownloadDocumentResponse>), StatusCodes.Status404NotFound)]
         [HttpGet]
-        public async Task<ResponseMessage<DownloadAttachmentResponse>> Get(Guid attachmentId, Guid ticketId)
+        public async Task<ResponseMessage<DownloadDocumentResponse>> Get(string documentId, Guid ticketId)
         {
-            return new ResponseMessage<DownloadAttachmentResponse> { };
+            var result = await _documentService.DownloadAttachmentAsync(documentId, ticketId);
+            return Ok(result);
         }
         [ProducesResponseType(typeof(ResponseMessage<UploadDocumentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseMessage<UploadDocumentResponse>), StatusCodes.Status400BadRequest)]
@@ -24,8 +34,28 @@ namespace MOHU.Integration.WebApi.Controllers
         [HttpPost]
         public async Task<ResponseMessage<UploadDocumentResponse>> Post([FromForm]IFormFileCollection files, Guid ticketId)
         {
-          
-            return new ResponseMessage<UploadDocumentResponse> { Result = new UploadDocumentResponse { } };
+            var documentsToUpload = new List<UploadDocumentContentDto>();
+            
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    using var ms = new MemoryStream();
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    string s = Convert.ToBase64String(fileBytes);
+                    documentsToUpload.Add(new UploadDocumentContentDto
+                    {
+                        Content = s,
+                        Name = file.FileName,
+                        Bytes = fileBytes
+                    });
+                }
+            }
+            var result = await _documentService.UploadDocumentAsync(documentsToUpload, ticketId);
+            return Ok(result);
         }
+
     }
+
 }

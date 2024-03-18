@@ -1,4 +1,6 @@
-﻿namespace MOHU.Integration.Contracts.Dto.Document
+﻿using MOHU.Integration.Contracts.Dto.Document.Download;
+
+namespace MOHU.Integration.Contracts.Dto.Document.Upload
 {
     public class UploadDocumentRequest
     {

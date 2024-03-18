@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Contracts.Interface.Cache;
 
@@ -40,7 +39,7 @@ namespace MOHU.Integration.Infrastructure.Service
         public Task SetAsync<T>(string key, T value)
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions()
-           .SetAbsoluteExpiration(TimeSpan.FromMinutes(10)); //TimeSpan.FromMinutes(_config.ExpirationInMinutes)
+           .SetAbsoluteExpiration(TimeSpan.FromMinutes(_config.ExpirationInMinutes));
             _cache.Set(key, value,cacheEntryOptions);
             return Task.CompletedTask ;
         }
