@@ -1,0 +1,6 @@
+@SDIntegraion_HostAddress = http://localhost:5113
+
+GET {{SDIntegraion_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
