@@ -10,7 +10,7 @@ using MOHU.Integration.Application.Validators;
 using MOHU.Integration.Infrastructure.Localization;
 using MOHU.Integration.Infrastructure.Repository;
 using MOHU.Integration.Application.Localization;
-using MOHU.Integration.Infrastructure.Service;
+using MOHU.Integration.Contracts.Dto;
 
 namespace MOHU.Integration.Application
 {
@@ -31,6 +31,7 @@ namespace MOHU.Integration.Application
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddScoped<IConfigurationService, ConfigurationService>();
+            services.AddSingleton<IRequestInfo, RequestInfo>();
 
             return services;
         }

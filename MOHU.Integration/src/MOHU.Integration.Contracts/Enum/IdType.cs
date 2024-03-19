@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MOHU.Integration.Contracts.Enum
 {
-    public enum IdTypeEnum
+    public enum IdType
     {
         [Display(Name = "National Identity")]
         NationalIdentity = 1,

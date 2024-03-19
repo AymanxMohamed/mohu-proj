@@ -42,9 +42,8 @@ namespace MOHU.Integration.WebApi.Controllers
         [HttpPost]
         public async Task<ResponseMessage<SubmitTicketResponse>> Post(Guid customerId, [FromBody] SubmitTicketRequest request)
         {
-           
-                var result = await _ticketService.SubmitTicketAsync(customerId, request);
-                return Ok(result);
+            var result = await _ticketService.SubmitTicketAsync(customerId, request);
+            return Ok(result);
         }
 
     }

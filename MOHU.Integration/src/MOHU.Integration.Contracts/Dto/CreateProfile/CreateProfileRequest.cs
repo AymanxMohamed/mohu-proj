@@ -44,11 +44,10 @@ namespace MOHU.Integration.Contracts.Dto.CreateProfile
 
         public Guid CountryOfResidence { get; set; } 
 
-        public IdTypeEnum IdType { get; set; }
+        public IdType IdType { get; set; }
 
-        public string IdNumber { get; set; }= string.Empty;
-
-        public string PassportNumber { get; set; } = string.Empty;    
+        public string IdNumber { get; set; }
+ 
 
 
 

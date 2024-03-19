@@ -1,4 +1,7 @@
-﻿namespace MOHU.Integration.Contracts.Dto.Ticket
+﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
+
+namespace MOHU.Integration.Contracts.Dto.Ticket
 {
     public class SubmitTicketRequest
     {
@@ -9,5 +12,8 @@
         public Guid? SubCategoryId1 { get; set; } 
         public int? BeneficiaryType { get; set; }
         public int? Location { get; set; }
+        [JsonIgnore]
+        [IgnoreDataMember]
+        public int Origin { get; set; }
     }
 } 

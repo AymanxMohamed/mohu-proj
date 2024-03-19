@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Shared;
+﻿using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Shared;
 using System.Globalization;
 
 namespace MOHU.Integration.WebApi.Middleware
@@ -6,10 +7,11 @@ namespace MOHU.Integration.WebApi.Middleware
     public class LanguageHeaderMiddleware
     {
         private readonly RequestDelegate _next;
-
-        public LanguageHeaderMiddleware(RequestDelegate next)
+        private readonly IRequestInfo _requestInfo;
+        public LanguageHeaderMiddleware(RequestDelegate next, IRequestInfo requestInfo)
         {
             _next = next;
+            _requestInfo = requestInfo;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -25,6 +27,10 @@ namespace MOHU.Integration.WebApi.Middleware
                 CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
             }
 
+            string origin = context?.Request?.Headers[Header.Origin];
+            if (!string.IsNullOrEmpty(origin))
+                _requestInfo.Origin = Convert.ToInt32(origin);
+     
             await _next(context);
         }
     }

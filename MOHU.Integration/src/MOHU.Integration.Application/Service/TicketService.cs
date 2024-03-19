@@ -29,13 +29,15 @@ namespace MOHU.Integration.Application.Service
         private readonly ICacheService _cacheService;
         private readonly IDocumentService _documentService;
         private readonly IStringLocalizer _localizer;
+        private readonly IRequestInfo _requestInfo;
         public TicketService(ICrmContext crmContext,
             IAppLogger logger,
             ICommonService commonService,
             IValidator<SubmitTicketRequest> validator,
             ICacheService cacheService,
             IDocumentService documentService,
-            IStringLocalizer stringLocalizer)
+            IStringLocalizer stringLocalizer,
+            IRequestInfo requestInfo)
         {
             _crmContext = crmContext;
             _commonService = commonService;
@@ -44,6 +46,7 @@ namespace MOHU.Integration.Application.Service
             _cacheService = cacheService;
             _documentService = documentService;
             _localizer = stringLocalizer;
+            _requestInfo = requestInfo;
         }
         public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
         {
@@ -179,8 +182,6 @@ namespace MOHU.Integration.Application.Service
         }
         public async Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
         {
-            
-
             var response = new SubmitTicketResponse();
 
             var results = await _validator.ValidateAsync(request);
@@ -194,12 +195,12 @@ namespace MOHU.Integration.Application.Service
 
             entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
             entity.Attributes.Add(Incident.Fields.ldv_Description, request.Description);
-            entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(1));
+            entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(_requestInfo.Origin));
             entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, request.CaseType));
             entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.CategoryId));
             entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId));
             entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", await GetTicketTypeProcessAsync(request.CaseType)));
-
+            //entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
             if (request.SubCategoryId1.HasValue)
                 entity.Attributes.Add(Incident.Fields.ldv_SecondarySubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId1.Value));
 
@@ -516,10 +517,10 @@ namespace MOHU.Integration.Application.Service
                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SecondarySubCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
             };
             if (entity.Contains(Incident.Fields.ldv_Locationcode))
-                result.Location = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Locationcode, "en");
+                result.Location = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Locationcode, LanguageHelper.IsArabic? "ar":"en");
 
             if (entity.Contains(Incident.Fields.ldv_Beneficiarytypecode))
-                result.BeneficiaryType = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Beneficiarytypecode, "en");
+                result.BeneficiaryType = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Beneficiarytypecode, LanguageHelper.IsArabic ? "ar" : "en");
             if (entity.Contains(Incident.Fields.ldv_ClosureDate))
                 result.ResolutionDate = entity.GetAttributeValue<DateTime>(Incident.Fields.ldv_ClosureDate);
             return result;
@@ -528,7 +529,7 @@ namespace MOHU.Integration.Application.Service
         {
             var name = string.Empty;
             var options = await _commonService.GetOptionSet(entity.LogicalName, fieldLogicalName, language);
-            name = options.FirstOrDefault(x => x.Value == entity.GetAttributeValue<OptionSetValue>(Incident.Fields.ldv_Locationcode)?.Value)?.Name;
+            name = options.FirstOrDefault(x => x.Value == entity.GetAttributeValue<OptionSetValue>(fieldLogicalName)?.Value)?.Name;
             return name;
         }
         private async Task<Guid> GetTicketTypeProcessAsync(Guid ticketTypeId)

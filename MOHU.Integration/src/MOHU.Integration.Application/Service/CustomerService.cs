@@ -36,28 +36,21 @@ namespace MOHU.Integration.Application.Service
             var results = await _validator.ValidateAsync(model);
 
             if (results?.IsValid == false)
-            {
                 throw new BadRequestException(results?.Errors?.FirstOrDefault()?.ErrorMessage);
-            }
+            
 
             var entity = new Entity(Individual.EntityLogicalName);
 
             var isEmailExist = await IsProfileWithSameEmailExists(model.Email);
             if (isEmailExist == true)
-            {
-
                 throw new BadRequestException(_localizer[ErrorMessageCodes.EmailisexistingBefore]);
-
-            }
-            var IsMobileExist = await IsProfileWithSameMobileNumberExists(model.MobileNumber);
-            if (IsMobileExist == true)
-            {
-
+            
+            var isMobileExist = await IsProfileWithSameMobileNumberExists(model.MobileNumber);
+            if (isMobileExist == true)
                 throw new BadRequestException(_localizer[ErrorMessageCodes.PhoneisexistingBefore]);
 
-            }
 
-            if (isEmailExist == false && IsMobileExist == false)
+            if (isEmailExist == false && isMobileExist == false)
             {
                 entity.Attributes.Add(Individual.Fields.FirstName, model.FirstName);
                 entity.Attributes.Add(Individual.Fields.LastName, model.LastName);
@@ -78,88 +71,56 @@ namespace MOHU.Integration.Application.Service
                 entity.Attributes.Add(Individual.Fields.IDType,
                  new OptionSetValue(Convert.ToInt32(model.IdType)));
 
-                if (model.IdType == IdTypeEnum.NationalIdentity)
+                if (model.IdType == IdType.NationalIdentity)
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
-                    {
-
                         throw new BadRequestException((_localizer[ErrorMessageCodes.NationalIdentityWithidnumber]));
 
-                    }
-
-                    var IsIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
-                    if (IsIdnumberExist == true)
-                    {
-
+                    var isIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
+                    if (isIdnumberExist)
                         throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
 
-                    }
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
 
                 }
-                else if (model.IdType == IdTypeEnum.Accommodation)
+                else if (model.IdType == IdType.Accommodation)
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
-                    {
-
                         throw new BadRequestException((_localizer[ErrorMessageCodes.AccommodationWithIdNumber]));
-                    }
-                    var IsIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
-                    if (IsIdnumberExist == true)
-                    {
 
+                    var isIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
+                    if (isIdnumberExist)
                         throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
-                    }
-                    entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
 
+                    entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
                 }
-                else if (model.IdType == IdTypeEnum.Gulfcitizen)
+                else if (model.IdType == IdType.Gulfcitizen)
                 {
                     if (string.IsNullOrEmpty(model.IdNumber))
-                    {
-
                         throw new BadRequestException((_localizer[ErrorMessageCodes.GulfcitizenWithIdNumber]));
 
-                    }
-                    if (string.IsNullOrEmpty(model.PassportNumber))
-                    {
-
+                    
+                    if (string.IsNullOrEmpty(model.IdNumber))
                         throw new BadRequestException((_localizer[ErrorMessageCodes.GulfcitizenWithPassportNumber]));
 
-                    }
-
-                    var IsIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
-                    if (IsIdnumberExist == true)
-                    {
+                    var isIdnumberExist = await IsProfileWithSameIdNumberIExists(model.IdNumber);
+                    if (isIdnumberExist)
                         throw new BadRequestException((_localizer[ErrorMessageCodes.IdNumberisexistingBefore]));
-                    }
-                    var IsPassportExsting = await IsProfileWithSamePassportExists(model.PassportNumber);
-                    if (IsPassportExsting == true)
-                    {
-                        throw new BadRequestException((_localizer[ErrorMessageCodes.PassportNumberDuplication]));
-
-                    }
-
+                    
                     entity.Attributes.Add(Individual.Fields.IDNumber, model.IdNumber);
-                    entity.Attributes.Add(Individual.Fields.PassportNumber, model.PassportNumber);
                 }
-                else if (model.IdType == IdTypeEnum.Passport)
+                else if (model.IdType == IdType.Passport)
                 {
-                    if (string.IsNullOrEmpty(model.PassportNumber))
-                    {
+                    if (string.IsNullOrEmpty(model.IdNumber))
                         throw new BadRequestException((_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]));
 
-                    }
-                    var IsPassportExsting = await IsProfileWithSamePassportExists(model.PassportNumber);
-                    if (IsPassportExsting == true)
-                    {
+                    
+                    var isPassportExsting = await IsProfileWithSamePassportExists(model.IdNumber);
+                    if (isPassportExsting)
                         throw new BadRequestException((_localizer[ErrorMessageCodes.IdtypeWithPassportNumber]));
-
-                    }
                     else
-                    {
-                        entity.Attributes.Add(Individual.Fields.PassportNumber, model.PassportNumber);
-                    }
+                        entity.Attributes.Add(Individual.Fields.PassportNumber, model.IdNumber);
+                    
                 }
 
                 var customerId = await _crmContext.ServiceClient.CreateAsync(entity);
