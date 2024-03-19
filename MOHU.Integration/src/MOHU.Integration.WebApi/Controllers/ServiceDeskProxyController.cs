@@ -24,7 +24,7 @@ namespace SDIntegraion.Controllers
         {
             var username = _configurationservice.GetConfigurationValueAsync("SD_User Name");
             var password = _configurationservice.GetConfigurationValueAsync("SD_Password");
-            var servicedeskURL = _configurationservice.GetConfigurationValueAsync("SD_URL");
+            var servicedeskURL = await _configurationservice.GetConfigurationValueAsync("SD_URL");
 
             string encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
                                            .GetBytes(username + ":" + password));
