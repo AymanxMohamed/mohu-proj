@@ -230,6 +230,30 @@ namespace MOHU.Integration.Application.Service
 
             return ticketTypes;
         }
+        public async Task<bool> UpdateStatus(UpdateTicketStatusRequest request)
+        {
+            if (request.CustomerId == Guid.Empty)
+                throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
+
+            if (request.TicketId == Guid.Empty)
+                throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
+
+            var isTicketExists = await IsTicketExists(request.TicketId);
+
+            if (!isTicketExists)
+                throw new NotFoundException("Ticket does not exist");
+
+            var entity = new Entity(Incident.EntityLogicalName, request.TicketId);
+
+            entity.Attributes.Add(Incident.Fields.IntegrationClosureReason, request.Resolution);
+            entity.Attributes.Add(Incident.Fields.IntegrationClosureDate, request.ResolutionDate);
+            entity.Attributes.Add(Incident.Fields.IntegrationStatus,
+               new OptionSetValue(Convert.ToInt32(request.IntegrationStatus)));
+            entity.Attributes.Add(request.FlagLogicalName, true);
+
+            await _crmContext.ServiceClient.UpdateAsync(entity);
+            return true;
+        }
         private async Task<List<TicketTypeResponse>> GetTypesAsync()
         {
             var cacheKey = "CaseTypes";
@@ -552,29 +576,5 @@ namespace MOHU.Integration.Application.Service
             return result.Entities.Any();
         }
 
-        public async Task<bool> UpdateStatus(UpdateStatusRequest request)
-        {
-            if (request.CustomerId == Guid.Empty)
-                throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
-
-            if (request.TicketId == Guid.Empty)
-                throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
-
-            var isTicketExists = await IsTicketExists(request.TicketId);
-
-            if (!isTicketExists)
-                throw new NotFoundException("Ticket does not exist");
-
-            var entity = new Entity(Incident.EntityLogicalName, request.TicketId);
-
-            entity.Attributes.Add(Incident.Fields.IntegrationClosureReason, request.Resolution);
-            entity.Attributes.Add(Incident.Fields.IntegrationClosureDate, request.ResolutionDate);
-            entity.Attributes.Add(Incident.Fields.IntegrationStatus,
-               new OptionSetValue(Convert.ToInt32(request.IntegrationStatus)));
-            entity.Attributes.Add(request.FlagLogicalNameToUpdate, true);
-
-            await _crmContext.ServiceClient.UpdateAsync(entity);
-            return true;
-        }
     }
 }

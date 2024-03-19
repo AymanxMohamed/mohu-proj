@@ -12,8 +12,5 @@ namespace MOHU.Integration.Contracts.Dto.Ticket
         public Guid? SubCategoryId1 { get; set; } 
         public int? BeneficiaryType { get; set; }
         public int? Location { get; set; }
-        [JsonIgnore]
-        [IgnoreDataMember]
-        public int Origin { get; set; }
     }
 } 

@@ -1,33 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Interface.Ticket;
+using MOHU.Integration.Contracts.Interface;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServiceDeskController : ControllerBase
+    public class ServiceDeskController : BaseController
     {
 
-        public readonly ITicketService _ticketService;
+        public readonly IServiceDeskService _serviceDeskService;
         public ServiceDeskController(
-              ITicketService ticketService
+              IServiceDeskService serviceDeskService
             )
         {
-            _ticketService = ticketService;
+            _serviceDeskService = serviceDeskService;
         }
 
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
         [HttpPost]
         [Route(nameof(UpdateStatus))]
-        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest model)
+        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest request)
         {
-            await _ticketService.UpdateStatus(model);
-            return new ResponseMessage<bool> { StatusCode = StatusCodes.Status200OK, Result = true };
+            var result = await _serviceDeskService.UpdateStatus(request);
+            return Ok(result);
         }
 
     }

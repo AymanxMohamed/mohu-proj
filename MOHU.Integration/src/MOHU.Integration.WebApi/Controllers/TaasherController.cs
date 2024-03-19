@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Ticket;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
@@ -11,11 +9,11 @@ namespace MOHU.Integration.WebApi.Controllers
     [ApiController]
     public class TaasherController : BaseController
     {
-        public readonly ITicketService _ticketService;
+        public readonly ITaasherService _taasherService;
         public TaasherController(
-             ITicketService ticketService)
+             ITaasherService taasherService)
         {
-            _ticketService = ticketService;
+            _taasherService = taasherService;
         }
 
         [Consumes("application/json")]
@@ -27,8 +25,8 @@ namespace MOHU.Integration.WebApi.Controllers
         [Route(nameof(UpdateStatus))]
         public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest request)
         {
-            await _ticketService.UpdateStatus(request);
-            return Ok(true);
+           var result =  await _taasherService.UpdateStatus(request);
+            return Ok(result);
         }
 
 

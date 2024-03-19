@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
 
 namespace MOHU.Integration.Contracts.Dto
 {
@@ -18,9 +16,6 @@ namespace MOHU.Integration.Contracts.Dto
         public DateTime? ResolutionDate { get; set; }
 
         public IntegrationStatus IntegrationStatus { get; set; }
-        [IgnoreDataMember]
-        [JsonIgnore]
-        public string FlagLogicalNameToUpdate { get; set; }
 
     }
 

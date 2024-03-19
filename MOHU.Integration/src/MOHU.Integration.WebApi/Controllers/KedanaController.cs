@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Interface.Ticket;
+using MOHU.Integration.Contracts.Interface;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
@@ -9,10 +9,10 @@ namespace MOHU.Integration.WebApi.Controllers
     [ApiController]
     public class KedanaController : BaseController
     {
-        public readonly ITicketService _ticketService;
-        public KedanaController(ITicketService ticketService)
+        public readonly IKedanaService _kedanaService;
+        public KedanaController(IKedanaService kedanaService)
         {
-            _ticketService = ticketService;
+            _kedanaService = kedanaService;
         }
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -23,8 +23,8 @@ namespace MOHU.Integration.WebApi.Controllers
         [Route(nameof(UpdateStatus))]
         public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest request)
         {
-            await _ticketService.UpdateStatus(request);
-            return Ok(true);
+            var result = await _kedanaService.UpdateStatus(request);
+            return Ok(result);
         }
 
 
