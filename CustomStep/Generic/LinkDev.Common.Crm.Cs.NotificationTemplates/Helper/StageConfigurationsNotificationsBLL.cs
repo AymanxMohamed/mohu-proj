@@ -424,7 +424,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                         if (notifctaionConfigurationTemplate.notificationTemp.GetAttributeValue<bool>("ldv_useemail"))
                         {
                             tracingService.Trace($" before CreateAndSendEmail");
-                             CreateAndSendEmail(from, notifctaionConfigurationTemplate.Language, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.toParty, notifctaionConfigurationTemplate.ccParty, null, notifctaionConfigurationTemplate.NotificationConfiguration);
+                             CreateAndSendEmail(from, notifctaionConfigurationTemplate.Language, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.toParty, notifctaionConfigurationTemplate.ccParty, null, notifctaionConfigurationTemplate.NotificationConfiguration,null);
                             tracingService.Trace($" after CreateAndSendEmail");
 
                         }
@@ -618,7 +618,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         #endregion
 
         #region  Notification Template Methods
-        public void SendNotificationTemplate(EntityReference ToSystemUser, EntityReference ToAccount, EntityReference ToContact, EntityReference queues, string ccText, string bccText, string toText, EntityReference NotificationTemplates, EntityReference RegardingObject)
+        public void SendNotificationTemplate(EntityReference ToSystemUser, /*EntityReference ToTeam,*/ EntityReference ToAccount, EntityReference ToContact, EntityReference queues, string ccText, string bccText, string toText, EntityReference NotificationTemplates, EntityReference RegardingObject , EntityReference RegardingLookup)
         {
 
             #region variables
@@ -663,16 +663,54 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                     }
                     else if (ToSystemUser != null && ToSystemUser.Id != Guid.Empty)
                     {
-                        Entity User = CRMAccessLayer.RetrieveEntity(ToSystemUser.Id.ToString(), "systemuser", new string[] { "ldv_preferredlanguagecode", "internalemailaddress" });
-                        if (User != null)
+                        if (ToSystemUser.LogicalName == "systemuser")
                         {
-                            if (User.Attributes.Contains("internalemailaddress"))
-                                toList.Add(new EntityReference("systemuser", ToSystemUser.Id));
-                            if (User.Attributes.Contains("ldv_preferredlanguagecode"))
-                                language = (Language)(((OptionSetValue)(User.Attributes["ldv_preferredlanguagecode"])).Value);
+                            tracingService.Trace($"  in systemuser ");
+
+
+                            Entity User = CRMAccessLayer.RetrieveEntity(ToSystemUser.Id.ToString(), "systemuser", new string[] { "ldv_preferredlanguagecode", "internalemailaddress" });
+                            if (User != null)
+                            {
+                                if (User.Attributes.Contains("internalemailaddress"))
+                                    toList.Add(new EntityReference("systemuser", ToSystemUser.Id));
+                                if (User.Attributes.Contains("ldv_preferredlanguagecode"))
+                                    language = (Language)(((OptionSetValue)(User.Attributes["ldv_preferredlanguagecode"])).Value);
+                            }
+                        }
+                        else
+                        {
+                            if (ToSystemUser.LogicalName == "team")
+                            {
+                                tracingService.Trace($"  in team ");
+                                var query = new QueryExpression("systemuser");
+                                query.Distinct = true;
+                                query.ColumnSet.AddColumns("fullname", "businessunitid", "title", "address1_telephone1", "positionid", "systemuserid");
+                                query.AddOrder("fullname", OrderType.Ascending);
+                                var query_teammembership = query.AddLink("teammembership", "systemuserid", "systemuserid");
+                                var ab = query_teammembership.AddLink("team", "teamid", "teamid");
+                                ab.EntityAlias = "ab";
+                                ab.LinkCriteria.AddCondition("teamid", ConditionOperator.Equal, ToSystemUser.Id);
+                                EntityCollection memebers = OrganizationService.RetrieveMultiple(query);
+                                if (memebers.Entities.Count > 0)
+                                {
+                                    tracingService.Trace($"  # members = {memebers.Entities.Count}");
+                                    foreach (var member in memebers.Entities)
+                                    {
+                                        Entity User = CRMAccessLayer.RetrieveEntity(member.Id.ToString(), "systemuser", new string[] { "ldv_preferredlanguagecode", "internalemailaddress" });
+                                        if (User != null)
+                                        {
+                                            if (User.Attributes.Contains("internalemailaddress"))
+                                                toList.Add(new EntityReference("systemuser", ToSystemUser.Id));
+                                            if (User.Attributes.Contains("ldv_preferredlanguagecode"))
+                                                language = (Language)(((OptionSetValue)(User.Attributes["ldv_preferredlanguagecode"])).Value);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-
+                   
+                   
                     #endregion
 
                     #region Send email to record Url Users:
@@ -721,7 +759,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                     // retrieve from:
                     EntityReference from =  RetriveEmailFrom();
                     // to create and send email 
-                     CreateAndSendEmail(from, language, notificationTemplate, RegardingObject, toList, ccList, bccList, null);
+                     CreateAndSendEmail(from, language, notificationTemplate, RegardingObject, toList, ccList, bccList, null,    RegardingLookup);
                 }
                 // to create sms and portal notifications to contact
                 if (ToContact != null)
@@ -823,7 +861,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 tracingService.Trace($" language {language} ");
 
                 if (notifySendEmail)
-                     CreateAndSendEmail(from, language, notificationTemplateCopy, regardingObject, new List<EntityReference>() { item.ToEntityReference() }, null, null, null);
+                     CreateAndSendEmail(from, language, notificationTemplateCopy, regardingObject, new List<EntityReference>() { item.ToEntityReference() }, null, null, null,null);
                 if (notifySendSMS)
                      CreateSMSAndPortalNotificationToContact(item, notificationTemplateCopy, regardingObject, null);
             }
@@ -833,7 +871,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         #region Common Bll
 
  
-        public void CreateAndSendEmail(EntityReference From, Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, List<EntityReference> toParty, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig)
+        public void CreateAndSendEmail(EntityReference From, Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, List<EntityReference> toParty, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig,  EntityReference RegardingLookup)
         {
             try
             {
@@ -865,8 +903,11 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 
                 tracingService.Trace($" before CreateEmail ");
 
-             
 
+                if (RegardingLookup!=null)
+                {
+                    regardingObject = RegardingLookup;
+                }
                 Guid emailID = CRMAccessLayer.CreateEmail(From, toParty, regardingObject, MailTitle, MailMessage, ccList, bccList, notificationConfig);
              
                 if (emailID != Guid.Empty)

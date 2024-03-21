@@ -30,7 +30,9 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         [Input("TO(User)")]
         [ReferenceTarget("systemuser")]
         public InArgument<EntityReference> ToUser { get; set; }
-
+        [Input("TO(Team)")]
+        [ReferenceTarget("team")]
+        public InArgument<EntityReference> ToTeam { get; set; }
         [Input("To(Contact)")]
         [ReferenceTarget("contact")]
         public InArgument<EntityReference> ToContact { get; set; }
@@ -55,11 +57,20 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         [Default("")]
         public InArgument<string> BCCRecordsURLs { get; set; }
 
+        [Input("Use another entity as regarding")]
+        [Default("False")]
+        public InArgument<bool> IsAnotherRegarding { get; set; }
+
+        [Input("RegardingId")]
+        public InArgument<string> RegardingId { get; set; }
+        [Input("RegardingSchemaName")]
+        public InArgument<string> RegardingName { get; set; }
+
         #endregion
 
         protected override void Execute(CodeActivityContext executionContext)
         {
-            SendNotificationLogics BL = new SendNotificationLogics(Notification, ToUser, ToAccount, ToContact, ToQueue, CCRecordsURLs, BCCRecordsURLs, ToRecordsURLs);
+            SendNotificationLogics BL = new SendNotificationLogics(Notification, ToUser, ToTeam, ToAccount, ToContact, ToQueue, CCRecordsURLs, BCCRecordsURLs, ToRecordsURLs, IsAnotherRegarding, RegardingId, RegardingName);
             BL.ExecuteLogic(executionContext);
         }
     }
@@ -72,22 +83,26 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 
         public InArgument<EntityReference> Notifications { get; set; }
         public InArgument<EntityReference> Users { get; set; }
+        public InArgument<EntityReference> Teams { get; set; }
         public InArgument<EntityReference> Accounts { get; set; }
         public InArgument<EntityReference> Contacts { get; set; }
         public InArgument<EntityReference> Queues { get; set; }
         public InArgument<string> CCRecordsURLs { get; set; }
         public InArgument<string> ToRecordsURLs { get; set; }
         public InArgument<string> BCCRecordsURLs { get; set; }
-
+        public InArgument<bool> IsAnotherRegarding { get; set; }
+        public InArgument<string> RegardingId { get; set; }
+        public InArgument<string> RegardingName { get; set; }
 
 
         #endregion
-      
+
 
         public SendNotificationLogics(
-           InArgument<EntityReference> notification, InArgument<EntityReference> toUser, InArgument<EntityReference> toAccount, InArgument<EntityReference> toContact,
-           InArgument<EntityReference> toQueue, InArgument<string> cCRecordsURLs, InArgument<string> bCCRecordsURLs, InArgument<string> toRecordsURLs
-            )
+           InArgument<EntityReference> notification, InArgument<EntityReference> toUser, InArgument<EntityReference> toTeam,
+           InArgument<EntityReference> toAccount, InArgument<EntityReference> toContact,
+           InArgument<EntityReference> toQueue, InArgument<string> cCRecordsURLs, InArgument<string> bCCRecordsURLs, InArgument<string> toRecordsURLs,
+           InArgument<bool> isAnotherRegarding, InArgument<string> regardingId, InArgument<string> regardingName )
         {
             Notifications = notification;
             Users = toUser;
@@ -97,6 +112,10 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
             CCRecordsURLs = cCRecordsURLs;
             ToRecordsURLs = toRecordsURLs;
             BCCRecordsURLs = bCCRecordsURLs;
+            Teams = toTeam;
+            IsAnotherRegarding = isAnotherRegarding;
+            RegardingId = regardingId;
+            RegardingName = regardingName;
         }
 
         public void ExecuteLogic(CodeActivityContext executionContext)
@@ -115,16 +134,24 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
             {
                 EntityReference notifications = Notifications.Get(executionContext);
                 EntityReference user = Users.Get(executionContext);
+               // EntityReference team = Teams.Get(executionContext);
                 EntityReference account = Accounts.Get(executionContext);
                 EntityReference contact =  Contacts.Get(executionContext);
                 EntityReference queue =  Queues.Get(executionContext);
                 string cCRecordsURL = CCRecordsURLs.Get(executionContext);
                 string toRecordsURL = ToRecordsURLs.Get(executionContext);
                 string bCCRecordsURL = BCCRecordsURLs.Get(executionContext);
+                bool isAnotherRegarding = IsAnotherRegarding.Get(executionContext);
+                string regardingId = RegardingId.Get(executionContext);
+                string regardingName = RegardingName.Get(executionContext);
+
+
+                EntityReference RegardingLookup = new EntityReference(regardingName, new Guid(regardingId));
+                 
                 tracingService.Trace($" after RetrieveRelatedApplicationByApplicationHeader  ");
                 StageConfigurationsNotificationsBLL BLL = new StageConfigurationsNotificationsBLL(service, tracingService, RegardingObject);
 
-                BLL.SendNotificationTemplate(user, account, contact, queue, cCRecordsURL, bCCRecordsURL, toRecordsURL, notifications, RegardingObject);
+                BLL.SendNotificationTemplate(user,/*team,*/ account, contact, queue, cCRecordsURL, bCCRecordsURL, toRecordsURL, notifications, RegardingObject  , RegardingLookup);
           } 
             catch (Exception ex)
             {

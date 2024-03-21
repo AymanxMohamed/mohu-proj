@@ -16,6 +16,7 @@ using Microsoft.Xrm.Sdk.Client;
  using LinkDev.Common.Crm.Cs.NotificationTemplates;
 using Microsoft.Xrm.Tooling.Connector;
 using System.Web.Configuration;
+using LinkDev.Common.Crm.Cs.StageConfiguration;
 
 namespace Linkdev.Common.Moq
 {
@@ -24,14 +25,15 @@ namespace Linkdev.Common.Moq
         static void Main(string[] args)
         {
             Dictionary<string, object> inputs;
-            Guid PrimaryEntityID = new Guid("{33854c3b-2a63-ec11-a9f0-6045bd8810e2}");
-            string PrimaryEntitySchemaName = "incident";   /*"contact";  */
+            Guid PrimaryEntityID = new Guid("b88fb13a-b6f9-44c0-b3ca-3394c483d2ae");
+            string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
 
             //Guid processstage = Guid.Empty;
 
-            Activity activity = new SendNotificationsByNotificationConfig();
-            
-             
+          //  Activity activity = new SendNotification();
+            Activity activity = new HistoricallyStageFields();
+
+
             #region Variables Intializations Admin
             // Crm  AdminUserId  
             Guid AdminUserId = new Guid("415a5fdc-62bd-ee11-9079-000d3aa84c36");
@@ -403,34 +405,7 @@ namespace Linkdev.Common.Moq
             //};
             #endregion
 
-            #region Notification template
-            //inputs = new Dictionary<string, object>
-            //{
-            //    //sp
-            //     //{ "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("{C4AF5B46-9386-EB11-A8B2-0022487FB31C}"))},
-            //     //{ "ToTeam", new EntityReference("team", new Guid("{61947389-2D87-EB11-A82C-000D3A396014}"))} ,
 
-            //     { "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("{0EA18FF0-ED95-EB11-BC88-005056AFB4AE}"))},
-            //     { "ToTeam", new EntityReference("team", new Guid("{C82945B1-AB97-EB11-BC89-005056AF4010}"))} ,
-
-
-            //     //{"ToUser",  new EntityReference("systemuser",  new Guid("677c8e4b-cebd-e611-80c1-005056af329a"))},
-
-
-            //    // { "ToContact",new EntityReference("contact",  Guid.Empty)} ,
-            //    //{ "ToAccount", new EntityReference("account",  Guid.Empty)} ,
-            //    // {"ToRecordsURLs",null },
-
-            //    //{ "ToQueue", new EntityReference("queue", Guid.Empty)} ,
-            //    // {"CCRecordsURLs",null },
-            //    // {"BCCRecordsURLs",null },
-            //    //{ "", new EntityReference("", new Guid( ))} ,
-
-            //    //{ "", new EntityReference("", new Guid( ))} ,
-
-
-            //};
-            #endregion
 
             #region Esclation 
             //inputs = new Dictionary<string, object>
@@ -535,15 +510,15 @@ namespace Linkdev.Common.Moq
 
 
             //};
-            inputs = new Dictionary<string, object>
-            {
-                // { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("b65e2990-fd5b-ec11-a9df-6045bd8810e2"))} ,
-                //{ "stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("d0825ca8-3bcc-eb11-a960-000d3a4573e4"))} ,
+            //inputs = new Dictionary<string, object>
+            //{
+            //    // { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("b65e2990-fd5b-ec11-a9df-6045bd8810e2"))} ,
+            //    //{ "stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("d0825ca8-3bcc-eb11-a960-000d3a4573e4"))} ,
 
-                  { "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("b65e2990-fd5b-ec11-a9df-6045bd8810e2"))} ,
-                { "StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("d0825ca8-3bcc-eb11-a960-000d3a4573e4"))} ,
+            //      { "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("b65e2990-fd5b-ec11-a9df-6045bd8810e2"))} ,
+            //    { "StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("d0825ca8-3bcc-eb11-a960-000d3a4573e4"))} ,
 
-            };
+            //};
             #endregion
             #region Inputs 
             //  inputs = new Dictionary<string, object>
@@ -559,6 +534,40 @@ namespace Linkdev.Common.Moq
             //};
 
 
+            #endregion
+            string x = "2";
+            #region Notification template
+            //inputs = new Dictionary<string, object>
+            //{
+
+            //     { "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("{afde4968-4cda-ee11-904c-6045bd895e74}"))},
+            //     {"ToUser",  new EntityReference("systemuser",  new Guid("c9cc971e-11c1-ee11-9079-6045bd895c76"))},
+            //    { "ToTeam", new EntityReference("team", new Guid("ceb05c27-26da-ee11-904b-6045bd895c76"))} ,
+            //     { "ToContact",new EntityReference("contact",  Guid.Empty)} ,
+
+            //    //{ "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("{0EA18FF0-ED95-EB11-BC88-005056AFB4AE}"))},
+            //    { "ToAccount", new EntityReference("account",  Guid.Empty)} ,
+            //     {"ToRecordsURLs",null },
+            //    { "ToQueue", new EntityReference("queue", Guid.Empty)} ,
+            //     {"CCRecordsURLs",null },
+            //     {"BCCRecordsURLs",null },
+            //     {"IsAnotherRegarding",true },
+            //     {"RegardingId","f5164848-4b86-4709-a32f-e29b2fca57fe" },
+            //     {"RegardingName","incident" },
+
+
+
+            //};
+            #endregion
+
+            #region MyRegion
+            inputs = new Dictionary<string, object>
+                {
+
+                {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{0C222E05-87CF-EE11-9079-6045BD895E74}"))} ,
+                { "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
+                
+                };
             #endregion
             //inputs = new Dictionary<string, object>();
 
