@@ -52,7 +52,7 @@ namespace MOHU.Integration.Application.Service
         {
             var individual = await _individualService.GetIndividualByMobileNumberAsync(mobileNumber);
 
-            individual ??= await _individualService.CreateIndividualAsync(mobileNumber);
+            individual ??= await _individualService.CreateProfilelAsync(mobileNumber);
             
             var applicationId = await _configurationService.GetConfigurationValueAsync("CallCenterAppId");
 

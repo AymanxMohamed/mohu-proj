@@ -43,7 +43,7 @@ namespace MOHU.Integration.WebApi.Controllers
         {
             try
             {
-                var result = await _customerService.CreateProfile(model);
+                var result = await _customerService.CreateProfileAsync(model);
                 return Ok(result);
             }
             catch (BadRequestException ex)
