@@ -5,6 +5,7 @@ using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Infrastructure;
 using MOHU.Integration.WebApi.Extension;
 using MOHU.Integration.WebApi.HttpInterceptor;
+using MOHU.Integration.WebApi.SwaggerFilter;
 using System.Net;
 
 namespace MOHU.Integration.WebApi
@@ -21,7 +22,7 @@ namespace MOHU.Integration.WebApi
             builder.Services.AddApplication();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c=>c.OperationFilter<AddHeaderParameter>());
 
             builder.Services.AddHttpLogging(logging =>
             {
