@@ -199,7 +199,7 @@ namespace MOHU.Integration.Application.Service
             entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.CategoryId));
             entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId));
             entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", await GetTicketTypeProcessAsync(request.CaseType)));
-            //entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
+            entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
             if (request.SubCategoryId1.HasValue)
                 entity.Attributes.Add(Incident.Fields.ldv_SecondarySubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId1.Value));
 
