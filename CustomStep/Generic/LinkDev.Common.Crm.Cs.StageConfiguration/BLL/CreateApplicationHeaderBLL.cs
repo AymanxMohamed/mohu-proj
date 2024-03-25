@@ -65,10 +65,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                             newApplicationHeader.Attributes.Add("subject", targetEntity.Attributes[RequestEntity.Name]);
                         }
                     }
-
-
-
-
+                    newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.RelatedApplicationId, targetEntity.Id.ToString());
+                    newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.RelatedApplicationSchemaName, targetEntity.LogicalName);
 
                     //adding  service to application header 
                     if (targetEntity.Attributes.Contains(RequestEntity.Service))
@@ -91,8 +89,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                         newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.PortalStatus, new EntityReference(ServiceSubStatusEntity.LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.PortaServiceSubStatus]).Id));
                     }
 
-               
-
+                     
                     // create application header
                     applicationHeaderId = crmAccess.CreateEntity(newApplicationHeader);
                     tracingService.Trace(" Created  app header ");

@@ -113,7 +113,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                                 {
                                     if (request.Contains(historicallyFieldsValue.FieldSchemaName))
                                     {
-                                        if ((request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)).LogicalName=="team")
+                                        //if ((request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName)).LogicalName=="team")
                                         {
                                             currentTask.Attributes.Add(historicallyFieldsValue.TaskFieldSchemaName,
                                                                                   request.GetAttributeValue<EntityReference>(historicallyFieldsValue.FieldSchemaName));
@@ -175,7 +175,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
         public string GetAttributeArabicValueRequest(int optSetValue, int LanguageCode, string entityLogicalName, string attributeName)
         {
             tracingService.Trace($" in GetAttributeArabicValueRequest ");
-            var value = OptionSetMetaData(entityLogicalName, attributeName, optSetValue);
+            var value = OptionSetMetaData(entityLogicalName, attributeName, optSetValue, LanguageCode);
             //RetrieveAttributeRequest attributeRequest = new RetrieveAttributeRequest
             //{
             //    EntityLogicalName = entityLogicalName,
@@ -191,7 +191,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
 
             return value;
         }
-        string  OptionSetMetaData(string logicalName, string fieldInApplication, int fieldOptionNumber)
+        string  OptionSetMetaData(string logicalName, string fieldInApplication, int fieldOptionNumber, int LanguageCode)
         {
             string outPutValue = "";
             RetrieveAttributeRequest raRequest = new RetrieveAttributeRequest
@@ -209,7 +209,9 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                 if (oMD.Value == fieldOptionNumber)
                 {
                     // log.LogInfo($"field Option language lcid both ");
-                    outPutValue = oMD.Label.LocalizedLabels.Where(x => x.LanguageCode == 1033).FirstOrDefault().Label.ToString();
+                    //outPutValue = oMD.Label.LocalizedLabels.Where(x => x.LanguageCode == 1033).FirstOrDefault().Label.ToString();
+                    outPutValue = oMD.Label.LocalizedLabels.Where(x => x.LanguageCode == LanguageCode).FirstOrDefault().Label.ToString();
+
                     tracingService.Trace($"oMD.Value {oMD.Value} ,   field {fieldInApplication}  English  {outPutValue}, optionSetValue {outPutValue}  ");
                 }
             }

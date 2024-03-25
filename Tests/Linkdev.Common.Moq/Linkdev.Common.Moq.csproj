@@ -140,6 +140,14 @@
       <Project>{1169e619-fc34-41f7-847b-d5b191211407}</Project>
       <Name>LinkDev.Common.Crm.Cs.NotificationTemplates</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CustomStep\Generic\LinkDev.Common.Crm.Cs.StageConfiguration\LinkDev.Common.Crm.Cs.StageConfigurationV2.csproj">
+      <Project>{3d61c374-4ce2-4f17-a25d-7a0c1c3e64a6}</Project>
+      <Name>LinkDev.Common.Crm.Cs.StageConfigurationV2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\LinkDev.MOHU.Plugin.Utilites\LinkDev.MOHU.Plugin.Utilites.csproj">
+      <Project>{5906D4DB-1CD8-4D59-8DEC-043C3243D8E1}</Project>
+      <Name>LinkDev.MOHU.Plugin.Utilites</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
