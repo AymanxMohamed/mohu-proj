@@ -40,7 +40,7 @@
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.51\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.52\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.19.8.16603, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
@@ -55,19 +55,19 @@
       <HintPath>..\..\packages\Microsoft.Xrm.Client.2011.5.0.18\lib\net40\microsoft.xrm.client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.51\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.52\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CrmSdk.Deployment.9.0.2.34\lib\net462\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CrmSdk.Workflow.9.0.2.42\lib\net462\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.CrmSdk.Workflow.9.0.2.52\lib\net462\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.1.45\lib\net462\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
     </Reference>
-    <Reference Include="Moq, Version=4.8.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.8.3\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.20.70.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moq.4.20.70\lib\net462\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -136,13 +136,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CustomStep\Generic\LinkDev.Common.Crm.Cs.NotificationTemplates\LinkDev.Common.Crm.Cs.NotificationTemplates.csproj">
-      <Project>{1169e619-fc34-41f7-847b-d5b191211407}</Project>
-      <Name>LinkDev.Common.Crm.Cs.NotificationTemplates</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CustomStep\Generic\LinkDev.Common.Crm.Cs.StageConfiguration\LinkDev.Common.Crm.Cs.StageConfigurationV2.csproj">
-      <Project>{3d61c374-4ce2-4f17-a25d-7a0c1c3e64a6}</Project>
-      <Name>LinkDev.Common.Crm.Cs.StageConfigurationV2</Name>
+    <ProjectReference Include="..\..\CustomStep\LinDev.MOHU.Utilites\LinDev.MOHU.Utilites.csproj">
+      <Project>{62bb5a12-2707-40c2-9826-dc1153677234}</Project>
+      <Name>LinDev.MOHU.Utilites</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Plugins\LinkDev.MOHU.Plugin.Utilites\LinkDev.MOHU.Plugin.Utilites.csproj">
       <Project>{5906D4DB-1CD8-4D59-8DEC-043C3243D8E1}</Project>
