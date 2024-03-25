@@ -48,7 +48,9 @@ namespace MOHU.Integration.WebApi.Controllers
                     {
                         Content = s,
                         Name = file.FileName,
-                        Bytes = fileBytes
+                        Bytes = fileBytes,
+                        Size = file.Length/1024f,
+                        ContentType = file.ContentType
                     });
                 }
             }

@@ -40,10 +40,11 @@ namespace MOHU.Integration.Infrastructure.Repository
 
                 foreach (var record in result.Entities)
                 {
+                    var concatenatedName = record.GetAttributeValue<string>(primaryField).Split('-');
                     var lookup = new LookupValueDto
                     {
                         Id = record.Id,
-                        Name = record.GetAttributeValue<string>(primaryField)
+                        Name = !language.Contains("ar") ? concatenatedName?.FirstOrDefault() : concatenatedName?.LastOrDefault()
                     };
 
                     lookups.Add(lookup);

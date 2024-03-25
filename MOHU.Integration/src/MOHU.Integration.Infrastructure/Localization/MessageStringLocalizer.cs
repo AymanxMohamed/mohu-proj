@@ -27,7 +27,7 @@ namespace MOHU.Integration.Infrastructure.Localization
                      var messageDto = _messageService.GetMessageByCodeAsync(name).Result;
                     if(messageDto is null)
                         return new LocalizedString(name, name, true);
-                    message = messageDto.ErrorMessage;
+                    message = messageDto?.ErrorMessage;
                     _cacheService.SetAsync(cacheKey, message).Wait();
 
                 }

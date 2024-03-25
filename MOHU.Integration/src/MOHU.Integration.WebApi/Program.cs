@@ -5,6 +5,7 @@ using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Infrastructure;
 using MOHU.Integration.WebApi.Extension;
 using MOHU.Integration.WebApi.HttpInterceptor;
+using System.Net;
 
 namespace MOHU.Integration.WebApi
 {
@@ -12,6 +13,8 @@ namespace MOHU.Integration.WebApi
     {
         public static void Main(string[] args)
         {
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddInfrastructure(builder.Configuration);
@@ -30,6 +33,14 @@ namespace MOHU.Integration.WebApi
             builder.Services.Configure<MemoryCacheConfig>(builder.Configuration.GetSection(nameof(MemoryCacheConfig)));
             builder.Services.AddHttpLoggingInterceptor<CorrelationIdHttpLoggingInterceptor>();
             builder.Services.AddHttpClient();
+            //builder.Services.AddHttpClient("ServiceDesk").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            //{
+            //  ServerCertificateCustomValidationCallback =
+            //(httpRequestMessage, cert, cetChain, policyErrors) =>
+            //{
+            //    return true;
+            //}
+            //});
             var app = builder.Build();
             app.UseHttpLogging();
             app.UseGlobalExceptionHandler();

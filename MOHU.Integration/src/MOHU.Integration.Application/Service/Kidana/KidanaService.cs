@@ -3,12 +3,12 @@ using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Ticket;
 using MOHU.Integration.Domain.Entitiy;
 
-namespace MOHU.Integration.Application.Service.Kedana
+namespace MOHU.Integration.Application.Service.Kidana
 {
-    public class KedanaService : IKedanaService 
+    public class KidanaService : IKidanaService 
     {
         private readonly ITicketService _ticketService;
-        public KedanaService(ITicketService ticketService)
+        public KidanaService(ITicketService ticketService)
         {
             _ticketService = ticketService;
         }

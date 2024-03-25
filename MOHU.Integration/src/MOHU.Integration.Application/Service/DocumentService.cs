@@ -1,10 +1,12 @@
-﻿using MOHU.Integration.Application.Exceptions;
+﻿using Microsoft.Xrm.Sdk;
+using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Document;
 using MOHU.Integration.Contracts.Dto.Document.Download;
 using MOHU.Integration.Contracts.Dto.Document.List;
 using MOHU.Integration.Contracts.Dto.Document.Upload;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Common;
+using MOHU.Integration.Domain.Entitiy;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -15,10 +17,12 @@ namespace MOHU.Integration.Application.Service
     {
         private readonly HttpClient _httpClient;
         private readonly IConfigurationService _configurationService;
-        public DocumentService(IHttpClientFactory httpClientFactory, IConfigurationService configurationService)
+        private readonly ICrmContext _crmContext;
+        public DocumentService(IHttpClientFactory httpClientFactory, IConfigurationService configurationService, ICrmContext crmContext)
         {
             _httpClient = httpClientFactory.CreateClient();
             _configurationService = configurationService;
+            _crmContext = crmContext;
         }
 
         public async Task<DownloadDocumentResponse> DownloadAttachmentAsync(string filePath, Guid ticketId)
@@ -36,12 +40,12 @@ namespace MOHU.Integration.Application.Service
 
             foreach (var document in documents)
             {
-                if (!IsValidExtension(document.Name))
+                if (!await IsValidExtension(document.ContentType.Split('/')?.LastOrDefault()))
                 {
                     result.FailedDocuments.Add(new FailedDocumentUploadDto { Name = document.Name, Error = "Extension not allowed" });
                     continue;
                 }
-                if (!IsValidSize())
+                if (!await IsValidSize(document.Size))
                 {
                     result.FailedDocuments.Add(new FailedDocumentUploadDto { Name = document.Name, Error = "File size is too big" });
                     continue;
@@ -69,13 +73,27 @@ namespace MOHU.Integration.Application.Service
             return result;
         }
 
-        private bool IsValidExtension(string fileName)
+        private async Task<bool> IsValidExtension(string fileExtension)
         {
+            var documentSettings = await GetDocumentSettingsAsync();
+            var allowedExtensions = documentSettings.GetAttributeValue<string>(ldv_documentsetting.Fields.ldv_allowedextensions).Split(',');
+            return allowedExtensions.Contains(fileExtension.ToLower());
+        }
+        private async Task<bool> IsValidSize(float fileSizeInKb)
+        {
+            var documentSettings = await GetDocumentSettingsAsync();
+            var maxFileSize = documentSettings.GetAttributeValue<int>(ldv_documentsetting.Fields.ldv_allowedsizeinkb);
+            if (fileSizeInKb > maxFileSize)
+                throw new BadRequestException($"File size {fileSizeInKb} is greater than allowed size ({maxFileSize}).");
             return true;
         }
-        private bool IsValidSize()
+        private async Task<Entity> GetDocumentSettingsAsync()
         {
-            return true;
+            var documentSettingId = Guid.Parse(await _configurationService.GetConfigurationValueAsync("DefaultDocumentSettings"));
+            var documentSettings = await _crmContext.ServiceClient.RetrieveAsync(ldv_documentsetting.EntityLogicalName, documentSettingId, 
+                new Microsoft.Xrm.Sdk.Query.ColumnSet(ldv_documentsetting.Fields.ldv_allowedextensions,ldv_documentsetting.Fields.ldv_allowedsizeinkb));
+            return documentSettings;
+
         }
         private async Task<(bool isUploaded,string filePathOrErrorMessage)> UploadAsync(UploadDocumentContentDto documentDto, Guid ticketId)
         {
