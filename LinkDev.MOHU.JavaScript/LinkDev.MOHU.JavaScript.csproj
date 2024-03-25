@@ -47,8 +47,16 @@
   <ItemGroup>
     <Folder Include="CaseManagement\Case\" />
     <Folder Include="CaseManagement\Category\" />
-    <Folder Include="Profile\Company\" />
-    <Folder Include="Profile\Individual\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CaseTest\Category\ldv_ticketcategory.js" />
+    <Content Include="CaseTest\ldv_Case_MainForm.js" />
+    <Content Include="Common\ldv_CommonGenericBPM.js" />
+    <Content Include="Common\ldv_MoeCommonGeneric.js" />
+    <Content Include="Profile\Company\ldv_Account_MainForm.js" />
+    <Content Include="Profile\Hajj\ldv_Hajj_MainForm.js" />
+    <Content Include="Profile\Individual\ldv_Contact_MainForm.js" />
+    <Content Include="Profile\Permits\ldv_Permits_Mainform.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
