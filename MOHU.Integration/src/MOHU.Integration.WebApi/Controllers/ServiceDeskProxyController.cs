@@ -3,13 +3,11 @@ using System.Text.Json;
 using System.Text;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.WebApi.Controllers;
-using System.Net.Http;
-using System.Net;
 
 namespace SDIntegraion.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ServiceDeskProxyController:BaseController
     {
         private readonly IHttpClientFactory _httpClientFactory;

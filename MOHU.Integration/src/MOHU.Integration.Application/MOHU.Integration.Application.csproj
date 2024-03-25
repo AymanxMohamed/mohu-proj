@@ -18,8 +18,4 @@
     <ProjectReference Include="..\MOHU.Integration.Shared\MOHU.Integration.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
-
 </Project>
