@@ -216,6 +216,9 @@ namespace MOHU.Integration.Application.Service
 
             var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
 
+            Entity requestEntity = new Entity(Incident.EntityLogicalName, caseId);
+            entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
+
             var caseEntity = await _crmContext.ServiceClient.RetrieveAsync(Incident.EntityLogicalName, caseId, new ColumnSet(Incident.Fields.Title));
             response.TicketNumber = caseEntity.GetAttributeValue<string>(Incident.Fields.Title);
             response.TicketId = caseId;

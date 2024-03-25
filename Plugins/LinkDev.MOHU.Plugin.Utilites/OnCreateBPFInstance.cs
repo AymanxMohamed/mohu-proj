@@ -108,7 +108,7 @@ namespace LinkDev.MOHU.Plugin.Utilites
             SetProcessRequest setProcReq = new SetProcessRequest
             {
                 Target = new EntityReference(request.LogicalName, request.Id),
-                NewProcess = new EntityReference("workflow", bpfProcess.Id)
+                NewProcess =   bpfProcess 
             };
             SetProcessResponse setProcResp = (SetProcessResponse)service.Execute(setProcReq);
 
