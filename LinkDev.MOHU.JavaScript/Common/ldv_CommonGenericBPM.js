@@ -190,10 +190,10 @@ CommonGeneric = {
             var fieldControl = formContext.getControl(fieldName);
             if (fieldControl !== null && fieldControl !== "undefined") {
                 fieldControl.setVisible(isShown);
-                if (isShown == false) { CommonGeneric.EmptyField(formContext, fieldName) }
-
+                if (isShown == false) { CommonGeneric.EmptyField(formContext, fieldName)}
             }
         }
+
     },
 
     // function to set array of fields visible or not
@@ -659,6 +659,62 @@ CommonGeneric = {
             formContext.getControl(attributeName_Notiifcation).setNotification(message);
         }
     },
+
+   ValidateArabicCharacters: function(formContext, fieldName) {
+    debugger;
+    formContext.getControl(fieldName).clearNotification("ArabicLettersValidator");
+
+    var fieldValue = formContext.getAttribute(fieldName).getValue();
+
+    if (fieldValue) {
+        fieldValue = fieldValue.replace(/\s/g, '').trim().replace(" ", "");
+
+        for (var i = 0; i < fieldValue.length; i++) {
+            var unicode = fieldValue.charCodeAt(i);
+
+            if ((unicode < 0x0600 || unicode > 0x06FF) || (unicode >= 0xFE70 && unicode <= 0xFEFF)) {
+
+                var ArabicField = formContext.getControl(fieldName);
+                CommonGeneric.showNotification(ArabicField, "3", "ArabicLettersValidator");
+
+
+                return false;
+            }
+            else {
+                formContext.getControl(fieldName).clearNotification("ArabicLettersValidator");
+
+            }
+        }
+
+        return true;
+    }
+},
+
+ValidateEnglishCharacters: function(formContext, fieldName) {
+    formContext.getControl(fieldName).clearNotification("EnglishLettersValidator");
+
+    if (formContext.getAttribute(fieldName).getValue() == null) {
+        return true;
+    }
+    else {
+        var english = /^[A-Za-z0-9]*$/;
+        var fieldValue = formContext.getAttribute(fieldName).getValue().replace(/\s/g, '');
+
+        if (fieldValue != null && !english.test(fieldValue)) {
+            var EnglishField = formContext.getControl(fieldName);
+            //formContext.getControl(fieldname).setNotification(message, "9");
+            CommonGeneric.showNotification(EnglishField, "4", "EnglishLettersValidator");
+            return false;
+        }
+        else {
+            formContext.getControl(fieldName).clearNotification("EnglishLettersValidator");
+
+        }
+
+        return true;
+    }
+},
+
 
     ShowBPFNextButton: function () {
         var backAction = Helper.SearchForElementByDom(parent.document, "stageAdvanceActionContainer");
@@ -1506,4 +1562,6 @@ var Helper = {
         return null;
     }
 }
+
+
 
