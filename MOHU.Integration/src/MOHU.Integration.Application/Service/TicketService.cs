@@ -195,7 +195,7 @@ namespace MOHU.Integration.Application.Service
 
             entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
             entity.Attributes.Add(Incident.Fields.ldv_Description, request.Description);
-            //Aya : where is the value of  origin?
+            //Aya : where is the value of  the origin?
             //entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(_requestInfo.Origin));
             entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, request.CaseType));
             entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.CategoryId));
@@ -216,9 +216,7 @@ namespace MOHU.Integration.Application.Service
 
             var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
 
-            Entity requestEntity = new Entity(Incident.EntityLogicalName, caseId);
-            entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
-
+          
             var caseEntity = await _crmContext.ServiceClient.RetrieveAsync(Incident.EntityLogicalName, caseId, new ColumnSet(Incident.Fields.Title));
             response.TicketNumber = caseEntity.GetAttributeValue<string>(Incident.Fields.Title);
             response.TicketId = caseId;
