@@ -569,8 +569,8 @@ namespace Linkdev.Common.Moq
             inputs = new Dictionary<string, object>
                 {
 
-                {"logicalName","phonetocaseprocess"} ,
-                {"Id","B1402196-A8EA-EE11-A204-6045BDA18D51"} ,
+                {"EntityLogicalName","phonetocaseprocess"} ,
+                {"EntityId","B1402196-A8EA-EE11-A204-6045BDA18D51"} ,
 
                 };
             #endregion

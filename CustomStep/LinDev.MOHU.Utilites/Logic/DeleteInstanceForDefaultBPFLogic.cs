@@ -61,9 +61,6 @@ namespace LinDev.MOHU.Utilites.Logic
                 //service.Delete("phonetocaseprocess", entityId);
                 service.Delete(entityLogicalName, entityId);
                 tracingService.Trace($"The Request {entityLogicalName} with id {entityId} is deleted.");
-
-
-
             }
             catch (Exception ex)
             {
