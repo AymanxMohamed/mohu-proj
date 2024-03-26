@@ -43,12 +43,11 @@ namespace MOHU.Integration.WebApi.Controllers
                     using var ms = new MemoryStream();
                     file.CopyTo(ms);
                     var fileBytes = ms.ToArray();
-                    string s = Convert.ToBase64String(fileBytes);
+                    string base64 = Convert.ToBase64String(fileBytes);
                     documentsToUpload.Add(new UploadDocumentContentDto
                     {
-                        Content = s,
+                        Content = $"data:{file.ContentType};base64,{base64}",
                         Name = file.FileName,
-                        Bytes = fileBytes,
                         Size = file.Length/1024f,
                         ContentType = file.ContentType
                     });

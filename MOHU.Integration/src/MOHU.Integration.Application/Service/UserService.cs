@@ -20,7 +20,7 @@ namespace MOHU.Integration.Application.Service
                 NoLock = true,
                 ColumnSet = new ColumnSet(SystemUser.Fields.DomainName)
             };
-            query.Criteria.AddCondition(SystemUser.Fields.FullName, ConditionOperator.Like, username);
+            query.Criteria.AddCondition(SystemUser.Fields.DomainName, ConditionOperator.Equal, username);
             var userCollection = await _context.ServiceClient.RetrieveMultipleAsync(query);
 
             if (userCollection != null && userCollection.Entities.Count > 0)

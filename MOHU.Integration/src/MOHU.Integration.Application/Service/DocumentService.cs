@@ -29,7 +29,7 @@ namespace MOHU.Integration.Application.Service
         {
             var downloadResult = await DownloadAsync(filePath);
             if (downloadResult is not null)
-                return new DownloadDocumentResponse { Content = downloadResult.Content.FileContent, Name = downloadResult.Name, ContentType = downloadResult.Content.ContentType };
+                return new DownloadDocumentResponse { Content = downloadResult?.Content.FileContent, Name = downloadResult?.Name, ContentType = downloadResult?.Content.ContentType };
             
             throw new NotFoundException("File not found");
         }
@@ -70,6 +70,7 @@ namespace MOHU.Integration.Application.Service
                 var content = await response.Content.ReadAsStringAsync();
                 result = Newtonsoft.Json.JsonConvert.DeserializeObject<GetFilesInFolderResponse>(content);
             }
+            
             return result;
         }
 
@@ -100,7 +101,7 @@ namespace MOHU.Integration.Application.Service
             var url = await _configurationService.GetConfigurationValueAsync("UploadDocumentFlowUrl");
           using StringContent jsonContent = new ( 
               JsonSerializer.Serialize(new {FileName = documentDto.Name,FileContent =
-              documentDto.Bytes,TicketId= ticketId}),
+              documentDto.Content,TicketId= ticketId}),
          Encoding.UTF8,
          "application/json");
 
@@ -115,7 +116,7 @@ namespace MOHU.Integration.Application.Service
         }
         private async Task<DownloadDocumentFlowResponse> DownloadAsync(string filePath)
         {
-            var result = new DownloadDocumentFlowResponse();
+            DownloadDocumentFlowResponse result = null;
             var url = await _configurationService.GetConfigurationValueAsync("DownloadDocumentFlowUrl");
             using StringContent jsonContent = new(JsonSerializer.Serialize(new { FileId = filePath }),
            Encoding.UTF8,

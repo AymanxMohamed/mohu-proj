@@ -176,7 +176,7 @@ namespace MOHU.Integration.Application.Service
             var documents = await _documentService.GetFilesInFolderAsync(result?.Id.ToString());
 
             foreach (var file in documents.Files)
-                result.Documents.Add(new Contracts.Dto.Document.DocumentDto { Id = file.Path, Name = file.Name });
+                result.Documents.Add(new Contracts.Dto.Document.DocumentDto { Id = file.Id, Name = file.Name });
 
             return result;
         }
@@ -229,7 +229,7 @@ namespace MOHU.Integration.Application.Service
 
             return ticketTypes;
         }
-        public async Task<bool> UpdateStatus(UpdateTicketStatusRequest request)
+        public async Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request)
         {
             if (request.CustomerId == Guid.Empty)
                 throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
@@ -575,5 +575,22 @@ namespace MOHU.Integration.Application.Service
             return result.Entities.Any();
         }
 
+        public async Task<Guid> GetTicketByIntegrationTicketNumberAsync(string fieldName, string integrTicketNumber)
+        {
+            var query = new QueryExpression(Incident.EntityLogicalName)
+            {
+                NoLock = true,
+                TopCount = 1
+            };
+
+            var filter = new FilterExpression(LogicalOperator.And);
+            query.Criteria.AddFilter(filter);
+            filter.AddCondition(new ConditionExpression(fieldName,ConditionOperator.Equal,integrTicketNumber));
+            var entities = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query))?.Entities;
+
+            return entities.Count == 0
+                ? throw new NotFoundException($"Ticket with #{integrTicketNumber} is not found")
+                : entities.FirstOrDefault().Id;
+        }
     }
 }

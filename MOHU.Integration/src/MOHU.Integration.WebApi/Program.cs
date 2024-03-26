@@ -14,7 +14,6 @@ namespace MOHU.Integration.WebApi
     {
         public static void Main(string[] args)
         {
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 
             var builder = WebApplication.CreateBuilder(args);
 

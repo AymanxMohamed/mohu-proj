@@ -26,7 +26,7 @@ namespace MOHU.Integration.Application.Service.Kidana
                 ResolutionDate = request.ResolutionDate
 
             };
-            await _ticketService.UpdateStatus(ticketStatusRequest);
+            await _ticketService.UpdateStatusAsync(ticketStatusRequest);
 
             return true;
 

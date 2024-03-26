@@ -4,7 +4,6 @@
     {
         public string Name { get; set; }
         public string Content { get; set; }
-        public byte[] Bytes { get; set; }
         public float Size { get; set; }
         public string ContentType { get; set; }
     }
