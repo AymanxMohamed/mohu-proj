@@ -196,7 +196,7 @@ namespace MOHU.Integration.Application.Service
             entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
             entity.Attributes.Add(Incident.Fields.ldv_Description, request.Description);
             //Aya : where is the value of  origin?
-            //entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(_requestInfo.Origin));
+            entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(4));
             entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, request.CaseType));
             entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.CategoryId));
             entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId));
@@ -204,7 +204,7 @@ namespace MOHU.Integration.Application.Service
             entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", await GetTicketTypeProcessAsync(request.CaseType)));
            // entity.Attributes.Add(Incident.Fields.ProcessId, new EntityReference("workflow", await GetTicketTypeProcessAsync(request.CaseType)));
 
-            //entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
+            entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
             if (request.SubCategoryId1.HasValue)
                 entity.Attributes.Add(Incident.Fields.ldv_SecondarySubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId1.Value));
 
@@ -215,9 +215,6 @@ namespace MOHU.Integration.Application.Service
                 entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
 
             var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
-
-            Entity requestEntity = new Entity(Incident.EntityLogicalName, caseId);
-            entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
 
             var caseEntity = await _crmContext.ServiceClient.RetrieveAsync(Incident.EntityLogicalName, caseId, new ColumnSet(Incident.Fields.Title));
             response.TicketNumber = caseEntity.GetAttributeValue<string>(Incident.Fields.Title);
