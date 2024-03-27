@@ -20,7 +20,7 @@ namespace MOHU.Integration.Application.Localization
             var msgQuery = new QueryExpression(ldv_message.EntityLogicalName)
             {
                 TopCount = 1,
-                ColumnSet = new ColumnSet(ldv_message.Fields.ldv_englishmessage)
+                ColumnSet = new ColumnSet(ldv_message.Fields.ldv_englishmessage, ldv_message.Fields.ldv_arabicmessage)
             };
             msgQuery.Criteria.AddCondition(new ConditionExpression(ldv_message.Fields.ldv_code, ConditionOperator.Equal, code));
             var entityCollection = await _crmContext.ServiceClient.RetrieveMultipleAsync(msgQuery);

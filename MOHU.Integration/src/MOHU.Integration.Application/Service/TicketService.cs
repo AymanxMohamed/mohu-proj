@@ -176,7 +176,7 @@ namespace MOHU.Integration.Application.Service
             var documents = await _documentService.GetFilesInFolderAsync(result?.Id.ToString());
 
             foreach (var file in documents.Files)
-                result.Documents.Add(new Contracts.Dto.Document.DocumentDto { Id = file.Path, Name = file.Name });
+                result.Documents.Add(new Contracts.Dto.Document.DocumentDto { Id = file.Id, Name = file.Name });
 
             return result;
         }
@@ -186,25 +186,20 @@ namespace MOHU.Integration.Application.Service
 
             var results = await _validator.ValidateAsync(request);
 
-            if (results?.IsValid == false)
-            {
+            if (!results.IsValid)
                 throw new BadRequestException(results.Errors.FirstOrDefault().ErrorMessage);
-            }
+            
 
             var entity = new Entity(Incident.EntityLogicalName);
 
             entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
             entity.Attributes.Add(Incident.Fields.ldv_Description, request.Description);
-            //Aya : where is the value of  the origin?
-            //entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(_requestInfo.Origin));
+            entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(_requestInfo.Origin));
             entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, request.CaseType));
             entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.CategoryId));
             entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId));
-           
             entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", await GetTicketTypeProcessAsync(request.CaseType)));
-           // entity.Attributes.Add(Incident.Fields.ProcessId, new EntityReference("workflow", await GetTicketTypeProcessAsync(request.CaseType)));
-
-            //entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
+            entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
             if (request.SubCategoryId1.HasValue)
                 entity.Attributes.Add(Incident.Fields.ldv_SecondarySubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId1.Value));
 
@@ -216,7 +211,6 @@ namespace MOHU.Integration.Application.Service
 
             var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
 
-          
             var caseEntity = await _crmContext.ServiceClient.RetrieveAsync(Incident.EntityLogicalName, caseId, new ColumnSet(Incident.Fields.Title));
             response.TicketNumber = caseEntity.GetAttributeValue<string>(Incident.Fields.Title);
             response.TicketId = caseId;
@@ -235,7 +229,7 @@ namespace MOHU.Integration.Application.Service
 
             return ticketTypes;
         }
-        public async Task<bool> UpdateStatus(UpdateTicketStatusRequest request)
+        public async Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request)
         {
             if (request.CustomerId == Guid.Empty)
                 throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
@@ -567,7 +561,6 @@ namespace MOHU.Integration.Application.Service
             var processId = ticketTypeEntity.GetAttributeValue<EntityReference>(ldv_service.Fields.ldv_processid).Id;
             return processId;
         }
-       
         private async Task<bool> IsTicketExists(Guid ticketId)
         {
             var ticketQuery = new QueryExpression
@@ -582,5 +575,22 @@ namespace MOHU.Integration.Application.Service
             return result.Entities.Any();
         }
 
+        public async Task<Guid> GetTicketByIntegrationTicketNumberAsync(string fieldName, string integrTicketNumber)
+        {
+            var query = new QueryExpression(Incident.EntityLogicalName)
+            {
+                NoLock = true,
+                TopCount = 1
+            };
+
+            var filter = new FilterExpression(LogicalOperator.And);
+            query.Criteria.AddFilter(filter);
+            filter.AddCondition(new ConditionExpression(fieldName,ConditionOperator.Equal,integrTicketNumber));
+            var entities = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query))?.Entities;
+
+            return entities.Count == 0
+                ? throw new NotFoundException($"Ticket with #{integrTicketNumber} is not found")
+                : entities.FirstOrDefault().Id;
+        }
     }
 }

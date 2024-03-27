@@ -17,13 +17,11 @@ namespace MOHU.Integration.Application.Validators
 
             RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FirstnameFieldisRequired])
-            .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.FirstnameExceedingcharacter])
-            .Matches("^[a-zA-Z]*$").WithMessage(_localizer[ErrorMessageCodes.EnglishLettersValidator]);
+            .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.FirstnameExceedingcharacter]);
 
             RuleFor(x => x.LastName)
           .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.LastNameReuired])
-          .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.LastNameExceeding])
-          .Matches("^[a-zA-Z]*$").WithMessage(_localizer[ErrorMessageCodes.EnglishLettersValidator]);
+          .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.LastNameExceeding]);
 
             RuleFor(x => x.ArabicName)
              .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.ArabicNameisRequired])

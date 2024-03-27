@@ -1,4 +1,5 @@
 ﻿using Microsoft.BusinessData.MetadataModel;
+using Microsoft.Xrm.Sdk;
 using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Activity;
 using MOHU.Integration.Contracts.Dto.Common;
@@ -43,6 +44,7 @@ namespace MOHU.Integration.Application.Service
             createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.Subject, $"{request.MobileNumber} - {request.IvrInteractionNumber}");
             createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.DirectionCode, false);
             createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.PhoneNumber, request.MobileNumber);
+            createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.RegardingObjectId, new EntityReference(individual.EntityLogicalName,individual.Id));
 
             var phoneCall = await _activityService.CreateActivityAsync(createActivityRequest);
             return phoneCall.Id;
@@ -52,7 +54,7 @@ namespace MOHU.Integration.Application.Service
         {
             var individual = await _individualService.GetIndividualByMobileNumberAsync(mobileNumber);
 
-            individual ??= await _individualService.CreateIndividualAsync(mobileNumber);
+            individual ??= await _individualService.CreateProfilelAsync(mobileNumber);
             
             var applicationId = await _configurationService.GetConfigurationValueAsync("CallCenterAppId");
 

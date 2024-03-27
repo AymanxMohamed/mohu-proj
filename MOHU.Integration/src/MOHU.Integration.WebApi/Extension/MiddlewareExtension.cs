@@ -7,7 +7,7 @@ namespace MOHU.Integration.WebApi.Extension
         public static IApplicationBuilder UseLanguageMiddleware(
       this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<LanguageHeaderMiddleware>();
+            return builder.UseMiddleware<CustomHeadersMiddleware>();
         }
         public static IApplicationBuilder UseGlobalExceptionHandler(
  this IApplicationBuilder builder)

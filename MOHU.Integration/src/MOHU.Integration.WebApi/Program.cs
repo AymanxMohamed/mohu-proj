@@ -5,6 +5,8 @@ using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Infrastructure;
 using MOHU.Integration.WebApi.Extension;
 using MOHU.Integration.WebApi.HttpInterceptor;
+using MOHU.Integration.WebApi.SwaggerFilter;
+using System.Net;
 
 namespace MOHU.Integration.WebApi
 {
@@ -12,13 +14,14 @@ namespace MOHU.Integration.WebApi
     {
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddApplication();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c=>c.OperationFilter<AddHeaderParameter>());
 
             builder.Services.AddHttpLogging(logging =>
             {
@@ -30,6 +33,14 @@ namespace MOHU.Integration.WebApi
             builder.Services.Configure<MemoryCacheConfig>(builder.Configuration.GetSection(nameof(MemoryCacheConfig)));
             builder.Services.AddHttpLoggingInterceptor<CorrelationIdHttpLoggingInterceptor>();
             builder.Services.AddHttpClient();
+            //builder.Services.AddHttpClient("ServiceDesk").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            //{
+            //  ServerCertificateCustomValidationCallback =
+            //(httpRequestMessage, cert, cetChain, policyErrors) =>
+            //{
+            //    return true;
+            //}
+            //});
             var app = builder.Build();
             app.UseHttpLogging();
             app.UseGlobalExceptionHandler();

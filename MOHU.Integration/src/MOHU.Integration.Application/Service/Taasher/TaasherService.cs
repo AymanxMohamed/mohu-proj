@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Contracts.Dto;
+using MOHU.Integration.Contracts.Dto.Taasher;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Ticket;
 using MOHU.Integration.Domain.Entitiy;
@@ -14,20 +15,19 @@ namespace MOHU.Integration.Application.Service.Taasher
             _ticketService = ticketService;
         }
 
-        public async Task<bool> UpdateStatus(UpdateStatusRequest request)
+        public async Task<bool> UpdateStatusAsync(TaasherUpdateStatusRequest request)
         {
-
+            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync("ldv_taasherticketnumber", request.TicketNumber);
             var ticketStatusRequest = new UpdateTicketStatusRequest
             {
-                TicketId = request.TicketId,
-                CustomerId = request.CustomerId,
+                TicketId = ticketId,
                 IntegrationStatus = request.IntegrationStatus,
                 FlagLogicalName = Incident.Fields.IsTashirUpdated,
                 Resolution = request.Resolution,
                 ResolutionDate = request.ResolutionDate
 
             };
-            await _ticketService.UpdateStatus(ticketStatusRequest);
+            await _ticketService.UpdateStatusAsync(ticketStatusRequest);
 
             return true;
          

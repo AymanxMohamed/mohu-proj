@@ -7,10 +7,10 @@ namespace MOHU.Integration.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KedanaController : BaseController
+    public class KidanaController : BaseController
     {
-        public readonly IKedanaService _kedanaService;
-        public KedanaController(IKedanaService kedanaService)
+        public readonly IKidanaService _kedanaService;
+        public KidanaController(IKidanaService kedanaService)
         {
             _kedanaService = kedanaService;
         }

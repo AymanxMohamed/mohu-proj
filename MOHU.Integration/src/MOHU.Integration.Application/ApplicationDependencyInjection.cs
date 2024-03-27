@@ -12,7 +12,7 @@ using MOHU.Integration.Infrastructure.Repository;
 using MOHU.Integration.Application.Localization;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Application.Service.Taasher;
-using MOHU.Integration.Application.Service.Kedana;
+using MOHU.Integration.Application.Service.Kidana;
 using MOHU.Integration.Application.Service.ServiceDesk;
 
 namespace MOHU.Integration.Application
@@ -36,7 +36,7 @@ namespace MOHU.Integration.Application
             services.AddScoped<IConfigurationService, ConfigurationService>();
             services.AddSingleton<IRequestInfo, RequestInfo>();
             services.AddTransient<ITaasherService, TaasherService>();
-            services.AddTransient<IKedanaService, KedanaService>();
+            services.AddTransient<IKidanaService, KidanaService>();
             services.AddTransient<IServiceDeskService, ServiceDeskService>();
 
             return services;
