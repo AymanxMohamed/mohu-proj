@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.WebApi.Controllers;
+using MOHU.Integration.Contracts.Dto.Common;
 
 namespace SDIntegraion.Controllers
 {
@@ -19,8 +20,13 @@ namespace SDIntegraion.Controllers
             _httpClientFactory = httpClientFactory;
             _configurationservice = configuration;
         }
-
-        [HttpPost] 
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
+        [HttpPost]
+        [Route(nameof(Post))]
         public async Task<object> Post(ServiceDeskRequest sdTicket)
         {
             var username = _configurationservice.GetConfigurationValueAsync("SD_User Name");

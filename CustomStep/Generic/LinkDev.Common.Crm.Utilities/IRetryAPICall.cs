@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LinkDev.MOHU.JavaScript
+namespace LinkDev.Common.Crm.Utilities
 {
-    public class Class1
+    public interface IRetryAPICall
     {
+        bool IsAllowRetry(Exception exception);
+       
     }
 }

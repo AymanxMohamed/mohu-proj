@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3D61C374-4CE2-4F17-A25D-7A0C1C3E64A6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LinkDev.Common.Crm.Cs.StageConfiguration</RootNamespace>
+    <AssemblyName>LinkDev.Common.Crm.Cs.StageConfigurationv2</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CustomerTestingServer|AnyCPU'">
+    <OutputPath>bin\CustomerTestingServer\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CustomerPreProduction|AnyCPU'">
+    <OutputPath>bin\CustomerPreProduction\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CustomerProduction|AnyCPU'">
+    <OutputPath>bin\CustomerProduction\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QC|AnyCPU'">
+    <OutputPath>bin\QC\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
+    <OutputPath>bin\Dev\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.52\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.52\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.CrmSdk.Workflow.9.0.2.52\lib\net462\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Workflow.Activities" />
+    <Reference Include="System.Workflow.ComponentModel" />
+    <Reference Include="System.Workflow.Runtime" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\LinkDev.Gea.Crm.Bll.Common\ConfigurationKeys.cs">
+      <Link>Utilities\ConfigurationKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\LinkDev.Gea.Crm.Bll.Common\Configuration.cs">
+      <Link>Utilities\Configurations.cs</Link>
+    </Compile>
+    <Compile Include="..\LinkDev.Common.Crm.Bll.Base\BllBase.cs">
+      <Link>BLL\BllBase.cs</Link>
+    </Compile>
+    <Compile Include="..\LinkDev.Common.Crm.Logger\Logger.cs">
+      <Link>Logger\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\linkdev.common.crm.utilities\CrmStringHandler.cs">
+      <Link>Utilities\CrmStringHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\linkdev.common.crm.cs.base\CustomStepBase.cs">
+      <Link>CustomStepBase\CustomStepBase.cs</Link>
+    </Compile>
+    <Compile Include="AssignTheRequest.cs" />
+    <Compile Include="BLL\CloseTaskBLL.cs" />
+    <Compile Include="BLL\CreateApplicationHeaderBLL.cs" />
+    <Compile Include="BLL\CreateTaskBLL.cs" />
+    <Compile Include="BLL\HistoricallyStageFieldsBLL.cs" />
+    <Compile Include="BLL\ChangeStageFieldsBLL.cs" />
+    <Compile Include="ChangeStageFields.cs" />
+    <Compile Include="CheckCurrentProcess.cs" />
+    <Compile Include="Common\Common.cs" />
+    <Compile Include="CreateApplicationHeader.cs" />
+    <Compile Include="CreateTask.cs" />
+    <Compile Include="DAL\CrmAccessLayer.cs" />
+    <Compile Include="BLL\StageConfigurationBLL.cs" />
+    <Compile Include="Entities\QueueItem.cs" />
+    <Compile Include="Old\DeactiveRequestAndFinalizeInstance.cs" />
+    <Compile Include="Old\DeleteInstanceRecord.cs" />
+    <Compile Include="Entities\AccountEntity.cs" />
+    <Compile Include="Entities\ApplicationHeaderEntity.cs" />
+    <Compile Include="Entities\ConfigurationEntity.cs" />
+    <Compile Include="Entities\ContactEntity.cs" />
+    <Compile Include="Entities\RequestEntity.cs" />
+    <Compile Include="Entities\SC_ChangedFields.cs" />
+    <Compile Include="Entities\ServiceDefinitionEntity.cs" />
+    <Compile Include="Entities\ServiceStatusEntity.cs" />
+    <Compile Include="Entities\ServiceSubStatusEntity.cs" />
+    <Compile Include="Entities\StageConditionEntity.cs" />
+    <Compile Include="Entities\StageConfigurationEntity.cs" />
+    <Compile Include="Entities\StageFieldsEntity.cs" />
+    <Compile Include="Entities\TaskEntity.cs" />
+    <Compile Include="GetEntityReferencePrimitives.cs" />
+    <Compile Include="GetRequestAndApplicationHeader.cs" />
+    <Compile Include="GetRoutingAssigning.cs" />
+    <Compile Include="GetStageConfiguration.cs" />
+    <Compile Include="Enum\Enum.cs" />
+    <Compile Include="HistoricallyStageFields.cs" />
+    <Compile Include="Old\PerformAction.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="key.snk" />
+    <None Include="packages.config" />
+    <None Include="PluginRegExt.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
