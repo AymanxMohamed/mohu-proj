@@ -10,6 +10,7 @@ using Microsoft.Extensions.Localization;
 using MOHU.Integration.Shared;
 using FluentValidation;
 using MOHU.Integration.Contracts.Dto.Common;
+using System.Globalization;
 
 namespace MOHU.Integration.Application.Service
 {
@@ -114,6 +115,9 @@ namespace MOHU.Integration.Application.Service
 
             entity.Attributes.Add(Individual.Fields.IDType,
              new OptionSetValue(Convert.ToInt32(model.IdType)));
+
+            if(model.DateOfBirth !=default)
+                entity.Attributes.Add(Individual.Fields.HijriBirthDate, GregorianToHijriDateConversion(model.DateOfBirth));
 
             var customerId = await _crmContext.ServiceClient.CreateAsync(entity);
             return customerId;
@@ -237,7 +241,14 @@ namespace MOHU.Integration.Application.Service
             }
             return false;
         }
-
+        public static DateTime GregorianToHijriDateConversion(DateTime gregorianDate)
+        {
+            Calendar umAlQura = new UmAlQuraCalendar();
+            var hijriYear = umAlQura.GetYear(gregorianDate);
+            var hijriMonth = umAlQura.GetMonth(gregorianDate);
+            var hijriDay = umAlQura.GetDayOfMonth(gregorianDate);
+            return new DateTime(hijriYear, hijriMonth, hijriDay);
+        }
     }
 }
 

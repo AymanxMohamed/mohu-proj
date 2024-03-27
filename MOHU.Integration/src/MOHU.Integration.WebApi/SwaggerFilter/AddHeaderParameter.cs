@@ -12,15 +12,13 @@ namespace MOHU.Integration.WebApi.SwaggerFilter
             {
                 Name = Header.Origin,
                 In = ParameterLocation.Header,
-                Required = true,
-                Description = "Origin system",
+                Required = false,
             });
             operation.Parameters.Add(new OpenApiParameter()
             {
                 Name = Header.Language,
                 In = ParameterLocation.Header,
                 Required = false,
-                Description = "Language",
             });
         }
     }
