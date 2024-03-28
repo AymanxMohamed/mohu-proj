@@ -34,7 +34,7 @@ namespace MOHU.Integration.Contracts.Dto.CreateProfile
         public string MobileCountryCode { get; set; }
 
        
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public GenderEnum? Gender { get; set; }
 

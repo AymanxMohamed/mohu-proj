@@ -5,6 +5,7 @@ namespace MOHU.Integration.Contracts.Dto.Ticket
     public class TicketDetailsResponse
     {
         public Guid Id { get; set; }
+        public string Description { get; set; }
         public string TicketNumber { get; set; }
         public string Resolution { get; set; }
         public string Status { get; set; }
