@@ -10,7 +10,7 @@ namespace MOHU.Integration.Contracts.Interface.Ticket
         Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request);
         Task<List<TicketTypeResponse>> GetTicketTypesAsync();
         Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request);
-        Task<Guid> GetTicketByIntegrationTicketNumberAsync(string fieldName, string integrationTicketNumber);
+        Task<Guid> GetTicketByIntegrationTicketNumberAsync(string integrationTicketNumber);
 
     }
 }

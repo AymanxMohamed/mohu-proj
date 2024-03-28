@@ -1,4 +1,4 @@
-﻿using MOHU.Integration.Contracts.Dto;
+﻿using MOHU.Integration.Contracts.Dto.ServiceDesk;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Ticket;
 using MOHU.Integration.Domain.Entitiy;
@@ -13,13 +13,13 @@ namespace MOHU.Integration.Application.Service.ServiceDesk
             _ticketService = ticketService;
         }
 
-        public async Task<bool> UpdateStatus(UpdateStatusRequest request)
+        public async Task<bool> UpdateStatusAsync(ServiceDeskUpdateStatusRequest request)
         {
+            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(request.TicketNumber);
 
             var ticketStatusRequest = new UpdateTicketStatusRequest
             {
-                TicketId = request.TicketId,
-                CustomerId = request.CustomerId,
+                TicketId = ticketId,
                 IntegrationStatus = request.IntegrationStatus,
                 FlagLogicalName = Incident.Fields.IsServiceDeskUpdated,
                 Resolution = request.Resolution,

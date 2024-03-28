@@ -1,10 +1,10 @@
-﻿using MOHU.Integration.Contracts.Dto;
+﻿using MOHU.Integration.Contracts.Dto.ServiceDesk;
 
 namespace MOHU.Integration.Contracts.Interface
 {
     public interface IServiceDeskService
     {
-        Task<bool> UpdateStatus(UpdateStatusRequest request);
+        Task<bool> UpdateStatusAsync(ServiceDeskUpdateStatusRequest request);
 
     }
 }

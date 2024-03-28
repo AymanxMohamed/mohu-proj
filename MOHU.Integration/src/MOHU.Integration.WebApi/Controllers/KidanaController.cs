@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Common;
+using MOHU.Integration.Contracts.Dto.Kidana;
 using MOHU.Integration.Contracts.Interface;
 
 namespace MOHU.Integration.WebApi.Controllers
@@ -21,9 +22,9 @@ namespace MOHU.Integration.WebApi.Controllers
         [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
         [HttpPost]
         [Route(nameof(UpdateStatus))]
-        public async Task<ResponseMessage<bool>> UpdateStatus(UpdateStatusRequest request)
+        public async Task<ResponseMessage<bool>> UpdateStatus(KidanaUpdateStatusRequest request)
         {
-            var result = await _kedanaService.UpdateStatus(request);
+            var result = await _kedanaService.UpdateStatusAsync(request);
             return Ok(result);
         }
 

@@ -575,7 +575,7 @@ namespace MOHU.Integration.Application.Service
             return result.Entities.Any();
         }
 
-        public async Task<Guid> GetTicketByIntegrationTicketNumberAsync(string fieldName, string integrTicketNumber)
+        public async Task<Guid> GetTicketByIntegrationTicketNumberAsync(string integrationTicketNumber)
         {
             var query = new QueryExpression(Incident.EntityLogicalName)
             {
@@ -585,11 +585,11 @@ namespace MOHU.Integration.Application.Service
 
             var filter = new FilterExpression(LogicalOperator.And);
             query.Criteria.AddFilter(filter);
-            filter.AddCondition(new ConditionExpression(fieldName,ConditionOperator.Equal,integrTicketNumber));
+            filter.AddCondition(new ConditionExpression(Incident.Fields.TicketNumber,ConditionOperator.Equal, integrationTicketNumber));
             var entities = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query))?.Entities;
 
             return entities.Count == 0
-                ? throw new NotFoundException($"Ticket with #{integrTicketNumber} is not found")
+                ? throw new NotFoundException($"Ticket with #{integrationTicketNumber} was not found")
                 : entities.FirstOrDefault().Id;
         }
     }

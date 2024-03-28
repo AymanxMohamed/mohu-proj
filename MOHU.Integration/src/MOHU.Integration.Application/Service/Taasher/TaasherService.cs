@@ -17,7 +17,7 @@ namespace MOHU.Integration.Application.Service.Taasher
 
         public async Task<bool> UpdateStatusAsync(TaasherUpdateStatusRequest request)
         {
-            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync("ldv_taasherticketnumber", request.TicketNumber);
+            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(request.TicketNumber);
             var ticketStatusRequest = new UpdateTicketStatusRequest
             {
                 TicketId = ticketId,

@@ -99,15 +99,17 @@ namespace MOHU.Integration.Application.Service
             }
             entity.Attributes.Add(Individual.Fields.FirstName, model.FirstName);
             entity.Attributes.Add(Individual.Fields.LastName, model.LastName);
-            entity.Attributes.Add(Individual.Fields.Age, model.Age);
+            
             entity.Attributes.Add(Individual.Fields.ArabicName, model.ArabicName);
             entity.Attributes.Add(Individual.Fields.Email, model.Email);
             entity.Attributes.Add(Individual.Fields.MobileCountryCode, model.MobileCountryCode);
-            entity.Attributes.Add(Individual.Fields.MobileNumber, model.MobileNumber);
+            entity.Attributes.Add(Individual.Fields.MobileNumber, $"{model.MobileCountryCode}{model.MobileNumber}");
             entity.Attributes.Add(Individual.Fields.BirthDate, model.DateOfBirth);
-            entity.Attributes.Add(Individual.Fields.Gender,
+            if(model.Gender.HasValue)
+                entity.Attributes.Add(Individual.Fields.Gender,
                   new OptionSetValue(Convert.ToInt32(model.Gender)));
-
+            if (model.Age.HasValue)
+                entity.Attributes.Add(Individual.Fields.Age, model.Age);
             entity.Attributes.Add(Individual.Fields.Nationality,
            new EntityReference(Individual.EntityLogicalName, model.Nationality));
             entity.Attributes.Add(Individual.Fields.CountryofResidence,

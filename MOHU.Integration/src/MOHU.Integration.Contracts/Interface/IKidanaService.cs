@@ -1,10 +1,10 @@
-﻿using MOHU.Integration.Contracts.Dto;
+﻿using MOHU.Integration.Contracts.Dto.Kidana;
 
 namespace MOHU.Integration.Contracts.Interface
 {
     public interface IKidanaService
     {
-        Task<bool> UpdateStatus(UpdateStatusRequest request);
+        Task<bool> UpdateStatusAsync(KidanaUpdateStatusRequest request);
 
     }
 }
