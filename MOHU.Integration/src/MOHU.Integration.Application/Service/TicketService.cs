@@ -317,7 +317,7 @@ namespace MOHU.Integration.Application.Service
 
             ticketTypes.ForEach(async t =>
             {
-                var cacheKey = $"CaseType-{t.Id}-Categories_{languageKey}";
+                var cacheKey = $"CaseType-{t.Id}-Categories_{languageKey}_Origin-{_requestInfo.Origin}";
                 var resultFromCache =  await _cacheService.GetAsync<List<TicketCategoryDto>>(cacheKey);
                 if (resultFromCache is not null)
                     t.Categories.AddRange(resultFromCache);
@@ -341,6 +341,7 @@ namespace MOHU.Integration.Application.Service
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Null));
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory, ConditionOperator.Null));
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal, ConditionOperator.Equal, true));
+                    filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.In, new[] {_requestInfo.Origin}));
 
 
                     executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
@@ -524,6 +525,7 @@ namespace MOHU.Integration.Application.Service
             var result = new TicketDetailsResponse
             {
                 Id = entity.Id,
+                Description = entity.GetAttributeValue<string>(Incident.Fields.ldv_Description),
                 TicketNumber = entity.GetAttributeValue<string>(Incident.Fields.Title),
                 CreatedOn = entity.GetAttributeValue<DateTime>(Incident.Fields.CreatedOn),
                 Resolution = entity.GetAttributeValue<string>(Incident.Fields.ldv_ClosureReason),

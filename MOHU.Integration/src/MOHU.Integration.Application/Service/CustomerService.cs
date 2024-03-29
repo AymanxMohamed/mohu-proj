@@ -104,7 +104,8 @@ namespace MOHU.Integration.Application.Service
             entity.Attributes.Add(Individual.Fields.Email, model.Email);
             entity.Attributes.Add(Individual.Fields.MobileCountryCode, model.MobileCountryCode);
             entity.Attributes.Add(Individual.Fields.MobileNumber, $"{model.MobileCountryCode}{model.MobileNumber}");
-            entity.Attributes.Add(Individual.Fields.BirthDate, model.DateOfBirth);
+            if(model.DateOfBirth.HasValue)
+                entity.Attributes.Add(Individual.Fields.BirthDate, model.DateOfBirth);
             if(model.Gender.HasValue)
                 entity.Attributes.Add(Individual.Fields.Gender,
                   new OptionSetValue(Convert.ToInt32(model.Gender)));
@@ -118,8 +119,8 @@ namespace MOHU.Integration.Application.Service
             entity.Attributes.Add(Individual.Fields.IDType,
              new OptionSetValue(Convert.ToInt32(model.IdType)));
 
-            if(model.DateOfBirth !=default)
-                entity.Attributes.Add(Individual.Fields.HijriBirthDate, GregorianToHijriDateConversion(model.DateOfBirth));
+            if(model.DateOfBirth.HasValue && model.DateOfBirth !=default)
+                entity.Attributes.Add(Individual.Fields.HijriBirthDate, GregorianToHijriDateConversion(model.DateOfBirth.Value));
 
             var customerId = await _crmContext.ServiceClient.CreateAsync(entity);
             return customerId;

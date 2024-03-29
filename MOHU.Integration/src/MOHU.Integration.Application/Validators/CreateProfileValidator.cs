@@ -19,13 +19,8 @@ namespace MOHU.Integration.Application.Validators
             .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.FirstnameFieldisRequired])
             .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.FirstnameExceedingcharacter]);
 
-            RuleFor(x => x.LastName)
-          .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.LastNameReuired])
-          .MaximumLength(75).WithMessage(_localizer[ErrorMessageCodes.LastNameExceeding]);
-
             RuleFor(x => x.ArabicName)
              .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.ArabicNameisRequired])
-             .Matches(@"^[\u0600-\u06FF\s]*$").WithMessage(_localizer[ErrorMessageCodes.ArabicLettersValidator])
              .MaximumLength(150).WithMessage(_localizer[ErrorMessageCodes.ArabicNameExceeding]);
 
             RuleFor(x => x.Email)
@@ -38,7 +33,6 @@ namespace MOHU.Integration.Application.Validators
 
 
             RuleFor(x => x.DateOfBirth)
-            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.DateofBirthRequired])
             .LessThanOrEqualTo(DateTime.Today).WithMessage(_localizer[ErrorMessageCodes.DateOfBirth]);
 
             RuleFor(x => x.MobileNumber)
