@@ -4,18 +4,17 @@ using System.Text;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.WebApi.Controllers;
 using MOHU.Integration.Contracts.Dto.Common;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace SDIntegraion.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ServiceDeskProxyController:BaseController
+    public class ServiceDeskProxyController : BaseController
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfigurationService _configurationservice;
 
-        public ServiceDeskProxyController(IHttpClientFactory httpClientFactory , IConfigurationService configuration)
+        public ServiceDeskProxyController(IHttpClientFactory httpClientFactory, IConfigurationService configuration)
         {
 
             _httpClientFactory = httpClientFactory;
@@ -23,52 +22,25 @@ namespace SDIntegraion.Controllers
         }
         [Consumes("application/json")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseMessage<object?>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status500InternalServerError)]
         [HttpPost]
         public async Task<object> Post(ServiceDeskRequest request)
         {
             var username = await _configurationservice.GetConfigurationValueAsync("SD_User Name");
             var password = await _configurationservice.GetConfigurationValueAsync("SD_Password");
             var servicedeskURL = await _configurationservice.GetConfigurationValueAsync("SD_URL");
-
-            string encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
-                                           .GetBytes(username + ":" + password));
-
+            var encoded = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, servicedeskURL.ToString());
             httpRequestMessage.Headers.Add("Authorization", "Basic " + encoded);
-            httpRequestMessage.Content = JsonContent.Create(request);
-
-           
+            httpRequestMessage.Content = JsonContent.Create(request, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             var httpClient = _httpClientFactory.CreateClient();
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-
-            var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
-
-            //var res = await httpClient.PostAsJsonAsync(servicedeskURL, request);
-            //var cStream = await res.Content.ReadAsStreamAsync();
+            var contentStream = (await httpResponseMessage.Content.ReadAsStringAsync()).Replace("\\", "")
+                                               .Trim(['"']);
             return contentStream;
-            //return await JsonSerializer.DeserializeAsync<object>(cStream);
 
-        }
-        [HttpGet]
-        public async Task<object> Get()
-        {
-
-            var url = await _configurationservice.GetConfigurationValueAsync("SD_URL");
-
-            //var url = "https://10.1.108.32/SM/9/rest/mohcrm";
-            var username = await _configurationservice.GetConfigurationValueAsync("SD_User Name");
-            var password = await _configurationservice.GetConfigurationValueAsync("SD_Password");
-            string encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
-                                          .GetBytes(username + ":" + password));
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url.ToString());
-            httpRequestMessage.Headers.Add("Authorization", "Basic " + encoded);
-            var client = _httpClientFactory.CreateClient();
-            var res = await client.SendAsync(httpRequestMessage);
-            var contentStream = await res.Content.ReadAsStringAsync();
-            return contentStream;
         }
     }
 }
