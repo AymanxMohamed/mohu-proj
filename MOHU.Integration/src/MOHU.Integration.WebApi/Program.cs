@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Application;
 using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Infrastructure;
@@ -33,14 +34,7 @@ namespace MOHU.Integration.WebApi
             builder.Services.Configure<MemoryCacheConfig>(builder.Configuration.GetSection(nameof(MemoryCacheConfig)));
             builder.Services.AddHttpLoggingInterceptor<CorrelationIdHttpLoggingInterceptor>();
             builder.Services.AddHttpClient();
-            //builder.Services.AddHttpClient("ServiceDesk").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-            //{
-            //  ServerCertificateCustomValidationCallback =
-            //(httpRequestMessage, cert, cetChain, policyErrors) =>
-            //{
-            //    return true;
-            //}
-            //});
+
             var app = builder.Build();
             app.UseHttpLogging();
             app.UseGlobalExceptionHandler();

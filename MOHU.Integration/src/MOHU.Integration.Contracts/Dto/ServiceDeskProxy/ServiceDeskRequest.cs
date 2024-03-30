@@ -1,7 +1,11 @@
-﻿namespace SDIntegraion
+﻿using Newtonsoft.Json;
+
+namespace SDIntegraion
 {
+
     public class ServiceDeskRequest
     {
-        public ServiceDeskRequestDTO Interaction { get; set; }
+        [JsonProperty("Interaction")]
+        public InteractionDto Interaction { get; set; }
     }
 }
