@@ -34,18 +34,7 @@ namespace MOHU.Integration.WebApi
             builder.Services.Configure<MemoryCacheConfig>(builder.Configuration.GetSection(nameof(MemoryCacheConfig)));
             builder.Services.AddHttpLoggingInterceptor<CorrelationIdHttpLoggingInterceptor>();
             builder.Services.AddHttpClient();
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
-            //builder.Services.AddHttpClient("ServiceDesk").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-            //{
-            //  ServerCertificateCustomValidationCallback =
-            //(httpRequestMessage, cert, cetChain, policyErrors) =>
-            //{
-            //    return true;
-            //}
-            //});
+
             var app = builder.Build();
             app.UseHttpLogging();
             app.UseGlobalExceptionHandler();
