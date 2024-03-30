@@ -4,6 +4,7 @@ using System.Text;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.WebApi.Controllers;
 using MOHU.Integration.Contracts.Dto.Common;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace SDIntegraion.Controllers
 {
@@ -26,8 +27,7 @@ namespace SDIntegraion.Controllers
         [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
         [HttpPost]
-        [Route(nameof(Post))]
-        public async Task<object> Post(ServiceDeskRequest sdTicket)
+        public async Task<object> Post(ServiceDeskRequest request)
         {
             var username = _configurationservice.GetConfigurationValueAsync("SD_User Name");
             var password = _configurationservice.GetConfigurationValueAsync("SD_Password");
@@ -38,21 +38,27 @@ namespace SDIntegraion.Controllers
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, servicedeskURL.ToString());
             httpRequestMessage.Headers.Add("Authorization", "Basic " + encoded);
-            httpRequestMessage.Content = JsonContent.Create(sdTicket);
+            httpRequestMessage.Content = JsonContent.Create(request);
+
            
             var httpClient = _httpClientFactory.CreateClient();
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+            var contentStream = await httpResponseMessage.Content.ReadAsStringAsync();
 
-            return await JsonSerializer.DeserializeAsync<object>(contentStream);
-            
+            //var res = await httpClient.PostAsJsonAsync(servicedeskURL, request);
+            //var cStream = await res.Content.ReadAsStreamAsync();
+            return contentStream;
+            //return await JsonSerializer.DeserializeAsync<object>(cStream);
+
         }
         [HttpGet]
         public async Task<object> Get()
         {
 
-            var url = "https://10.1.108.32/SM/9/rest/mohcrm";
+            var url = await _configurationservice.GetConfigurationValueAsync("SD_URL");
+
+            //var url = "https://10.1.108.32/SM/9/rest/mohcrm";
             var username = _configurationservice.GetConfigurationValueAsync("SD_User Name");
             var password = _configurationservice.GetConfigurationValueAsync("SD_Password");
             string encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
