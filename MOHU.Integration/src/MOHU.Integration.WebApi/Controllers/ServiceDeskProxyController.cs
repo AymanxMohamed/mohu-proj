@@ -29,8 +29,8 @@ namespace SDIntegraion.Controllers
         [HttpPost]
         public async Task<object> Post(ServiceDeskRequest request)
         {
-            var username = _configurationservice.GetConfigurationValueAsync("SD_User Name");
-            var password = _configurationservice.GetConfigurationValueAsync("SD_Password");
+            var username = await _configurationservice.GetConfigurationValueAsync("SD_User Name");
+            var password = await _configurationservice.GetConfigurationValueAsync("SD_Password");
             var servicedeskURL = await _configurationservice.GetConfigurationValueAsync("SD_URL");
 
             string encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
@@ -59,8 +59,8 @@ namespace SDIntegraion.Controllers
             var url = await _configurationservice.GetConfigurationValueAsync("SD_URL");
 
             //var url = "https://10.1.108.32/SM/9/rest/mohcrm";
-            var username = _configurationservice.GetConfigurationValueAsync("SD_User Name");
-            var password = _configurationservice.GetConfigurationValueAsync("SD_Password");
+            var username = await _configurationservice.GetConfigurationValueAsync("SD_User Name");
+            var password = await _configurationservice.GetConfigurationValueAsync("SD_Password");
             string encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1")
                                           .GetBytes(username + ":" + password));
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url.ToString());
