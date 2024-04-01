@@ -42,7 +42,7 @@ namespace MOHU.Integration.Application.Service
 
             var entity = new Entity(Individual.EntityLogicalName);
 
-            var isProfileExists = await IsProfileExists($"{model.MobileCountryCode}{model.MobileNumber}", model.Email);
+            var isProfileExists = await IsProfileExists($"{model.MobileCountryCode}{model.MobileNumber}",model.Email);
             if (isProfileExists)
                 throw new BadRequestException(_localizer[ErrorMessageCodes.EmailisexistingBefore]);
 
@@ -226,7 +226,7 @@ namespace MOHU.Integration.Application.Service
             return false;
         }
 
-        private async Task<bool> IsProfileExists(string mobileNumber, string email)
+        private async Task<bool> IsProfileExists(string mobileNumber,string email)
         {
             var contactQuery = new QueryExpression
             {
@@ -234,15 +234,11 @@ namespace MOHU.Integration.Application.Service
                 NoLock = true
             };
             var filter = new FilterExpression(LogicalOperator.Or);
-            filter.AddCondition(new ConditionExpression(Individual.Fields.MobileNumber, ConditionOperator.Equal, mobileNumber));
             filter.AddCondition(new ConditionExpression(Individual.Fields.Email, ConditionOperator.Equal, email));
+            filter.AddCondition(new ConditionExpression(Individual.Fields.MobileNumber, ConditionOperator.Equal, mobileNumber));
             contactQuery.Criteria.AddFilter(filter);
-            var response = (await _crmContext.ServiceClient.RetrieveMultipleAsync(contactQuery)).Entities?.FirstOrDefault()?.ToString();
-            if (response != null)
-            {
-                return true;
-            }
-            return false;
+            var response = await _crmContext.ServiceClient.RetrieveMultipleAsync(contactQuery);
+            return response.Entities.Count > 0;
         }
         public static DateTime GregorianToHijriDateConversion(DateTime gregorianDate)
         {

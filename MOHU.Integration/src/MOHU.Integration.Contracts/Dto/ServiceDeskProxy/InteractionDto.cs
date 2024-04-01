@@ -54,25 +54,25 @@ namespace SDIntegraion
         public string Urgency { get; set; }
         [JsonProperty("UserType")]
 
-        public object UserType { get; set; }
+        public object? UserType { get; set; }
         [JsonProperty("DateOfBirth")]
 
-        public object DateOfBirth { get; set; }
+        public object? DateOfBirth { get; set; }
         [JsonProperty("VisaNumber")]
 
-        public object VisaNumber { get; set; }
+        public object? VisaNumber { get; set; }
         [JsonProperty("MobileType")]
 
-        public object MobileType { get; set; }
+        public object? MobileType { get; set; }
         [JsonProperty("ReservationNumber")]
 
-        public object ReservationNumber { get; set; }
+        public object? ReservationNumber { get; set; }
         [JsonProperty("ErrorCode")]
 
-        public object ErrorCode { get; set; }
+        public object? ErrorCode { get; set; }
         [JsonProperty("LoginMethod")]
 
-        public object LoginMethod { get; set; }
+        public object? LoginMethod { get; set; }
 
     }
 }
