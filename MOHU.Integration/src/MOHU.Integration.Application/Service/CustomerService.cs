@@ -236,11 +236,8 @@ namespace MOHU.Integration.Application.Service
             var filter = new FilterExpression(LogicalOperator.Or);
             contactQuery.Criteria.AddFilter(filter);
             filter.AddCondition(new ConditionExpression(Individual.Fields.Email, ConditionOperator.Equal, email));
-            filter.AddCondition(new ConditionExpression(Individual.Fields.MobileNumber, ConditionOperator.Equal, mobileNumber));
             if (!string.IsNullOrEmpty(contextId))
             {
-                filter.AddCondition(new ConditionExpression(Individual.Fields.VisaNumber, ConditionOperator.Equal, contextId));
-                filter.AddCondition(new ConditionExpression(Individual.Fields.BorderNumber, ConditionOperator.Equal, contextId));
                 filter.AddCondition(new ConditionExpression(Individual.Fields.PassportNumber, ConditionOperator.Equal, contextId));
                 filter.AddCondition(new ConditionExpression(Individual.Fields.IDNumber, ConditionOperator.Equal, contextId));
 
