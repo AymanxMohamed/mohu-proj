@@ -39,6 +39,7 @@ namespace MOHU.Integration.Application.Service
                 ActivityName = PhoneCall.EntityLogicalName,
                 Owner = agent,
                 From = new LookupDto(individual.Id, Contact.EntityLogicalName),
+                To = new List<LookupDto>{new LookupDto(agent.Id,agent.EntityLogicalName)},
             };
             createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.ldv_IvrInteractionNumber, request.IvrInteractionNumber);
             createActivityRequest.ExtraProperties.Add(PhoneCall.Fields.Subject, $"{request.MobileNumber} - {request.IvrInteractionNumber}");
