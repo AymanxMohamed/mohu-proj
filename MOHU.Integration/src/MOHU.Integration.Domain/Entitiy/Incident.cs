@@ -71,6 +71,7 @@
             public const string ldv_Description = "ldv_description";
             public const string ldv_EmployeeNeededInformation = "ldv_employeeneededinformation";
             public const string ldv_ErrorCodeid = "ldv_errorcodeid";
+            public const string ldv_externalticketnumber = "ldv_externalticketnumber";
             public const string ldv_FirstResponseSLAId = "ldv_firstresponseslaid";
             public const string ldv_IsFCR = "ldv_isfcr";
             public const string ldv_Isservicedeskupdated = "ldv_isservicedeskupdated";
