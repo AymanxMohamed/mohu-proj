@@ -231,16 +231,9 @@ namespace MOHU.Integration.Application.Service
         }
         public async Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request)
         {
-            if (request.CustomerId == Guid.Empty)
-                throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
-
+        
             if (request.TicketId == Guid.Empty)
                 throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
-
-            var isTicketExists = await IsTicketExists(request.TicketId);
-
-            if (!isTicketExists)
-                throw new NotFoundException("Ticket does not exist");
 
             var entity = new Entity(Incident.EntityLogicalName, request.TicketId);
 
@@ -587,7 +580,7 @@ namespace MOHU.Integration.Application.Service
 
             var filter = new FilterExpression(LogicalOperator.And);
             query.Criteria.AddFilter(filter);
-            filter.AddCondition(new ConditionExpression(Incident.Fields.TicketNumber,ConditionOperator.Equal, integrationTicketNumber));
+            filter.AddCondition(new ConditionExpression(Incident.Fields.ldv_externalticketnumber,ConditionOperator.Equal, integrationTicketNumber));
             var entities = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query))?.Entities;
 
             return entities.Count == 0
