@@ -187,7 +187,7 @@ namespace MOHU.Integration.Application.Service
             var results = await _validator.ValidateAsync(request);
 
             if (!results.IsValid)
-                throw new BadRequestException(results.Errors.FirstOrDefault().ErrorMessage);
+                throw new BadRequestException(_localizer[results?.Errors?.FirstOrDefault()?.ErrorCode]);
             
 
             var entity = new Entity(Incident.EntityLogicalName);
