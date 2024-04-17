@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LinkDev.MOHU.Plugin.Utilites
 {
-    public class OnCreateBPFInstance : IPlugin
+     class OnCreateBPFInstance : IPlugin
     {
         ITracingService tracingService;
         IOrganizationService service;
@@ -27,8 +27,7 @@ namespace LinkDev.MOHU.Plugin.Utilites
             (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
               service = serviceFactory.CreateOrganizationService(context.UserId);
             // The InputParameters collection contains all the data passed in the message request.
-            if (context.InputParameters.Contains("Target") &&
-            context.InputParameters["Target"] is Entity)
+            if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity)
             {
                 try
                 {
