@@ -88,7 +88,7 @@ namespace MOHU.Integration.Application.Service
 
             portalStatusLink.Columns.AddColumns(ldv_servicesubstatus.Fields.ldv_name_ar, ldv_servicesubstatus.Fields.ldv_name_en);
 
-            var caseTypeLink = query.AddLink(ldv_service.EntityLogicalName,Incident.Fields.ldv_serviceid,ldv_service.Fields.Id, JoinOperator.LeftOuter);
+            var caseTypeLink = query.AddLink(ldv_service.EntityLogicalName, Incident.Fields.ldv_serviceid, ldv_service.Fields.Id, JoinOperator.LeftOuter);
             caseTypeLink.EntityAlias = Globals.LinkEntityConsts.CaseTypeLink;
 
             caseTypeLink.Columns.AddColumns(ldv_service.Fields.ldv_name_en, ldv_service.Fields.ldv_name_ar);
@@ -188,7 +188,7 @@ namespace MOHU.Integration.Application.Service
 
             if (!results.IsValid)
                 throw new BadRequestException(_localizer[results?.Errors?.FirstOrDefault()?.ErrorCode]);
-            
+
 
             var entity = new Entity(Incident.EntityLogicalName);
 
@@ -209,7 +209,7 @@ namespace MOHU.Integration.Application.Service
                 entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
 
             var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
-            if (caseId !=null && caseId!=Guid.Empty)
+            if (caseId != null && caseId != Guid.Empty)
             {
                 var createdEntity = new Entity(Incident.EntityLogicalName, caseId);
                 createdEntity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
@@ -221,7 +221,7 @@ namespace MOHU.Integration.Application.Service
             response.TicketId = caseId;
 
             return response;
-        }   
+        }
         public async Task<List<TicketTypeResponse>> GetTicketTypesAsync()
         {
             var ticketTypes = new List<TicketTypeResponse>();
@@ -236,7 +236,7 @@ namespace MOHU.Integration.Application.Service
         }
         public async Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request)
         {
-        
+
             if (request.TicketId == Guid.Empty)
                 throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
 
@@ -316,7 +316,7 @@ namespace MOHU.Integration.Application.Service
             ticketTypes.ForEach(async t =>
             {
                 var cacheKey = $"CaseType-{t.Id}-Categories_{languageKey}_Origin-{_requestInfo.Origin}";
-                var resultFromCache =  await _cacheService.GetAsync<List<TicketCategoryDto>>(cacheKey);
+                var resultFromCache = await _cacheService.GetAsync<List<TicketCategoryDto>>(cacheKey);
                 if (resultFromCache is not null)
                     t.Categories.AddRange(resultFromCache);
                 else
@@ -338,8 +338,7 @@ namespace MOHU.Integration.Application.Service
                      t.Id));
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Null));
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory, ConditionOperator.Null));
-                    filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal, ConditionOperator.Equal, true));
-                    filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.In, new[] {_requestInfo.Origin}));
+                    filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.In, new[] { _requestInfo.Origin }));
 
 
                     executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
@@ -350,7 +349,7 @@ namespace MOHU.Integration.Application.Service
 
             if (!executeMultipleRequest.Requests.Any())
                 return;
-            var categoryResponse = (ExecuteMultipleResponse) await _crmContext.ServiceClient
+            var categoryResponse = (ExecuteMultipleResponse)await _crmContext.ServiceClient
                 .ExecuteAsync(executeMultipleRequest);
 
             if (categoryResponse.IsFaulted)
@@ -422,8 +421,6 @@ namespace MOHU.Integration.Application.Service
                             subCategoryQuery.Criteria.AddFilter(filter);
                             filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
                                 ConditionOperator.Equal, ticketType.Id));
-                            filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal,
-                                  ConditionOperator.Equal, true));
 
                             filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory,
                                  ConditionOperator.Equal, ticketCategory.Id));
@@ -437,7 +434,7 @@ namespace MOHU.Integration.Application.Service
                 if (!executeMultipleRequest.Requests.Any())
                     return;
 
-                var categoryResponse = (ExecuteMultipleResponse) await _crmContext.ServiceClient
+                var categoryResponse = (ExecuteMultipleResponse)await _crmContext.ServiceClient
               .ExecuteAsync(executeMultipleRequest);
 
                 if (categoryResponse.IsFaulted)
@@ -513,7 +510,7 @@ namespace MOHU.Integration.Application.Service
                             entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.MainCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value.ToString(),
                 CreationOn = entity.GetAttributeValue<DateTime>(Incident.Fields.CreatedOn)
             };
-            return result; 
+            return result;
         }
         private async Task<TicketDetailsResponse?> MapTicketToDetailsDto(Entity entity)
         {
@@ -540,7 +537,7 @@ namespace MOHU.Integration.Application.Service
                            entity.GetAttributeValue<AliasedValue>($"{Globals.LinkEntityConsts.SecondarySubCategoryLink}.{ldv_casecategory.Fields.ldv_englishname}")?.Value?.ToString(),
             };
             if (entity.Contains(Incident.Fields.ldv_Locationcode))
-                result.Location = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Locationcode, LanguageHelper.IsArabic? "ar":"en");
+                result.Location = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Locationcode, LanguageHelper.IsArabic ? "ar" : "en");
 
             if (entity.Contains(Incident.Fields.ldv_Beneficiarytypecode))
                 result.BeneficiaryType = await GetNameFromOptionSetAsync(entity, Incident.Fields.ldv_Beneficiarytypecode, LanguageHelper.IsArabic ? "ar" : "en");
@@ -585,7 +582,7 @@ namespace MOHU.Integration.Application.Service
 
             var filter = new FilterExpression(LogicalOperator.And);
             query.Criteria.AddFilter(filter);
-            filter.AddCondition(new ConditionExpression(Incident.Fields.ldv_externalticketnumber,ConditionOperator.Equal, integrationTicketNumber));
+            filter.AddCondition(new ConditionExpression(Incident.Fields.ldv_externalticketnumber, ConditionOperator.Equal, integrationTicketNumber));
             var entities = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query))?.Entities;
 
             return entities.Count == 0
