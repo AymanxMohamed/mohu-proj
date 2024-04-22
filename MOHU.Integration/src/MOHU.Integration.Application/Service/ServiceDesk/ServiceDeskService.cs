@@ -15,7 +15,7 @@ namespace MOHU.Integration.Application.Service.ServiceDesk
 
         public async Task<bool> UpdateStatusAsync(ServiceDeskUpdateStatusRequest request)
         {
-            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(request.TicketNumber);
+            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(request.TicketNumber, Incident.Fields.ServiceDeskTicketNumber);
 
             var ticketStatusRequest = new UpdateTicketStatusRequest
             {

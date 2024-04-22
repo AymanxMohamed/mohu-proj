@@ -177,6 +177,24 @@
 
             public const string IsTashirUpdated = "ldv_istashirupdated";
 
+            //Tasheer
+            public const string TaasherTicketNumber = "ldv_taasherticketnumber";
+            public const string TaasherTicketId = "ldv_tasheerticketid";
+
+            //Kadana
+            public const string KidanaTicketNumber = "ldv_kidanaticketnumber";
+            public const string KidanaTicketId = "ldv_kidanaticketid";
+
+            //Service Desk
+            public const string ServiceDeskTicketNumber = "ldv_servicedeskticketnumber";
+            public const string ServiceDeskTicketId = "ldv_servicedeskticketid";
+
+
+
+
+
+
+
         }
 
         public const string EntityLogicalName = "incident";
