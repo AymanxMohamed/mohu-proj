@@ -1,4 +1,10 @@
-﻿namespace MOHU.Integration.Domain.Entitiy
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Linkdev.Common.Moq.Model
 {
     public class Incident
     {
@@ -176,24 +182,6 @@
             public const string IsKadanaUpdated = "ldv_iskadanaupdated";
 
             public const string IsTashirUpdated = "ldv_istashirupdated";
-
-            //Tasheer
-            public const string TaasherTicketNumber = "ldv_taasherticketnumber";
-            public const string TaasherTicketId = "ldv_tasheerticketid";
-
-            //Kadana
-            public const string KidanaTicketNumber = "ldv_kidanaticketnumber";
-            public const string KidanaTicketId = "ldv_kidanaticketid";
-
-            //Service Desk
-            public const string ServiceDeskTicketNumber = "ldv_servicedeskticketnumber";
-            public const string ServiceDeskTicketId = "ldv_servicedeskticketid";
-
-
-
-
-
-
 
         }
 
