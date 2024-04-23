@@ -341,7 +341,7 @@ namespace MOHU.Integration.Application.Service
                      t.Id));
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Null));
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory, ConditionOperator.Null));
-                    filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.In, new[] {_requestInfo.Origin}));
+                    filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.ContainValues, _requestInfo.Origin));
 
 
                     executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
