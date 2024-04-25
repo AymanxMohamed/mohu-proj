@@ -340,8 +340,7 @@ namespace MOHU.Integration.Application.Service
                      t.Id));
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Null));
                     filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory, ConditionOperator.Null));
-                    filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal, ConditionOperator.Equal, true));
-                    filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.In, new[] {_requestInfo.Origin}));
+                    filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.ContainValues, _requestInfo.Origin));
 
 
                     executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
@@ -424,9 +423,6 @@ namespace MOHU.Integration.Application.Service
                             subCategoryQuery.Criteria.AddFilter(filter);
                             filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
                                 ConditionOperator.Equal, ticketType.Id));
-                            filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal,
-                                  ConditionOperator.Equal, true));
-
                             filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory,
                                  ConditionOperator.Equal, ticketCategory.Id));
 
