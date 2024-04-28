@@ -7,23 +7,24 @@ namespace MOHU.Integration.Application.Validators
 {
     public class SubmitTicketRequestValidator : AbstractValidator<SubmitTicketRequest>
     {
-        private readonly IStringLocalizer _localizer;
-        public SubmitTicketRequestValidator(IStringLocalizer localizer)
+        public SubmitTicketRequestValidator()
 
         {
-            _localizer = localizer;
-
             RuleFor(x => x.Description)
-           .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.DescriptionisRequired]);
+           .NotEmpty()
+           .WithErrorCode(ErrorMessageCodes.DescriptionisRequired);
 
             RuleFor(x => x.CaseType)
-           .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.CaseTypeisRequired]);
+           .NotEmpty()
+           .WithErrorCode(ErrorMessageCodes.CaseTypeisRequired);
 
             RuleFor(x => x.CategoryId)
-            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.CategoryRequired]);
+            .NotEmpty()
+            .WithErrorCode(ErrorMessageCodes.CategoryRequired);
 
             RuleFor(x => x.SubCategoryId)
-            .NotEmpty().WithMessage(_localizer[ErrorMessageCodes.SubCategoryIdRequired]);
+            .NotEmpty()
+            .WithErrorCode(ErrorMessageCodes.SubCategoryIdRequired);
         }
     }
 }

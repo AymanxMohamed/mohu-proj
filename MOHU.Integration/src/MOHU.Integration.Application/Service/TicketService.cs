@@ -187,7 +187,7 @@ namespace MOHU.Integration.Application.Service
             var results = await _validator.ValidateAsync(request);
 
             if (!results.IsValid)
-                throw new BadRequestException(results.Errors.FirstOrDefault().ErrorMessage);
+                throw new BadRequestException(_localizer[results?.Errors?.FirstOrDefault()?.ErrorCode]);
             
 
             var entity = new Entity(Incident.EntityLogicalName);
@@ -200,6 +200,7 @@ namespace MOHU.Integration.Application.Service
             entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId));
             entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", await GetTicketTypeProcessAsync(request.CaseType)));
             entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
+
             if (request.SubCategoryId1.HasValue)
                 entity.Attributes.Add(Incident.Fields.ldv_SecondarySubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId1.Value));
 
@@ -210,6 +211,13 @@ namespace MOHU.Integration.Application.Service
                 entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
 
             var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
+            
+            //if (caseId !=null && caseId!=Guid.Empty)
+            //{
+            //    var createdEntity = new Entity(Incident.EntityLogicalName, caseId);
+            //    createdEntity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
+            //    await _crmContext.ServiceClient.UpdateAsync(createdEntity);
+            //}
 
             var caseEntity = await _crmContext.ServiceClient.RetrieveAsync(Incident.EntityLogicalName, caseId, new ColumnSet(Incident.Fields.Title));
             response.TicketNumber = caseEntity.GetAttributeValue<string>(Incident.Fields.Title);
@@ -231,16 +239,9 @@ namespace MOHU.Integration.Application.Service
         }
         public async Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request)
         {
-            if (request.CustomerId == Guid.Empty)
-                throw new NotFoundException(_localizer[ErrorMessageCodes.CustomerIdRquired]);
-
+        
             if (request.TicketId == Guid.Empty)
                 throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
-
-            var isTicketExists = await IsTicketExists(request.TicketId);
-
-            if (!isTicketExists)
-                throw new NotFoundException("Ticket does not exist");
 
             var entity = new Entity(Incident.EntityLogicalName, request.TicketId);
 
@@ -423,6 +424,7 @@ namespace MOHU.Integration.Application.Service
                             subCategoryQuery.Criteria.AddFilter(filter);
                             filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
                                 ConditionOperator.Equal, ticketType.Id));
+
                             filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory,
                                  ConditionOperator.Equal, ticketCategory.Id));
 
@@ -573,7 +575,7 @@ namespace MOHU.Integration.Application.Service
             return result.Entities.Any();
         }
 
-        public async Task<Guid> GetTicketByIntegrationTicketNumberAsync(string integrationTicketNumber)
+        public async Task<Guid> GetTicketByIntegrationTicketNumberAsync(string integrationTicketNumber, string ticketNumberSchemaName)
         {
             var query = new QueryExpression(Incident.EntityLogicalName)
             {
@@ -583,8 +585,9 @@ namespace MOHU.Integration.Application.Service
 
             var filter = new FilterExpression(LogicalOperator.And);
             query.Criteria.AddFilter(filter);
-            filter.AddCondition(new ConditionExpression(Incident.Fields.TicketNumber,ConditionOperator.Equal, integrationTicketNumber));
+            filter.AddCondition(new ConditionExpression(ticketNumberSchemaName, ConditionOperator.Equal, integrationTicketNumber.ToString()));
             var entities = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query))?.Entities;
+
 
             return entities.Count == 0
                 ? throw new NotFoundException($"Ticket with #{integrationTicketNumber} was not found")

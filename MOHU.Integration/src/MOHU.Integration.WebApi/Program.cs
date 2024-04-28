@@ -22,8 +22,17 @@ namespace MOHU.Integration.WebApi
             builder.Services.AddApplication();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(c=>c.OperationFilter<AddHeaderParameter>());
-
+            builder.Services.AddSwaggerGen(c => c.OperationFilter<AddHeaderParameter>());
+            builder.Services.AddCors(x =>
+            {
+                x.AddPolicy("Dev", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                    //("GET", "POST");
+                });
+            });
             builder.Services.AddHttpLogging(logging =>
             {
                 logging.LoggingFields = HttpLoggingFields.All;
@@ -47,13 +56,9 @@ namespace MOHU.Integration.WebApi
             //}
            
             app.UseHttpsRedirection();
-           
+            app.UseCors("Dev");
             app.UseLanguageMiddleware();
-            app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }

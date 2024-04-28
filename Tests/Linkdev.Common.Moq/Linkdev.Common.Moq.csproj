@@ -127,6 +127,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomStep.cs" />
+    <Compile Include="Model\Contact.cs" />
+    <Compile Include="Model\Incident.cs" />
+    <Compile Include="Model\ldv_casecategory.cs" />
+    <Compile Include="Model\ldv_service.cs" />
     <Compile Include="plugin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
