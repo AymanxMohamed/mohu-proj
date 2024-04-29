@@ -135,8 +135,10 @@ namespace MOHU.Integration.Application.Service
             {
                 NoLock = true
             };
-            var filter = new FilterExpression(LogicalOperator.And);
+            var filter = new FilterExpression(LogicalOperator.Or);
             filter.AddCondition(new ConditionExpression(Contact.Fields.MobilePhone, ConditionOperator.Equal, mobileNumber));
+            filter.AddCondition(new ConditionExpression(Contact.Fields.MobilePhone, ConditionOperator.Equal, $"+{mobileNumber}"));
+            query.AddOrder(Contact.Fields.CreatedOn, OrderType.Ascending);
             query.Criteria.AddFilter(filter);
 
             var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
