@@ -136,6 +136,8 @@ namespace MOHU.Integration.Application.Service
                 NoLock = true
             };
             var filter = new FilterExpression(LogicalOperator.Or);
+            filter.AddCondition(new ConditionExpression(Contact.Fields.ldv_mobilenumber, ConditionOperator.Equal, mobileNumber));
+            filter.AddCondition(new ConditionExpression(Contact.Fields.ldv_mobilenumber, ConditionOperator.Equal, $"+{mobileNumber}"));
             filter.AddCondition(new ConditionExpression(Contact.Fields.MobilePhone, ConditionOperator.Equal, mobileNumber));
             filter.AddCondition(new ConditionExpression(Contact.Fields.MobilePhone, ConditionOperator.Equal, $"+{mobileNumber}"));
             query.AddOrder(Contact.Fields.CreatedOn, OrderType.Ascending);
@@ -153,6 +155,7 @@ namespace MOHU.Integration.Application.Service
         {
             var entity = new Entity(Contact.EntityLogicalName);
             entity.Attributes.Add(Contact.Fields.MobilePhone, mobileNumber);
+            entity.Attributes.Add(Contact.Fields.ldv_mobilenumber, mobileNumber);
             var individualId = await _crmContext.ServiceClient.CreateAsync(entity);
             return new LookupDto { Id = individualId, EntityLogicalName = entity.LogicalName };
         }

@@ -188,6 +188,7 @@
             public const string ldv_LastTransactionDate = "ldv_lasttransactiondate";
             public const string ldv_LegalEntityID = "ldv_legalentityid";
             public const string ldv_LicenseIssuingAuthorityId = "ldv_licenseissuingauthorityid";
+            public const string ldv_mobilenumber = "ldv_mobilenumber";
             public const string ldv_NationalityID = "ldv_nationalityid";
             public const string ldv_PassportNumber = "ldv_passportnumber";
             public const string ldv_preferredlanguagecode = "ldv_preferredlanguagecode";
