@@ -62,7 +62,7 @@ namespace MOHU.Integration.WebApi.Middleware
 
         private Task HandleBadRequestException(HttpContext context, Exception ex)
         {
-            var exception = ex as ValidationException;
+            var exception = ex as BadRequestException;
 
             var details = new ResponseMessage<object>
             {

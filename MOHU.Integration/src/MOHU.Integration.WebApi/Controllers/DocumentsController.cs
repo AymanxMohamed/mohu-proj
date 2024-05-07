@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Document.Download;
 using MOHU.Integration.Contracts.Dto.Document.Upload;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Shared;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
@@ -11,6 +13,7 @@ namespace MOHU.Integration.WebApi.Controllers
     public class DocumentsController : BaseController
     {
         private readonly IDocumentService _documentService;
+        
 
         public DocumentsController(IDocumentService documentService)
         {
@@ -35,7 +38,7 @@ namespace MOHU.Integration.WebApi.Controllers
         public async Task<ResponseMessage<UploadDocumentResponse>> Post([FromForm]IFormFileCollection files, Guid ticketId)
         {
             var documentsToUpload = new List<UploadDocumentContentDto>();
-            
+
             foreach (var file in files)
             {
                 if (file.Length > 0)

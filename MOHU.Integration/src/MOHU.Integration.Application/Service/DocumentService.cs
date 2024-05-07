@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Extensions.Localization;
+using Microsoft.Xrm.Sdk;
 using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Document;
 using MOHU.Integration.Contracts.Dto.Document.Download;
@@ -7,6 +8,7 @@ using MOHU.Integration.Contracts.Dto.Document.Upload;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Domain.Entitiy;
+using MOHU.Integration.Shared;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -18,11 +20,13 @@ namespace MOHU.Integration.Application.Service
         private readonly HttpClient _httpClient;
         private readonly IConfigurationService _configurationService;
         private readonly ICrmContext _crmContext;
-        public DocumentService(IHttpClientFactory httpClientFactory, IConfigurationService configurationService, ICrmContext crmContext)
+        private readonly IStringLocalizer _localizer;
+        public DocumentService(IHttpClientFactory httpClientFactory, IConfigurationService configurationService, ICrmContext crmContext, IStringLocalizer localizer)
         {
             _httpClient = httpClientFactory.CreateClient();
             _configurationService = configurationService;
             _crmContext = crmContext;
+            _localizer = localizer;
         }
 
         public async Task<DownloadDocumentResponse> DownloadAttachmentAsync(string filePath, Guid ticketId)
@@ -37,7 +41,8 @@ namespace MOHU.Integration.Application.Service
         public async Task<UploadDocumentResponse> UploadDocumentAsync(List<UploadDocumentContentDto> documents, Guid ticketId)
         {
             var result = new UploadDocumentResponse();
-
+            if (documents.Count == 0)
+                throw new BadRequestException(_localizer[ErrorMessageCodes.NoFilesFound]);
             foreach (var document in documents)
             {
                 if (!await IsValidExtension(document.ContentType.Split('/')?.LastOrDefault()))
