@@ -16,7 +16,7 @@ namespace MOHU.Integration.Application.Service.Kidana
 
         public async Task<bool> UpdateStatusAsync(KidanaUpdateStatusRequest request)
         {
-            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(request.TicketId.ToString());
+            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(request.TicketId.ToString(), Incident.Fields.KidanaTicketNumber);
 
             var ticketStatusRequest = new UpdateTicketStatusRequest
             {
