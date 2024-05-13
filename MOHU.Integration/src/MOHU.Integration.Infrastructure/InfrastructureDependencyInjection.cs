@@ -8,6 +8,7 @@ using MOHU.Integration.Infrastructure.Localization;
 using MOHU.Integration.Infrastructure.Logging;
 using MOHU.Integration.Infrastructure.Persistence;
 using MOHU.Integration.Infrastructure.Service;
+using MOHU.Integration.Infrastructure.Settings;
 using Serilog;
 //using MOHU.Integration.Application.common;
 
@@ -29,11 +30,16 @@ namespace MOHU.Integration.Infrastructure
             services.AddSingleton<ICacheKeyGeneratorService,CacheKeyGeneratorService>();
             services.AddMemoryCache();
             services.AddTransient<IStringLocalizer, MessageStringLocalizer>();
+            services.AddConfigurationOptions(configuration);
 
+            return services;
+        }
 
-         
-
-
+        private static IServiceCollection AddConfigurationOptions(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.Configure<CrmContextSettings>(configuration.GetSection(nameof(CrmContextSettings)));
             return services;
         }
     }
