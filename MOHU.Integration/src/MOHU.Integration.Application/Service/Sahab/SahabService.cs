@@ -12,9 +12,7 @@ public class SahabService(ITicketService ticketService) : ISahabService
         var ticketId = await ticketService.GetTicketByIntegrationTicketNumberAsync(
             integrationTicketNumber: request.TicketNumber, 
             ticketNumberSchemaName: Incident.Fields.SahabTicketNumber);
-
-        await ticketService.UpdateStatusAsync(request.ToUpdateTicketStatusRequest(ticketId));
         
-        return true;
+        return  await ticketService.UpdateStatusAsync(request.ToUpdateTicketStatusRequest(ticketId));
     }
 }
