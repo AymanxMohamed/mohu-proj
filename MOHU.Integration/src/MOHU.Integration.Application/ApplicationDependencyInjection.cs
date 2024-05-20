@@ -13,6 +13,7 @@ using MOHU.Integration.Application.Localization;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Application.Service.Taasher;
 using MOHU.Integration.Application.Service.Kidana;
+using MOHU.Integration.Application.Service.Sahab;
 using MOHU.Integration.Application.Service.ServiceDesk;
 
 namespace MOHU.Integration.Application
@@ -38,6 +39,7 @@ namespace MOHU.Integration.Application
             services.AddTransient<ITaasherService, TaasherService>();
             services.AddTransient<IKidanaService, KidanaService>();
             services.AddTransient<IServiceDeskService, ServiceDeskService>();
+            services.AddTransient<ISahabService, SahabService>();
 
             return services;
         }
