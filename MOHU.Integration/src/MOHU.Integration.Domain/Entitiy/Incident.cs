@@ -176,6 +176,8 @@
             public const string IsKadanaUpdated = "ldv_iskadanaupdated";
 
             public const string IsTashirUpdated = "ldv_istashirupdated";
+            public const string IsSahabUpdated = "ldv_issendrequesttosahab";
+
 
             //Tasheer
             public const string TaasherTicketNumber = "ldv_taasherticketnumber";
