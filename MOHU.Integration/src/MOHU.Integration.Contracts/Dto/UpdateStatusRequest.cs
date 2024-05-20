@@ -18,13 +18,4 @@ namespace MOHU.Integration.Contracts.Dto
         public IntegrationStatus IntegrationStatus { get; set; }
 
     }
-
-    public enum IntegrationStatus
-    {
-        [Display(Name = "Close The Ticket")]
-        CloseTheTicket = 1,
-        [Display(Name = "Cancel")]
-        Canceled = 2,
-    }
-
 }
