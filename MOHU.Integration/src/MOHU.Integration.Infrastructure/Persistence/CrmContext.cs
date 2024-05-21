@@ -1,27 +1,22 @@
-﻿using Microsoft.PowerPlatform.Dataverse.Client;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.PowerPlatform.Dataverse.Client;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.Infrastructure.Settings;
 
 namespace MOHU.Integration.Infrastructure.Persistence
 {
-    public class CrmContext : ICrmContext
+    public class CrmContext(IOptions<CrmContextSettings> crmContextSettings) : ICrmContext
     {
         private ServiceClient? _serviceClient;
         public ServiceClient ServiceClient => GetServiceClient();
-
-
+        
         private ServiceClient GetServiceClient()
         {
-            if (_serviceClient == null)
-            {
-                var authType = "ClientSecret";
-                var clientId = "ec070189-1252-4ba0-9b8c-7fdd2477b02d";
-                var clientSecret = "eu-8Q~gah3Lph_ye.wg.IEm1pHzaU5ndY3rQnazP";
-                var url = "https://mohudev.crm4.dynamics.com/";
-                var connectionString = $"AuthType={authType};ClientId={clientId};Url={url};ClientSecret={clientSecret};";
-                _serviceClient = new ServiceClient(connectionString);
-            }
+            if (_serviceClient != null) return _serviceClient;
+            
+            _serviceClient = new ServiceClient(crmContextSettings.Value.GetConnectionString());
+            
             return _serviceClient;
-
         }
     }
 }

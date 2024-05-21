@@ -59,8 +59,8 @@ namespace MOHU.Integration.Application.Service
             
             var applicationId = await _configurationService.GetConfigurationValueAsync("CallCenterAppId");
 
-            return string.Format(await _configurationService.GetConfigurationValueAsync("IndividualProfileUrl"), applicationId, individual.Id);
-
+            return string.Format(await _configurationService.GetConfigurationValueAsync("IndividualProfileUrl"),
+                applicationId, individual.Id);
         }
     }
 }
