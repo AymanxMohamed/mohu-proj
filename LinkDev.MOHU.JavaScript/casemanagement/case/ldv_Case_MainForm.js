@@ -293,11 +293,27 @@ var BPFs = {
             },
             quality: {
                 name: 'Quality',
-                id: 'f43fe841-1303-4159-851f-a353ce7964b7'
+                id: '87812202-1eeb-4dcd-ad48-58a978da126d'
+            },
+            quality2: {
+                name: 'Quality',
+                id: '60d0e55a-e318-405f-9fbf-c45a717e6949'
+            },
+            quality3: {
+                name: 'Quality',
+                id: '9a02ae6b-1112-46a0-8f30-653cb539e138'
             },
             resolved: {
                 name: 'Resolved',
-                id: '48050991-24dc-4d21-a459-d5679351219c'
+                id: '50f93362-cfd0-4f16-901a-2bdf446012b2'
+            },
+            resolved2: {
+                name: 'Resolved',
+                id: 'c1973771-816d-4aa8-852c-9f0efa5d2c82'
+            },
+            resolved3: {
+                name: 'Resolved',
+                id: 'e5a020b0-9819-4b7b-8b3f-72581f5af01d'
             },
             Supervisor: {
                 name: 'Supervisor',
@@ -1869,6 +1885,7 @@ function UnlockCategoriesFieldsInSocialMediaStage(formContext) {
         }
     }
 }
+
 ///////////////////////////////////////////////////////////////////Decisions//////////////////////////////
 
 // #region Decisions
@@ -1987,6 +2004,8 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             var jadaStageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Jada.id.toLowerCase();
             var madinaStageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Madina.id.toLowerCase();
             var qualityStageId = BPFs.TechnicalComplainMomentaryUmrah.stages.quality.id.toLowerCase();
+            var quality2StageId = BPFs.TechnicalComplainMomentaryUmrah.stages.quality2.id.toLowerCase();
+            var quality3StageId = BPFs.TechnicalComplainMomentaryUmrah.stages.quality3.id.toLowerCase();
             var supervisorStageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Supervisor.id.toLowerCase();
             var supervisor2StageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Supervisor2.id.toLowerCase();
             var supervisor3StageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Supervisor3.id.toLowerCase();
@@ -2026,6 +2045,19 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                     GeneralQualityStageDecisionR2_OnChange(executionContext);
                 });
             }
+            if (currentStageId === quality2StageId) {
+                TechnicalComplainMomentaryUmrah_Quality2StageDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentaryUmrah_Quality2StageDecision_OnChange(executionContext);
+                });
+
+            }
+            if (currentStageId === quality3StageId) {
+                TechnicalComplainMomentaryUmrah_Quality3StageDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentaryUmrah_Quality3StageDecision_OnChange(executionContext);
+                });
+            }
 
             if (currentStageId === supervisorStageId) {
                 GeneralSuperVisorDecision_OnChange(executionContext);
@@ -2040,7 +2072,6 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
 
                 });
             }
-
             if (currentStageId === supervisor3StageId) {
                 TechnicalComplainMomentryUmrah_Supervisor3Stage_Onchange(executionContext);
                 formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
@@ -2318,6 +2349,7 @@ function FC_InternalPilgrimspostHajj_OnLoad(formContext) {
         departmentNeedInfoOnBpf,
         departmentClosureReasonOnBpf
     );
+
     GeneralQualityStageDecisionR2_OnLoad(formContext);
     GeneralSocialMediaDecision_OnLoad(formContext);
     GeneralSupervisorDecision_OnLoad(formContext);
@@ -2421,6 +2453,25 @@ function TechnicalComplainMomentaryUmrah_MadinaStageDecision_OnChange(executionC
     );
 }
 
+function TechnicalComplainMomentaryUmrah_Quality2StageDecision_OnChange(executionContext) {
+    var quality2ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
+    var quality2NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
+    DepartmentQualityDecisionForR2_OnChange(
+        executionContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality2NeededInformationOnBpf,
+        quality2ClosureReasonOnBpf);
+}
+
+function TechnicalComplainMomentaryUmrah_Quality3StageDecision_OnChange(executionContext) {
+    var quality3ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_2';
+    var quality3NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_2';
+    DepartmentQualityDecisionForR2_OnChange(
+        executionContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality3NeededInformationOnBpf,
+        quality3ClosureReasonOnBpf);
+}
 function TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(executionContext) {
     var supervisor2CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_1';
     SupervisorDecision_OnChange(executionContext, caseFields.ldv_supervisordecisioncode, supervisor2CommentOnBpf);
@@ -2442,7 +2493,11 @@ function TechnicalComplainMomentaryUmrah_OnLoad(formContext) {
     var supervisor2CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_1';
     var supervisor3CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_2';
 
+    var quality2ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
+    var quality2NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
 
+    var quality3ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_2';
+    var quality3NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_2';
 
     //Makkah Stage
     DepartmentDecision_OnLoad(
@@ -2472,6 +2527,8 @@ function TechnicalComplainMomentaryUmrah_OnLoad(formContext) {
     GeneralSupervisorDecision_OnLoad(formContext);
     SupervisorDecision_OnLoad(formContext, caseFields.ldv_supervisordecisioncode, supervisor2CommentOnBpf);
     SupervisorDecision_OnLoad(formContext, caseFields.ldv_supervisordecisioncode, supervisor3CommentOnBpf);
+    DepartmentQualityDecisionForR2_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, quality2NeededInformationOnBpf, quality2ClosureReasonOnBpf);
+    DepartmentQualityDecisionForR2_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, quality3NeededInformationOnBpf, quality3ClosureReasonOnBpf);
 
 }
 
@@ -3834,23 +3891,49 @@ function testRenameStage(formContext) {//new v2
 
 function HideQualityAndResolvedStages(formContext) {
     debugger;
-    //var qualityStageId = BPFs.TechnicalComplainMomentaryUmrah.stages.quality.id.toLowerCase();
-    //var resolvedStageId = BPFs.TechnicalComplainMomentaryUmrah.stages.resolved.id.toLowerCase();
-    var resolve = BPFs.FinancialComplainInternalPilgrimspostHajj.stages.resolved.id.toLowerCase();
+
     var processControl = formContext.data.process;
 
     if (processControl) {
-        var stageElementId = 'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_0cad470e-d631-407e-8a5d-dba3cb633630';
-        var stageElement = parent.document.getElementById(stageElementId);
+        var currentStage = formContext.data.process.getActiveStage();
 
-        var nextElementId = 'MscrmControls.Containers.ProcessBreadCrumb-headerNavigationButtoncontainertrue';
-        var nextElement = parent.document.getElementById(nextElementId);
-        if (stageElement) {
-            stageElement.style.display = 'none';
+        if (!currentStage) {
+            console.error('current stage is null or undefined.');
+            return;
         }
-        if (nextElement) {
-            nextElement.style.display = 'none';
+
+        var currentStageId = currentStage.getId().toLowerCase();
+        var supervisorStageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Supervisor.id.toLowerCase();
+        var supervisor2StageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Supervisor2.id.toLowerCase();
+        var supervisor3StageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Supervisor3.id.toLowerCase();
+
+        if (currentStageId === supervisorStageId || currentStageId === supervisor2StageId || currentStageId === supervisor3StageId) {
+            //var stageElementId = 'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_0cad470e-d631-407e-8a5d-dba3cb633630';
+            //var stageElement = parent.document.getElementById(stageElementId);
+
+            var qualityStageElementId = 'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_f43fe841-1303-4159-851f-a353ce7964b7';
+            var qualityStageElement = parent.document.getElementById(qualityStageElementId);
+
+            var resolvedStageElementId = 'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_48050991-24dc-4d21-a459-d5679351219c';
+            var resolvedStageElement = parent.document.getElementById(resolvedStageElementId);
+
+            var nextElementId = 'MscrmControls.Containers.ProcessBreadCrumb-headerNavigationButtoncontainertrue';
+            var nextElement = parent.document.getElementById(nextElementId);
+
+            //if (stageElement) {
+            //    stageElement.style.display = 'none';
+            //}
+            if (qualityStageElement) {
+                qualityStageElement.style.display = 'none';
+            }
+            if (resolvedStageElement) {
+                resolvedStageElement.style.display = 'none';
+            }
+            if (nextElement) {
+                nextElement.style.display = 'none';
+            }
         }
+
 
 
     }
