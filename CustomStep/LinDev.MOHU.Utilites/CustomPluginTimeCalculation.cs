@@ -32,19 +32,23 @@ namespace LinDev.MOHU.Utilites
 
         [RequiredArgument]
         [Input("requestType")]
-        public InArgument<string> requestType { get; set; }
+        public InArgument<string> requestType { get; set; } //requestType=getEndTime :If you don't have a pause or resume scenario, only the WarningTime and FailureTime are to be calculated.
 
-        [RequiredArgument]
+        //[RequiredArgument]
         [Input("previousInstanceId")]
         public InArgument<string> previousInstanceId { get; set; }
 
         [RequiredArgument]
         [Input("firstInputDuration")]
-        public InArgument<int> firstInputDuration { get; set; }
+        public InArgument<int> firstInputDuration { get; set; }//Duration (warning duration or failure duration in minutes).
 
         [RequiredArgument]
         [Input("secondInputDuration")]
         public InArgument<int> secondInputDuration { get; set; }
+
+        [RequiredArgument]
+        [Input("SlaLevel")]
+        public InArgument<int> SlaLevel { get; set; }
 
         [RequiredArgument]
         [Input("firstInputDate")]
@@ -58,7 +62,7 @@ namespace LinDev.MOHU.Utilites
 
         #region "Output Parameters"
 
-        [RequiredArgument]
+        //[RequiredArgument]
         [Output("firstOutputValue")]
         public OutArgument<string> firstOutputValue { get; set; }
 
@@ -72,7 +76,7 @@ namespace LinDev.MOHU.Utilites
         #endregion
         protected override void Execute(CodeActivityContext context)
         {
-             new CustomPluginTimeCalculationLogic.Execute(this, context);
+             new CustomPluginTimeCalculationLogic() .Execute(this, context);
         }
     }
 }

@@ -50,6 +50,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Report Include="All Cases English Report - Without Grouping.rdl" />
+    <Report Include="Case Summary Table.rdl" />
+    <Report Include="Number of Cases per status reason.rdl" />
+    <Report Include="Number of Cases2.rdl" />
     <Report Include="Report1.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
