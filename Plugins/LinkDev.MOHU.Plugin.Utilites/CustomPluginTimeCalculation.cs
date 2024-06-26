@@ -16,77 +16,74 @@ namespace LinkDev.MOHU.Plugin.Utilites
         public void Execute(IServiceProvider serviceProvider)
         {
 
-            tracingService =
-             (ITracingService)serviceProvider.GetService(typeof(ITracingService));
-            // Obtain the execution context from the service provider.
-            IPluginExecutionContext context = (IPluginExecutionContext)
-            serviceProvider.GetService(typeof(IPluginExecutionContext));
-            // Obtain the organization service reference which you will need for
-            // web service calls.
-            IOrganizationServiceFactory serviceFactory =
-            (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+            tracingService =(ITracingService)serviceProvider.GetService(typeof(ITracingService));
+          
+            IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+            IOrganizationServiceFactory serviceFactory =(IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             service = serviceFactory.CreateOrganizationService(context.UserId);
-            // The InputParameters collection contains all the data passed in the message request.
-
             tracingService.Trace($"in Execute ");
-            if (context.MessageName != "new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989")
+
+            int slaLevel = -1;
+            // Ensure this plugin is for the correct action
+            if (context.MessageName == "new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989")
             {
-                throw new InvalidPluginExecutionException("This plugin is registered for a different action.");
+                slaLevel = 1;
+                tracingService.Trace($"Sla Level = 1 ");
             }
+            else if (context.MessageName == "new_ActionSLATimerCustomPluginTimeCalculationLevel28a5b068cb933ef1184096045bd8d9989")
+            {
+                slaLevel = 2;
+                tracingService.Trace($"Sla Level = 2 ");
+            }
+            else if (context.MessageName == "new_ActionSLATimerCustomPluginTimeCalculationLevel3b0e030b5bc33ef11840a000d3a48ff6a")
+            {
+                slaLevel = 3;
+                tracingService.Trace($"Sla Level = 3 ");
+            }
+            else
+            {
+                 throw new InvalidPluginExecutionException("This plugin is registered for a different action. ");
+            }
+            // The InputParameters collection contains all the data passed in the message request.
             string regardingId = context.InputParameters["regardingId"].ToString();
             string calendarId = context.InputParameters["calendarId"].ToString();
             string requestType = context.InputParameters["requestType"].ToString();
             string slaItemId = context.InputParameters["slaItemId"].ToString();
             string previousInstanceId = context.InputParameters["previousInstanceId"].ToString();
-
             string entityName = context.InputParameters["entityName"].ToString();
-            int slaLevel = 1;// (int) context.InputParameters["SlaLevel"];  
             int warningDuration = (int)context.InputParameters["firstInputDuration"] ;
             int failureDuration = (int)context.InputParameters["secondInputDuration"] ;
             DateTime warningStartTime = (DateTime)context.InputParameters["firstInputDate"];
             DateTime failureStartTime = (DateTime) context.InputParameters["secondInputDate"];
 
             tracingService.Trace($"input parameter");
-            tracingService.Trace($"calendarId {calendarId}");
-            tracingService.Trace($"regardingId {regardingId}");
-            tracingService.Trace($"slaItemId {slaItemId}");
-            tracingService.Trace($"entityName {entityName}");
-            tracingService.Trace($"requestType {requestType}");
-            tracingService.Trace($"previousInstanceId {previousInstanceId}");
-
-            //tracingService.Trace($"slaLevel {slaLevel}");
-            tracingService.Trace($"warningDuration {warningDuration}");
-            tracingService.Trace($"failureDuration {failureDuration}");
-            tracingService.Trace($"warningStartTime {warningStartTime}");
-            tracingService.Trace($"failureStartTime {failureStartTime}");
+            tracingService.Trace($"calendarId: {calendarId}  , slaItemId: {slaItemId}  , requestType: {requestType} , previousInstanceId: {previousInstanceId}");
+            tracingService.Trace($" regardingId: {regardingId} , entityName: {entityName}");
+            tracingService.Trace($"warningDuration: {warningDuration}   , failureDuration: {failureDuration}");
+            tracingService.Trace($"warningStartTime: {warningStartTime} , failureStartTime: {failureStartTime}");
             tracingService.Trace($"-----------------");
 
             // API name of action 
-            OrganizationRequest actionRequest = new OrganizationRequest("new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989");
-
-            //if (context.InputParameters.Contains("Target") &&context.InputParameters["Target"] is Entity){          
-                tracingService.Trace("ExamplePlugin - attempt to exicute request");
-                 
-                   // OrganizationResponse response = service.Execute(actionRequest);
+            //OrganizationRequest actionRequest = new OrganizationRequest("new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989");      
+            //    tracingService.Trace(" CustomPluginTimeCalculationd attempt to exicute request");
             try
             {
                 // implement this requestType for any new SLA KPi instance creation.
                 if (requestType.Equals("getEndTime", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    tracingService.Trace($"in getEndTime");
-                    tracingService.Trace($"before CalculateWarningAndFailureTime");
-                    // Step 2 : Add the custom Logic to calculate the WarningTime and FailureTime
-                    string returnCalendarId = CalculateWarningAndFailureTime(regardingId, calendarId, slaItemId, entityName, warningStartTime,
-                        failureStartTime, warningDuration, failureDuration, slaLevel, out DateTime warningTime, out DateTime failureTime);
+                    tracingService.Trace("Calculating warning and failure times.");
+                    DateTime warningTime;
+                    DateTime failureTime;
 
-                    tracingService.Trace($"  failureTime {failureTime}");
-                    tracingService.Trace($"  warningTime {warningTime}");
-                    tracingService.Trace($"  returnCalendarId {returnCalendarId}");
+                    string returnCalendarId = CalculateWarningAndFailureTime(regardingId, calendarId, slaItemId, entityName, warningStartTime,
+                        failureStartTime, warningDuration, failureDuration, slaLevel, out   warningTime, out   failureTime);
 
                     #region MyRegion
 
-                    warningTime = new DateTime(2024, 06, 27, 15, 03, 00);
-                    failureTime = new DateTime(2024, 06, 27, 17, 00, 00);
+                    //warningTime = new DateTime(2024, 06, 26, 19, 00, 00);
+                    //  failureTime = new DateTime(2024, 06, 27, 20, 00, 00);
+                    //string returnCalendarId = "39825827-0ED1-EE11-9079-6045BD895E74";
+
                     tracingService.Trace($"Executing Custom SLA Time Calculation");
                     tracingService.Trace($"Current UTC Time: {DateTime.UtcNow}");
                     tracingService.Trace($"Calculated failureTime: {failureTime}");
@@ -94,9 +91,9 @@ namespace LinkDev.MOHU.Plugin.Utilites
                     tracingService.Trace($"Using Calendar ID: {returnCalendarId}");
                     #endregion
 
-                    //// Step 3 : return the output values.
-                    context.OutputParameters["firstOutputValue"] = failureTime.ToString();
-                    context.OutputParameters["secondOutputValue"] = warningTime.ToString();
+                    ////   return the output values.
+                    context.OutputParameters["firstOutputValue"] = warningTime .ToString();
+                    context.OutputParameters["secondOutputValue"] = failureTime.ToString();
                     context.OutputParameters["returnCalendarId"] = returnCalendarId; // Example calendar ID
                     tracingService.Trace($"after CalculateWarningAndFailureTime");
 
@@ -104,22 +101,23 @@ namespace LinkDev.MOHU.Plugin.Utilites
                 // implement this requestType for finding Paused time for any new SLA KPi instance after it resumed.
                 else if (requestType.Equals("getElapsedTime", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    DateTime casePausedTime = (DateTime)context.InputParameters["firstInputDate"];
-                    DateTime caseResumedTime = (DateTime)context.InputParameters["secondInputDate"];
-                    int existingElapsedTime = (int)context.InputParameters["firstInputDuration"];
-                    // Step 2 : Add the custom Logic to calculate the elapsedTime between startTime(paused) and endTime(resumed)
-                    double elapsedTimeInMinutes = CalculateElapsedTime(regardingId, calendarId, slaItemId, entityName, casePausedTime, caseResumedTime, existingElapsedTime);
+                    tracingService.Trace($"getElapsedTime");
+                    //DateTime casePausedTime = (DateTime)context.InputParameters["firstInputDate"];
+                    //DateTime caseResumedTime = (DateTime)context.InputParameters["secondInputDate"];
+                    //int existingElapsedTime = (int)context.InputParameters["firstInputDuration"];
+                    //// Step 2 : Add the custom Logic to calculate the elapsedTime between startTime(paused) and endTime(resumed)
+                    //double elapsedTimeInMinutes = CalculateElapsedTime(regardingId, calendarId, slaItemId, entityName, casePausedTime, caseResumedTime, existingElapsedTime);
 
-                    // Step 3 : return the output values.
-                    context.OutputParameters["firstOutputValue"] = elapsedTimeInMinutes.ToString();
-                    context.OutputParameters["secondOutputValue"] = elapsedTimeInMinutes.ToString();
-                    tracingService.Trace($"after CalculateWarningAndFailureTime");
+                    //// Step 3 : return the output values.
+                    //context.OutputParameters["firstOutputValue"] = elapsedTimeInMinutes.ToString();
+                    //context.OutputParameters["secondOutputValue"] = elapsedTimeInMinutes.ToString();
+                    //tracingService.Trace($"after CalculateWarningAndFailureTime");
                 }
             }
             catch (Exception ex)
             {
-                tracingService.Trace($"ExamplePlugin - error = " + ex.Message);
- 
+                tracingService.Trace("Exception: " + ex.ToString());
+                throw new InvalidPluginExecutionException($"An error occurred: {ex.Message}");
             }
         }
 
@@ -134,16 +132,38 @@ namespace LinkDev.MOHU.Plugin.Utilites
             int newFailureTime = failureDuration;
             int customCode = 0;
             tracingService.Trace($"in CalculateWarningAndFailureTime");
+            
             // use OOB SLATimeCalculation Custom Action to do actual calculation_
             OrganizationRequest requestTimeCalculation = new OrganizationRequest("msdyn_SLATimeCalculation");
             requestTimeCalculation["requestType"] = "getendtime";
             requestTimeCalculation["calendarId"] = calendarId;
+            string slaLookupName = string.Empty;
+
+            if (slaLevel==1)
+            {
+                slaLookupName = "ldv_slahourlevel1id";
+            }
+            else if (slaLevel == 2)
+            {
+                slaLookupName = "ldv_slahourlevel2id";
+            }
+            else if (slaLevel == 3)
+            {
+                slaLookupName = "ldv_slahourlevel3id";
+            }
+            Entity entity=FetchRequestRecord(entityName, regardingId, slaLookupName);
+
+        
+
+
+
+
             // calculate warning time
             if (warningDuration != -1)
             {
                 tracingService.Trace($" in warningDuration");
 
-                requestTimeCalculation["startTime"] = warningStartTime;
+                requestTimeCalculation["startTime"] = warningStartTime; /*DateTime.Now.AddHours()*/
                 requestTimeCalculation["minutes"] = newWarningTime;
                 customizedTimeCalculationResponse =  service.Execute(requestTimeCalculation);
                 tracingService.Trace($"after Execute");
@@ -206,43 +226,65 @@ namespace LinkDev.MOHU.Plugin.Utilites
             return caseRecord;
         }
       
-        Entity FetchRequestRecord(string entityName, string regardingId)
+        Entity FetchRequestRecord(string entitySchemaName, string regardingId, string slaLookupName)
         {
             var query = new QueryExpression();
 
-            if (entityName == "task")
+            if (entitySchemaName == "task")
             {
-                query = ExecuteRequestQuery(entityName, regardingId, "activityid");
+                query = ExecuteRequestQuery("activityid", regardingId, slaLookupName);
 
             }
-            else if (entityName == "incident")
+            else if (entitySchemaName == "incident")
             {
-                query = ExecuteRequestQuery(entityName, regardingId, "incidentid");
+                query = ExecuteRequestQuery("incidentid", regardingId, slaLookupName);
 
             }
             var result = service.RetrieveMultiple(query)[0];
 
             return result;
         }
-        QueryExpression ExecuteRequestQuery(string entityName, string regardingId, string regardingIdName)
+        QueryExpression ExecuteRequestQuery(string entitySchemaName, string regardingId, string slaLookupName)
         {
-            var ag_regardingId = regardingId;
 
-            var query = new QueryExpression("ldv_casecategory");
-            query.Distinct = true; query.ColumnSet.AddColumns(
-                    "ldv_casecategoryid",
-                    "ldv_slahourlevel3code",
-                    "ldv_slahourlevel2code",
-                    "ldv_slahourlevel1code");
-            query.AddOrder("ldv_slahourlevel1code", OrderType.Ascending);
+            //warning/ failur 
+            //min. /hour
+            //
+            //1 - get ticket category from task
+            // 2 - get sla hours level 1 ,2,3 from ticket category
+            //  3 - check
+            // if leve3
+            // time = level1 + level2 + l3vel3
+            //else leve2
+            // time = level1 + level2
+            //else leve1
+            // time = level1
 
-            var ag = query.AddLink(entityName, "ldv_casecategoryid", "ldv_subcategoryid");
-            ag.EntityAlias = "ag";
 
-            ag.LinkCriteria.AddCondition(regardingIdName, ConditionOperator.Equal, ag_regardingId);
+            // Instantiate QueryExpression query
+            var query = new QueryExpression("ldv_slahours");
+            query.Distinct = true;
+            // Add columns to query.ColumnSet
+            query.ColumnSet.AddColumns("ldv_name", "createdon", "ldv_code", "ldv_slahoursid", "ldv_warningdurationminutes", "ldv_warningdurationhours", "ldv_failuredurationminutes", "ldv_failuredurationhours");
+            query.AddOrder("createdon", OrderType.Descending);
+            var query_statecode = 0;
+            // Define filter query.Criteria
+            query.Criteria.AddCondition("statecode", ConditionOperator.Equal, query_statecode);
+            // Add link-entity aa
+            var aa = query.AddLink("ldv_casecategory", "ldv_slahoursid", slaLookupName);
+            aa.EntityAlias = "aa";
+            // Add link-entity ad
+            var ad = aa.AddLink(entitySchemaName, "ldv_casecategoryid", "ldv_subcategoryid");
+            ad.EntityAlias = "ad";
+            // Define filter ad.LinkCriteria
+            ad.LinkCriteria.AddCondition("activityid", ConditionOperator.Equal, regardingId);
             //add execute query
             return query;
-
         }
+
+
+ 
+
+
     }
 }
