@@ -90,6 +90,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomPluginTimeCalculation.cs" />
     <Compile Include="ExecuteAction.cs" />
     <Compile Include="Model\RequestEntity.cs" />
     <Compile Include="OnCreateBPFInstance.cs" />

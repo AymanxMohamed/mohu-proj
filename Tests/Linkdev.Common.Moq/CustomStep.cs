@@ -13,11 +13,12 @@ using Microsoft.Xrm.Sdk.Query;
 using System.ServiceModel.Description;
 using Microsoft.Xrm.Sdk.Client;
 
-using LinkDev.Common.Crm.Cs.NotificationTemplates;
+ 
 using Microsoft.Xrm.Tooling.Connector;
 using System.Web.Configuration;
-using LinkDev.Common.Crm.Cs.StageConfiguration;
+ 
 using Linkdev.Common.Moq.Model;
+using LinDev.MOHU.Utilites;
 
 namespace Linkdev.Common.Moq
 {
@@ -27,13 +28,13 @@ namespace Linkdev.Common.Moq
         static void Main(string[] args)
         {
             Dictionary<string, object> inputs;
-            Guid PrimaryEntityID = new Guid("b88fb13a-b6f9-44c0-b3ca-3394c483d2ae");
-            string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
+            Guid PrimaryEntityID = new Guid("5399784a-2f32-ef11-8409-6045bd8d9989");
+            string PrimaryEntitySchemaName =  "task"; //*/ "incident";   /*"contact";  */
 
             //Guid processstage = Guid.Empty;
 
             //  Activity activity = new SendNotification();
-            Activity activity = new HistoricallyStageFields();
+            Activity activity = new CustomPluginTimeCalculation();
 
 
             #region Variables Intializations Admin
@@ -58,7 +59,7 @@ namespace Linkdev.Common.Moq
               service = getCRMAccess();
 
 
-               createTicket();
+               //createTicket();
 
             //IOrganizationService service = new CRMAccess().GetAccessToCRM();
             //set up a mock workflowcontext
@@ -574,6 +575,29 @@ namespace Linkdev.Common.Moq
 
                 };
             #endregion
+
+            #region MyRegion
+              inputs = new Dictionary<string, object>
+            {
+                { "calendarId","39825827-0ED1-EE11-9079-6045BD895E74"} ,
+                { "regardingId", "5399784a-2f32-ef11-8409-6045bd8d9989" } ,
+                {"slaItemId","a3a0e571-06dc-ee11-904b-6045bd895c76" },
+                {"entityName","task" },
+                {"requestType","getEndTime" },
+                {"previousInstanceId","" },
+                {"firstInputDuration",  -1},
+                {"secondInputDuration",4  },
+                {"SlaLevel",1  },
+                {"firstInputDate",new DateTime(2024,6,24,8,3,1)  },
+                {"secondInputDate",new DateTime(2024,6,24,9,3,1)  },
+
+
+
+                };
+
+            #endregion
+
+
             //inputs = new Dictionary<string, object>();
 
             var outputs = invoker.Invoke(inputs);
