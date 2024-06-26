@@ -29,25 +29,32 @@ namespace LinkDev.MOHU.Plugin.Utilites
             // The InputParameters collection contains all the data passed in the message request.
 
             tracingService.Trace($"in Execute ");
-            
+            if (context.MessageName != "new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989")
+            {
+                throw new InvalidPluginExecutionException("This plugin is registered for a different action.");
+            }
             string regardingId = context.InputParameters["regardingId"].ToString();
             string calendarId = context.InputParameters["calendarId"].ToString();
             string requestType = context.InputParameters["requestType"].ToString();
             string slaItemId = context.InputParameters["slaItemId"].ToString();
+            string previousInstanceId = context.InputParameters["previousInstanceId"].ToString();
+
             string entityName = context.InputParameters["entityName"].ToString();
-            int slaLevel =(int) context.InputParameters["SlaLevel"];  
+            int slaLevel = 1;// (int) context.InputParameters["SlaLevel"];  
             int warningDuration = (int)context.InputParameters["firstInputDuration"] ;
             int failureDuration = (int)context.InputParameters["secondInputDuration"] ;
             DateTime warningStartTime = (DateTime)context.InputParameters["firstInputDate"];
             DateTime failureStartTime = (DateTime) context.InputParameters["secondInputDate"];
 
             tracingService.Trace($"input parameter");
-            tracingService.Trace($"regardingId {regardingId}");
             tracingService.Trace($"calendarId {calendarId}");
-            tracingService.Trace($"requestType {requestType}");
+            tracingService.Trace($"regardingId {regardingId}");
             tracingService.Trace($"slaItemId {slaItemId}");
             tracingService.Trace($"entityName {entityName}");
-            tracingService.Trace($"slaLevel {slaLevel}");
+            tracingService.Trace($"requestType {requestType}");
+            tracingService.Trace($"previousInstanceId {previousInstanceId}");
+
+            //tracingService.Trace($"slaLevel {slaLevel}");
             tracingService.Trace($"warningDuration {warningDuration}");
             tracingService.Trace($"failureDuration {failureDuration}");
             tracingService.Trace($"warningStartTime {warningStartTime}");
@@ -78,8 +85,8 @@ namespace LinkDev.MOHU.Plugin.Utilites
 
                     #region MyRegion
 
-                    warningTime = new DateTime(2024, 06, 26, 15, 03, 00);
-                    failureTime = new DateTime(2024, 06, 26, 17, 00, 00);
+                    warningTime = new DateTime(2024, 06, 27, 15, 03, 00);
+                    failureTime = new DateTime(2024, 06, 27, 17, 00, 00);
                     tracingService.Trace($"Executing Custom SLA Time Calculation");
                     tracingService.Trace($"Current UTC Time: {DateTime.UtcNow}");
                     tracingService.Trace($"Calculated failureTime: {failureTime}");
@@ -88,7 +95,6 @@ namespace LinkDev.MOHU.Plugin.Utilites
                     #endregion
 
                     //// Step 3 : return the output values.
-
                     context.OutputParameters["firstOutputValue"] = failureTime.ToString();
                     context.OutputParameters["secondOutputValue"] = warningTime.ToString();
                     context.OutputParameters["returnCalendarId"] = returnCalendarId; // Example calendar ID
