@@ -1,5 +1,6 @@
 ﻿var caseFields = {
     customerid: 'customerid',
+    ldv_fieldserviceofficeid: 'ldv_fieldserviceofficeid',
     title: 'title',
     ldv_serviceid: 'ldv_serviceid',
     ldv_maincategoryid: 'ldv_maincategoryid',
@@ -53,7 +54,7 @@
     ldv_senttokidana: 'ldv_senttokidana',
     ldv_senttoservicedesk: 'ldv_senttoservicedesk',
     ldv_issenttosehab: 'ldv_issenttosehab',
-    ldv_qualityofficerneededinformations:'ldv_qualityofficerneededinformations',
+    ldv_qualityofficerneededinformations: 'ldv_qualityofficerneededinformations',
 
     ldv_isfcr: 'ldv_isfcr',
 
@@ -61,6 +62,8 @@
     ldv_socialMediaComment: 'ldv_socialmediacomment',
     ldv_supervisordecisioncode: 'ldv_supervisordecisioncode',
     ldv_supervisorcomment: 'ldv_supervisorcomment',
+    ldv_supervisorDesision2: 'ldv_supervisorclosedecisioncode',
+    ldv_description:'ldv_description',
 
     Enums: {
         location: {
@@ -85,8 +88,8 @@
             needMoreDetails: 2
         },
         qualityDecision: {
-            closeTheTicket: 1,
-            needMoreDetails: 2
+            closeTheTicket: 1, //Resolved
+            needMoreDetails: 2 //Transfer
         },
         qualityDecision2: {
             closeTheTicket: 1,
@@ -116,9 +119,10 @@
             Visitor: 5
         },
         socialMediaDecision: {
-
             checkedTicket: 1
-
+        },
+        supervisorDecision2: {
+            CloseTicket: 1
         },
     }
 };
@@ -225,9 +229,22 @@ var BPFs = {
                 name: 'Submit',
                 id: 'a677a23e-a96f-423d-8547-606e433f61cf'
             },
+            socialMedia: {
+                name: 'Social Media',
+
+                id: 'd3532423-7356-4819-9184-94936ad11fbc'
+            },
+
             ministrySHajjAgency: {
                 name: 'Ministry’S Hajj Agency',
+
                 id: '5fafb075-cca2-4359-8431-806679d70732'
+            },
+
+            supervisor: {
+                name: 'Supervisor',
+
+                id: '7d603fd0-6201-459b-9b19-6d876d9c5677'
             },
             quality: {
                 name: 'Quality',
@@ -257,7 +274,7 @@ var BPFs = {
                 id: 'cef9ddbe-0e55-40df-9850-6c8ef2adf962'
             },
             supervisor: {
-                name: "Supervisor",
+                name: 'Supervisor',
                 id: 'b7a1ea91-acf8-4bea-9f7f-ec5193e19f86'
             },
             quality: {
@@ -317,7 +334,7 @@ var BPFs = {
             },
             Supervisor: {
                 name: 'Supervisor',
-                id:'7809604f-6c5a-486a-bb90-081e14b77702'
+                id: '7809604f-6c5a-486a-bb90-081e14b77702'
             },
             Supervisor2: {
                 name: 'Supervisor',
@@ -334,7 +351,7 @@ var BPFs = {
             Location: {
                 name: 'Location',
                 id: 'c7090231-8d5d-4587-946b-27f4bd4e0108'
-            },
+            }
         }
     },
 
@@ -346,9 +363,25 @@ var BPFs = {
                 name: 'Submit',
                 id: 'c366cb3d-f8a7-48cb-b299-d892f32c0f3a'
             },
+            socialMedia: {
+                name: 'Social Media',
+                id: '42099590-e8a9-4cc0-9d4d-4718fd79d5e0'
+            },
             quality: {
                 name: 'Quality',
-                id: '2875d1ba-fd30-4725-a786-fb64202184bb'
+                id: '992a6841-305e-477c-b477-a966b082ca02'
+            },
+            quality2: {
+                name: 'Quality',
+                id: '025de776-7a6b-41b1-b9fb-ec58d0f4098e'
+            },
+            supervisor: {
+                name: 'Supervisor',
+                id: '08af1f16-9895-4995-a6af-69b38adfd07b'
+            },
+            supervisor2: {
+                name: 'Supervisor',
+                id: '67f49211-7db9-4a96-befc-cf77006fbc8a'
             },
             resolved: {
                 name: 'Resolved',
@@ -366,11 +399,9 @@ var BPFs = {
                 id: 'b9e77c7f-cb09-4dfe-b306-8ea4fcad4a4c'
             },
             socialMedia: {
-
                 name: 'Social Media',
 
                 id: '0a7d3e39-bed8-488c-8cd0-15f12cc15c67'
-
             },
             quality: {
                 name: 'Quality',
@@ -420,10 +451,42 @@ var BPFs = {
                 name: 'Quality',
                 id: 'ac37d1ec-87e3-4ea0-8a9d-b43126ed80a7'
             },
+            Quality2: {
+                name: 'Quality',
+                id: '9534e56e-6737-4bb7-88c0-ad87342a2725'
+            },
+            Quality3: {
+                name: 'Quality',
+                id: 'eec59f93-097f-44c6-a509-783bf05252b2'
+            },
+            Quality4: {
+                name: 'Quality',
+                id: 'bd5ef71f-b867-4a7e-b737-64cf44ed529e'
+            },
             Resolved: {
                 name: 'Resolved',
                 id: '68ccc8b3-1c5d-4f66-9187-21d5dd06269e'
-            }
+            },
+            SocialMedia: {
+                name: 'Social Media',
+                id: '2a3b7b97-5990-4846-a94e-e46e91e53a5f'
+            },
+            Supervisor: {
+                name: 'Supervisor',
+                id: 'a35c934b-3f37-4ff1-8daf-3dcd1e4205c9'
+            },
+            Supervisor2: {
+                name: 'Supervisor',
+                id: 'a5b5b32e-3211-4426-888e-b7a6d6c06492'
+            },
+            Supervisor3: {
+                name: 'Supervisor',
+                id: 'b8ca92e8-9c23-4967-ac41-4307faa4c76f'
+            },
+            Supervisor4: {
+                name: 'Supervisor',
+                id: 'aef9ac1e-a6cc-4252-8111-5b44807051db'
+            },
         }
     },
     TechnicalComplainNotMomentaryHijjAndUmarah: {
@@ -434,6 +497,14 @@ var BPFs = {
                 name: 'Submit',
                 id: 'ef1eab3c-ac6e-4375-af03-851d40ff3c8f'
             },
+            SocialMedia: {
+                name: 'Social Media',
+                id: '944efce3-c44e-4dfa-99b8-23bdaba9dd89'
+            },
+            Season: {
+                name: 'Season ',
+                id: '8d7648f2-fd9a-4f13-90fe-0a06baead77a'
+            },
             Hajj: {
                 name: 'Hajj',
                 id: 'ae916fe5-4185-42f1-854b-e2bf14875be8'
@@ -442,21 +513,35 @@ var BPFs = {
                 name: 'Umrah',
                 id: 'bc6ab56a-8979-4178-aa16-b2d0965a2a19'
             },
-
+            Supervisor: {
+                name: 'Supervisor ',
+                id: '48ea1a3c-bad3-4e10-8250-a1ba15cb7024'
+            },
+            Supervisor1: {
+                name: 'Supervisor',
+                id: '29737a13-da8a-4edc-88e3-7b8c802d0de0'
+            },
             Quality: {
                 name: 'Quality',
                 id: 'c11ceeb2-f5c2-41ed-8e51-1f8e9d0f6391'
             },
+            Quality1: {
+                name: 'Quality',
+                id: '93cf589a-a8b6-4e6d-ac6b-2ae1a4b8a5a5'
+            },
             Resolved: {
                 name: 'Resolved',
                 id: 'd32598c5-e107-4488-ad85-c76896169a3d'
+            },
+            Resolved1: {
+                name: 'Resolved',
+                id: 'bc76a5e0-038f-4a40-a731-cc621768e4af'
             }
         }
     },
     RequestComplainsIntegration: {
         name: 'BPF | Requesting Complaints | Integration | Flow',
         id: 'C1FEA096-843C-4573-BD77-D5C767618B8F',
-
         stages: {
             Submit: {
                 name: 'Submit',
@@ -468,7 +553,7 @@ var BPFs = {
             },
             ServiceDesk: {
                 name: 'Service Desk',
-                id: '3d8e178d-421d-440e-9dd8-1be829d5e7c7'
+                id: '28e4fc97-ae59-435f-aa6e-6ad21611dad3'
             },
             Kadana: {
                 name: 'Kadana',
@@ -480,19 +565,23 @@ var BPFs = {
             },
             Quality: {
                 name: 'Quality',
-                id: '101210ae-ae2d-40dd-9ef1-e559397dd455'
+                id: 'b48d01d6-3aa9-41e6-815c-c664c6685cd7'
             },
             Quality2: {
                 name: 'Quality 2',
-                id: 'b48d01d6-3aa9-41e6-815c-c664c6685cd7'
+                id: 'd2afa263-c463-4b44-b09b-c48ebc676d0c'
             },
             Quality3: {
                 name: 'Quality 3',
-                id: 'd2afa263-c463-4b44-b09b-c48ebc676d0c'
+                id: '101210ae-ae2d-40dd-9ef1-e559397dd455'
             },
             Resolved: {
                 name: 'Resolved',
                 id: '236a7caa-861a-4dc5-8c33-f330f4aa85a6'
+            },
+            SocialMedia: {
+                name: 'Social Media',
+                id: '95b4f090-c9b8-4f39-b212-62ce8da39fac'
             }
         }
     }
@@ -552,7 +641,21 @@ function OnLoad(executionContext) {
         ShowAndHidePassportNumberAndIdNumber(executionContext);
     }
 
-    UnlockCategoriesFieldsInSocialMediaStage(formContext);
+    UnlockFieldsInSocialMediaStage(formContext);
+
+    addOnChangeHandlerEvents(executionContext);
+
+    formContext.getControl(caseFields.ldv_subsourceid).addPreSearch(function () {
+        filterSubSourceBasedOnOrigin(formContext);
+    });
+
+    SetReqForMainCategoryForInquiry(formContext);
+    unLockCategoryFieldsOnInquiry(formContext);
+}
+
+function addOnChangeHandlerEvents(executionContext) {
+
+    var formContext = executionContext.getFormContext();
 
     formContext.getAttribute(caseFields.ldv_serviceid).addOnChange(function () {
         OnChange_RequestType(formContext);
@@ -631,17 +734,9 @@ function OnLoad(executionContext) {
         removeMadinaFromLocation(formContext);
     });
 
-    formContext.getControl(caseFields.ldv_subsourceid).addPreSearch(function () {
-        filterSubSourceBasedOnOrigin(formContext);
-    });
-
     // formContext.getControl(caseFields.ldv_company).addPreSearch(function () {
     //     filterCompanyBasedOnServiceType(formContext);
     // });
-
-    SetReqForMainCategoryForInquiry(formContext);
-    unLockFieldsOnQualityStageInquiry(formContext);
-
 }
 
 function OnSave(executionContext) {
@@ -663,6 +758,7 @@ function saveFormOnChangeFCR(formContext) {
         }
     }
 }
+
 function ShowAndHideBeneficiaryType(formContext) {
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
     if (service === null || service === undefined) {
@@ -683,7 +779,6 @@ function ShowAndHideBeneficiaryType(formContext) {
             }
         } else if (
             serviceId === ServiceType.TechnicalComplainMomentaryUmrah.serviceDefinitionId.toLowerCase() ||
-            serviceId === ServiceType.TechnicalComplainMomentaryUmrahForCompanies.serviceDefinitionId.toLowerCase() ||
             serviceId === ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase()
         ) {
             //OnChange_Season(formContext);
@@ -694,7 +789,68 @@ function ShowAndHideBeneficiaryType(formContext) {
                 CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true);
             }
         } else if (
+            serviceId === ServiceType.TechnicalComplainMomentaryUmrahForCompanies.serviceDefinitionId.toLowerCase()
+        ) {
+            CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_beneficiarytypecode, true, true);
+            RemoveVisitorOptionFromBeneficiaryType(formContext);
+            var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
+            if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
+                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true);
+            }
+        } else if (
             serviceId === ServiceType.TechnologicalComplain.serviceDefinitionId.toLowerCase() ||
+            serviceId === ServiceType.Inquiry.serviceDefinitionId.toLowerCase()
+        ) {
+            CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_beneficiarytypecode, true, true);
+            var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
+            if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
+                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true);
+            }
+        }
+    }
+}
+function ShowAndHideBeneficiaryType_OnLoad(formContext) {
+    var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
+    if (service === null || service === undefined) {
+        CommonGeneric.ShowAndReuiredFieldWithoutEmpty(formContext, caseFields.ldv_beneficiarytypecode, false, false);
+    } else {
+        var serviceId = service.id.replace('{', '').replace('}', '').toLowerCase();
+        RemoveAllOptionsFromBeneficiaryType(formContext);
+        AddAllOptionsFromBeneficiaryType(formContext);
+        if (
+            serviceId === ServiceType.TechnicalComplainMomentaryHajj.serviceDefinitionId.toLowerCase() ||
+            serviceId === ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase()
+        ) {
+            CommonGeneric.ShowAndReuiredFieldWithoutEmpty(formContext, caseFields.ldv_beneficiarytypecode, true, true);
+            RemoveUmrahOptionsFromBeneficiaryType(formContext);
+            var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
+            if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
+                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true); // Lock the field
+            }
+        } else if (
+            serviceId === ServiceType.TechnicalComplainMomentaryUmrah.serviceDefinitionId.toLowerCase() ||
+            serviceId === ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase()
+        ) {
+            //OnChange_SeasonWithoutEmpty(formContext);
+            CommonGeneric.ShowAndReuiredFieldWithoutEmpty(formContext, caseFields.ldv_beneficiarytypecode, true, true);
+            RemoveHajjOptionsFromBeneficiaryType(formContext);
+            var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
+            if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
+                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true);
+            }
+        } else if (
+            serviceId === ServiceType.TechnicalComplainMomentaryUmrahForCompanies.serviceDefinitionId.toLowerCase()
+        ) {
+            //OnChange_SeasonWithoutEmpty(formContext);
+            CommonGeneric.ShowAndReuiredFieldWithoutEmpty(formContext, caseFields.ldv_beneficiarytypecode, true, true);
+            RemoveVisitorOptionFromBeneficiaryType(formContext);
+            var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
+            if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
+                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true);
+            }
+        } else if (
+            serviceId === ServiceType.TechnologicalComplain.serviceDefinitionId.toLowerCase() ||
+            serviceId === ServiceType.Suggestions.serviceDefinitionId.toLowerCase() ||
             serviceId === ServiceType.Inquiry.serviceDefinitionId.toLowerCase()
         ) {
             CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_beneficiarytypecode, true, true);
@@ -720,7 +876,6 @@ function RemoveUmrahOptionsFromBeneficiaryType(formContext) {
     ];
     RemoveOptionSetValues(formContext, caseFields.ldv_beneficiarytypecode, removedValues);
 }
-
 function RemoveHajjOptionsFromBeneficiaryType(formContext) {
     var beneficiaryTypeField = formContext.getAttribute(caseFields.ldv_beneficiarytypecode);
     if (!beneficiaryTypeField) {
@@ -734,7 +889,15 @@ function RemoveHajjOptionsFromBeneficiaryType(formContext) {
     ];
     RemoveOptionSetValues(formContext, caseFields.ldv_beneficiarytypecode, removedValues);
 }
+function RemoveVisitorOptionFromBeneficiaryType(formContext) {
+    var beneficiaryTypeField = formContext.getAttribute(caseFields.ldv_beneficiarytypecode);
+    if (!beneficiaryTypeField) {
+        return;
+    }
 
+    var removedValues = [caseFields.Enums.beneficiaryType.Visitor];
+    RemoveOptionSetValues(formContext, caseFields.ldv_beneficiarytypecode, removedValues);
+}
 function RemoveAllOptionsFromBeneficiaryType(formContext) {
     debugger;
     var beneficiaryTypeField = formContext.getAttribute(caseFields.ldv_beneficiarytypecode);
@@ -751,7 +914,6 @@ function RemoveAllOptionsFromBeneficiaryType(formContext) {
     ];
     RemoveOptionSetValues(formContext, caseFields.ldv_beneficiarytypecode, removedValues);
 }
-
 function AddAllOptionsFromBeneficiaryType(formContext) {
     debugger;
     var beneficiaryTypeField = formContext.getAttribute(caseFields.ldv_beneficiarytypecode);
@@ -770,48 +932,6 @@ function AddAllOptionsFromBeneficiaryType(formContext) {
     AddOptionSetValues(formContext, caseFields.ldv_beneficiarytypecode, removedValues);
 }
 
-function ShowAndHideBeneficiaryType_OnLoad(formContext) {
-    var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
-    if (service === null || service === undefined) {
-        CommonGeneric.ShowAndReuiredFieldWithoutEmpty(formContext, caseFields.ldv_beneficiarytypecode, false, false);
-    } else {
-        var serviceId = service.id.replace('{', '').replace('}', '').toLowerCase();
-        RemoveAllOptionsFromBeneficiaryType(formContext);
-        AddAllOptionsFromBeneficiaryType(formContext);
-        if (
-            serviceId === ServiceType.TechnicalComplainMomentaryHajj.serviceDefinitionId.toLowerCase() ||
-            serviceId === ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase()
-        ) {
-            CommonGeneric.ShowAndReuiredFieldWithoutEmpty(formContext, caseFields.ldv_beneficiarytypecode, true, true);
-            RemoveUmrahOptionsFromBeneficiaryType(formContext);
-            var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
-            if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
-                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true); // Lock the field
-            }
-        } else if (
-            serviceId === ServiceType.TechnicalComplainMomentaryUmrah.serviceDefinitionId.toLowerCase() ||
-            serviceId === ServiceType.TechnicalComplainMomentaryUmrahForCompanies.serviceDefinitionId.toLowerCase() ||
-            serviceId === ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase()
-        ) {
-            //OnChange_SeasonWithoutEmpty(formContext);
-            CommonGeneric.ShowAndReuiredFieldWithoutEmpty(formContext, caseFields.ldv_beneficiarytypecode, true, true);
-            RemoveHajjOptionsFromBeneficiaryType(formContext);
-            var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
-            if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
-                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true);
-            }
-        } else if (
-            serviceId === ServiceType.TechnologicalComplain.serviceDefinitionId.toLowerCase() ||
-            serviceId === ServiceType.Suggestions.serviceDefinitionId.toLowerCase()
-        ) {
-            CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_beneficiarytypecode, true, true);
-            var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
-            if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
-                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true);
-            }
-        }
-    }
-}
 function ShowAndHideSeason(formContext) {
     var fields = [caseFields.ldv_seasoncode];
     var serviceIdsToShow = [
@@ -825,7 +945,6 @@ function ShowAndHideSeason(formContext) {
         CommonGeneric.DisableField(formContext, caseFields.ldv_seasoncode, true); // Lock the field
     }
 }
-
 function ShowAndHideSeason_OnLoad(formContext) {
     var fields = [caseFields.ldv_seasoncode];
     var serviceIdsToShow = [
@@ -839,6 +958,7 @@ function ShowAndHideSeason_OnLoad(formContext) {
         CommonGeneric.DisableField(formContext, caseFields.ldv_seasoncode, true); // Lock the field
     }
 }
+
 function ShowAndHideLocation(formContext) {
     var fields = [caseFields.ldv_locationcode];
     var serviceIdsToShow = [
@@ -851,7 +971,6 @@ function ShowAndHideLocation(formContext) {
     removeJaddaFromLocation(formContext);
     removeMadinaFromLocation(formContext);
 }
-
 function ShowAndHideLocation_OnLoad(formContext) {
     var fields = [caseFields.ldv_locationcode];
     var serviceIdsToShow = [
@@ -864,7 +983,6 @@ function ShowAndHideLocation_OnLoad(formContext) {
     removeJaddaFromLocation(formContext);
     removeMadinaFromLocation(formContext);
 }
-
 function removeJaddaFromLocation(formContext) {
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
     if (!service) {
@@ -895,7 +1013,6 @@ function removeJaddaFromLocation(formContext) {
         }
     }
 }
-
 function removeMadinaFromLocation(formContext) {
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
     if (!service) {
@@ -1020,6 +1137,7 @@ function ShowAndHideCompany(formContext) {
 
 //    }
 //};
+
 function HideAndShowComplainPriority(formContext) {
     var serviceRecord = GetLookUpRecordWithExpandedValues(
         formContext,
@@ -1072,21 +1190,18 @@ function SettingComplainTypePrioritySeason(formContext, categoryField) {
         }
     }
 }
-
 function SettingComplainTypePrioritySeasonFromMainCategory(formContext) {
     var subCategoryVisible = IsFieldVisible(formContext, caseFields.ldv_subcategoryid);
     if (!subCategoryVisible) {
         SettingComplainTypePrioritySeason(formContext, caseFields.ldv_maincategoryid);
     }
 }
-
 function SettingComplainTypePrioritySeasonFromSubCategory(formContext) {
     var secondarySubCategoryVisible = IsFieldVisible(formContext, caseFields.ldv_secondarysubcategoryid);
     if (!secondarySubCategoryVisible) {
         SettingComplainTypePrioritySeason(formContext, caseFields.ldv_subcategoryid);
     }
 }
-
 function SettingComplainTypePrioritySeasonFromSecondarySubCategory(formContext) {
     SettingComplainTypePrioritySeason(formContext, caseFields.ldv_secondarysubcategoryid);
 }
@@ -1157,7 +1272,6 @@ function OnChange_Season(formContext) {
         }
     }
 }
-
 function OnChange_SeasonWithoutEmpty(formContext) {
     var season = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_seasoncode);
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
@@ -1291,7 +1405,6 @@ function HandleErrorFieldVisibility(formContext, subcategoryField) {
         CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_errorcodeid, false, false);
     }
 }
-
 function HandleErrorFieldVisibility_OnLoad(formContext) {
     var secondarySubCategoryVisible = IsFieldVisible(formContext, caseFields.ldv_secondarysubcategoryid);
     if (secondarySubCategoryVisible) {
@@ -1518,13 +1631,14 @@ function SetReqForMainCategoryForInquiry(formContext) {
 function HideFieldsOnSubmitStageInquiry(formContext) {
     var subCategoryOnBpf = 'header_process_' + caseFields.ldv_subcategoryid;
     var mainCategoryOnBpf = 'header_process_' + caseFields.ldv_maincategoryid;
+    var mainCategoryOnSocialStage = 'header_process_' + caseFields.ldv_maincategoryid + '_1';
+
     CommonGeneric.ShowAndReuiredField(formContext, subCategoryOnBpf, false, false);
     CommonGeneric.ShowAndReuiredField(formContext, mainCategoryOnBpf, false, false);
+    CommonGeneric.ShowAndReuiredField(formContext, mainCategoryOnSocialStage, false, false);
+    HideOriginOnSubmitStage(formContext);
 }
-
-
-function HideFieldsOnSubmitStageSuggestion(formContext){
-
+function HideFieldsOnSubmitStageSuggestion(formContext) {
     var origin = 'header_process_' + caseFields.caseorigincode;
     CommonGeneric.ShowAndReuiredField(formContext, origin, false, false);
 }
@@ -1550,11 +1664,11 @@ function HideFieldsOnSubmitStageTechnicalComplainMomentaryHajj(formContext) {
     CommonGeneric.ShowAndReuiredField(formContext, locationFieldOnBpf, false, false);
     CommonGeneric.ShowAndReuiredField(formContext, beneficiaryTypeOnBpf, false, false);
 }
-
 function HideFieldsOnSubmitTechnicalComplainNonMomentaryHajjAndUmrah(formContext) {
     var seasonOnBpf = 'header_process_' + caseFields.ldv_seasoncode;
     CommonGeneric.ShowAndReuiredField(formContext, seasonOnBpf, false, false);
 }
+
 function LockFormFieldsAfterSubmit(formContext) {
     var submitValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_issubmitted);
 
@@ -1621,14 +1735,6 @@ function HandleBPF(executionContext, callback) {
         formContext.data.process.addOnPreStageChange(PreventDefaultSetActiveAndBackOnPreChange);
     }
 }
-
-function HideBPFNextButtonForSubmitStage(formContext) {
-    var currentStageName = formContext.data.process.getActiveStage().getName();
-    if (currentStageName === 'Submit') {
-        CommonGeneric.HideNextStageUCI();
-    }
-}
-
 function ShowBPFNextButtonForSubmitStage(executionContext) {
     var formContext = executionContext.getFormContext();
     var currentStage = formContext.data.process.getActiveStage();
@@ -1643,7 +1749,7 @@ function OnChange_addOnStageChange(executionContext) {
     var formContext = executionContext.getFormContext();
     HideUCIButtons(executionContext);
     ShowBPFNextButtonForSubmitStage(executionContext);
-    GetActiveStageDecisionsBasedOnService(executionContext, formContext);
+    GetActiveStageDecisionsBasedOnService(executionContext);
     if (formContext.ui.getFormType() !== 1) {
         CommonGeneric.DisableField(formContext, caseFields.ldv_serviceid, true); // Lock the Request Type Field
     }
@@ -1662,7 +1768,6 @@ function ShowAndHideFieldsBasedOnService(formContext, fields, serviceIdsToShow) 
         });
     }
 }
-
 function ShowAndHideFieldsBasedOnServiceWithoutEmpty(formContext, fields, serviceIdsToShow) {
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
     if (service === null || service === undefined) {
@@ -1769,7 +1874,6 @@ function ShowAndHideIntegrationSection(formContext) {
         CommonGeneric.SectionVisibility(formContext, Tabs.tab_administiration, Sections.IntegrationSection, false);
     }
 }
-
 function ShowAndHideSLATimerSection(formContext) {
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
     if (!service) {
@@ -1790,7 +1894,6 @@ function ShowAndHideSLATimerSection(formContext) {
         CommonGeneric.SectionVisibility(formContext, Tabs.tab_requestinformation, Sections.SLATimer, true);
     }
 }
-
 function ShowAndHide_Sahab_Tasheer_SD_Kidana_Section(formContext) {
     debugger;
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
@@ -1874,14 +1977,27 @@ function ShowAndHidePassportNumberAndIdNumber(executionContext) {
     }
 }
 
-function UnlockCategoriesFieldsInSocialMediaStage(formContext) {
+function UnlockFieldsInSocialMediaStage(formContext) {
     var currentStage = formContext.data.process.getActiveStage();
     if (currentStage) {
         var currentStageName = currentStage.getName();
-        if (currentStageName === 'Social Media' || currentStageName === 'التواصل الإجتماعي' || currentStageName === 'التواصل الاجتماعي') {
+        if (
+            currentStageName === 'Social Media' ||
+            currentStageName === 'التواصل الإجتماعي' ||
+            currentStageName === 'التواصل الاجتماعي'
+        ) {
             CommonGeneric.DisableField(formContext, caseFields.ldv_maincategoryid, false);
             CommonGeneric.DisableField(formContext, caseFields.ldv_subcategoryid, false);
             CommonGeneric.DisableField(formContext, caseFields.ldv_secondarysubcategoryid, false);
+
+            CommonGeneric.DisableField(formContext, caseFields.ldv_seasoncode, false);
+            CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, false);
+            CommonGeneric.DisableField(formContext, caseFields.ldv_locationcode, false);
+            CommonGeneric.DisableField(formContext, caseFields.ldv_company, false);
+            CommonGeneric.DisableField(formContext, caseFields.ldv_fieldserviceofficeid, false);
+            CommonGeneric.DisableField(formContext, caseFields.ldv_description, false);
+
+
         }
     }
 }
@@ -1910,7 +2026,8 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
 
     switch (serviceId) {
         case ServiceType.FinancialComplainInternalPilgrimspostHajj.serviceDefinitionId.toLowerCase():
-            var companiesAdminstrationStageId =BPFs.FinancialComplainInternalPilgrimspostHajj.stages.companiesAdminstration.id.toLowerCase();
+            var companiesAdminstrationStageId =
+                BPFs.FinancialComplainInternalPilgrimspostHajj.stages.companiesAdminstration.id.toLowerCase();
             var qualityStageId = BPFs.FinancialComplainInternalPilgrimspostHajj.stages.quality.id.toLowerCase();
             var socialMediaStageId = BPFs.FinancialComplainInternalPilgrimspostHajj.stages.socialMedia.id.toLowerCase();
             var supervisorStageId = BPFs.FinancialComplainInternalPilgrimspostHajj.stages.supervisor.id.toLowerCase();
@@ -1942,30 +2059,48 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             break;
 
         case ServiceType.FinancialCompensationComplain.serviceDefinitionId.toLowerCase():
-            var umrahsCompanyServiceStageId =
-                BPFs.FinancialCompensationComplain.stages.ministrySHajjAgency.id.toLowerCase();
+            var ministrySHajjAgency = BPFs.FinancialCompensationComplain.stages.ministrySHajjAgency.id.toLowerCase();
             var qualityStageId = BPFs.FinancialCompensationComplain.stages.quality.id.toLowerCase();
+            var socialMediaStageId = BPFs.FinancialCompensationComplain.stages.socialMedia.id.toLowerCase();
+            var supervisorStageId = BPFs.FinancialCompensationComplain.stages.supervisor.id.toLowerCase();
 
-            if (currentStageId === umrahsCompanyServiceStageId) {
+            if (currentStageId === socialMediaStageId) {
+                GeneralSocialMediaDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_socialMediaDecisioncode).addOnChange(function () {
+                    GeneralSocialMediaDecision_OnChange(executionContext);
+                });
+            }
+            if (currentStageId === ministrySHajjAgency) {
                 FinancialCompensationComplain_MinistrySHajjAgencyStageDecision_OnChange(executionContext);
                 formContext.getAttribute(caseFields.ldv_ministryshajjagencydecisisoncode).addOnChange(function () {
                     FinancialCompensationComplain_MinistrySHajjAgencyStageDecision_OnChange(executionContext);
                 });
             }
 
+            if (currentStageId === supervisorStageId) {
+                GeneralSuperVisorDecision_OnChange(executionContext);
+
+                formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
+                    GeneralSuperVisorDecision_OnChange(executionContext);
+                });
+            }
+
             if (currentStageId === qualityStageId) {
                 GeneralQualityStageDecisionR2_OnChange(executionContext);
+
                 formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
                     GeneralQualityStageDecisionR2_OnChange(executionContext);
                 });
             }
+
             break;
 
         case ServiceType.TechnicalComplainMomentaryUmrahForCompanies.serviceDefinitionId.toLowerCase():
             var umrahsCompanyServiceStageId =
                 BPFs.TechnicalComplainMomentaryUmrahForCompanies.stages.umrahsCompanyService.id.toLowerCase();
             var qualityStageId = BPFs.TechnicalComplainMomentaryUmrahForCompanies.stages.quality.id.toLowerCase();
-            var socialMediaStageId = BPFs.TechnicalComplainMomentaryUmrahForCompanies.stages.socialMedia.id.toLowerCase();
+            var socialMediaStageId =
+                BPFs.TechnicalComplainMomentaryUmrahForCompanies.stages.socialMedia.id.toLowerCase();
             var supervisorStageId = BPFs.TechnicalComplainMomentaryUmrahForCompanies.stages.supervisor.id.toLowerCase();
 
             if (currentStageId === socialMediaStageId) {
@@ -2050,7 +2185,6 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                 formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
                     TechnicalComplainMomentaryUmrah_Quality2StageDecision_OnChange(executionContext);
                 });
-
             }
             if (currentStageId === quality3StageId) {
                 TechnicalComplainMomentaryUmrah_Quality3StageDecision_OnChange(executionContext);
@@ -2069,30 +2203,63 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                 TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(executionContext);
                 formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
                     TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(executionContext);
-
                 });
             }
             if (currentStageId === supervisor3StageId) {
                 TechnicalComplainMomentryUmrah_Supervisor3Stage_Onchange(executionContext);
                 formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
                     TechnicalComplainMomentryUmrah_Supervisor3Stage_Onchange(executionContext);
-
                 });
             }
- 
+
             break;
 
         case ServiceType.Inquiry.serviceDefinitionId.toLowerCase():
-            var qualityStageId = BPFs.Inquiry.stages.quality.id.toLowerCase();
+            var socialMediaStageId = BPFs.Inquiry.stages.socialMedia.id.toLowerCase();
+            var quality1_StageId = BPFs.Inquiry.stages.quality.id.toLowerCase();
+            var quality2_StageId = BPFs.Inquiry.stages.quality2.id.toLowerCase();
+            var supervisor1_StageId = BPFs.Inquiry.stages.supervisor.id.toLowerCase();
+            var supervisor2_StageId = BPFs.Inquiry.stages.supervisor2.id.toLocaleLowerCase();
+            var submit_StageId = BPFs.Inquiry.stages.submit.id.toLowerCase();
 
-            if (currentStageId === qualityStageId) {
+            //Submit
+            if (currentStageId === submit_StageId) {
+                unLockCategoryFieldsOnInquiry(formContext);
+            }
+            //Social Media
+            else if (currentStageId === socialMediaStageId) {
+                socialMediaDecision_Inquiry_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_socialMediaDecisioncode).addOnChange(function () {
+                    socialMediaDecision_Inquiry_OnChange(executionContext);
+                });
+                unLockCategoryFieldsOnInquiry(formContext);
+            }//Quality1
+            else if (currentStageId === quality1_StageId) {
                 Inquiry_QualityStageDecision_OnChange(executionContext);
-                formContext.getAttribute(caseFields.ldv_qualityofficerdecisioncode2).addOnChange(function () {
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
                     Inquiry_QualityStageDecision_OnChange(executionContext);
                 });
-                unLockFieldsOnQualityStageInquiry(formContext);
-            }
-
+                unLockCategoryFieldsOnInquiry(formContext);
+            }//Quality2
+            else if (currentStageId === quality2_StageId) {
+                Inquiry_QualityStageDecision2_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
+                    Inquiry_QualityStageDecision2_OnChange(executionContext);
+                });
+                unLockCategoryFieldsOnInquiry(formContext);
+            }//Supervisor1
+            else if (currentStageId === supervisor1_StageId) {
+                supervisorDecision_Inquiry_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_supervisorDesision2).addOnChange(function () {
+                    supervisorDecision_Inquiry_OnChange(executionContext);
+                });
+            }//supervisor2
+            else if (currentStageId === supervisor2_StageId) {
+                supervisorDecision2_Inquiry_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_supervisorDesision2).addOnChange(function () {
+                    supervisorDecision2_Inquiry_OnChange(executionContext);
+                });
+            };
             break;
 
         case ServiceType.Suggestions.serviceDefinitionId.toLowerCase():
@@ -2101,18 +2268,11 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             var suggestionQuality2_StageId = BPFs.Suggestions.stages.quality_2.id.toLowerCase();
             var suggestionSocialMediaStageId = BPFs.Suggestions.stages.socialMedia.id.toLocaleLowerCase();
 
-
-
             if (currentStageId === suggestionSocialMediaStageId) {
-
                 SocialMediaDecision_Suggestion_OnChange(executionContext);
-
                 formContext.getAttribute(caseFields.ldv_socialMediaDecisioncode).addOnChange(function () {
-
                     SocialMediaDecision_Suggestion_OnChange(executionContext);
-
                 });
-
             }
             if (currentStageId === suggestionQualityStageId) {
                 ShowNextStage(executionContext);
@@ -2144,6 +2304,14 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             var tcMomentaryHajjCoordinationCouncilStageId =
                 BPFs.TechnicalComplainMomentaryHajj.stages.CoordinationCouncil.id.toLowerCase();
             var tcMomentaryHajjResolvedStageId = BPFs.TechnicalComplainMomentaryHajj.stages.Resolved.id.toLowerCase();
+            var tcMomentaryHajjSocialMediaStageId = BPFs.TechnicalComplainMomentaryHajj.stages.SocialMedia.id.toLowerCase();
+            var tcMomentaryHajjSupervisor1StageId = BPFs.TechnicalComplainMomentaryHajj.stages.Supervisor.id.toLowerCase();
+            var tcMomentaryHajjSupervisor2StageId = BPFs.TechnicalComplainMomentaryHajj.stages.Supervisor2.id.toLowerCase();
+            var tcMomentaryHajjSupervisor3StageId = BPFs.TechnicalComplainMomentaryHajj.stages.Supervisor3.id.toLowerCase();
+            var tcMomentaryHajjSupervisor4StageId = BPFs.TechnicalComplainMomentaryHajj.stages.Supervisor4.id.toLowerCase();
+            var tcMomentaryHajjQuality2StageId = BPFs.TechnicalComplainMomentaryHajj.stages.Quality2.id.toLowerCase();
+            var tcMomentaryHajjQuality3StageId = BPFs.TechnicalComplainMomentaryHajj.stages.Quality3.id.toLowerCase();
+            var tcMomentaryHajjQuality4StageId = BPFs.TechnicalComplainMomentaryHajj.stages.Quality4.id.toLowerCase();
 
             if (currentStageId === tcMomentaryHajjQualityStageId) {
                 GeneralQualityStageDecisionR2_OnChange(executionContext);
@@ -2181,16 +2349,72 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                     CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true); // Lock the Beneficiary Type Field
                 }
             }
+            if (currentStageId === tcMomentaryHajjSocialMediaStageId) {
+                GeneralSocialMediaDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_socialMediaDecisioncode).addOnChange(function () {
+                    GeneralSocialMediaDecision_OnChange(executionContext);
+                });
+            }
+            if (currentStageId === tcMomentaryHajjSupervisor1StageId) {
+                GeneralSuperVisorDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
+                    GeneralSuperVisorDecision_OnChange(executionContext);
+                });
+            }
+            if (currentStageId === tcMomentaryHajjSupervisor2StageId) {
+                TechnicalComplainMomentryHajj_Supervisor_Stage_Onchange(executionContext, '_1');
+                formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentryHajj_Supervisor_Stage_Onchange(executionContext, '_1');
+                });
+            }
+            if (currentStageId === tcMomentaryHajjSupervisor3StageId) {
+                TechnicalComplainMomentryHajj_Supervisor_Stage_Onchange(executionContext, '_2');
+                formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentryHajj_Supervisor_Stage_Onchange(executionContext, '_2');
+                });
+            }
+            if (currentStageId === tcMomentaryHajjSupervisor4StageId) {
+                TechnicalComplainMomentryHajj_Supervisor_Stage_Onchange(executionContext, '_3');
+                formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentryHajj_Supervisor_Stage_Onchange(executionContext, '_3');
+                });
+            }
+            if (currentStageId === tcMomentaryHajjQuality2StageId) {
+                TechnicalComplainMomentaryHajj_Quality_StageDecision_OnChange(executionContext, '_1');
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentaryHajj_Quality_StageDecision_OnChange(executionContext, '_1');
+                });
+            }
+            if (currentStageId === tcMomentaryHajjQuality3StageId) {
+                TechnicalComplainMomentaryHajj_Quality_StageDecision_OnChange(executionContext, '_2');
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentaryHajj_Quality_StageDecision_OnChange(executionContext, '_2');
+                });
+            }
+            if (currentStageId === tcMomentaryHajjQuality4StageId) {
+                TechnicalComplainMomentaryHajj_Quality_StageDecision_OnChange(executionContext, '_3');
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentaryHajj_Quality_StageDecision_OnChange(executionContext, '_3');
+                });
+            }
             break;
 
         case ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase():
         case ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase():
             var notMomentaryHijjAndUmarahQualityStageId =
                 BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Quality.id.toLowerCase();
+            var notMomentaryHijjAndUmarahQuality1StageId =
+                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Quality1.id.toLowerCase();
             var notMomentaryHijjAndUmarahUmrahStageId =
                 BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Umrah.id.toLowerCase();
             var notMomentaryHijjAndUmarahHajjStageId =
                 BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Hajj.id.toLowerCase();
+            var notMomentaryHijjAndUmarahSocialMediaId =
+                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.SocialMedia.id.toLowerCase();
+            var notMomentaryHijjAndUmarahSupervisorStageId =
+                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Supervisor.id.toLowerCase();
+            var notMomentaryHijjAndUmarahSupervisor1StageId =
+                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Supervisor1.id.toLowerCase();
 
             if (currentStageId === notMomentaryHijjAndUmarahHajjStageId) {
                 TechnicalComplainNotMomentaryHijjAndUmarah_HajjDecision_OnChange(executionContext);
@@ -2213,6 +2437,33 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                 });
             }
 
+            if (currentStageId === notMomentaryHijjAndUmarahQuality1StageId) {
+                TechnicalComplainMomentryUmrah_Quality2Stage_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentryUmrah_Quality2Stage_OnChange(executionContext);
+                });
+            }
+
+            if (currentStageId === notMomentaryHijjAndUmarahSocialMediaId) {
+                GeneralSocialMediaDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_socialMediaDecisioncode).addOnChange(function () {
+                    GeneralSocialMediaDecision_OnChange(executionContext);
+                });
+            }
+
+            if (currentStageId === notMomentaryHijjAndUmarahSupervisorStageId) {
+                GeneralSuperVisorDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
+                    GeneralSuperVisorDecision_OnChange(executionContext);
+                });
+            }
+
+            if (currentStageId === notMomentaryHijjAndUmarahSupervisor1StageId) {
+                TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(executionContext);
+                formContext.getAttribute(caseFields.ldv_supervisordecisioncode).addOnChange(function () {
+                    TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(executionContext)
+                });
+            }
             break;
 
         case ServiceType.BusinessSectorComplain.serviceDefinitionId.toLowerCase():
@@ -2224,22 +2475,23 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             var quality2StageId = BPFs.RequestComplainsIntegration.stages.Quality2.id.toLowerCase();
             var quality3StageId = BPFs.RequestComplainsIntegration.stages.Quality3.id.toLowerCase();
             var FCRStageId = BPFs.RequestComplainsIntegration.stages.FCR.id.toLowerCase();
+            var socialMediaStageId = BPFs.RequestComplainsIntegration.stages.SocialMedia.id.toLowerCase();
             if (currentStageId === qualityStageId) {
-                IntegrationServices_QualityDecision_OnChange(executionContext);
-                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
-                    IntegrationServices_QualityDecision_OnChange(executionContext);
-                });
-            }
-            if (currentStageId === quality2StageId) {
                 GeneralQualityStageDecisionR2_OnChange(executionContext);
                 formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
                     GeneralQualityStageDecisionR2_OnChange(executionContext);
                 });
             }
-            if (currentStageId === quality3StageId) {
+            if (currentStageId === quality2StageId) {
                 IntegrationServices_Quality3Decision_OnChange(executionContext);
                 formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
                     IntegrationServices_Quality3Decision_OnChange(executionContext);
+                });
+            }
+            if (currentStageId === quality3StageId) {
+                IntegrationServices_QualityDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_qualitydecisioncode).addOnChange(function () {
+                    IntegrationServices_QualityDecision_OnChange(executionContext);
                 });
             }
 
@@ -2247,6 +2499,13 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                 IntegrationServices_IsFCR_OnChange(executionContext);
                 formContext.getAttribute(caseFields.ldv_isfcr).addOnChange(function () {
                     IntegrationServices_IsFCR_OnChange(executionContext);
+                });
+            }
+            if (currentStageId == socialMediaStageId) {
+                debugger;
+                GeneralSocialMediaDecision_OnChange(executionContext);
+                formContext.getAttribute(caseFields.ldv_socialMediaDecisioncode).addOnChange(function () {
+                    GeneralSocialMediaDecision_OnChange(executionContext);
                 });
             }
             break;
@@ -2294,7 +2553,7 @@ function GetDecisionsBasedOnService_OnLoad(formContext) {
 
         case ServiceType.Suggestions.serviceDefinitionId.toLowerCase():
             Suggestions_OnLoad(formContext);
-            HideFieldsOnSubmitStageSuggestion(formContext);
+            HideOriginOnSubmitStage(formContext);
             break;
 
         case ServiceType.TechnicalComplainMomentaryHajj.serviceDefinitionId.toLowerCase():
@@ -2381,6 +2640,9 @@ function FinancialCompensationComplain_OnLoad(formContext) {
         ministryHajjClosureReasonOnBpf
     );
     GeneralQualityStageDecisionR2_OnLoad(formContext);
+    GeneralSocialMediaDecision_OnLoad(formContext);
+
+    GeneralSupervisorDecision_OnLoad(formContext);
 }
 
 //#endregion
@@ -2460,7 +2722,8 @@ function TechnicalComplainMomentaryUmrah_Quality2StageDecision_OnChange(executio
         executionContext,
         caseFields.ldv_qualitydecisioncode,
         quality2NeededInformationOnBpf,
-        quality2ClosureReasonOnBpf);
+        quality2ClosureReasonOnBpf
+    );
 }
 
 function TechnicalComplainMomentaryUmrah_Quality3StageDecision_OnChange(executionContext) {
@@ -2470,7 +2733,22 @@ function TechnicalComplainMomentaryUmrah_Quality3StageDecision_OnChange(executio
         executionContext,
         caseFields.ldv_qualitydecisioncode,
         quality3NeededInformationOnBpf,
-        quality3ClosureReasonOnBpf);
+        quality3ClosureReasonOnBpf
+    );
+}
+function TechnicalComplainMomentaryHajj_Quality_StageDecision_OnChange(executionContext, number) {
+    var qualityClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + number;
+    var qualityNeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + number;
+    DepartmentQualityDecisionForR2_OnChange(
+        executionContext,
+        caseFields.ldv_qualitydecisioncode,
+        qualityNeededInformationOnBpf,
+        qualityClosureReasonOnBpf
+    );
+}
+function TechnicalComplainMomentryHajj_Supervisor_Stage_Onchange(executionContext, number) {
+    var supervisorCommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + number;
+    SupervisorDecision_OnChange(executionContext, caseFields.ldv_supervisordecisioncode, supervisorCommentOnBpf);
 }
 function TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(executionContext) {
     var supervisor2CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_1';
@@ -2527,41 +2805,72 @@ function TechnicalComplainMomentaryUmrah_OnLoad(formContext) {
     GeneralSupervisorDecision_OnLoad(formContext);
     SupervisorDecision_OnLoad(formContext, caseFields.ldv_supervisordecisioncode, supervisor2CommentOnBpf);
     SupervisorDecision_OnLoad(formContext, caseFields.ldv_supervisordecisioncode, supervisor3CommentOnBpf);
-    DepartmentQualityDecisionForR2_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, quality2NeededInformationOnBpf, quality2ClosureReasonOnBpf);
-    DepartmentQualityDecisionForR2_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, quality3NeededInformationOnBpf, quality3ClosureReasonOnBpf);
-
+    DepartmentQualityDecisionForR2_OnLoad(
+        formContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality2NeededInformationOnBpf,
+        quality2ClosureReasonOnBpf
+    );
+    DepartmentQualityDecisionForR2_OnLoad(
+        formContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality3NeededInformationOnBpf,
+        quality3ClosureReasonOnBpf
+    );
 }
-
-
 
 //#endregion
 
 // #region Inquiry
+//Quality 1
 function Inquiry_QualityStageDecision_OnChange(executionContext) {
-    var qualityClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason;
-    var transferReasonOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformation2;
+    var ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason;
+    var transferReasonOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations;
 
-    DepartmentDecision_OnChange(
+    QualityDecision_R2_OnChange(
         executionContext,
-        caseFields.ldv_qualityofficerdecisioncode2,
-        transferReasonOnBpf,
-        qualityClosureReasonOnBpf
+        caseFields.ldv_qualitydecisioncode,
+        ClosureReasonOnBpf,
+        transferReasonOnBpf
     );
 }
 
 function Inquiry_QualityStageDecision_OnLoad(formContext) {
-    var qualityClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason;
-    var transferReasonOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformation2;
+    var ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason;
+    var transferReasonOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations;
 
-    DepartmentDecision_OnLoad(
+    QualityDecision_R2_OnLoad(
         formContext,
-        caseFields.ldv_qualityofficerdecisioncode2,
-        transferReasonOnBpf,
-        qualityClosureReasonOnBpf
+        caseFields.ldv_qualitydecisioncode,
+        ClosureReasonOnBpf,
+        transferReasonOnBpf
+    );
+}
+//Quality 2
+function Inquiry_QualityStageDecision2_OnChange(executionContext) {
+    var ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
+    var transferReasonOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
+
+    QualityDecision_R2_OnChange(
+        executionContext,
+        caseFields.ldv_qualitydecisioncode,
+        ClosureReasonOnBpf,
+        transferReasonOnBpf
     );
 }
 
-function unLockFieldsOnQualityStageInquiry(formContext) {
+function Inquiry_QualityStageDecision2_OnLoad(formContext) {
+    var ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
+    var transferReasonOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
+
+    QualityDecision_R2_OnLoad(
+        formContext,
+        caseFields.ldv_qualitydecisioncode,
+        ClosureReasonOnBpf,
+        transferReasonOnBpf
+    );
+}
+function unLockCategoryFieldsOnInquiry(formContext) {
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
     var currentStage = formContext.data.process.getActiveStage();
 
@@ -2574,6 +2883,7 @@ function unLockFieldsOnQualityStageInquiry(formContext) {
         var serviceId = service.id.replace('{', '').replace('}', '').toLowerCase();
         var currentStageId = currentStage.getId().toLowerCase();
         var qualityStageId = BPFs.Inquiry.stages.quality.id.toLowerCase();
+        var qualityStageId2 = BPFs.Inquiry.stages.quality2.id.toLowerCase();
 
         if (serviceId === ServiceType.Inquiry.serviceDefinitionId.toLowerCase()) {
             CommonGeneric.LockUnlock_field1_BasedOn_field2_Emptiness(
@@ -2591,7 +2901,7 @@ function unLockFieldsOnQualityStageInquiry(formContext) {
                 caseFields.ldv_secondarysubcategoryid,
                 caseFields.ldv_subcategoryid
             );
-            if (currentStageId === qualityStageId) {
+            if (currentStageId === qualityStageId || currentStageId === qualityStageId2) {
                 //Set Main Category Required in stage Quality
                 CommonGeneric.SetReqLevel(formContext, caseFields.ldv_maincategoryid, true);
                 CommonGeneric.SetReqLevel(formContext, caseFields.ldv_subcategoryid, true);
@@ -2601,6 +2911,36 @@ function unLockFieldsOnQualityStageInquiry(formContext) {
     }
 }
 
+//
+function socialMediaDecision_Inquiry_OnLoad(formContext) {
+    var socialMediaCommentOnBpf = 'header_process_' + caseFields.ldv_socialMediaComment;
+
+    SocialMediaDecision_OnLoad(
+        formContext,
+        caseFields.ldv_socialMediaDecisioncode,
+        socialMediaCommentOnBpf
+    );
+}
+
+function socialMediaDecision_Inquiry_OnChange(executionContext) {
+    var socialMediaCommentOnBpf = 'header_process_' + caseFields.ldv_socialMediaComment;
+
+    SocialMediaDecision_OnChange(
+        executionContext,
+        caseFields.ldv_socialMediaDecisioncode,
+        socialMediaCommentOnBpf
+    );
+}
+//Supervisor1
+function supervisorDecision_Inquiry_OnChange(executionContext) {
+    var supervisorCommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment;
+    InquirySupervisorDecision_R2_OnChange(executionContext, caseFields.ldv_supervisorDesision2, supervisorCommentOnBpf);
+}
+//Supervisor2
+function supervisorDecision2_Inquiry_OnChange(executionContext) {
+    var supervisorCommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_1';
+    InquirySupervisorDecision_R2_OnChange(executionContext, caseFields.ldv_supervisorDesision2, supervisorCommentOnBpf);
+}
 //#endregion
 
 // #region Suggestions
@@ -2608,7 +2948,7 @@ function Suggestions_ConcernedDepartmentDecision_OnChange(executionContext) {
     var suggestionsCDNeededInfoOnBpf = 'header_process_' + caseFields.ldv_departmentneededinformation;
     var suggestionCDClosureReason = 'header_process_' + caseFields.ldv_departmentclosurereason;
 
-    DepartmentDecision_OnChange(
+    ConcernedDepartmentDecisionR2_OnChange(
         executionContext,
         caseFields.ldv_departmentdecisioncode,
         suggestionsCDNeededInfoOnBpf,
@@ -2617,42 +2957,30 @@ function Suggestions_ConcernedDepartmentDecision_OnChange(executionContext) {
 }
 
 function SocialMediaDecision_Suggestion_OnLoad(formContext) {
-
     var socialMediaCommentOnBpf = 'header_process_' + caseFields.ldv_socialMediaComment;
 
-
-
     SocialMediaDecision_OnLoad(
-
         formContext,
-
         caseFields.ldv_socialMediaDecisioncode,
-
-        socialMediaCommentOnBpf);
-
+        socialMediaCommentOnBpf
+    );
 }
 
-
-
 function SocialMediaDecision_Suggestion_OnChange(executionContext) {
-
     var socialMediaCommentOnBpf = 'header_process_' + caseFields.ldv_socialMediaComment;
 
     SocialMediaDecision_OnChange(
-
         executionContext,
-
         caseFields.ldv_socialMediaDecisioncode,
-
-        socialMediaCommentOnBpf);
-
+        socialMediaCommentOnBpf
+    );
 }
 
 function Suggestions_OnLoad(formContext) {
     var suggestionsCDNeededInfoOnBpf = 'header_process_' + caseFields.ldv_departmentneededinformation;
     var suggestionCDClosureReason = 'header_process_' + caseFields.ldv_departmentclosurereason;
 
-    DepartmentDecision_OnLoad(
+    ConcernedDepartmentDecisionR2_OnLoad(
         formContext,
         caseFields.ldv_departmentdecisioncode,
         suggestionsCDNeededInfoOnBpf,
@@ -2666,6 +2994,43 @@ function Suggestions_OnLoad(formContext) {
 // #region TC-Momentary Hajj
 function TechnicalComplainMomentaryHajj_OnLoad(formContext) {
     GeneralQualityStageDecisionR2_OnLoad(formContext);
+    GeneralSocialMediaDecision_OnLoad(formContext);
+    GeneralSupervisorDecision_OnLoad(formContext);
+
+    var quality2ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
+    var quality2NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
+
+    var quality3ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_2';
+    var quality3NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_2';
+
+    var quality4ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_3';
+    var quality4NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_3';
+
+    var supervisor2CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_1';
+    var supervisor3CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_2';
+    var supervisor4CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_3';
+
+    DepartmentQualityDecisionForR2_OnLoad(
+        formContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality2NeededInformationOnBpf,
+        quality2ClosureReasonOnBpf
+    );
+    DepartmentQualityDecisionForR2_OnLoad(
+        formContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality3NeededInformationOnBpf,
+        quality3ClosureReasonOnBpf
+    );
+    DepartmentQualityDecisionForR2_OnLoad(
+        formContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality4NeededInformationOnBpf,
+        quality4ClosureReasonOnBpf
+    );
+    SupervisorDecision_OnLoad(formContext, caseFields.ldv_supervisordecisioncode, supervisor2CommentOnBpf);
+    SupervisorDecision_OnLoad(formContext, caseFields.ldv_supervisordecisioncode, supervisor3CommentOnBpf);
+    SupervisorDecision_OnLoad(formContext, caseFields.ldv_supervisordecisioncode, supervisor4CommentOnBpf);
 
     var needInfoOnBpfMadina = 'header_process_' + caseFields.ldv_castingofficerneededinformation;
     var closureReasonOnBpfMadina = 'header_process_' + caseFields.ldv_closurereasons + '_2';
@@ -2757,6 +3122,9 @@ function TechnicalComplainNotMomentaryHijjAndUmarah_OnLoad(formContext) {
 
     var needInfoOnBpfHajj = 'header_process_' + caseFields.ldv_ministryshajjagencyneededinformation;
     var closureReasonOnBpfHajj = 'header_process_' + caseFields.ldv_closurereasons;
+    var supervisor2CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_1';
+    var qualityClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
+    var qualityNeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
     DepartmentDecision_OnLoad(
         formContext,
         caseFields.ldv_ministryshajjagencydecisisoncode,
@@ -2772,6 +3140,11 @@ function TechnicalComplainNotMomentaryHijjAndUmarah_OnLoad(formContext) {
         needInfoOnBpfUmarah,
         closureReasonOnBpfUmarah
     );
+    GeneralSocialMediaDecision_OnLoad(formContext);
+    GeneralSupervisorDecision_OnLoad(formContext);
+    SupervisorDecision_OnLoad(formContext, caseFields.ldv_supervisordecisioncode, supervisor2CommentOnBpf);
+    DepartmentQualityDecisionForR2_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, qualityNeededInformationOnBpf, qualityClosureReasonOnBpf);
+
 }
 
 function TechnicalComplainNotMomentaryHijjAndUmarah_HajjDecision_OnChange(executionContext) {
@@ -2795,6 +3168,22 @@ function TechnicalComplainNotMomentaryHijjAndUmarah_UmarahDecision_OnChange(exec
     );
 }
 
+function TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(executionContext) {
+    var supervisor2CommentOnBpf = 'header_process_' + caseFields.ldv_supervisorcomment + '_1';
+    SupervisorDecision_OnChange(executionContext, caseFields.ldv_supervisordecisioncode, supervisor2CommentOnBpf);
+}
+
+function TechnicalComplainMomentryUmrah_Quality2Stage_OnChange(executionContext) {
+    var qualityClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
+    var qualityNeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
+    DepartmentQualityDecisionForR2_OnChange(
+        executionContext,
+        caseFields.ldv_qualitydecisioncode,
+        qualityNeededInformationOnBpf,
+        qualityClosureReasonOnBpf);
+
+}
+
 //#endregion
 
 //#region Integration Services
@@ -2803,18 +3192,23 @@ function TechnicalComplainNotMomentaryHijjAndUmarah_UmarahDecision_OnChange(exec
 
 function IntegrationServices_QualityDecision_OnChange(executionContext) {
     var quality2ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_2';
-    DepartmentQualityDecision_OnChange(
+    var qualityNeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_2';
+
+    DepartmentQualityDecisionForR2_OnChange(
         executionContext,
         caseFields.ldv_qualitydecisioncode,
+        qualityNeededInformationOnBpf,
         quality2ClosureReasonOnBpf
     );
 }
 
 function IntegrationServices_Quality3Decision_OnChange(executionContext) {
     var quality3ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
-    DepartmentQualityDecision_OnChange(
+    var qualityNeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
+    DepartmentQualityDecisionForR2_OnChange(
         executionContext,
         caseFields.ldv_qualitydecisioncode,
+        qualityNeededInformationOnBpf,
         quality3ClosureReasonOnBpf
     );
 }
@@ -2836,11 +3230,25 @@ function IntegrationServices_IsFCR_OnChange(executionContext) {
 function IntegrationServices_OnLoad(formContext) {
     var quality2ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_2';
     var quality3ClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason + '_1';
-    var qualityClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason;
+    // var qualityClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason;
+    var quality2NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_2';
+    var quality1NeededInformationOnBpf = 'header_process_' + caseFields.ldv_qualityofficerneededinformations + '_1';
 
-    DepartmentQualityDecision_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, quality2ClosureReasonOnBpf);
-    DepartmentQualityDecision_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, quality3ClosureReasonOnBpf);
-    DepartmentQualityDecision_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, qualityClosureReasonOnBpf);
+    DepartmentQualityDecisionForR2_OnLoad(
+        formContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality2NeededInformationOnBpf,
+        quality2ClosureReasonOnBpf
+    );
+    DepartmentQualityDecisionForR2_OnLoad(
+        formContext,
+        caseFields.ldv_qualitydecisioncode,
+        quality1NeededInformationOnBpf,
+        quality3ClosureReasonOnBpf
+    );
+    // DepartmentQualityDecisionForR2_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, qualityClosureReasonOnBpf);
+    GeneralQualityStageDecisionR2_OnLoad(formContext);
+    GeneralSocialMediaDecision_OnLoad(formContext);
 }
 
 //#endregion
@@ -2856,7 +3264,6 @@ function QualityStageDecisionR1_OnLoad(formContext) {
     DepartmentQualityDecision_OnLoad(formContext, caseFields.ldv_qualitydecisioncode, qualityClosureReasonOnBpf);
 }
 
-
 ///R2 Quality
 function GeneralQualityStageDecisionR2_OnChange(executionContext) {
     var qualityClosureReasonOnBpf = 'header_process_' + caseFields.ldv_closurereason;
@@ -2865,8 +3272,8 @@ function GeneralQualityStageDecisionR2_OnChange(executionContext) {
         executionContext,
         caseFields.ldv_qualitydecisioncode,
         qualityNeededInformationOnBpf,
-        qualityClosureReasonOnBpf);
-
+        qualityClosureReasonOnBpf
+    );
 }
 
 function GeneralQualityStageDecisionR2_OnLoad(formContext) {
@@ -2876,7 +3283,8 @@ function GeneralQualityStageDecisionR2_OnLoad(formContext) {
         formContext,
         caseFields.ldv_qualitydecisioncode,
         qualityNeededInformationOnBpf,
-        qualityClosureReasonOnBpf);
+        qualityClosureReasonOnBpf
+    );
 }
 
 // General Social Media method
@@ -2905,7 +3313,7 @@ function GeneralSupervisorDecision_OnLoad(formContext) {
 
 // #region Common Functions For Decisions
 
-//show next button in all cases 
+//show next button in all cases
 function DepartmentDecision_OnChange(
     executionContext,
     decisionSchemaName,
@@ -3022,7 +3430,89 @@ function DepartmentDecision_OnLoad(
         }
     }
 }
+//Concerned Department Decision >>> Show Back if Need more Details and next if Resolve
+function ConcernedDepartmentDecisionR2_OnChange(
+    executionContext,
+    decisionSchemaName,
+    needInformationSchemaNameOnBpf,
+    closureReasonSchemaNameOnBpf
+) {
+    var formContext = executionContext.getFormContext();
+    if (!decisionSchemaName || !needInformationSchemaNameOnBpf || !closureReasonSchemaNameOnBpf) {
+        console.error('One or more parameters are null or undefined.');
+        return;
+    }
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+    var needInfoSchemaNameOnForm = GetLogicalFieldName(formContext, needInformationSchemaNameOnBpf);
+    var closureReasonSchemaNameOnForm = GetLogicalFieldName(formContext, closureReasonSchemaNameOnBpf);
 
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(formContext, needInformationSchemaNameOnBpf, false, false);
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+        if (needInfoSchemaNameOnForm) {
+            CommonGeneric.ShowAndReuiredField(formContext, needInfoSchemaNameOnForm, false, false);
+        }
+    }
+
+    if (decision === caseFields.Enums.departmentDecision.closeTheTicket) {
+        //Close
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, true, true);
+        CommonGeneric.ShowAndReuiredField(formContext, needInformationSchemaNameOnBpf, false, false);
+        if (needInfoSchemaNameOnForm) {
+            CommonGeneric.EmptyField(formContext, needInfoSchemaNameOnForm);
+            CommonGeneric.ShowAndReuiredField(formContext, needInfoSchemaNameOnForm, false, false);
+        }
+        ShowNextStage(executionContext);
+    } else if (decision === caseFields.Enums.departmentDecision.needMoreDetails) {
+        //more Information
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(formContext, needInformationSchemaNameOnBpf, true, true);
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+        if (closureReasonSchemaNameOnForm) {
+            CommonGeneric.EmptyField(formContext, closureReasonSchemaNameOnForm);
+        }
+        if (needInfoSchemaNameOnForm) {
+            CommonGeneric.ShowAndReuiredField(formContext, needInfoSchemaNameOnForm, true, true);
+        }
+
+        ShowPreviousStage(executionContext);
+        //HideUCIButtons();
+    }
+}
+function ConcernedDepartmentDecisionR2_OnLoad(
+    formContext,
+    decisionSchemaName,
+    needInformationSchemaNameOnBpf,
+    closureReasonSchemaNameOnBpf
+) {
+    if (!decisionSchemaName || !needInformationSchemaNameOnBpf || !closureReasonSchemaNameOnBpf) {
+        console.error('One or more parameters are null or undefined.');
+        return;
+    }
+
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(formContext, needInformationSchemaNameOnBpf, false, false);
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+    }
+
+    if (decision === caseFields.Enums.departmentDecision.closeTheTicket) {
+        //Close
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, true, true);
+        CommonGeneric.ShowAndReuiredField(formContext, needInformationSchemaNameOnBpf, false, false);
+    } else if (decision === caseFields.Enums.departmentDecision.needMoreDetails) {
+        //more Information
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(formContext, needInformationSchemaNameOnBpf, true, true);
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+    }
+}
 //in all choises >> show next button to go to the next stage
 function DepartmentQualityDecision_OnChange(executionContext, decisionSchemaName, closureReasonSchemaNameOnBpf) {
     var formContext = executionContext.getFormContext();
@@ -3075,8 +3565,7 @@ function SocialMediaDecision_OnChange(executionContext, decisionSchemaName, comm
     if (decision === null || decision === undefined) {
         CommonGeneric.ShowAndReuiredField(formContext, commentSchemaNameOnBpf, false, false);
         return;
-    }
-    else {
+    } else {
         CommonGeneric.ShowAndReuiredField(formContext, commentSchemaNameOnBpf, false, true);
     }
 
@@ -3148,6 +3637,62 @@ function QualityOfficerDecision2_OnLoad(formContext, decisionSchemaName, closure
         //Trnasfer
 
         //In Stage
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+    }
+}
+//
+//in all choises >> show next button to go to the next stage [if transfer or resolve] go next  //inquiry
+function QualityDecision_R2_OnChange(executionContext, decisionSchemaName, closureReasonSchemaNameOnBpf, transferReasonSchemaNameonBpf) {
+    var formContext = executionContext.getFormContext();
+
+    if (!decisionSchemaName || !closureReasonSchemaNameOnBpf) {
+        console.error('One or more parameters are null or undefined.');
+        return;
+    }
+
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+        CommonGeneric.ShowAndReuiredField(formContext, transferReasonSchemaNameonBpf, false, false);
+        return;
+    }
+
+    // Show and set required status for Closure Reason field based on decision [Resolve]
+    if (decision === caseFields.Enums.qualityDecision.closeTheTicket) {
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, true, true);
+        CommonGeneric.ShowAndReuiredField(formContext, transferReasonSchemaNameonBpf, false, false);
+        ShowNextStage(executionContext);
+    }//Transfer Reason
+    else if (decision === caseFields.Enums.qualityDecision.needMoreDetails) {
+        CommonGeneric.ShowAndReuiredField(formContext, transferReasonSchemaNameonBpf, true, true);
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+        ShowNextStage(executionContext);
+    };
+}
+function QualityDecision_R2_OnLoad(formContext, decisionSchemaName, closureReasonSchemaNameOnBpf, transferReasonSchemaNameonBpf) {
+    if (!decisionSchemaName || !closureReasonSchemaNameOnBpf) {
+        console.error('One or more parameters are null or undefined.');
+        return;
+    }
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(formContext, transferReasonSchemaNameonBpf, false, false);
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+    }
+
+    if (decision === caseFields.Enums.qualityDecision.closeTheTicket) {
+        //Resolved
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, true, true);
+        CommonGeneric.ShowAndReuiredField(formContext, transferReasonSchemaNameonBpf, false, false);
+    } else if (decision === caseFields.Enums.qualityDecision.needMoreDetails) {
+        //Transfer
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(formContext, transferReasonSchemaNameonBpf, true, true);
         CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
     }
 }
@@ -3246,12 +3791,10 @@ function SupervisorDecision_OnChange(executionContext, decisionSchemaName, comme
     if (decision === null || decision === undefined) {
         CommonGeneric.ShowField(formContext, commentSchemaNameOnBpf, false, false);
         return;
-    }
-    else {
+    } else {
         CommonGeneric.ShowField(formContext, commentSchemaNameOnBpf, true, true);
         ShowPreviousStage(executionContext);
     }
-
 }
 
 function SupervisorDecision_OnLoad(formContext, decisionSchemaName, commentSchemaNameOnBpf) {
@@ -3267,6 +3810,43 @@ function SupervisorDecision_OnLoad(formContext, decisionSchemaName, commentSchem
     }
 }
 
+// supervisor >> show Next button [Close Ticket]
+function InquirySupervisorDecision_R2_OnChange(executionContext, decisionSchemaName, commentSchemaNameonBpf) {
+    var formContext = executionContext.getFormContext();
+
+    if (!decisionSchemaName || !commentSchemaNameonBpf) {
+        console.error('One or more parameters are null or undefined.');
+        return;
+    }
+
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(formContext, commentSchemaNameonBpf, false, false);
+        return;
+    }
+
+    if (decision === caseFields.Enums.supervisorDecision2.CloseTicket) {
+        CommonGeneric.ShowAndReuiredField(formContext, commentSchemaNameonBpf, true, true);
+        ShowNextStage(executionContext);
+    };
+}
+function InquirySupervisorDecision_R2_OnLoad(formContext, decisionSchemaName, commentSchemaNameonBpf) {
+    if (!decisionSchemaName || !commentSchemaNameonBpf) {
+        console.error('One or more parameters are null or undefined.');
+        return;
+    }
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(formContext, commentSchemaNameonBpf, false, false);
+    }
+    //Close Ticket
+    if (decision === caseFields.Enums.supervisorDecision2.CloseTicket) {
+        CommonGeneric.ShowAndReuiredField(formContext, commentSchemaNameonBpf, true, true);
+    }
+}
+//
 // #endregion
 
 // #endregion
@@ -3509,7 +4089,6 @@ ShowNextStageUCI = function (isVisible = true) {
 //};
 
 ShowPreviusButtonInUCI = function (isVisible = true) {
-
     try {
         setTimeout(function () {
             $(window.parent.document)
@@ -3538,25 +4117,36 @@ ShowPreviusButtonInUCI = function (isVisible = true) {
                         var previousButtonElementLabel = parent.document.getElementById(
                             'MscrmControls.Containers.ProcessStageControl-previousButtonContainerbuttonInnerContainer'
                         );
-                        var addedLabelElement = parent.document.getElementById("MOHUAddLabelPreviousStage");
+                        var addedLabelElement = parent.document.getElementById('MOHUAddLabelPreviousStage');
                         if (addedLabelElement == null) {
                             var Lang = Xrm.Page.context.getUserLcid();
                             if (Lang === 1033) {
-                                previousButtonElementLabel.innerHTML += "<label id='MOHUAddLabelPreviousStage' style='padding-left: 0.5em;cursor: inherit;'>Previous Stage</label>"
-                                previousButtonElement.style.marginRight = "50px";
+                                previousButtonElementLabel.innerHTML +=
+                                    "<label id='MOHUAddLabelPreviousStage' style='padding-left: 0.5em;cursor: inherit;'>Previous Stage</label>";
+                                previousButtonElement.style.marginRight = '50px';
 
-                            }
-                            else {
-                                previousButtonElementLabel.innerHTML += "<label id='MOHUAddLabelPreviousStage' style='padding-right: 0.5em;cursor: inherit;'>المرحلة السابقة</label>"
-                                previousButtonElement.style.marginLeft = "50px";
+                            } else {
+                                previousButtonElementLabel.innerHTML +=
+                                    "<label id='MOHUAddLabelPreviousStage' style='padding-right: 0.5em;cursor: inherit;'>المرحلة السابقة</label>";
+                                previousButtonElement.style.marginLeft = '50px';
 
                             }
                         }
-                        //previousButtonElement.style.width = "100%";
-                        previousButtonElement.style.width = "50%"; // Adjust width as needed
-                        previousButtonElement.style.height = "40px"; // Adjust height as needed
-                        previousButtonElement.style.display = "flex";
 
+                        var newLookButton = Array.from(parent.document.querySelectorAll('button'))
+                            .find(button => button.getAttribute('aria-label') === 'New look' || button.getAttribute('aria-label') === 'جرّب المظهر الجديد');
+
+                        if (newLookButton && newLookButton.getAttribute('aria-checked') === 'false') {
+                            previousButtonElement.style.width = '900%'; // Default width
+
+
+                        } else {
+                            previousButtonElement.style.width = '50%';
+                        }
+                        //previousButtonElement.style.width = "100%";
+                        //previousButtonElement.style.width = '50%'; // Adjust width as needed
+                        previousButtonElement.style.height = '40px'; // Adjust height as needed
+                        previousButtonElement.style.display = 'flex';
                     }
                     clearInterval(intervalForBackButton);
                 }
@@ -3715,18 +4305,30 @@ function PreventDefaultSetActiveAndBackOnPreChange(executionContext) {
     }
     //dont allow to go back using the Previous button
 
-//    if (eventArgs.getDirection() === 'Previous') {
-//        eventArgs.preventDefault();
-//        if (userLanguage === 1025) {
-//            Xrm.Utility.alertDialog('حركة المرحلة الخلفية غير مسموح بها.');
-//        } else {
-//            Xrm.Utility.alertDialog('Back stage movement is not allowed.');
-//        }
-//    }
+    //    if (eventArgs.getDirection() === 'Previous') {
+    //        eventArgs.preventDefault();
+    //        if (userLanguage === 1025) {
+    //            Xrm.Utility.alertDialog('حركة المرحلة الخلفية غير مسموح بها.');
+    //        } else {
+    //            Xrm.Utility.alertDialog('Back stage movement is not allowed.');
+    //        }
+    //    }
+    if (eventArgs.getDirection() === 'Previous') {
+        var previousButtonLabel = parent.document.getElementById('MOHUAddLabelPreviousStage');
+        if (previousButtonLabel == null) {
+            eventArgs.preventDefault();
+            if (userLanguage === 1025) {
+                Xrm.Utility.alertDialog('حركة المرحلة الخلفية غير مسموح بها.');
+            } else {
+                Xrm.Utility.alertDialog('Back stage movement is not allowed.');
+            }
+        }
+    }
 }
 
 //#region On Load Extensions
 var globalCompanyLookupControl;
+var globalFieldServiceOfficeControl;
 var globalBeneficiaryTypeControl;
 var serviceControl;
 var globalFormContext;
@@ -3736,6 +4338,7 @@ function onLoadExtension(formContext) {
     globalFormContext = formContext;
 
     globalCompanyLookupControl = getControl(formContext, caseFields.ldv_company);
+    globalFieldServiceOfficeControl = getControl(formContext, caseFields.ldv_fieldserviceofficeid);
     globalBeneficiaryTypeControl = getControl(formContext, caseFields.ldv_beneficiarytypecode);
     serviceControl = getControl(formContext, 'ldv_serviceid');
 
@@ -3748,11 +4351,13 @@ function onLoadExtension(formContext) {
 function addOnChangeEvents() {
     // addOnChangeEvent(serviceControl, handleServiceChange);
     // addOnChangeEvent(globalBeneficiaryTypeControl, handleBeneificiaryTypeChange);
+    addOnChangeEvent(globalCompanyLookupControl, handleCompanyChange);
 }
 
 function HandleFormUIOnLoad() {
     handleServiceChange(true);
     handleBeneificiaryTypeChange(true);
+    handleCompanyChange(true);
 }
 
 function handleBeneificiaryTypeChange(isManuallyTriggered) {
@@ -3787,16 +4392,33 @@ function handleServiceChange(isManuallyTriggered) {
         setControlToVisibileAndRequired(globalCompanyLookupControl);
     }
 }
+
+
+function handleCompanyChange(isManuallyTriggered) {
+    debugger;
+    var companyId = getIdWithoutCurlyBraces(getLookupFieldValue(globalCompanyLookupControl));
+
+    if (isManuallyTriggered !== true) {
+        clearLookupValue(globalFieldServiceOfficeControl);
+    }
+
+    if (companyId) {
+        setControlToVisibileAndOptional(globalFieldServiceOfficeControl);
+    } else {
+        setControlToHiddenAndOptional(globalFieldServiceOfficeControl);
+    }
+}
 //#endregion
 
 //#region PreSearchFilters
 function addPreSearchOnLoad() {
     addPreSearch(globalCompanyLookupControl, globalCompanyPresearchPresearchFilter);
+    addPreSearch(globalFieldServiceOfficeControl, fieldServiceOfficePresearch);
 }
 
 function globalCompanyPresearchPresearchFilter() {
     debugger;
-    let control = globalCompanyLookupControl,
+    let control = globalFieldServiceOfficeControl,
         serviceId = getIdWithoutCurlyBraces(getLookupFieldValue(serviceControl)),
         filter = null;
 
@@ -3825,6 +4447,18 @@ function getHajjFilter() {
   </filter>`;
 }
 
+function fieldServiceOfficePresearch() {
+    debugger;
+    let control = globalCompanyLookupControl,
+        companyId = getIdWithoutCurlyBraces(getLookupFieldValue(globalCompanyLookupControl)),
+        filter = `
+            <filter type="and">
+                <condition attribute="ldv_companyid" operator="eq" value="${companyId}" />
+            </filter>`;
+
+    if (filter) addControlCustomFilter(control, filter, 'ldv_fieldserviceofficeid');
+}
+
 //#endregion
 
 //#region Helpers
@@ -3848,8 +4482,8 @@ function IsHajj(serviceId) {
 
 //#endregion
 
-
-function testRenameStage(formContext) {//new v2
+function testRenameStage(formContext) {
+    //new v2
     // Retrieve the lookup record
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
     if (service === null || service === undefined) {
@@ -3859,8 +4493,8 @@ function testRenameStage(formContext) {//new v2
 
         // Check for specific service ID condition
         if (serviceId === ServiceType.FinancialComplainInternalPilgrimspostHajj.serviceDefinitionId.toLowerCase()) {
-            var descriptionField = formContext.getAttribute("ldv_description").getValue();
-            if (descriptionField === "test") {
+            var descriptionField = formContext.getAttribute('ldv_description').getValue();
+            if (descriptionField === 'test') {
                 var bpfControl = formContext.data.process;
 
                 // Ensure the BPF is loaded
@@ -3869,16 +4503,18 @@ function testRenameStage(formContext) {//new v2
 
                     if (activeStage) {
                         var activeStageId = activeStage.getId();
-                        var companiesStageId = BPFs.FinancialComplainInternalPilgrimspostHajj.stages.companiesAdminstration.id.toLowerCase();
+                        var companiesStageId =
+                            BPFs.FinancialComplainInternalPilgrimspostHajj.stages.companiesAdminstration.id.toLowerCase();
 
                         if (activeStageId === companiesStageId) {
                             // Get the element by the known data ID and update the stage label
-                            var stageElementId = "MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageName_a37f5442-2123-4ef6-a63c-f4875085e8ca";
+                            var stageElementId =
+                                'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageName_a37f5442-2123-4ef6-a63c-f4875085e8ca';
                             //var stageElementId = "MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageName_" + activeStageId.replace(/-/g, '_');
                             var stageElement = parent.document.getElementById(stageElementId);
 
                             if (stageElement) {
-                                stageElement.innerText = "Test";
+                                stageElement.innerText = 'Test';
                             }
                         }
                     }
@@ -3887,7 +4523,6 @@ function testRenameStage(formContext) {//new v2
         }
     }
 }
-
 
 function HideQualityAndResolvedStages(formContext) {
     debugger;
@@ -3907,14 +4542,20 @@ function HideQualityAndResolvedStages(formContext) {
         var supervisor2StageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Supervisor2.id.toLowerCase();
         var supervisor3StageId = BPFs.TechnicalComplainMomentaryUmrah.stages.Supervisor3.id.toLowerCase();
 
-        if (currentStageId === supervisorStageId || currentStageId === supervisor2StageId || currentStageId === supervisor3StageId) {
+        if (
+            currentStageId === supervisorStageId ||
+            currentStageId === supervisor2StageId ||
+            currentStageId === supervisor3StageId
+        ) {
             //var stageElementId = 'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_0cad470e-d631-407e-8a5d-dba3cb633630';
             //var stageElement = parent.document.getElementById(stageElementId);
 
-            var qualityStageElementId = 'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_f43fe841-1303-4159-851f-a353ce7964b7';
+            var qualityStageElementId =
+                'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_f43fe841-1303-4159-851f-a353ce7964b7';
             var qualityStageElement = parent.document.getElementById(qualityStageElementId);
 
-            var resolvedStageElementId = 'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_48050991-24dc-4d21-a459-d5679351219c';
+            var resolvedStageElementId =
+                'MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_48050991-24dc-4d21-a459-d5679351219c';
             var resolvedStageElement = parent.document.getElementById(resolvedStageElementId);
 
             var nextElementId = 'MscrmControls.Containers.ProcessBreadCrumb-headerNavigationButtoncontainertrue';
@@ -3933,11 +4574,5 @@ function HideQualityAndResolvedStages(formContext) {
                 nextElement.style.display = 'none';
             }
         }
-
-
-
     }
 }
-
-
-

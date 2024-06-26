@@ -56,6 +56,7 @@
     <Content Include="Profile\Company\ldv_Account_MainForm.js" />
     <Content Include="Profile\Hajj\ldv_Hajj_MainForm.js" />
     <Content Include="Profile\Individual\ldv_Contact_MainForm.js" />
+    <Content Include="Profile\Individual\ldv_Contact_Ribbon.js" />
     <Content Include="Profile\Permits\ldv_Permits_Mainform.js" />
   </ItemGroup>
   <ItemGroup>
