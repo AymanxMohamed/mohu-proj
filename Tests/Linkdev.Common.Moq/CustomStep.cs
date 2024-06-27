@@ -13,10 +13,10 @@
 //using System.ServiceModel.Description;
 //using Microsoft.Xrm.Sdk.Client;
 
- 
+
 //using Microsoft.Xrm.Tooling.Connector;
 //using System.Web.Configuration;
- 
+
 //using Linkdev.Common.Moq.Model;
 //using LinDev.MOHU.Utilites;
 
@@ -29,7 +29,7 @@
 //        {
 //            Dictionary<string, object> inputs;
 //            Guid PrimaryEntityID = new Guid("5399784a-2f32-ef11-8409-6045bd8d9989");
-//            string PrimaryEntitySchemaName =  "task"; //*/ "incident";   /*"contact";  */
+//            string PrimaryEntitySchemaName = "task"; //*/ "incident";   /*"contact";  */
 
 //            //Guid processstage = Guid.Empty;
 
@@ -56,10 +56,10 @@
 
 //            //IOrganizationService service = GetCrmConnection("https://stc-dev-v9.linkdev.com/XRMServices/2011/Organization.svc", @"CRM365DC\crmadmin", "linkP@ss");
 
-//              service = getCRMAccess();
+//            service = getCRMAccess();
 
 
-//               //createTicket();
+//            //createTicket();
 
 //            //IOrganizationService service = new CRMAccess().GetAccessToCRM();
 //            //set up a mock workflowcontext
@@ -577,7 +577,7 @@
 //            #endregion
 
 //            #region MyRegion
-//              inputs = new Dictionary<string, object>
+//            inputs = new Dictionary<string, object>
 //            {
 //                { "calendarId","39825827-0ED1-EE11-9079-6045BD895E74"} ,
 //                { "regardingId", "5399784a-2f32-ef11-8409-6045bd8d9989" } ,
@@ -763,7 +763,7 @@
 //        }
 //        static Guid GetTicketTypeProcessAsync(Guid ticketTypeId)
 //        {
-//            var ticketTypeEntity = service.Retrieve (ldv_service.EntityLogicalName, ticketTypeId, new ColumnSet(ldv_service.Fields.ldv_processid));
+//            var ticketTypeEntity = service.Retrieve(ldv_service.EntityLogicalName, ticketTypeId, new ColumnSet(ldv_service.Fields.ldv_processid));
 //            var processId = ticketTypeEntity.GetAttributeValue<EntityReference>(ldv_service.Fields.ldv_processid).Id;
 //            return processId;
 //        }
@@ -778,13 +778,13 @@
 //            Guid SubCategoryId = new Guid("df9254fb-3ecc-ee11-907a-6045bd8c99bf");
 //            //Guid SubCategoryId1 = new Guid("E8015016-4BCB-EE11-9079-6045BD895C76");
 
-//            entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName,new Guid( customerId)));
-//            entity.Attributes.Add(Incident.Fields.ldv_Description,  Description);
-//            entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue( Origin));
-//            entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName,  CaseType));
+//            entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, new Guid(customerId)));
+//            entity.Attributes.Add(Incident.Fields.ldv_Description, Description);
+//            entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(Origin));
+//            entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, CaseType));
 //            entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, CategoryId));
-//            entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName,  SubCategoryId));
-//            entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow",   GetTicketTypeProcessAsync( CaseType)));
+//            entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, SubCategoryId));
+//            entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", GetTicketTypeProcessAsync(CaseType)));
 //            entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
 //            //if (request.SubCategoryId1.HasValue)
 //            //    entity.Attributes.Add(Incident.Fields.ldv_SecondarySubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId1.Value));
@@ -795,9 +795,9 @@
 //            //if (request.Location.HasValue)
 //            //    entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
 
-//            var caseId = service. Create (entity);
+//            var caseId = service.Create(entity);
 
-           
+
 //        }
 //        public static CrmServiceClient getCRMAccess()
 //        {
@@ -814,7 +814,7 @@
 //        public const string UserName = @"";
 //        public const string Password = "";
 //        public const string Url = " ";
-        
+
 
 //    }
 //}

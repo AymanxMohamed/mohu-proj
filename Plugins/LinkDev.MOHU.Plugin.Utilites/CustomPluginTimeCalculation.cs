@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using LinDev.MOHU.Utilites.Model;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -131,6 +132,9 @@ namespace LinkDev.MOHU.Plugin.Utilites
             int newWarningTime = warningDuration;
             int newFailureTime = failureDuration;
             int customCode = 0;
+
+
+
             tracingService.Trace($"in CalculateWarningAndFailureTime");
             
             // use OOB SLATimeCalculation Custom Action to do actual calculation_
@@ -151,9 +155,39 @@ namespace LinkDev.MOHU.Plugin.Utilites
             {
                 slaLookupName = "ldv_slahourlevel3id";
             }
-            Entity entity=FetchRequestRecord(entityName, regardingId, slaLookupName);
 
-        
+
+
+            //Entity entity=FetchRequestRecord(entityName, regardingId, slaLookupName);
+
+            // Retrieve the SLA hours and durations
+            SLAHoursResult slaHoursResult = RetrieveSLAHours(entityName, regardingId);
+
+            // Use the retrieved SLA hours and durations as needed
+            int level1WarningTime = slaHoursResult.Level1WarningTime;
+            int level1FailureTime = slaHoursResult.Level1FailureTime;
+            int level2WarningTime = slaHoursResult.Level2WarningTime;
+            int level2FailureTime = slaHoursResult.Level2FailureTime;
+            int level3WarningTime = slaHoursResult.Level3WarningTime;
+            int level3FailureTime = slaHoursResult.Level3FailureTime;
+
+            if (slaLevel == 1)
+            {
+                newWarningTime = level1WarningTime;
+                newFailureTime = level1FailureTime;
+
+            }
+            else if (slaLevel == 2)
+            {
+                newWarningTime = level1WarningTime + level2WarningTime;
+                newFailureTime = level1FailureTime + level2FailureTime;
+            }
+            else if (slaLevel == 3)
+            {
+                newWarningTime = level1WarningTime + level2WarningTime + level3WarningTime;
+                newFailureTime = level1FailureTime + level2FailureTime + level3FailureTime;
+            }
+
 
 
 
@@ -283,8 +317,142 @@ namespace LinkDev.MOHU.Plugin.Utilites
         }
 
 
- 
+        Entity FetchCaseCategory(string entitySchemaName, string regardingId)
+        {
+            tracingService.Trace($"in FetchCaseCategory");
+
+            // Create a query expression for ldv_casecategory
+            var query = new QueryExpression(CategoryEntity.EntityLogicalName)
+            {
+                ColumnSet = new ColumnSet(CategoryEntity.SlaHourLevel1, CategoryEntity.SlaHourLevel2, CategoryEntity.SlaHourLevel3)
+            };
+
+            // Create a link entity to join with the task entity
+            var taskLink = new LinkEntity(CategoryEntity.EntityLogicalName, TaskEntity.EntityLogicalName, CategoryEntity.IDLogicalName, TaskEntity.SubCategory, JoinOperator.Inner);
+            taskLink.Columns.AddColumns(TaskEntity.IDLogicalName); // Add any additional columns you need from the task entity
+
+            // Filter the link entity to include only the task with the specific activityid
+            taskLink.LinkCriteria.AddCondition(TaskEntity.IDLogicalName, ConditionOperator.Equal, new Guid(regardingId));
+
+            // Add the link entity to the main query
+            query.LinkEntities.Add(taskLink);
+
+            // Retrieve the ldv_casecategory entity
+            var result = service.RetrieveMultiple(query);
+
+            // Check if the result contains any entities
+            if (result.Entities.Count == 0)
+            {
+                throw new InvalidPluginExecutionException($"No ldv_casecategory found for task with ID {regardingId}.");
+            }
+
+            // Return the first ldv_casecategory entity found (assuming there should be only one)
+            return result.Entities[0];
+        }
+
+        Dictionary<Guid, Entity> FetchSLAHours(List<Guid> slaHoursIds)
+        {
+            tracingService.Trace($"in FetchSLAHours");
+
+            if (slaHoursIds == null || slaHoursIds.Count == 0)
+            {
+                throw new ArgumentException("SLA Hours IDs list cannot be null or empty.");
+            }
+
+            var slaQuery = new QueryExpression(SlaHoursEntity.EntityLogicalName)
+            {
+                ColumnSet = new ColumnSet(
+                    SlaHoursEntity.IDLogicalName,
+                    SlaHoursEntity.FailureDurationHours,
+                    SlaHoursEntity.FailureDurationMinutes,
+                    SlaHoursEntity.WarningDurationHours,
+                    SlaHoursEntity.WarningDurationMinutes
+                ),
+
+                Criteria = new FilterExpression
+                {
+                    Conditions =
+            {
+                new ConditionExpression(SlaHoursEntity.IDLogicalName, ConditionOperator.In, slaHoursIds.ToArray())
+            }
+                }
+            };
+
+            var slaHoursEntities = service.RetrieveMultiple(slaQuery).Entities.ToList();
+            if (slaHoursEntities.Count == 0)
+            {
+                throw new InvalidPluginExecutionException("No SLA Hours records found.");
+            }
+
+            return slaHoursEntities.ToDictionary(e => e.Id, e => e);
+        }
+
+
+        SLAHoursResult RetrieveSLAHours(string entityName, string regardingId)
+        {
+            var result = new SLAHoursResult();
+
+            tracingService.Trace($"in RetrieveSLAHours");
+
+            // Fetch the case category
+            Entity caseCategoryEntity = FetchCaseCategory(entityName, regardingId);
+
+            // Retrieve SLA Hour Level IDs from the case category entity
+            if (caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel1) &&
+                caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel2) &&
+                caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel3))
+            {
+                Guid level1Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel1).Id;
+                Guid level2Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel2).Id;
+                Guid level3Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel3).Id;
+
+                var slaHoursIds = new List<Guid> { level1Id, level2Id, level3Id };
+
+                // Fetch the SLA hours for all three levels in one call
+                var slaHoursEntities = FetchSLAHours(slaHoursIds);
+
+                // Process each SLA Hours entity separately
+                if (slaHoursEntities.TryGetValue(level1Id, out Entity slaHoursLevel1))
+                {
+                    result.Level1WarningTime = GetDurationMinutes(slaHoursLevel1, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+                    result.Level1FailureTime = GetDurationMinutes(slaHoursLevel1, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+                }
+
+                if (slaHoursEntities.TryGetValue(level2Id, out Entity slaHoursLevel2))
+                {
+                    result.Level2WarningTime = GetDurationMinutes(slaHoursLevel2, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+                    result.Level2FailureTime = GetDurationMinutes(slaHoursLevel2, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+                }
+
+                if (slaHoursEntities.TryGetValue(level3Id, out Entity slaHoursLevel3))
+                {
+                    result.Level3WarningTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+                    result.Level3FailureTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+                }
+            }
+
+            return result;
+        }
+
+        int GetDurationMinutes(Entity entity, string hoursFieldName, string minutesFieldName)
+        {
+            var hours = (int)(entity.GetAttributeValue<decimal?>(hoursFieldName) ?? 0);
+            var minutes = (int)(entity.GetAttributeValue<decimal?>(minutesFieldName) ?? 0);
+            return hours * 60 + minutes;
+        }
 
 
     }
+
+    class SLAHoursResult
+    {
+        public int Level1WarningTime { get; set; }
+        public int Level1FailureTime { get; set; }
+        public int Level2WarningTime { get; set; }
+        public int Level2FailureTime { get; set; }
+        public int Level3WarningTime { get; set; }
+        public int Level3FailureTime { get; set; }
+    }
+
+
 }

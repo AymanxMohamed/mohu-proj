@@ -34,7 +34,7 @@ namespace Linkdev.Common.Moq
             //portal
             Guid AdminUserId = new Guid("415a5fdc-62bd-ee11-9079-000d3aa84c36");
 
-            Guid PrimaryEntityID = new Guid("5399784a-2f32-ef11-8409-6045bd8d9989");
+            Guid PrimaryEntityID = new Guid("994d3d0f-6a34-ef11-8409-6045bd8d9989");
             string PrimaryEntityName = "task";
 
             //set up mock plugincontext with input/output parameters, etc.
@@ -137,8 +137,26 @@ namespace Linkdev.Common.Moq
             //var workflowContext = workflowContextMock.Object;
 
 
-            ParameterCollection inputParameters = new ParameterCollection();
+            //ParameterCollection inputParameters = new ParameterCollection();
+
+            //set up the input parameters expected by the plugin
+            ParameterCollection inputParameters = new ParameterCollection
+            {
+                { "regardingId", "994d3d0f-6a34-ef11-8409-6045bd8d9989" },
+                { "calendarId", "39825827-0ED1-EE11-9079-6045BD895E74" },
+                { "requestType", "getEndTime" },
+                { "slaItemId", "a3a0e571-06dc-ee11-904b-6045bd895c76" },
+                { "previousInstanceId", "4e7ce19d-f033-ef11-8409-6045bd91711b" },
+                { "entityName", "task" },
+                { "firstInputDuration", 30 },
+                { "secondInputDuration", 60 },
+                { "firstInputDate", DateTime.UtcNow },
+                { "secondInputDate", DateTime.UtcNow.AddHours(1) }
+            };
             inputParameters.Add("Target", targetEntity);
+
+
+
             //EntityImageCollection imageCollection = new EntityImageCollection();
             //imageCollection.Add("PreImage", PreImageEntity);
             ParameterCollection outputParameters = new ParameterCollection();
@@ -151,7 +169,8 @@ namespace Linkdev.Common.Moq
             pluginContextMock.Setup(t => t.UserId).Returns(AdminUserId);
             pluginContextMock.Setup(t => t.PrimaryEntityName).Returns(PrimaryEntityName);
             pluginContextMock.Setup(t => t.PrimaryEntityId).Returns(PrimaryEntityID);
-            pluginContextMock.Setup(t => t.MessageName).Returns("create");
+            //pluginContextMock.Setup(t => t.MessageName).Returns("create");
+            pluginContextMock.Setup(t => t.MessageName).Returns("new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989");
             var pluginContext = pluginContextMock.Object;
 
             //set up a serviceprovidermock

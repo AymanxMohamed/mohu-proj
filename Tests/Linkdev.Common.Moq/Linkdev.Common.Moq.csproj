@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Linkdev.Common.Moq</RootNamespace>
     <AssemblyName>Linkdev.Common.Moq</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -35,6 +35,9 @@
   <ItemGroup>
     <Reference Include="Castle.Core, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Core.5.1.1\lib\net462\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="LinkDev.MOHU.Plugin.Utilites">
+      <HintPath>..\..\Plugins\LinkDev.MOHU.Plugin.Utilites\bin\Debug\LinkDev.MOHU.Plugin.Utilites.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -138,16 +141,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CustomStep\LinDev.MOHU.Utilites\LinDev.MOHU.Utilites.csproj">
-      <Project>{62bb5a12-2707-40c2-9826-dc1153677234}</Project>
-      <Name>LinDev.MOHU.Utilites</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\LinkDev.MOHU.Plugin.Utilites\LinkDev.MOHU.Plugin.Utilites.csproj">
-      <Project>{5906D4DB-1CD8-4D59-8DEC-043C3243D8E1}</Project>
-      <Name>LinkDev.MOHU.Plugin.Utilites</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

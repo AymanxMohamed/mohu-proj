@@ -33,4 +33,32 @@ namespace LinDev.MOHU.Utilites.Model
         public const string Process  = "ldv_processid";
 
     }
+
+    public static class CategoryEntity
+    {
+        public const string EntityLogicalName = "ldv_casecategory";
+        public const string IDLogicalName = "ldv_casecategoryid";
+        public const string SlaHourLevel1 = "ldv_slahourlevel1id";
+        public const string SlaHourLevel2 = "ldv_slahourlevel2id";
+        public const string SlaHourLevel3 = "ldv_slahourlevel3id";
+
+    }
+
+    public static class SlaHoursEntity
+    {
+        public const string EntityLogicalName = "ldv_slahours";
+        public const string IDLogicalName = "ldv_slahoursid";
+        public const string WarningDurationHours = "ldv_warningdurationhours";
+        public const string WarningDurationMinutes = "ldv_warningdurationminutes";
+        public const string FailureDurationHours = "ldv_failuredurationhours";
+        public const string FailureDurationMinutes = "ldv_failuredurationminutes";
+    }
+
+    public static class TaskEntity
+    {
+        public const string EntityLogicalName = "task";
+        public const string IDLogicalName = "activityid";
+        public const string SubCategory = "ldv_subcategoryid";
+
+    }
 }
