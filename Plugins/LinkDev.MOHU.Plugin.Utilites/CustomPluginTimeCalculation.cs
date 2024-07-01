@@ -26,17 +26,17 @@ namespace LinkDev.MOHU.Plugin.Utilites
 
             int slaLevel = -1;
             // Ensure this plugin is for the correct action
-            if (context.MessageName == "new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989")
+            if (context.MessageName == ActionNames.ActionLevel1)
             {
                 slaLevel = 1;
                 tracingService.Trace($"Sla Level = 1 ");
             }
-            else if (context.MessageName == "new_ActionSLATimerCustomPluginTimeCalculationLevel28a5b068cb933ef1184096045bd8d9989")
+            else if (context.MessageName == ActionNames.ActionLevel2)
             {
                 slaLevel = 2;
                 tracingService.Trace($"Sla Level = 2 ");
             }
-            else if (context.MessageName == "new_ActionSLATimerCustomPluginTimeCalculationLevel3b0e030b5bc33ef11840a000d3a48ff6a")
+            else if (context.MessageName == ActionNames.ActionLevel3)
             {
                 slaLevel = 3;
                 tracingService.Trace($"Sla Level = 3 ");
@@ -143,18 +143,18 @@ namespace LinkDev.MOHU.Plugin.Utilites
             requestTimeCalculation["calendarId"] = calendarId;
             string slaLookupName = string.Empty;
 
-            if (slaLevel==1)
-            {
-                slaLookupName = "ldv_slahourlevel1id";
-            }
-            else if (slaLevel == 2)
-            {
-                slaLookupName = "ldv_slahourlevel2id";
-            }
-            else if (slaLevel == 3)
-            {
-                slaLookupName = "ldv_slahourlevel3id";
-            }
+            //if (slaLevel==1)
+            //{
+            //    slaLookupName = "ldv_slahourlevel1id";
+            //}
+            //else if (slaLevel == 2)
+            //{
+            //    slaLookupName = "ldv_slahourlevel2id";
+            //}
+            //else if (slaLevel == 3)
+            //{
+            //    slaLookupName = "ldv_slahourlevel3id";
+            //}
 
 
 
@@ -453,6 +453,8 @@ namespace LinkDev.MOHU.Plugin.Utilites
         public int Level3WarningTime { get; set; }
         public int Level3FailureTime { get; set; }
     }
+
+
 
 
 }

@@ -61,4 +61,13 @@ namespace LinDev.MOHU.Utilites.Model
         public const string SubCategory = "ldv_subcategoryid";
 
     }
+
+    public static class ActionNames
+    {
+        public const string ActionLevel1 = "new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989";
+        public const string ActionLevel2 = "new_ActionSLATimerCustomPluginTimeCalculationLevel28a5b068cb933ef1184096045bd8d9989";
+        public const string ActionLevel3 = "new_ActionSLATimerCustomPluginTimeCalculationLevel3b0e030b5bc33ef11840a000d3a48ff6a";
+
+
+    }
 }
