@@ -64,9 +64,7 @@ namespace LinkDev.MOHU.Plugin.Utilites
             tracingService.Trace($"warningStartTime: {warningStartTime} , failureStartTime: {failureStartTime}");
             tracingService.Trace($"-----------------");
 
-            // API name of action 
-            //OrganizationRequest actionRequest = new OrganizationRequest("new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989");      
-            //    tracingService.Trace(" CustomPluginTimeCalculationd attempt to exicute request");
+
             try
             {
                 // implement this requestType for any new SLA KPi instance creation.
@@ -81,10 +79,6 @@ namespace LinkDev.MOHU.Plugin.Utilites
 
                     #region MyRegion
 
-                    //warningTime = new DateTime(2024, 06, 26, 19, 00, 00);
-                    //  failureTime = new DateTime(2024, 06, 27, 20, 00, 00);
-                    //string returnCalendarId = "39825827-0ED1-EE11-9079-6045BD895E74";
-
                     tracingService.Trace($"Executing Custom SLA Time Calculation");
                     tracingService.Trace($"Current UTC Time: {DateTime.UtcNow}");
                     tracingService.Trace($"Calculated failureTime: {failureTime}");
@@ -95,7 +89,7 @@ namespace LinkDev.MOHU.Plugin.Utilites
                     ////   return the output values.
                     context.OutputParameters["firstOutputValue"] = warningTime .ToString();
                     context.OutputParameters["secondOutputValue"] = failureTime.ToString();
-                    context.OutputParameters["returnCalendarId"] = returnCalendarId; // Example calendar ID
+                    context.OutputParameters["returnCalendarId"] = returnCalendarId;
                     tracingService.Trace($"after CalculateWarningAndFailureTime");
 
                 }
@@ -103,16 +97,16 @@ namespace LinkDev.MOHU.Plugin.Utilites
                 else if (requestType.Equals("getElapsedTime", StringComparison.CurrentCultureIgnoreCase))
                 {
                     tracingService.Trace($"getElapsedTime");
-                    //DateTime casePausedTime = (DateTime)context.InputParameters["firstInputDate"];
-                    //DateTime caseResumedTime = (DateTime)context.InputParameters["secondInputDate"];
-                    //int existingElapsedTime = (int)context.InputParameters["firstInputDuration"];
-                    //// Step 2 : Add the custom Logic to calculate the elapsedTime between startTime(paused) and endTime(resumed)
-                    //double elapsedTimeInMinutes = CalculateElapsedTime(regardingId, calendarId, slaItemId, entityName, casePausedTime, caseResumedTime, existingElapsedTime);
+                    DateTime casePausedTime = (DateTime)context.InputParameters["firstInputDate"];
+                    DateTime caseResumedTime = (DateTime)context.InputParameters["secondInputDate"];
+                    int existingElapsedTime = (int)context.InputParameters["firstInputDuration"];
+                    // Step 2 : Add the custom Logic to calculate the elapsedTime between startTime(paused) and endTime(resumed)
+                    double elapsedTimeInMinutes = CalculateElapsedTime(regardingId, calendarId, slaItemId, entityName, casePausedTime, caseResumedTime, existingElapsedTime);
 
-                    //// Step 3 : return the output values.
-                    //context.OutputParameters["firstOutputValue"] = elapsedTimeInMinutes.ToString();
-                    //context.OutputParameters["secondOutputValue"] = elapsedTimeInMinutes.ToString();
-                    //tracingService.Trace($"after CalculateWarningAndFailureTime");
+                    // Step 3 : return the output values.
+                    context.OutputParameters["firstOutputValue"] = elapsedTimeInMinutes.ToString();
+                    context.OutputParameters["secondOutputValue"] = elapsedTimeInMinutes.ToString();
+                    tracingService.Trace($"after CalculateWarningAndFailureTime");
                 }
             }
             catch (Exception ex)
@@ -122,7 +116,6 @@ namespace LinkDev.MOHU.Plugin.Utilites
             }
         }
 
-        // in this example, we're using Custom Field(new_country) on the Case entity to apply the required calendar.
         private string CalculateWarningAndFailureTime(string regardingId, string calendarId, string slaItemId,
             string entityName, DateTime warningStartTime, DateTime failureStartTime,
             int warningDuration, int failureDuration, int slaLevel, out DateTime warningTime, out DateTime failureTime)
@@ -141,54 +134,43 @@ namespace LinkDev.MOHU.Plugin.Utilites
             OrganizationRequest requestTimeCalculation = new OrganizationRequest("msdyn_SLATimeCalculation");
             requestTimeCalculation["requestType"] = "getendtime";
             requestTimeCalculation["calendarId"] = calendarId;
-            string slaLookupName = string.Empty;
 
-            //if (slaLevel==1)
-            //{
-            //    slaLookupName = "ldv_slahourlevel1id";
-            //}
-            //else if (slaLevel == 2)
-            //{
-            //    slaLookupName = "ldv_slahourlevel2id";
-            //}
-            //else if (slaLevel == 3)
-            //{
-            //    slaLookupName = "ldv_slahourlevel3id";
-            //}
-
-
-
-            //Entity entity=FetchRequestRecord(entityName, regardingId, slaLookupName);
 
             // Retrieve the SLA hours and durations
             SLAHoursResult slaHoursResult = RetrieveSLAHours(entityName, regardingId);
 
+
             // Use the retrieved SLA hours and durations as needed
-            int level1WarningTime = slaHoursResult.Level1WarningTime;
-            int level1FailureTime = slaHoursResult.Level1FailureTime;
-            int level2WarningTime = slaHoursResult.Level2WarningTime;
-            int level2FailureTime = slaHoursResult.Level2FailureTime;
-            int level3WarningTime = slaHoursResult.Level3WarningTime;
-            int level3FailureTime = slaHoursResult.Level3FailureTime;
+            int[] warningTimes = { slaHoursResult.Level1WarningTime, slaHoursResult.Level2WarningTime, slaHoursResult.Level3WarningTime };
+            int[] failureTimes = { slaHoursResult.Level1FailureTime, slaHoursResult.Level2FailureTime, slaHoursResult.Level3FailureTime };
 
-            if (slaLevel == 1)
+            bool isWarningTimeUpdated = false;
+            bool isFailureTimeUpdated = false;
+
+            for (int i = 0; i < slaLevel; i++)
             {
-                newWarningTime = level1WarningTime;
-                newFailureTime = level1FailureTime;
+                if (warningTimes[i] != 0)
+                {
+                    if (!isWarningTimeUpdated)
+                    {
+                        newWarningTime = 0; // Reset only once
+                        isWarningTimeUpdated = true;
+                    }
+                    newWarningTime += warningTimes[i];
+                }
 
-            }
-            else if (slaLevel == 2)
-            {
-                newWarningTime = level1WarningTime + level2WarningTime;
-                newFailureTime = level1FailureTime + level2FailureTime;
-            }
-            else if (slaLevel == 3)
-            {
-                newWarningTime = level1WarningTime + level2WarningTime + level3WarningTime;
-                newFailureTime = level1FailureTime + level2FailureTime + level3FailureTime;
+                if (failureTimes[i] != 0)
+                {
+                    if (!isFailureTimeUpdated)
+                    {
+                        newFailureTime = 0; // Reset only once
+                        isFailureTimeUpdated = true;
+                    }
+                    newFailureTime += failureTimes[i];
+                }
             }
 
-
+            tracingService.Trace($"newWarningTime: {newWarningTime}, newFailureTime: {newFailureTime}");
 
 
 
@@ -197,7 +179,7 @@ namespace LinkDev.MOHU.Plugin.Utilites
             {
                 tracingService.Trace($" in warningDuration");
 
-                requestTimeCalculation["startTime"] = warningStartTime; /*DateTime.Now.AddHours()*/
+                requestTimeCalculation["startTime"] = warningStartTime;
                 requestTimeCalculation["minutes"] = newWarningTime;
                 customizedTimeCalculationResponse =  service.Execute(requestTimeCalculation);
                 tracingService.Trace($"after Execute");
@@ -223,21 +205,6 @@ namespace LinkDev.MOHU.Plugin.Utilites
 
         private double CalculateElapsedTime(string regardingId, string calendarId, string slaItemId, string entityName, DateTime casePausedTime, DateTime caseResumedTime, int existingElapsedTime)
         {
-            //if (caseRecord.Attributes.Contains("new_country"))
-            //{
-            //    //if ((int)(((OptionSetValue)(caseRecord.Attributes["new_country"])).Value) == 0)
-            //    //{
-            //    //    // fetch IST id
-            //    //    IST_CALENDAR = FetchCalendar("IST_CALENDAR" );
-            //    //    calendarId = IST_CALENDAR;
-            //    //}
-            //    //else if ((int)(((OptionSetValue)(caseRecord.Attributes["new_country"])).Value) == 1)
-            //    //{
-            //    //    // fetch PST  id
-            //    //    PST_CALENDAR = FetchCalendar("PST_CALENDAR" );
-            //    //    calendarId = PST_CALENDAR;
-            //    //}
-            //}
 
             // use OOB SLATimeCalculation Custom Action to do actual calculation_
             OrganizationRequest requestTimeCalculation = new OrganizationRequest("msdyn_SLATimeCalculation");
@@ -281,20 +248,6 @@ namespace LinkDev.MOHU.Plugin.Utilites
         QueryExpression ExecuteRequestQuery(string entitySchemaName, string regardingId, string slaLookupName)
         {
 
-            //warning/ failur 
-            //min. /hour
-            //
-            //1 - get ticket category from task
-            // 2 - get sla hours level 1 ,2,3 from ticket category
-            //  3 - check
-            // if leve3
-            // time = level1 + level2 + l3vel3
-            //else leve2
-            // time = level1 + level2
-            //else leve1
-            // time = level1
-
-
             // Instantiate QueryExpression query
             var query = new QueryExpression("ldv_slahours");
             query.Distinct = true;
@@ -329,7 +282,7 @@ namespace LinkDev.MOHU.Plugin.Utilites
 
             // Create a link entity to join with the task entity
             var taskLink = new LinkEntity(CategoryEntity.EntityLogicalName, TaskEntity.EntityLogicalName, CategoryEntity.IDLogicalName, TaskEntity.SubCategory, JoinOperator.Inner);
-            taskLink.Columns.AddColumns(TaskEntity.IDLogicalName); // Add any additional columns you need from the task entity
+            taskLink.Columns.AddColumns(TaskEntity.IDLogicalName);
 
             // Filter the link entity to include only the task with the specific activityid
             taskLink.LinkCriteria.AddCondition(TaskEntity.IDLogicalName, ConditionOperator.Equal, new Guid(regardingId));
@@ -343,7 +296,9 @@ namespace LinkDev.MOHU.Plugin.Utilites
             // Check if the result contains any entities
             if (result.Entities.Count == 0)
             {
-                throw new InvalidPluginExecutionException($"No ldv_casecategory found for task with ID {regardingId}.");
+                //throw new InvalidPluginExecutionException($"No ldv_casecategory found for task with ID {regardingId}.");
+                tracingService.Trace($"No ldv_casecategory found for task with ID {regardingId}.");
+                return null;
             }
 
             // Return the first ldv_casecategory entity found (assuming there should be only one)
@@ -356,7 +311,8 @@ namespace LinkDev.MOHU.Plugin.Utilites
 
             if (slaHoursIds == null || slaHoursIds.Count == 0)
             {
-                throw new ArgumentException("SLA Hours IDs list cannot be null or empty.");
+                //throw new ArgumentException("SLA Hours IDs list cannot be null or empty.");
+                tracingService.Trace("SLA Hours IDs list cannot be null or empty.");
             }
 
             var slaQuery = new QueryExpression(SlaHoursEntity.EntityLogicalName)
@@ -381,7 +337,9 @@ namespace LinkDev.MOHU.Plugin.Utilites
             var slaHoursEntities = service.RetrieveMultiple(slaQuery).Entities.ToList();
             if (slaHoursEntities.Count == 0)
             {
-                throw new InvalidPluginExecutionException("No SLA Hours records found.");
+                //throw new InvalidPluginExecutionException("No SLA Hours records found.");
+                tracingService.Trace("No SLA Hours records found.");
+                return new Dictionary<Guid, Entity>();
             }
 
             return slaHoursEntities.ToDictionary(e => e.Id, e => e);
@@ -396,6 +354,12 @@ namespace LinkDev.MOHU.Plugin.Utilites
 
             // Fetch the case category
             Entity caseCategoryEntity = FetchCaseCategory(entityName, regardingId);
+
+            if (caseCategoryEntity == null)
+            {
+                tracingService.Trace($"No case category found for entity {entityName} with regarding ID {regardingId}.");
+                return result;
+            }
 
             // Retrieve SLA Hour Level IDs from the case category entity
             if (caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel1) &&
@@ -429,6 +393,11 @@ namespace LinkDev.MOHU.Plugin.Utilites
                     result.Level3WarningTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
                     result.Level3FailureTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
                 }
+            }
+            else
+            {
+                tracingService.Trace($"One or more SLA Hour Level fields missing in case category entity for entity {entityName} with regarding ID {regardingId}.");
+
             }
 
             return result;

@@ -144,7 +144,7 @@ namespace Linkdev.Common.Moq
             {
                 { "regardingId", "994d3d0f-6a34-ef11-8409-6045bd8d9989" },
                 { "calendarId", "39825827-0ED1-EE11-9079-6045BD895E74" },
-                { "requestType", "getEndTime" },
+                { "requestType", "getElapsedTime" }, //getEndTime
                 { "slaItemId", "a3a0e571-06dc-ee11-904b-6045bd895c76" },
                 { "previousInstanceId", "4e7ce19d-f033-ef11-8409-6045bd91711b" },
                 { "entityName", "task" },
@@ -170,7 +170,7 @@ namespace Linkdev.Common.Moq
             pluginContextMock.Setup(t => t.PrimaryEntityName).Returns(PrimaryEntityName);
             pluginContextMock.Setup(t => t.PrimaryEntityId).Returns(PrimaryEntityID);
             //pluginContextMock.Setup(t => t.MessageName).Returns("create");
-            pluginContextMock.Setup(t => t.MessageName).Returns("new_CustomPluginTimeCalculationd87ba2edce32ef1184096045bd8d9989");
+            pluginContextMock.Setup(t => t.MessageName).Returns("new_ActionSLATimerCustomPluginTimeCalculationLevel3b0e030b5bc33ef11840a000d3a48ff6a");
             var pluginContext = pluginContextMock.Object;
 
             //set up a serviceprovidermock
