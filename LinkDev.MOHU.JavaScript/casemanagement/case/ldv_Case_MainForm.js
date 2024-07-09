@@ -63,7 +63,7 @@
     ldv_supervisordecisioncode: 'ldv_supervisordecisioncode',
     ldv_supervisorcomment: 'ldv_supervisorcomment',
     ldv_supervisorDesision2: 'ldv_supervisorclosedecisioncode',
-    ldv_description:'ldv_description',
+    ldv_description: 'ldv_description',
 
     Enums: {
         location: {
@@ -799,7 +799,8 @@ function ShowAndHideBeneficiaryType(formContext) {
             }
         } else if (
             serviceId === ServiceType.TechnologicalComplain.serviceDefinitionId.toLowerCase() ||
-            serviceId === ServiceType.Inquiry.serviceDefinitionId.toLowerCase()
+            serviceId === ServiceType.Inquiry.serviceDefinitionId.toLowerCase() ||
+            serviceId === ServiceType.Suggestions.serviceDefinitionId.toLowerCase()
         ) {
             CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_beneficiarytypecode, true, true);
             var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
@@ -1186,10 +1187,26 @@ function SettingComplainTypePrioritySeason(formContext, categoryField) {
         if (seasonVisible && categoryRecord.ldv_seasoncode !== null) {
             formContext.getAttribute(caseFields.ldv_seasoncode).setValue(categoryRecord.ldv_seasoncode);
             formContext.getAttribute(caseFields.ldv_seasoncode).fireOnChange();
-            CommonGeneric.DisableField(formContext, caseFields.ldv_seasoncode, true);
+
+            var currentStage = formContext.data.process.getActiveStage();
+            if (currentStage) {
+                var currentStageName = currentStage.getName();
+                if (
+                    currentStageName !== 'Social Media' &&
+                    currentStageName !== 'التواصل الإجتماعي' &&
+                    currentStageName !== 'التواصل الاجتماعي'
+                ) {
+                    CommonGeneric.DisableField(formContext, caseFields.ldv_seasoncode, true);
+
+                }
+            } else {
+                CommonGeneric.DisableField(formContext, caseFields.ldv_seasoncode, true);
+            }
         }
     }
 }
+
+
 function SettingComplainTypePrioritySeasonFromMainCategory(formContext) {
     var subCategoryVisible = IsFieldVisible(formContext, caseFields.ldv_subcategoryid);
     if (!subCategoryVisible) {
@@ -1265,7 +1282,20 @@ function OnChange_Season(formContext) {
             // Check if ldv_beneficiarytypecode contains data
             var beneficiaryTypeValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_beneficiarytypecode);
             if (beneficiaryTypeValue !== null && beneficiaryTypeValue !== undefined) {
-                CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true); // Lock the field
+                var currentStage = formContext.data.process.getActiveStage();
+                if (currentStage) {
+                    var currentStageName = currentStage.getName();
+                    if (
+                        currentStageName !== 'Social Media' &&
+                        currentStageName !== 'التواصل الإجتماعي' &&
+                        currentStageName !== 'التواصل الاجتماعي'
+                    ) {
+                        CommonGeneric.DisableField(formContext, caseFields.ldv_beneficiarytypecode, true); // Lock the field
+
+                    }
+                } else {
+                    CommonGeneric.DisableField(formContext, caseFields.ldv_seasoncode, true);
+                }
             }
         } else {
             CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_beneficiarytypecode, false, false);
@@ -1726,6 +1756,7 @@ function HandleBPF(executionContext, callback) {
         });
         formContext.data.process.addOnStageSelected(function () {
             OnChange_addOnStageChange(executionContext);
+            
         });
 
         formContext.data.process.addOnPreStageChange(function () {
@@ -1753,6 +1784,7 @@ function OnChange_addOnStageChange(executionContext) {
     if (formContext.ui.getFormType() !== 1) {
         CommonGeneric.DisableField(formContext, caseFields.ldv_serviceid, true); // Lock the Request Type Field
     }
+    UnlockFieldsInSocialMediaStage(formContext);
 }
 function ShowAndHideFieldsBasedOnService(formContext, fields, serviceIdsToShow) {
     var service = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_serviceid);
