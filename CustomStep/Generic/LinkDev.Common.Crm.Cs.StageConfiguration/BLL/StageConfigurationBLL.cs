@@ -524,15 +524,13 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
             }
         }
 
-        public EntityReference RetriveStageConfigurarionByProcessStage(Guid bpfInstanceId, string bpfInstanceSchemaName, ITracingService tracingService)
+        public EntityReference RetriveStageConfigurarionByProcessStage(Guid bpfInstanceId, string bpfInstanceSchemaName, Guid serviceId, ITracingService tracingService)
         {
             try
             {
                 tracingService.Trace($" In method RetriveStageConfigurarionByProcessStage {bpfInstanceId} {bpfInstanceSchemaName}");
                 if (bpfInstanceId == Guid.Empty && bpfInstanceSchemaName == string.Empty) return null;
-
                 tracingService.Trace($"4");
-
                 var bpfOfRequest = new QueryExpression(bpfInstanceSchemaName);
                 bpfOfRequest.Distinct = true;
                 bpfOfRequest.ColumnSet.AddColumns("activestageid");
@@ -541,15 +539,19 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                 if (!instance.Entities.Any()) return null;
                 EntityReference activeStage = instance.Entities[0].GetAttributeValue<EntityReference>("activestageid");
                 if (activeStage?.Id == Guid.Empty) return null;
-
                 tracingService.Trace($"stage id { activeStage.Id}");
-
+                string serviceIdFetch = "";
+                if (serviceId!=Guid.Empty)
+                {
+                      serviceIdFetch="<condition attribute='ldv_serviceid' operator='eq'  uitype='ldv_service' value='"+serviceId+"' />";
+                }
                 string fetchXml = "<fetch version='1.0' output-format='xml-platform' mapping='logical' no-lock='true' distinct='true'>" +
                                          "  <entity name='ldv_stageconfiguration'>" +
                                          "    <attribute name='ldv_stageconfigurationid' />" +
                                          "    <filter type='and'>" +
                                          "      <condition attribute='ldv_processstageid' operator='eq'  uitype='processstage' value='{" +
                                          activeStage.Id + "}' />" +
+                                         serviceId+
                                          "    </filter>" +
                                          "  </entity>" +
                                          "</fetch>";
@@ -1135,7 +1137,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
         #endregion
 
         #region IsValidCurrentProcess
-        public bool IsValidCurrentProcess(string entityReferenceId, string entityReferenceName, ITracingService tracingService)
+        public bool IsValidCurrentProcess(string entityReferenceId, string entityReferenceName,Guid  serviceId , ITracingService tracingService)
         {
             tracingService.Trace($"in IsValidCurrentProcess");
 
@@ -1145,7 +1147,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                 tracingService.Trace($"1");
                 Entity target = crmAccess.RetrivePrimaryEntityOfBpf(entityReferenceName, new Guid(entityReferenceId));
                 tracingService.Trace($"2");
-                EntityReference stageConf = RetriveStageConfigurarionByProcessStage(new Guid(entityReferenceId), entityReferenceName, tracingService);
+                EntityReference stageConf = RetriveStageConfigurarionByProcessStage(new Guid(entityReferenceId), entityReferenceName, serviceId, tracingService);
                 tracingService.Trace($"3");
 
                 if (target?.Id == Guid.Empty) return false;

@@ -18,14 +18,19 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
         [RequiredArgument]
         [Input("InstanceName")]
         public InArgument<string> EntityReferenceName { get; set; }
+        [Input("UseService")]
+        [Default("False")]
+        public InArgument<bool> UseService { get; set; }
 
+        [Input("ServiceID")]
+        public InArgument<string> ServiceId { get; set; }
         [Output("IsBpfValid")]
         [Default("False")]
         public OutArgument<bool> IsBpfValid { get; set; }
 
         protected override void Execute(CodeActivityContext context)
         {
-            CheckCurrentProcessLogic BL = new CheckCurrentProcessLogic(IsBpfValid,   EntityReferenceId, EntityReferenceName);
+            CheckCurrentProcessLogic BL = new CheckCurrentProcessLogic(IsBpfValid,   EntityReferenceId, EntityReferenceName, ServiceId,UseService );
             BL.ExecuteLogic(context);
         }
     }
@@ -33,13 +38,17 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
     {
         public InArgument<string> EntityReferenceId { get; set; }
         public InArgument<string> EntityReferenceName { get; set; }
+        public InArgument<bool> UseService { get; set; }
+        public InArgument<string> ServiceId { get; set; }
         public OutArgument<bool> IsBpfValid { get; set; }
         protected StageConfigurationBLL logicLayer;
-        public CheckCurrentProcessLogic(OutArgument<bool> isBpfValid, InArgument<string> entityReferenceId, InArgument<string> entityReferenceName)
+        public CheckCurrentProcessLogic(OutArgument<bool> isBpfValid, InArgument<string> entityReferenceId, InArgument<string> entityReferenceName, InArgument<string> serviceId, InArgument<bool> useService)
         {
             IsBpfValid = isBpfValid;
             EntityReferenceId = entityReferenceId;
             EntityReferenceName = entityReferenceName;
+            ServiceId = serviceId;
+            UseService = useService;
         }
         public void ExecuteLogic(CodeActivityContext executionContext)
         {
@@ -53,13 +62,22 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
             {
                 string entityReferenceId = EntityReferenceId.Get(executionContext);
                 string entityReferenceName = EntityReferenceName.Get(executionContext);
+                bool useService = UseService.Get(executionContext);
+                string serviceId = ServiceId.Get(executionContext);
                 tracingService.Trace($"Instance id {entityReferenceId}");
                 tracingService.Trace($"Instance Schema Name {entityReferenceName}");
 
                 //tracingService.Trace();
 
                 //IsBpfValid.Set(executionContext, false);
-                bool isBpfValid = logicLayer.IsValidCurrentProcess(  entityReferenceId ,   entityReferenceName, tracingService);
+                bool isBpfValid = false;
+                if (useService)
+                {
+                      isBpfValid = logicLayer.IsValidCurrentProcess(entityReferenceId, entityReferenceName,new Guid( serviceId), tracingService);
+
+                }
+                else
+                  isBpfValid = logicLayer.IsValidCurrentProcess(  entityReferenceId ,   entityReferenceName,Guid.Empty, tracingService);
                 IsBpfValid.Set(executionContext, true);
 
             }
