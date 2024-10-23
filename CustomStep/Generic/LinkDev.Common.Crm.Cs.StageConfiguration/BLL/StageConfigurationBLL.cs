@@ -551,10 +551,12 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
                                          "    <filter type='and'>" +
                                          "      <condition attribute='ldv_processstageid' operator='eq'  uitype='processstage' value='{" +
                                          activeStage.Id + "}' />" +
-                                         serviceId+
+                                         serviceIdFetch +
                                          "    </filter>" +
                                          "  </entity>" +
                                          "</fetch>";
+                tracingService.Trace($"fetchXml {fetchXml}");
+
                 var retrieved = crmAccess.RetrieveMultiple(new FetchExpression(fetchXml));
 
                 //tracingService.Trace($" { fetchXml}");
@@ -562,7 +564,7 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
 
                 tracingService.Trace($"5");
 
-                if (!retrieved.Any()) return null;
+                if (retrieved.Count<1) return null;
                 //log.Log("retrieved= " + retrieved + ", retrieved.Entities.Count " + retrieved.Count, LogLevel.Debug);
                 EntityReference stageConfiguration =
                     retrieved[0].Attributes.Contains(StageConfigurationEntity.StageConfiguration)
