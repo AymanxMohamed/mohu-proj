@@ -77,6 +77,27 @@ namespace Linkdev.Common.Moq
             invoker.Extensions.Add<IOrganizationServiceFactory>(() => factory);
             #endregion
 
+
+            #region MyRegion
+            inputs = new Dictionary<string, object>
+                {
+
+                {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
+                //{ "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
+
+                {"ServiceId" , "7980A868-2DCC-EE11-907A-6045BD8C92A2" },
+                {"TargetEntityId" , "9EA3726A-6E0D-4D6F-B9C2-9CDCB582B465" },
+                {"TargetEntitSchemaName" , "incident" },
+
+                };
+            #endregion
+            //inputs = new Dictionary<string, object>();
+
+            var outputs = invoker.Invoke(inputs);
+        }
+        void mm()
+        {
+
             #region GetEntityReferencePrimitives
             //var inputs = new Dictionary<string, object>
             //    {
@@ -562,23 +583,6 @@ namespace Linkdev.Common.Moq
 
             //};
             #endregion
-
-            #region MyRegion
-            inputs = new Dictionary<string, object>
-                {
-
-                {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
-                //{ "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
-
-                {"ServiceId" , "7980A868-2DCC-EE11-907A-6045BD8C92A2" },
-                {"TargetEntityId" , "9EA3726A-6E0D-4D6F-B9C2-9CDCB582B465" },
-                {"TargetEntitSchemaName" , "incident" },
-
-                };
-            #endregion
-            //inputs = new Dictionary<string, object>();
-
-            var outputs = invoker.Invoke(inputs);
         }
         public static Entity RetrieveEntityById(IOrganizationService service, string entityLogicalName, Guid guidEntityId)
         {

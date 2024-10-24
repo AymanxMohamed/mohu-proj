@@ -49,9 +49,9 @@ namespace LinDev.MOHU.Utilites
         protected ITracingService tracingService;
         protected IOrganizationService service;
 
-        protected override void Execute(CodeActivityContext context)
+        protected override void Execute(CodeActivityContext executionContext)
         {
-
+             
             // Initialize the tracing service for logging
             tracingService = executionContext.GetExtension<ITracingService>();
             tracingService.Trace("Custom workflow activity execution started.");
