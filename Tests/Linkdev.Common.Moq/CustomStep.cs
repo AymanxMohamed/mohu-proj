@@ -12,12 +12,10 @@ using Microsoft.Xrm.Client.Services;
 using Microsoft.Xrm.Sdk.Query;
 using System.ServiceModel.Description;
 using Microsoft.Xrm.Sdk.Client;
-
-using LinkDev.Common.Crm.Cs.NotificationTemplates;
 using Microsoft.Xrm.Tooling.Connector;
 using System.Web.Configuration;
-using LinkDev.Common.Crm.Cs.StageConfiguration;
 using Linkdev.Common.Moq.Model;
+using LinDev.MOHU.Utilites;
 
 namespace Linkdev.Common.Moq
 {
@@ -33,7 +31,7 @@ namespace Linkdev.Common.Moq
             //Guid processstage = Guid.Empty;
 
             //  Activity activity = new SendNotification();
-            Activity activity = new HistoricallyStageFields();
+            Activity activity = new GetServiceConfiguration();
 
 
             #region Variables Intializations Admin
@@ -58,7 +56,7 @@ namespace Linkdev.Common.Moq
               service = getCRMAccess();
 
 
-               createTicket();
+               //createTicket();
 
             //IOrganizationService service = new CRMAccess().GetAccessToCRM();
             //set up a mock workflowcontext
@@ -569,8 +567,12 @@ namespace Linkdev.Common.Moq
             inputs = new Dictionary<string, object>
                 {
 
-                {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{0C222E05-87CF-EE11-9079-6045BD895E74}"))} ,
-                { "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
+                {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
+                //{ "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
+
+                {"ServiceId" , "7980A868-2DCC-EE11-907A-6045BD8C92A2" },
+                {"TargetEntityId" , "9EA3726A-6E0D-4D6F-B9C2-9CDCB582B465" },
+                {"TargetEntitSchemaName" , "incident" },
 
                 };
             #endregion
@@ -771,7 +773,7 @@ namespace Linkdev.Common.Moq
             //if (request.Location.HasValue)
             //    entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
 
-            var caseId = service. Create (entity);
+            //var caseId = service. Create (entity);
 
            
         }

@@ -117,14 +117,17 @@
     <Compile Include="DeleteInstanceForDefaultBPF.cs" />
     <Compile Include="GetEntityReference.cs" />
     <Compile Include="GetEntityReferencePrimitives.cs" />
+    <Compile Include="GetServiceConfiguration.cs" />
     <Compile Include="Logic\CustomPluginTimeCalculationLogic.cs" />
     <Compile Include="Logic\DeleteInstanceForDefaultBPFLogic.cs" />
     <Compile Include="Logic\GetEntityReferencePrimitivesLogic.cs" />
+    <Compile Include="Model\CaseModel.cs" />
+    <Compile Include="Model\ServiceConfigurationModel.cs" />
+    <Compile Include="Model\ServiceDefinitionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
