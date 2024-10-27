@@ -51,7 +51,7 @@ namespace LinDev.MOHU.Utilites
 
         protected override void Execute(CodeActivityContext executionContext)
         {
-             
+             this.executionContext = executionContext;
             // Initialize the tracing service for logging
             tracingService = executionContext.GetExtension<ITracingService>();
             tracingService.Trace("Custom workflow activity execution started.");
@@ -70,13 +70,15 @@ namespace LinDev.MOHU.Utilites
             string serviceId = ServiceId.Get(executionContext);
             string targetEntityId = TargetEntityId.Get(executionContext);
             string targetEntitySchemaName = TargetEntitSchemaName.Get(executionContext);
-            EntityReference stageConfigration = StageConfiguration.Get(executionContext);
+            EntityReference stageConfigrationInput = StageConfiguration.Get(executionContext);
+
+            tracingService.Trace($"Inputs serviceID = {serviceId} , targetEntityId={targetEntityId} , targetEntitySchemaName={targetEntitySchemaName} , stageConfigrationInput = {stageConfigrationInput.Id}");
 
 
             // Validate and parse entity ID
             if (!Guid.TryParse(serviceId, out Guid parsedServiceID))
             {
-                throw new InvalidPluginExecutionException("Invalid Entity ID format.");
+                tracingService.Trace("Invalid Entity ID format.");
             }
 
 
@@ -85,16 +87,15 @@ namespace LinDev.MOHU.Utilites
                 ColumnSet columns = new ColumnSet("ldv_serviceconfigurationfields");
                 Entity result =  service.Retrieve(ServiceDefinitionModel.EntitySchemaName, parsedServiceID, columns);
                 string ldv_serviceconfigurationfields = result.GetAttributeValue<string>("ldv_serviceconfigurationfields"); // Multiline Text
-
+                tracingService.Trace($"service configuration fields {ldv_serviceconfigurationfields}");
                 string[] fields = ldv_serviceconfigurationfields.Split(',');
                 GetFieldsFromTargetEntity(targetEntitySchemaName,targetEntityId, fields);
 
             }
             catch (Exception ex){
-                tracingService.Trace($"Error : {ex.Message}");
+                tracingService.Trace($"Function: Execute() | Error : {ex.Message}");
             }
 
-            throw new NotImplementedException();
         }
 
 
@@ -108,13 +109,16 @@ namespace LinDev.MOHU.Utilites
             // Ensure targetEntityId is a valid GUID
             if (!Guid.TryParse(targetEntityId, out Guid entityId))
             {
-                tracingService.Trace("Invalid entity ID.");
+                tracingService.Trace("Function: GetFieldsFromTargetEntity() | error : Invalid entity ID.");
             }
 
             try
             {
                 // Retrieve the target entity record using the provided schema name, entity ID, and columns
                 Entity targetEntity = service.Retrieve(targetEntitySchemaName, entityId, columns);
+
+                tracingService.Trace($"Target Entity Record = ID {targetEntity.Id}, LogicalName {targetEntity.LogicalName}");
+
 
                 Dictionary<string, object> schemaNamevaluePairs = new Dictionary<string, object>();
                 // Check if the target entity contains the fields and log the values
@@ -126,14 +130,14 @@ namespace LinDev.MOHU.Utilites
                     }
                     else
                     {
-                        tracingService.Trace($"Field {field} is not found on the entity.");
+                        tracingService.Trace($"Function: GetFieldsFromTargetEntity() |  Field {field} is not found on the entity.");
                     }
                 }
                 QueryInServiceConfigrationsEntity( schemaNamevaluePairs);
             }
             catch (Exception ex)
             {
-                tracingService.Trace($"Error retrieving entity: {ex.Message}");
+                tracingService.Trace($"Function: GetFieldsFromTargetEntity() | error: Error retrieving entity: {ex.Message}");
             }
         }
 
@@ -164,19 +168,38 @@ namespace LinDev.MOHU.Utilites
                 string attributeName = pair.Key;
                 object value = pair.Value;
 
-                // Add a condition to the criteria based on the attribute name and value
-                query.Criteria.AddCondition(new ConditionExpression(attributeName, ConditionOperator.Equal, value));
+                if (value is OptionSetValue optionSetValue)
+                {
+                    // Use the Value property for the condition
+                    query.Criteria.AddCondition(new ConditionExpression(attributeName, ConditionOperator.Equal, optionSetValue.Value));
+                    tracingService.Trace($"Condition Attribute Name = {attributeName} == Value = {optionSetValue.Value}");
+
+                }
+                else
+                {
+                    // For other types, add the condition as normal
+                    query.Criteria.AddCondition(new ConditionExpression(attributeName, ConditionOperator.Equal, value));
+                tracingService.Trace($"Condition Attribute Name = {attributeName} == Value = {value}");
+
+                }
             }
 
             try
             {
                 // Retrieve target service configuration
                 EntityCollection serviceConfigurations = service.RetrieveMultiple(query);
+
+                tracingService.Trace($"ServiceConfigurations.TotalRecordCount {serviceConfigurations.TotalRecordCount}");
+
                 Entity selectedServiceConfigration = serviceConfigurations[0];
-                if(selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.PortalStatus, out EntityReference portalstatus) && selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.StatusReason, out EntityReference statusreason) && selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.Team, out EntityReference team))
+                tracingService.Trace($"selectedServiceConfigration {selectedServiceConfigration.Id}");
+
+                if (selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.PortalStatus, out EntityReference portalstatus) && selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.StatusReason, out EntityReference statusreason) && selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.Team, out EntityReference team))
                 {
                     UpdateCaseStatus(portalstatus, statusreason);
                     Team.Set(executionContext, team);
+                    tracingService.Trace($"team = {team.Id}");
+
                 }
 
 
@@ -184,7 +207,7 @@ namespace LinDev.MOHU.Utilites
             catch (Exception ex)
             {
                 // Handle any exceptions that occur during the query
-                tracingService.Trace($"Error querying entity: {ex.Message}");
+                tracingService.Trace($"Function: QueryInServiceConfigrationsEntity() | error: Error querying entity: {ex.Message}");
             }
 
         }
@@ -195,7 +218,7 @@ namespace LinDev.MOHU.Utilites
             string targetEntitySchemaName = TargetEntitSchemaName.Get(executionContext);
             if (!Guid.TryParse(targetEntityId, out Guid entityId))
             {
-                throw new ArgumentException("Invalid case ID.");
+                tracingService.Trace($"Function: UpdateCaseStatus() | error: Invalid case ID");
             }
             Entity targetEntity = new Entity(targetEntitySchemaName)
             {
@@ -204,6 +227,8 @@ namespace LinDev.MOHU.Utilites
 
             targetEntity[CaseModel.PortalStatus] = portalStatus;
             targetEntity[CaseModel.StatusReason] = statusReason;
+            tracingService.Trace($"Update Entity Step entityId = {entityId}, logicalName = {targetEntitySchemaName}");
+            tracingService.Trace($"portalStatus = {portalStatus.Id}, statusReason = {statusReason.Id}");
 
             service.Update(targetEntity);
         }
