@@ -7,7 +7,6 @@ namespace MOHU.Integration.WebApi.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-
        protected ResponseMessage<T> Ok<T>(T result)
         {
             return new ResponseMessage<T>
@@ -15,9 +14,9 @@ namespace MOHU.Integration.WebApi.Controllers
                 Status = Contracts.Enum.Status.Success,
                 Result = result,
                 StatusCode = StatusCodes.Status200OK,
-
             };
         }
+       
         protected ResponseMessage<T> Created<T>(T result)
         {
             return new ResponseMessage<T>
