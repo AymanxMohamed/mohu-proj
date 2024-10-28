@@ -146,8 +146,15 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
                 string regardingName = RegardingName.Get(executionContext);
 
 
-                EntityReference RegardingLookup = new EntityReference(regardingName, new Guid(regardingId));
-                 
+                EntityReference RegardingLookup = new EntityReference();
+
+                if (isAnotherRegarding)
+                {
+                    RegardingLookup = new EntityReference(regardingName, new Guid(regardingId));
+                }
+                else 
+                    RegardingLookup = RegardingObject;
+
                 tracingService.Trace($" after RetrieveRelatedApplicationByApplicationHeader  ");
                 StageConfigurationsNotificationsBLL BLL = new StageConfigurationsNotificationsBLL(service, tracingService, RegardingObject);
 
