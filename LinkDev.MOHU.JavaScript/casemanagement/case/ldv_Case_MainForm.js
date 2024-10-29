@@ -2840,7 +2840,6 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             break;
 
         case ServiceType.TechnicalComplainCompanyService.serviceDefinitionId.toLowerCase():
-            console.log(currentStageId + " -------- " + "momentaryUmrahOrHajj company service");
             var qualityStageId =
                 BPFs.TechnicalComplainCompanyService.stages.quality.id.toLowerCase();
             var supervisorStageId =
@@ -2852,8 +2851,6 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             //var customerApprovalStageId = BPFs.TechnicalComplainCompanyService.stages.customerApproval.id.toLowerCase();
 
             if (currentStageId === socialMediaStageId) {
-                console.log("socilla");
-
                 GeneralSocialMediaDecision_OnChange(executionContext);
                 formContext
                     .getAttribute(caseFields.ldv_socialMediaDecisioncode)
@@ -2883,11 +2880,11 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             }
 
             if (currentStageId === qualityStageId) {
-                GeneralQualityStageDecisionR2_OnChange(executionContext);
+                GeneralQualityOfficerStageDecisionR2_OnChange(executionContext);
                 formContext
-                    .getAttribute(caseFields.ldv_qualitydecisioncode)
+                    .getAttribute(caseFields.ldv_qualityofficerdecisioncode)
                     .addOnChange(function () {
-                        GeneralQualityStageDecisionR2_OnChange(executionContext);
+                        GeneralQualityOfficerStageDecisionR2_OnChange(executionContext);
                     });
             }
 
@@ -2912,7 +2909,6 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                 BPFs.TechnicalComplainCompanyService.stages.company.id.toLowerCase();
             var socialMediaStageId =
                 BPFs.TechnicalComplainCompanyService.stages.socialMedia.id.toLowerCase();
-            //var customerApprovalStageId = BPFs.TechnicalComplainCompanyService.stages.customerApproval.id.toLowerCase();
 
             if (currentStageId === socialMediaStageId) {
                 console.log("socilla");
@@ -2924,13 +2920,6 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                         GeneralSocialMediaDecision_OnChange(executionContext);
                     });
             }
-
-            //if (currentStageId === customerApprovalStageId) {
-            //    TechnicalComplainMomentaryUmrah_CustomerApprovalStage_OnChange(executionContext);
-            //    formContext.getAttribute(caseFields.ldv_Ispassedcustomerapproval).addOnChange(function () {
-            //        TechnicalComplainMomentaryUmrah_CustomerApprovalStage_OnChange(executionContext);
-            //    });
-            //}
 
             if (currentStageId === companyStageId) {
                 TechnicalComplainMomentaryUmrah_CompanyDecision_OnChange(
@@ -2965,7 +2954,6 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
 
             break;
         case ServiceType.Inquiry.serviceDefinitionId.toLowerCase():
-            console.log(currentStageId + " -------- " + "momentaryUmrahOrHajj company service");
             var socialMediaStageId = BPFs.Inquiry.stages.socialMedia.id.toLowerCase();
             var quality1_StageId = BPFs.Inquiry.stages.quality.id.toLowerCase();
             var quality2_StageId = BPFs.Inquiry.stages.quality2.id.toLowerCase();
@@ -4217,6 +4205,19 @@ function GeneralQualityStageDecisionR2_OnChange(executionContext) {
         qualityClosureReasonOnBpf
     );
 }
+function GeneralQualityOfficerStageDecisionR2_OnChange(executionContext) {
+    debugger;
+    var qualityClosureReasonOnBpf =
+        "header_process_" + caseFields.ldv_closurereason;
+    var qualityNeededInformationOnBpf =
+        "header_process_" + caseFields.ldv_qualityofficerneededinformation2;
+    DepartmentQualityDecisionForR2_OnChange(
+        executionContext,
+        caseFields.ldv_qualityofficerdecisioncode,
+        qualityNeededInformationOnBpf,
+        qualityClosureReasonOnBpf
+    );
+}
 
 function GeneralQualityStageDecisionR2_OnLoad(formContext) {
     var qualityClosureReasonOnBpf =
@@ -4230,6 +4231,19 @@ function GeneralQualityStageDecisionR2_OnLoad(formContext) {
         qualityClosureReasonOnBpf
     );
 }
+
+function GeneralQualityOfficerStageDecisionR2_OnLoad(formContext) {
+    var qualityClosureReasonOnBpf =
+        "header_process_" + caseFields.ldv_closurereason;
+    var qualityNeededInformationOnBpf =
+        "header_process_" + caseFields.ldv_qualityofficerneededinformation2;
+    DepartmentQualityDecisionForR2_OnLoad(
+        formContext,
+        caseFields.ldv_qualityofficerdecisioncode,
+        qualityNeededInformationOnBpf,
+        qualityClosureReasonOnBpf
+    );
+} 
 
 // General Social Media method
 function GeneralSocialMediaDecision_OnChange(executionContext) {
