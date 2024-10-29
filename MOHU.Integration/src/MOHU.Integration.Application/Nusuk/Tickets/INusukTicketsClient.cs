@@ -3,7 +3,7 @@ using MOHU.Integration.Application.Nusuk.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Application.Nusuk.Tickets;
 
-public interface INusukTicketClient
+public interface INusukTicketsClient
 {
     public Task<NusukRootResponse> UpdateAsync(UpdateNusukTicketRequest request);
 }

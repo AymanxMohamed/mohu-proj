@@ -9,20 +9,25 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace MOHU.Integration.Application.Nusuk.Tickets;
 
-internal class NusukTicketClient(
+internal class NusukTicketsesClient(
     IConfigurationService configurationService,
-    IHttpClientFactory httpClientFactory) : INusukTicketClient
+    IHttpClientFactory httpClientFactory) : INusukTicketsClient
 {
     public async Task<NusukRootResponse> UpdateAsync(UpdateNusukTicketRequest request)
     {
-        var token = await configurationService.GetConfigurationValueAsync(NusukConfigurationKeys.Token);
-        var updateUrl = await configurationService.GetConfigurationValueAsync(NusukConfigurationKeys.UpdateTicketStatusUrl);
+        var token = await configurationService
+            .GetConfigurationValueAsync(NusukConfigurationKeys.Token);
+        
+        var updateUrl = await configurationService
+            .GetConfigurationValueAsync(NusukConfigurationKeys.UpdateTicketStatusUrl);
 
         var httpClient = httpClientFactory.CreateClient();
         
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, updateUrl);
         httpRequestMessage.Headers.Add("Authorization", $"Bearer {token}");
-        httpRequestMessage.Content = JsonContent.Create(request, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        httpRequestMessage.Content = JsonContent.Create(
+            request, 
+            options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         var response = await httpClient.SendAsync(httpRequestMessage);
 
@@ -38,6 +43,7 @@ internal class NusukTicketClient(
             throw new FaultException("Nusuk ticket update failed");
         }
         
-        throw new FaultException($"Failed to process update nusuk ticket request: Response Status Code {response.StatusCode} response: {response.Content}");
+        throw new FaultException($"Failed to process update nusuk ticket request: " +
+                                 $"Response Status Code {response.StatusCode} response: {response.Content}");
     }
 }
