@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LinDev.MOHU.Utilites</RootNamespace>
     <AssemblyName>LinDev.MOHU.Utilites</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -113,17 +113,22 @@
     <Compile Include="..\..\Common\LinkDev.Common.Crm.Cs.Base\CrmStringHandler.cs">
       <Link>Common\CrmStringHandler.cs</Link>
     </Compile>
+    <Compile Include="ChangeBpfInstanceAndActiveStage.cs" />
     <Compile Include="CustomPluginTimeCalculation.cs" />
     <Compile Include="DeleteInstanceForDefaultBPF.cs" />
+    <Compile Include="GetEntityReference.cs" />
     <Compile Include="GetEntityReferencePrimitives.cs" />
+    <Compile Include="GetServiceConfiguration.cs" />
     <Compile Include="Logic\CustomPluginTimeCalculationLogic.cs" />
     <Compile Include="Logic\DeleteInstanceForDefaultBPFLogic.cs" />
     <Compile Include="Logic\GetEntityReferencePrimitivesLogic.cs" />
+    <Compile Include="Model\CaseModel.cs" />
+    <Compile Include="Model\ServiceConfigurationModel.cs" />
+    <Compile Include="Model\ServiceDefinitionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Linkdev.Common.Moq</RootNamespace>
     <AssemblyName>Linkdev.Common.Moq</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -143,10 +143,6 @@
     <ProjectReference Include="..\..\CustomStep\LinDev.MOHU.Utilites\LinDev.MOHU.Utilites.csproj">
       <Project>{62bb5a12-2707-40c2-9826-dc1153677234}</Project>
       <Name>LinDev.MOHU.Utilites</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\LinkDev.MOHU.Plugin.Utilites\LinkDev.MOHU.Plugin.Utilites.csproj">
-      <Project>{5906D4DB-1CD8-4D59-8DEC-043C3243D8E1}</Project>
-      <Name>LinkDev.MOHU.Plugin.Utilites</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
