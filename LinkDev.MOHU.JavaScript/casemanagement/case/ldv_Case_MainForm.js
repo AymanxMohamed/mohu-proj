@@ -12,6 +12,7 @@
     ldv_seasoncode: "ldv_seasoncode",
     ldv_locationcode: "ldv_locationcode",
     ldv_beneficiarytypecode: "ldv_beneficiarytypecode",
+    ldv_requesttypeid:"ldv_requesttypeid",
     ldv_company: "ldv_company",
     ldv_filteredcompanyid: "ldv_filteredcompanyid",
     ldv_errorcodeid: "ldv_errorcodeid",
@@ -75,6 +76,9 @@
     ldv_cxdecisioncode: "ldv_cxdecisioncode",
     ldv_closurereasoncx: "ldv_closurereasoncx",
     ldv_customersatisfycode: "ldv_customersatisfycode",
+    ldv_nusukdecisioncode: "ldv_nusukdecisioncode",
+    ldv_nusukcarecomment: "ldv_nusukcarecomment",
+    ldv_nusukclosedecisioncode: "ldv_nusukclosedecisioncode",
 
     Enums: {
         location: {
@@ -135,6 +139,10 @@
         supervisorDecision2: {
             CloseTicket: 1,
         },
+        nusukTeamDecision: {
+            Resolved: 1,
+            SendBack: 2,
+        },
     },
 };
 
@@ -147,7 +155,14 @@ var ServiceType = {
         serviceDefinitionId: "8780a868-2dcc-ee11-907a-6045bd8c92a2",
         serviceDefinitionName: "Financial compensation complain",
     },
-
+    TechnicalComplainNonMomentaryHajj: {
+        serviceDefinitionId: "7D80A868-2DCC-EE11-907A-6045BD8C92A2",
+        serviceDefinitionName: "Technical complain - Non-momentary Hajj",
+    },
+    TechnicalComplainNonMomentaryUmrah: {
+        serviceDefinitionId: "7780A868-2DCC-EE11-907A-6045BD8C92A2",
+        serviceDefinitionName: "Technical complain - Non-momentary Umrah",
+    },
     TechnicalComplainMomentaryHajj: {
         serviceDefinitionId: "7b80a868-2dcc-ee11-907a-6045bd8c92a2",
         serviceDefinitionName: "Technical complain - Momentary Hajj",
@@ -159,14 +174,6 @@ var ServiceType = {
     TechnicalComplainMomentaryUmrahForCompanies: {
         serviceDefinitionId: "DE69552C-B0D0-EE11-9079-6045BD895E74",
         serviceDefinitionName: "Technical complain - Momentary Umrah for companies",
-    },
-    TechnicalComplainNonMomentaryHajj: {
-        serviceDefinitionId: "7D80A868-2DCC-EE11-907A-6045BD8C92A2",
-        serviceDefinitionName: "Technical complain - Non-momentary Hajj",
-    },
-    TechnicalComplainNonMomentaryUmrah: {
-        serviceDefinitionId: "7780A868-2DCC-EE11-907A-6045BD8C92A2",
-        serviceDefinitionName: "Technical complain - Non-momentary Umrah",
     },
     Inquiry: {
         serviceDefinitionId: "E8015016-4BCB-EE11-9079-6045BD895C76",
@@ -197,6 +204,16 @@ var ServiceType = {
     TechnologicalComplain: {
         serviceDefinitionId: "7580A868-2DCC-EE11-907A-6045BD8C92A2",
         serviceDefinitionName: "Technological Complain",
+    },
+
+    //nusuk services (Mentoring -Missing Persons  )
+    MentoringServiceNUSUKEnaya: {
+        serviceDefinitionId: "7A8C2CBC-8F8C-EF11-AC20-6045BD8FAE55",
+        serviceDefinitionName: "Mentoring Service - NUSUK Enaya",
+    },
+    MissingPersonsServiceNUSUKEnaya: {
+        serviceDefinitionId: "F1CC8DDA-8F8C-EF11-AC20-6045BD8FAE55",
+        serviceDefinitionName: "Missing Persons Service - NUSUK Enaya",
     },
 };
 
@@ -251,7 +268,7 @@ var BPFs = {
     //        },
 
     //        ministrySHajjAgency: {
-    //            name: "Ministry’S Hajj Agency",
+    //            name: "Ministryâ€™S Hajj Agency",
 
     //            id: "5fafb075-cca2-4359-8431-806679d70732",
     //        },
@@ -559,6 +576,37 @@ var BPFs = {
             },
         },
     },
+    // BPF for new nusuk care services
+    NusukCareServicesRequest: {
+        name: "BPF| Nusuk Care Guidance Request",
+        id: "AA4570AA-4294-EF11-8A6A-6045BD9EC6EF",
+        stages: {
+            submit: {
+                name: "Submit",
+                id: "2cce20a4-5a6f-4be1-866d-e744b390590d",
+            },
+            nusuk1: {
+                name: "Nusuk1",
+                id: "eb2e6270-b920-404a-a07c-2f291c49a71a",
+            },
+            company: {
+                name: "Company",
+                id: "cb629b45-1fc8-426f-9832-58752735ce76",
+            },
+            nusuk: {
+                name: "Nusuk",
+                id: "06fadf0f-1552-4586-a857-6ba8f02f3ae2",
+            },
+            customerApproval: {
+                name: "Customer Approval",
+                id: "2b539a21-2720-47c4-a3bc-e22e8c3853e4",
+            },
+            close: {
+                name: "Close",
+                id: "af4ae1f2-7cfb-4f97-afc7-bcefc802df57",
+            },
+        },
+    },
 };
 
 var Tabs = {
@@ -588,7 +636,7 @@ function OnLoad(executionContext) {
     HandleBPF(executionContext, GetDecisionsBasedOnService_OnLoad);
     OnChange_MainCategory(formContext);
     OnChange_SubCategory(formContext);
-
+    OnChange_ParentRequestType(formContext);
     HideAndShowComplainPriority(formContext);
     ShowAndHideCompany(formContext);
     ShowAndHideBeneficiaryType_OnLoad(formContext);
@@ -720,6 +768,9 @@ function addOnChangeHandlerEvents(executionContext) {
     formContext.getAttribute(caseFields.caseorigincode).addOnChange(function () {
         CommonGeneric.EmptyField(formContext, caseFields.ldv_subsourceid);
         showAndHideSubSourceField(formContext);
+    });
+    formContext.getAttribute(caseFields.ldv_requesttypeid).addOnChange(function () {
+        OnChange_ParentRequestType(formContext);
     });
 
     formContext
@@ -2726,8 +2777,10 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
     var currentStageId = currentStage.getId().toLowerCase();
 
     switch (serviceId) {
-
+        case ServiceType.FinancialCompensationComplain.serviceDefinitionId.toLowerCase():
         case ServiceType.FinancialComplainInternalPilgrimspostHajj.serviceDefinitionId.toLowerCase():
+        case ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase():
+        case ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase():
             var departmentStageId =
                 BPFs.DepartmentComplain.stages.department.id.toLowerCase();
             var qualityStageId =
@@ -2763,13 +2816,13 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                         GeneralSocialMediaDecision_OnChange(executionContext);
                     });
             } else if (currentStageId === departmentStageId) {
-                FC_InternalPilgrimspostHajj_CompaniesAdministrationStageDecision_OnChange(
+                FC_General_DepartmentAdministrationStageDecision_OnChange(
                     executionContext
                 );
                 formContext
                     .getAttribute(caseFields.ldv_departmentdecisioncode)
                     .addOnChange(function () {
-                        FC_InternalPilgrimspostHajj_CompaniesAdministrationStageDecision_OnChange(
+                        FC_General_DepartmentAdministrationStageDecision_OnChange(
                             executionContext
                         );
                     });
@@ -2840,6 +2893,9 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             break;
 
         case ServiceType.TechnicalComplainCompanyService.serviceDefinitionId.toLowerCase():
+            console.log(
+                currentStageId + " -------- " + "momentaryUmrahOrHajj company service"
+            );
             var qualityStageId =
                 BPFs.TechnicalComplainCompanyService.stages.quality.id.toLowerCase();
             var supervisorStageId =
@@ -2851,6 +2907,8 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             //var customerApprovalStageId = BPFs.TechnicalComplainCompanyService.stages.customerApproval.id.toLowerCase();
 
             if (currentStageId === socialMediaStageId) {
+                console.log("socilla");
+
                 GeneralSocialMediaDecision_OnChange(executionContext);
                 formContext
                     .getAttribute(caseFields.ldv_socialMediaDecisioncode)
@@ -2882,7 +2940,7 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             if (currentStageId === qualityStageId) {
                 GeneralQualityStageDecisionR2_OnChange(executionContext);
                 formContext
-                    .getAttribute(caseFields.ldv_qualityofficerdecisioncode)
+                    .getAttribute(caseFields.ldv_qualitydecisioncode)
                     .addOnChange(function () {
                         GeneralQualityStageDecisionR2_OnChange(executionContext);
                     });
@@ -2899,8 +2957,6 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
 
             break;
         case ServiceType.TechnicalComplainMomentaryHajj.serviceDefinitionId.toLowerCase():
-
-
             var qualityStageId =
                 BPFs.TechnicalComplainCompanyService.stages.quality.id.toLowerCase();
             var supervisorStageId =
@@ -2909,6 +2965,7 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                 BPFs.TechnicalComplainCompanyService.stages.company.id.toLowerCase();
             var socialMediaStageId =
                 BPFs.TechnicalComplainCompanyService.stages.socialMedia.id.toLowerCase();
+            //var customerApprovalStageId = BPFs.TechnicalComplainCompanyService.stages.customerApproval.id.toLowerCase();
 
             if (currentStageId === socialMediaStageId) {
                 console.log("socilla");
@@ -2920,6 +2977,13 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                         GeneralSocialMediaDecision_OnChange(executionContext);
                     });
             }
+
+            //if (currentStageId === customerApprovalStageId) {
+            //    TechnicalComplainMomentaryUmrah_CustomerApprovalStage_OnChange(executionContext);
+            //    formContext.getAttribute(caseFields.ldv_Ispassedcustomerapproval).addOnChange(function () {
+            //        TechnicalComplainMomentaryUmrah_CustomerApprovalStage_OnChange(executionContext);
+            //    });
+            //}
 
             if (currentStageId === companyStageId) {
                 TechnicalComplainMomentaryUmrah_CompanyDecision_OnChange(
@@ -2954,6 +3018,9 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
 
             break;
         case ServiceType.Inquiry.serviceDefinitionId.toLowerCase():
+            console.log(
+                currentStageId + " -------- " + "momentaryUmrahOrHajj company service"
+            );
             var socialMediaStageId = BPFs.Inquiry.stages.socialMedia.id.toLowerCase();
             var quality1_StageId = BPFs.Inquiry.stages.quality.id.toLowerCase();
             var quality2_StageId = BPFs.Inquiry.stages.quality2.id.toLowerCase();
@@ -3049,101 +3116,100 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
 
             break;
 
+        // case ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase():
+        // case ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase():
+        //   var notMomentaryHijjAndUmarahQualityStageId =
+        //     BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Quality.id.toLowerCase();
+        //   var notMomentaryHijjAndUmarahQuality1StageId =
+        //     BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Quality1.id.toLowerCase();
+        //   var notMomentaryHijjAndUmarahUmrahStageId =
+        //     BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Umrah.id.toLowerCase();
+        //   var notMomentaryHijjAndUmarahHajjStageId =
+        //     BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Hajj.id.toLowerCase();
+        //   var notMomentaryHijjAndUmarahSocialMediaId =
+        //     BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.SocialMedia.id.toLowerCase();
+        //   var notMomentaryHijjAndUmarahSupervisorStageId =
+        //     BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Supervisor.id.toLowerCase();
+        //   var notMomentaryHijjAndUmarahSupervisor1StageId =
+        //     BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Supervisor1.id.toLowerCase();
 
-        case ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase():
-        case ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase():
-            var notMomentaryHijjAndUmarahQualityStageId =
-                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Quality.id.toLowerCase();
-            var notMomentaryHijjAndUmarahQuality1StageId =
-                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Quality1.id.toLowerCase();
-            var notMomentaryHijjAndUmarahUmrahStageId =
-                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Umrah.id.toLowerCase();
-            var notMomentaryHijjAndUmarahHajjStageId =
-                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Hajj.id.toLowerCase();
-            var notMomentaryHijjAndUmarahSocialMediaId =
-                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.SocialMedia.id.toLowerCase();
-            var notMomentaryHijjAndUmarahSupervisorStageId =
-                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Supervisor.id.toLowerCase();
-            var notMomentaryHijjAndUmarahSupervisor1StageId =
-                BPFs.TechnicalComplainNotMomentaryHijjAndUmarah.stages.Supervisor1.id.toLowerCase();
+        //   if (currentStageId === notMomentaryHijjAndUmarahHajjStageId) {
+        //     TechnicalComplainNotMomentaryHijjAndUmarah_HajjDecision_OnChange(
+        //       executionContext
+        //     );
+        //     formContext
+        //       .getAttribute(caseFields.ldv_ministryshajjagencydecisisoncode)
+        //       .addOnChange(function () {
+        //         TechnicalComplainNotMomentaryHijjAndUmarah_HajjDecision_OnChange(
+        //           executionContext
+        //         );
+        //       });
+        //   }
 
-            if (currentStageId === notMomentaryHijjAndUmarahHajjStageId) {
-                TechnicalComplainNotMomentaryHijjAndUmarah_HajjDecision_OnChange(
-                    executionContext
-                );
-                formContext
-                    .getAttribute(caseFields.ldv_ministryshajjagencydecisisoncode)
-                    .addOnChange(function () {
-                        TechnicalComplainNotMomentaryHijjAndUmarah_HajjDecision_OnChange(
-                            executionContext
-                        );
-                    });
-            }
+        //   if (currentStageId === notMomentaryHijjAndUmarahUmrahStageId) {
+        //     TechnicalComplainNotMomentaryHijjAndUmarah_UmarahDecision_OnChange(
+        //       executionContext
+        //     );
+        //     formContext
+        //       .getAttribute(caseFields.ldv_ministrysumarahagencydecisisoncode)
+        //       .addOnChange(function () {
+        //         TechnicalComplainNotMomentaryHijjAndUmarah_UmarahDecision_OnChange(
+        //           executionContext
+        //         );
+        //       });
+        //   }
 
-            if (currentStageId === notMomentaryHijjAndUmarahUmrahStageId) {
-                TechnicalComplainNotMomentaryHijjAndUmarah_UmarahDecision_OnChange(
-                    executionContext
-                );
-                formContext
-                    .getAttribute(caseFields.ldv_ministrysumarahagencydecisisoncode)
-                    .addOnChange(function () {
-                        TechnicalComplainNotMomentaryHijjAndUmarah_UmarahDecision_OnChange(
-                            executionContext
-                        );
-                    });
-            }
+        //   if (currentStageId === notMomentaryHijjAndUmarahQualityStageId) {
+        //     GeneralQualityStageDecisionR2_OnChange(executionContext);
+        //     formContext
+        //       .getAttribute(caseFields.ldv_qualitydecisioncode)
+        //       .addOnChange(function () {
+        //         GeneralQualityStageDecisionR2_OnChange(executionContext);
+        //       });
+        //   }
 
-            if (currentStageId === notMomentaryHijjAndUmarahQualityStageId) {
-                GeneralQualityStageDecisionR2_OnChange(executionContext);
-                formContext
-                    .getAttribute(caseFields.ldv_qualitydecisioncode)
-                    .addOnChange(function () {
-                        GeneralQualityStageDecisionR2_OnChange(executionContext);
-                    });
-            }
+        //   if (currentStageId === notMomentaryHijjAndUmarahQuality1StageId) {
+        //     TechnicalComplainMomentryUmrah_Quality2Stage_OnChange(executionContext);
+        //     formContext
+        //       .getAttribute(caseFields.ldv_qualitydecisioncode)
+        //       .addOnChange(function () {
+        //         TechnicalComplainMomentryUmrah_Quality2Stage_OnChange(
+        //           executionContext
+        //         );
+        //       });
+        //   }
 
-            if (currentStageId === notMomentaryHijjAndUmarahQuality1StageId) {
-                TechnicalComplainMomentryUmrah_Quality2Stage_OnChange(executionContext);
-                formContext
-                    .getAttribute(caseFields.ldv_qualitydecisioncode)
-                    .addOnChange(function () {
-                        TechnicalComplainMomentryUmrah_Quality2Stage_OnChange(
-                            executionContext
-                        );
-                    });
-            }
+        //   if (currentStageId === notMomentaryHijjAndUmarahSocialMediaId) {
+        //     GeneralSocialMediaDecision_OnChange(executionContext);
+        //     formContext
+        //       .getAttribute(caseFields.ldv_socialMediaDecisioncode)
+        //       .addOnChange(function () {
+        //         GeneralSocialMediaDecision_OnChange(executionContext);
+        //       });
+        //   }
 
-            if (currentStageId === notMomentaryHijjAndUmarahSocialMediaId) {
-                GeneralSocialMediaDecision_OnChange(executionContext);
-                formContext
-                    .getAttribute(caseFields.ldv_socialMediaDecisioncode)
-                    .addOnChange(function () {
-                        GeneralSocialMediaDecision_OnChange(executionContext);
-                    });
-            }
+        //   if (currentStageId === notMomentaryHijjAndUmarahSupervisorStageId) {
+        //     GeneralSuperVisorDecision_OnChange(executionContext);
+        //     formContext
+        //       .getAttribute(caseFields.ldv_supervisordecisioncode)
+        //       .addOnChange(function () {
+        //         GeneralSuperVisorDecision_OnChange(executionContext);
+        //       });
+        //   }
 
-            if (currentStageId === notMomentaryHijjAndUmarahSupervisorStageId) {
-                GeneralSuperVisorDecision_OnChange(executionContext);
-                formContext
-                    .getAttribute(caseFields.ldv_supervisordecisioncode)
-                    .addOnChange(function () {
-                        GeneralSuperVisorDecision_OnChange(executionContext);
-                    });
-            }
-
-            if (currentStageId === notMomentaryHijjAndUmarahSupervisor1StageId) {
-                TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(
-                    executionContext
-                );
-                formContext
-                    .getAttribute(caseFields.ldv_supervisordecisioncode)
-                    .addOnChange(function () {
-                        TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(
-                            executionContext
-                        );
-                    });
-            }
-            break;
+        //   if (currentStageId === notMomentaryHijjAndUmarahSupervisor1StageId) {
+        //     TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(
+        //       executionContext
+        //     );
+        //     formContext
+        //       .getAttribute(caseFields.ldv_supervisordecisioncode)
+        //       .addOnChange(function () {
+        //         TechnicalComplainMomentryUmrah_Supervisor2Stage_Onchange(
+        //           executionContext
+        //         );
+        //       });
+        //   }
+        //   break;
 
         case ServiceType.BusinessSectorComplain.serviceDefinitionId.toLowerCase():
         case ServiceType.TechnologicalComplain.serviceDefinitionId.toLowerCase():
@@ -3192,12 +3258,46 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                 });
             }
             if (currentStageId == socialMediaStageId) {
-                debugger;
+                // debugger;
                 GeneralSocialMediaDecision_OnChange(executionContext);
                 formContext
                     .getAttribute(caseFields.ldv_socialMediaDecisioncode)
                     .addOnChange(function () {
                         GeneralSocialMediaDecision_OnChange(executionContext);
+                    });
+            }
+            break;
+
+        case ServiceType.MentoringServiceNUSUKEnaya.serviceDefinitionId.toLowerCase():
+            var Nusuk1StageId =
+                BPFs.NusukCareServicesRequest.stages.nusuk1.id.toLowerCase();
+            var CompanyStageId =
+                BPFs.NusukCareServicesRequest.stages.company.id.toLowerCase();
+            var nusukStageId =
+                BPFs.NusukCareServicesRequest.stages.nusuk.id.toLowerCase();
+
+            if (currentStageId === Nusuk1StageId) {
+                NusukSubmitDecision_MentoringService_OnChange(executionContext);
+                formContext
+                    .getAttribute(caseFields.ldv_nusukdecisioncode)
+                    .addOnChange(function () {
+                        NusukSubmitDecision_MentoringService_OnChange(executionContext);
+                    });
+            }
+            if (currentStageId === CompanyStageId) {
+                // NusukMonitoring_CompanyDecision_OnChange(executionContext);
+                // formContext
+                //   .getAttribute(caseFields.ldv_companiesservicedecisioncode)
+                //   .addOnChange(function () {
+                //     NusukMonitoring_CompanyDecision_OnChange(executionContext);
+                //   });
+            }
+            if (currentStageId === nusukStageId) {
+                NusukMonitoring_NusukResolveDecision_OnChange(executionContext);
+                formContext
+                    .getAttribute(caseFields.ldv_nusukdecisioncode)
+                    .addOnChange(function () {
+                        NusukMonitoring_NusukResolveDecision_OnChange(executionContext);
                     });
             }
             break;
@@ -3218,15 +3318,21 @@ function GetDecisionsBasedOnService_OnLoad(formContext) {
     }
 
     switch (serviceId) {
+        case ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase():
+        case ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase():
         case ServiceType.FinancialComplainInternalPilgrimspostHajj.serviceDefinitionId.toLowerCase():
-            FC_InternalPilgrimspostHajj_OnLoad(formContext);
+        case ServiceType.FinancialCompensationComplain.serviceDefinitionId.toLowerCase():
+            FC_General_DepartmentComplain_OnLoad(formContext);
             HideOriginOnSubmitStage(formContext);
             break;
 
-        case ServiceType.FinancialCompensationComplain.serviceDefinitionId.toLowerCase():
-            FinancialCompensationComplain_OnLoad(formContext);
-            HideOriginOnSubmitStage(formContext);
-            break;
+        // To be asked about
+        //case ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase():
+        //case ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase():
+        //    TechnicalComplainNotMomentaryHijjAndUmarah_OnLoad(formContext);
+        //    HideFieldsOnSubmitTechnicalComplainNonMomentaryHajjAndUmrah(formContext);
+        //    HideOriginOnSubmitStage(formContext);
+        //    break;
 
         case ServiceType.TechnicalComplainMomentaryUmrahForCompanies.serviceDefinitionId.toLowerCase():
             TechnicalComplainMomentaryUmrahForCompanies_OnLoad(formContext);
@@ -3256,17 +3362,6 @@ function GetDecisionsBasedOnService_OnLoad(formContext) {
             HideOriginOnSubmitStage(formContext);
             break;
 
-        case ServiceType.TechnicalComplainNonMomentaryUmrah.serviceDefinitionId.toLowerCase():
-            TechnicalComplainNotMomentaryHijjAndUmarah_OnLoad(formContext);
-            HideFieldsOnSubmitTechnicalComplainNonMomentaryHajjAndUmrah(formContext);
-            HideOriginOnSubmitStage(formContext);
-            break;
-        case ServiceType.TechnicalComplainNonMomentaryHajj.serviceDefinitionId.toLowerCase():
-            TechnicalComplainNotMomentaryHijjAndUmarah_OnLoad(formContext);
-            HideFieldsOnSubmitTechnicalComplainNonMomentaryHajjAndUmrah(formContext);
-            HideOriginOnSubmitStage(formContext);
-            break;
-
         case ServiceType.BusinessSectorComplain.serviceDefinitionId.toLowerCase():
         case ServiceType.TechnologicalComplain.serviceDefinitionId.toLowerCase():
         case ServiceType.FinancialComplainInternalPilgrims.serviceDefinitionId.toLowerCase():
@@ -3276,11 +3371,16 @@ function GetDecisionsBasedOnService_OnLoad(formContext) {
             HideFieldsOnSubmitStageRequestComplainsIntegration(formContext);
             HideOriginOnSubmitStage(formContext);
             break;
+
+        case ServiceType.MentoringServiceNUSUKEnaya.serviceDefinitionId.toLowerCase():
+            NusukMonitoring__OnLoad(formContext);
+            //  HideOriginOnSubmitStage(formContext);
+            break;
     }
 }
 
-// #region FC Internal Pilgrims post Hajj service
-function FC_InternalPilgrimspostHajj_CompaniesAdministrationStageDecision_OnChange(
+// #region FC Internal Pilgrims post Hajj service & Financial Compensation Complain & technical Non Commentary for Hajj and Umrah
+function FC_General_DepartmentAdministrationStageDecision_OnChange(
     executionContext
 ) {
     var formContext = executionContext.getFormContext();
@@ -3298,7 +3398,7 @@ function FC_InternalPilgrimspostHajj_CompaniesAdministrationStageDecision_OnChan
     ShowNextStage(executionContext);
 }
 
-function FC_InternalPilgrimspostHajj_OnLoad(formContext) {
+function FC_General_DepartmentComplain_OnLoad(formContext) {
     var departmentNeedInfoOnBpf =
         "header_process_" + caseFields.ldv_departmentneededinformation;
     var departmentClosureReasonOnBpf =
@@ -3315,43 +3415,41 @@ function FC_InternalPilgrimspostHajj_OnLoad(formContext) {
     GeneralSocialMediaDecision_OnLoad(formContext);
     GeneralSupervisorDecision_OnLoad(formContext);
 }
-
-//#endregion
 
 // #region Financial compensation complain
-function FinancialCompensationComplain_MinistrySHajjAgencyStageDecision_OnChange(
-    executionContext
-) {
-    var ministryHajjNeedInfoOnBpf =
-        "header_process_" + caseFields.ldv_ministryshajjagencyneededinformation;
-    var ministryHajjClosureReasonOnBpf =
-        "header_process_" + caseFields.ldv_closurereasons;
+//function FinancialCompensationComplain_MinistrySHajjAgencyStageDecision_OnChange(
+//    executionContext
+//) {
+//    var ministryHajjNeedInfoOnBpf =
+//        "header_process_" + caseFields.ldv_ministryshajjagencyneededinformation;
+//    var ministryHajjClosureReasonOnBpf =
+//        "header_process_" + caseFields.ldv_closurereasons;
 
-    DepartmentDecision_OnChange(
-        executionContext,
-        caseFields.ldv_ministryshajjagencydecisisoncode,
-        ministryHajjNeedInfoOnBpf,
-        ministryHajjClosureReasonOnBpf
-    );
-}
+//    DepartmentDecision_OnChange(
+//        executionContext,
+//        caseFields.ldv_ministryshajjagencydecisisoncode,
+//        ministryHajjNeedInfoOnBpf,
+//        ministryHajjClosureReasonOnBpf
+//    );
+//}
 
-function FinancialCompensationComplain_OnLoad(formContext) {
-    var departmentNeedInfoOnBpf =
-        "header_process_" + caseFields.ldv_departmentneededinformation;
-    var departmentClosureReasonOnBpf =
-        "header_process_" + caseFields.ldv_departmentclosurereason;
+//function FinancialCompensationComplain_OnLoad(formContext) {
+//    var departmentNeedInfoOnBpf =
+//        "header_process_" + caseFields.ldv_departmentneededinformation;
+//    var departmentClosureReasonOnBpf =
+//        "header_process_" + caseFields.ldv_departmentclosurereason;
 
-    DepartmentDecision_OnLoad(
-        formContext,
-        caseFields.ldv_departmentdecisioncode,
-        departmentNeedInfoOnBpf,
-        departmentClosureReasonOnBpf
-    );
+//    DepartmentDecision_OnLoad(
+//        formContext,
+//        caseFields.ldv_departmentdecisioncode,
+//        departmentNeedInfoOnBpf,
+//        departmentClosureReasonOnBpf
+//    );
 
-    GeneralQualityStageDecisionR2_OnLoad(formContext);
-    GeneralSocialMediaDecision_OnLoad(formContext);
-    GeneralSupervisorDecision_OnLoad(formContext);
-}
+//    GeneralQualityStageDecisionR2_OnLoad(formContext);
+//    GeneralSocialMediaDecision_OnLoad(formContext);
+//    GeneralSupervisorDecision_OnLoad(formContext);
+//}
 
 //#endregion
 
@@ -3805,6 +3903,66 @@ function CxDecision_Suggestion_OnChange(formContext) {
     );
 }
 
+// nusuk team submit Decision on case Mentoring Service
+function NusukSubmitDecision_MentoringService_OnLoad(formContext) {
+    var nusukSubmitDescisionCommentOnBpf =
+        "header_process_" + caseFields.ldv_nusukcarecomment;
+
+    NusukSubmitDecision_OnLoad(
+        formContext,
+        caseFields.ldv_nusukdecisioncode,
+        nusukSubmitDescisionCommentOnBpf
+    );
+}
+
+function NusukSubmitDecision_MentoringService_OnChange(formContext) {
+    var NusukSubmitDescisionCommentOnBpf =
+        "header_process_" + caseFields.ldv_nusukcarecomment;
+
+    NusukSubmitDecision_OnChange(
+        formContext,
+        caseFields.ldv_nusukdecisioncode,
+        NusukSubmitDescisionCommentOnBpf
+    );
+}
+
+// function NusukMonitoring_CompanyDecision_OnChange(formContext) {
+//   var NusukSubmitDescisionCommentOnBpf =
+//       "header_process_" + caseFields.ldv_nusukcarecomment;
+
+//       NusukSubmitDecision_OnChange(
+//       formContext,
+//       caseFields.ldv_nusukdecisioncode,
+//       NusukSubmitDescisionCommentOnBpf
+//   );
+// }
+
+function NusukMonitoring_NusukResolveDecision_OnLoad(executionContext) {
+    var ClosureReasonOnBpf = "header_process_" + caseFields.ldv_closurereason;
+    var needMoreDetailsOnBpf =
+        "header_process_" + caseFields.ldv_needsmoredetails;
+
+    NusukResolveDecision_OnLoad(
+        executionContext,
+        caseFields.ldv_nusukclosedecisioncode,
+        ClosureReasonOnBpf,
+        needMoreDetailsOnBpf
+    );
+}
+
+function NusukMonitoring_NusukResolveDecision_OnChange(executionContext) {
+    var ClosureReasonOnBpf = "header_process_" + caseFields.ldv_closurereason;
+    var needMoreDetailsOnBpf =
+        "header_process_" + caseFields.ldv_needsmoredetails;
+
+    NusukResolveDecision_OnChange(
+        executionContext,
+        caseFields.ldv_nusukclosedecisioncode,
+        ClosureReasonOnBpf,
+        needMoreDetailsOnBpf
+    );
+}
+
 function Suggestions_OnLoad(formContext) {
     //  var suggestionsCDNeededInfoOnBpf = 'header_process_' + caseFields.ldv_departmentneededinformation;
     // var suggestionCDClosureReason = 'header_process_' + caseFields.ldv_departmentclosurereason;
@@ -4168,6 +4326,11 @@ function IntegrationServices_OnLoad(formContext) {
     GeneralSocialMediaDecision_OnLoad(formContext);
 }
 
+function NusukMonitoring__OnLoad(formContext) {
+    NusukSubmitDecision_MentoringService_OnLoad(formContext);
+    // NusukMonitoring_NusukResolveDecision_OnLoad(formContext);
+}
+
 //#endregion
 
 // General Quality method
@@ -4205,19 +4368,6 @@ function GeneralQualityStageDecisionR2_OnChange(executionContext) {
         qualityClosureReasonOnBpf
     );
 }
-function GeneralQualityOfficerStageDecisionR2_OnChange(executionContext) {
-    debugger;
-    var qualityClosureReasonOnBpf =
-        "header_process_" + caseFields.ldv_closurereason;
-    var qualityNeededInformationOnBpf =
-        "header_process_" + caseFields.ldv_qualityofficerneededinformation2;
-    DepartmentQualityDecisionForR2_OnChange(
-        executionContext,
-        caseFields.ldv_qualityofficerdecisioncode,
-        qualityNeededInformationOnBpf,
-        qualityClosureReasonOnBpf
-    );
-}
 
 function GeneralQualityStageDecisionR2_OnLoad(formContext) {
     var qualityClosureReasonOnBpf =
@@ -4231,19 +4381,6 @@ function GeneralQualityStageDecisionR2_OnLoad(formContext) {
         qualityClosureReasonOnBpf
     );
 }
-
-function GeneralQualityOfficerStageDecisionR2_OnLoad(formContext) {
-    var qualityClosureReasonOnBpf =
-        "header_process_" + caseFields.ldv_closurereason;
-    var qualityNeededInformationOnBpf =
-        "header_process_" + caseFields.ldv_qualityofficerneededinformation2;
-    DepartmentQualityDecisionForR2_OnLoad(
-        formContext,
-        caseFields.ldv_qualityofficerdecisioncode,
-        qualityNeededInformationOnBpf,
-        qualityClosureReasonOnBpf
-    );
-} 
 
 // General Social Media method
 function GeneralSocialMediaDecision_OnChange(executionContext) {
@@ -5527,6 +5664,198 @@ function CxDecision_OnChange(
     ShowNextStage(executionContext);
 }
 
+///////////////nusuk team decision
+
+function NusukSubmitDecision_OnLoad(
+    formContext,
+    decisionSchemaName,
+    commentSchemaNameOnBpf
+) {
+    debugger;
+    if (!decisionSchemaName || !commentSchemaNameOnBpf) {
+        console.error("One or more parameters are null or undefined.");
+        return;
+    }
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            commentSchemaNameOnBpf,
+            false,
+            false
+        );
+    } else {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            commentSchemaNameOnBpf,
+            false,
+            true
+        );
+    }
+}
+
+function NusukSubmitDecision_OnChange(
+    executionContext,
+    decisionSchemaName,
+    commentSchemaNameOnBpf
+) {
+    debugger;
+    var formContext = executionContext.getFormContext();
+    if (!decisionSchemaName || !commentSchemaNameOnBpf) {
+        console.error("One or more parameters are null or undefined.");
+        return;
+    }
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            commentSchemaNameOnBpf,
+            false,
+            false
+        );
+        return;
+    } else {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            commentSchemaNameOnBpf,
+            true,
+            true
+        );
+    }
+
+    ShowNextStage(executionContext);
+}
+
+// nusuk resolve decision
+
+function NusukResolveDecision_OnLoad(
+    executionContext,
+    decisionSchemaName,
+    closureReasonSchemaNameOnBpf,
+    transferReasonSchemaNameonBpf
+) {
+    var formContext = executionContext.getFormContext();
+
+    if (!decisionSchemaName || !closureReasonSchemaNameOnBpf) {
+        console.error("One or more parameters are null or undefined.");
+        return;
+    }
+
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            false,
+            false
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            transferReasonSchemaNameonBpf,
+            false,
+            false
+        );
+        return;
+    }
+
+    // Show and set required status for Closure Reason field based on decision [Resolve]
+    if (decision === caseFields.Enums.nusukTeamDecision.Resolved) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            true,
+            true
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            transferReasonSchemaNameonBpf,
+            false,
+            false
+        );
+        ShowNextStage(executionContext);
+    } //Transfer Reason
+    else if (decision === caseFields.Enums.nusukTeamDecision.SendBack) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            transferReasonSchemaNameonBpf,
+            true,
+            true
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            false,
+            false
+        );
+        ShowNextStage(executionContext);
+    }
+}
+
+function NusukResolveDecision_OnChange(
+    executionContext,
+    decisionSchemaName,
+    closureReasonSchemaNameOnBpf,
+    transferReasonSchemaNameonBpf
+) {
+    var formContext = executionContext.getFormContext();
+
+    if (!decisionSchemaName || !closureReasonSchemaNameOnBpf) {
+        console.error("One or more parameters are null or undefined.");
+        return;
+    }
+
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            false,
+            false
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            transferReasonSchemaNameonBpf,
+            false,
+            false
+        );
+        return;
+    }
+
+    // Show and set required status for Closure Reason field based on decision [Resolve]
+    if (decision === caseFields.Enums.nusukTeamDecision.Resolved) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            true,
+            true
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            transferReasonSchemaNameonBpf,
+            false,
+            false
+        );
+        ShowNextStage(executionContext);
+    } //Transfer Reason
+    else if (decision === caseFields.Enums.nusukTeamDecision.SendBack) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            transferReasonSchemaNameonBpf,
+            true,
+            true
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            false,
+            false
+        );
+        ShowNextStage(executionContext);
+    }
+}
+
 //
 // #endregion
 
@@ -6035,7 +6364,7 @@ function PreventDefaultSetActiveAndBackOnPreChange(executionContext) {
     //    if (eventArgs.getDirection() === 'Previous') {
     //        eventArgs.preventDefault();
     //        if (userLanguage === 1025) {
-    //            Xrm.Utility.alertDialog('حركة المرحلة الخلفية غير مسموح بها.');
+    //          Xrm.Utility.alertDialog('حركة المرحلة الخلفية غير مسموح بها.');
     //        } else {
     //            Xrm.Utility.alertDialog('Back stage movement is not allowed.');
     //        }
@@ -6193,9 +6522,9 @@ function fieldServiceOfficePresearch() {
             getLookupFieldValue(globalCompanyLookupControl)
         ),
         filter = `
-    <filter type="and">
-        <condition attribute="ldv_companyid" operator="eq" value="${companyId}" />
-    </filter>`;
+<filter type="and">
+  <condition attribute="ldv_companyid" operator="eq" value="${companyId}" />
+</filter>`;
 
     if (filter)
         addControlCustomFilter(control, filter, "ldv_fieldserviceofficeid");
@@ -6338,4 +6667,22 @@ function HideQualityAndResolvedStages(formContext) {
             }
         }
     }
+}
+function OnChange_ParentRequestType(formContext) {
+
+
+    var fieldValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_requesttypeid);
+
+    if (fieldValue) {
+        CommonGeneric.ShowField(formContext, caseFields.ldv_serviceid, true);
+        const selectedEntity = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_requesttypeid);
+        if (selectedEntity != null) {
+            const parentId = selectedEntity.id.replace('{', '').replace('}', '').toLowerCase();
+            GetChildService(formContext, parentId)
+        }
+    } else {
+        CommonGeneric.ShowField(formContext, caseFields.ldv_serviceid, false);
+    }
+
+
 }
