@@ -24,13 +24,10 @@ namespace LinDev.MOHU.Utilites.Model
         public const string statuscode = "statuscode";
         public const string statecode = "statecode";
         public const string ProcessId = "processid";
-
-
     }
     public static class ServiceEntity
     {
         public const string EntityLogicalName = "ldv_service";
         public const string Process  = "ldv_processid";
-
     }
 }

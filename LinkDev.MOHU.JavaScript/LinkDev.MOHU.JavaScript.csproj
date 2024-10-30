@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CaseManagement\Case\CaseMainForm_R2.js" />
     <Content Include="caseTest - Copy.js" />
     <Content Include="caseTest.js" />
+    <Content Include="CaseManagement\Case\ldv_Case_CopyOfMainForm.js" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +58,7 @@
     <Content Include="Profile\Company\ldv_Account_MainForm.js" />
     <Content Include="Profile\Hajj\ldv_Hajj_MainForm.js" />
     <Content Include="Profile\Individual\ldv_Contact_MainForm.js" />
+    <Content Include="Profile\Individual\Ribbon.js" />
     <Content Include="Profile\Permits\ldv_Permits_Mainform.js" />
   </ItemGroup>
   <ItemGroup>

@@ -237,23 +237,17 @@ namespace MOHU.Integration.Application.Service
 
             return ticketTypes;
         }
+        
         public async Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request)
         {
-
             if (request.TicketId == Guid.Empty)
                 throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
-
-            var entity = new Entity(Incident.EntityLogicalName, request.TicketId);
-
-            entity.Attributes.Add(Incident.Fields.IntegrationClosureReason, request.Resolution);
-            entity.Attributes.Add(Incident.Fields.IntegrationClosureDate, request.ResolutionDate);
-            entity.Attributes.Add(Incident.Fields.IntegrationStatus,
-               new OptionSetValue(Convert.ToInt32(request.IntegrationStatus)));
-            entity.Attributes.Add(request.FlagLogicalName, true);
-
-            await _crmContext.ServiceClient.UpdateAsync(entity);
+            
+            await _crmContext.ServiceClient.UpdateAsync(request.ToTicketEntity());
+            
             return true;
         }
+        
         private async Task<List<TicketTypeResponse>> GetTypesAsync()
         {
             var cacheKey = "CaseTypes";

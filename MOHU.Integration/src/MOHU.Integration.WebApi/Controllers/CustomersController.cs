@@ -13,15 +13,8 @@ namespace MOHU.Integration.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : BaseController
+    public class CustomersController(IIvrService ivrService, ICustomerService customerService) : BaseController
     {
-        private readonly IIvrService _ivrService;
-        private readonly ICustomerService _customerService;
-        public CustomersController(IIvrService ivrService, ICustomerService customerService)
-        {
-            _ivrService = ivrService;
-            _customerService = customerService;
-        }
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ResponseMessage<string>),StatusCodes.Status200OK)]
@@ -31,11 +24,10 @@ namespace MOHU.Integration.WebApi.Controllers
         {
             var internationalFormatNumber = mobileNumber.ConvertPhoneNumberToInternationalFormat();
             
-            var result = await _ivrService.GetCustomerProfileUrlAsync(internationalFormatNumber);
+            var result = await ivrService.GetCustomerProfileUrlAsync(internationalFormatNumber);
             
             return Ok(result);
         }
-
 
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -46,7 +38,7 @@ namespace MOHU.Integration.WebApi.Controllers
         {
             try
             {
-                var result = await _customerService.CreateProfileAsync(model);
+                var result = await customerService.CreateProfileAsync(model);
                 return Ok(result);
             }
             catch (BadRequestException ex)
@@ -55,6 +47,7 @@ namespace MOHU.Integration.WebApi.Controllers
             }
           
         }
+        
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
@@ -62,7 +55,7 @@ namespace MOHU.Integration.WebApi.Controllers
         [HttpPost(nameof(CreatePhoneCall))]
         public async Task<ResponseMessage<Guid>> CreatePhoneCall(CreatePhoneCallRequest request)
         {
-            var result = await _ivrService.CreatePhoneCall(request);
+            var result = await ivrService.CreatePhoneCall(request);
             return Ok(result);
         }
     }

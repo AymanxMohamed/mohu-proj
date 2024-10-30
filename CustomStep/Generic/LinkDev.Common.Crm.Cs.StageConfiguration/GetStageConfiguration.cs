@@ -19,24 +19,39 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
 {
     public class GetStageConfiguration : CodeActivity
     {
+        #region Input Parameter
+
         //// [RequiredArgument]
-        [Input("Process Stage")]
-        [ReferenceTarget("processstage")]
-        public InArgument<EntityReference> ProcessStage { get; set; }
-        //[RequiredArgument]
+        //[Input("Process Stage")]
+        //[ReferenceTarget("processstage")]
+        //public InArgument<EntityReference> ProcessStage { get; set; }
+      [RequiredArgument]
         [Input("EntityReferenceId")]
         public InArgument<string> EntityReferenceId { get; set; }
-       // [RequiredArgument]
+      [RequiredArgument]
         [Input("EntityReferenceSchemaName")]
         public InArgument<string> EntityReferenceName { get; set; }
 
+        [Input("UseService")]
+        [Default("False")]
+        public InArgument<bool> UseService { get; set; }
+
+        [Input("ServiceID")]
+        public InArgument<string> ServiceId { get; set; }
+        #endregion
+
+        #region Output Parameter
 
         [Output("Stage Configuration")]
         [ReferenceTarget("ldv_stageconfiguration")]
         public OutArgument<EntityReference> StageConfiguration { get; set; }
+#endregion
+
         protected override void Execute(CodeActivityContext executionContext)
         {
-            GetStageConfigurationLogic BL = new GetStageConfigurationLogic(/*ProcessStage,*/ StageConfiguration, EntityReferenceId, EntityReferenceName);
+            GetStageConfigurationLogic BL = new GetStageConfigurationLogic(/*ProcessStage,*/ StageConfiguration, EntityReferenceId,
+                EntityReferenceName,   ServiceId, UseService);
+
             BL.ExecuteLogic(executionContext);
         }
     }
@@ -46,14 +61,19 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
         public OutArgument<EntityReference> StageConfiguration { get; set; }
         public InArgument<string> EntityReferenceId { get; set; }
         public InArgument<string> EntityReferenceName { get; set; }
+        public InArgument<bool> UseService { get; set; }
+        public InArgument<string> ServiceId { get; set; }
+
         protected CRMAccessLayer DAL;
         protected StageConfigurationBLL logicLayer;
-        public GetStageConfigurationLogic(/*InArgument<EntityReference> processStage,*/ OutArgument<EntityReference> stageConfiguration, InArgument<string> entityReferenceId, InArgument<string> entityReferenceName)
+        public GetStageConfigurationLogic( OutArgument<EntityReference> stageConfiguration, InArgument<string> entityReferenceId, InArgument<string> entityReferenceName, InArgument<string> serviceId, InArgument<bool> useService)
         {
             //ProcessStage = processStage;
             StageConfiguration = stageConfiguration;
             EntityReferenceId = entityReferenceId;
             EntityReferenceName = entityReferenceName;
+            ServiceId = serviceId;
+            UseService = useService;
         }     
         public void ExecuteLogic(CodeActivityContext executionContext)
         {
@@ -71,6 +91,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
                 //EntityReference processStage = ProcessStage.Get(executionContext);
                 string entityReferenceId = EntityReferenceId.Get(executionContext);
                 string entityReferenceName = EntityReferenceName.Get(executionContext);
+                bool useService = UseService.Get(executionContext);
+                string serviceId = ServiceId.Get(executionContext);
                 StageConfiguration.Set(executionContext, null);
 
                 #region pass active stage
@@ -97,7 +119,14 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration
 
                 if (entityReferenceId != string.Empty && entityReferenceName != string.Empty)
                 {
-                    EntityReference stageConf = logicLayer.RetriveStageConfigurarionByProcessStage(new Guid(entityReferenceId), entityReferenceName, tracingService);
+                    EntityReference stageConf = new EntityReference();
+                    if (useService)
+                    {
+                        stageConf = logicLayer.RetriveStageConfigurarionByProcessStage(new Guid(entityReferenceId), entityReferenceName, new Guid(serviceId), tracingService);
+
+                    }
+                    else
+                    stageConf = logicLayer.RetriveStageConfigurarionByProcessStage(new Guid(entityReferenceId), entityReferenceName, Guid.Empty, tracingService);
                    
                     if (stageConf?.Id != Guid.Empty)
                     {

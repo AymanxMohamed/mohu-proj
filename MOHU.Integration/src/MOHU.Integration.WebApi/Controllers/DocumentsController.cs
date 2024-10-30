@@ -1,25 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Document.Download;
 using MOHU.Integration.Contracts.Dto.Document.Upload;
 using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Shared;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DocumentsController : BaseController
+    public class DocumentsController(IDocumentService documentService) : BaseController
     {
-        private readonly IDocumentService _documentService;
-        
-
-        public DocumentsController(IDocumentService documentService)
-        {
-            _documentService = documentService;
-        }
-
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ResponseMessage<DownloadDocumentResponse>), StatusCodes.Status200OK)]
@@ -28,7 +18,7 @@ namespace MOHU.Integration.WebApi.Controllers
         [HttpGet]
         public async Task<ResponseMessage<DownloadDocumentResponse>> Get(string documentId, Guid ticketId)
         {
-            var result = await _documentService.DownloadAttachmentAsync(documentId, ticketId);
+            var result = await documentService.DownloadAttachmentAsync(documentId, ticketId);
             return Ok(result);
         }
         [ProducesResponseType(typeof(ResponseMessage<UploadDocumentResponse>), StatusCodes.Status200OK)]
@@ -56,7 +46,7 @@ namespace MOHU.Integration.WebApi.Controllers
                     });
                 }
             }
-            var result = await _documentService.UploadDocumentAsync(documentsToUpload, ticketId);
+            var result = await documentService.UploadDocumentAsync(documentsToUpload, ticketId);
             return Ok(result);
         }
 

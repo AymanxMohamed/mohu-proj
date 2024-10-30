@@ -1,34 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Kidana;
 using MOHU.Integration.Contracts.Interface;
 
-namespace MOHU.Integration.WebApi.Controllers
+namespace MOHU.Integration.WebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class KidanaController(IKidanaService kidanaService) : BaseController
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class KidanaController : BaseController
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
+    [HttpPost]
+    [Route(nameof(UpdateStatus))]
+    public async Task<ResponseMessage<bool>> UpdateStatus(KidanaUpdateStatusRequest request)
     {
-        public readonly IKidanaService _kedanaService;
-        public KidanaController(IKidanaService kedanaService)
-        {
-            _kedanaService = kedanaService;
-        }
-        [Consumes("application/json")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
-        [HttpPost]
-        [Route(nameof(UpdateStatus))]
-        public async Task<ResponseMessage<bool>> UpdateStatus(KidanaUpdateStatusRequest request)
-        {
-            var result = await _kedanaService.UpdateStatusAsync(request);
-            return Ok(result);
-        }
-
-
-
+        var result = await kidanaService.UpdateStatusAsync(request);
+        return Ok(result);
     }
 }

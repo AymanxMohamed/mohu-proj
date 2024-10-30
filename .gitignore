@@ -529,3 +529,5 @@ XrmDefinitelyTyped
 
 #Resharper
 *.DotSettings
+
+appsettings.Local.json

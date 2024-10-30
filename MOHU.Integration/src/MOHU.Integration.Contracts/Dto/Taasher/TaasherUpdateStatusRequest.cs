@@ -1,11 +1,8 @@
-﻿namespace MOHU.Integration.Contracts.Dto.Taasher
-{
-    public class TaasherUpdateStatusRequest
-    {
-        public string TicketNumber { get; set; }
-        public string Resolution { get; set; }
-        public DateTime? ResolutionDate { get; set; }
-        public IntegrationStatus IntegrationStatus { get; set; }
+﻿using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
-    }
+namespace MOHU.Integration.Contracts.Dto.Taasher;
+
+public class TaasherUpdateStatusRequest : UpdateTicketStatusData
+{
+    public string TicketNumber { get; init; } = null!;
 }

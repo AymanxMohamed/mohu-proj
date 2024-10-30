@@ -1,36 +1,22 @@
-﻿using MOHU.Integration.Contracts.Dto;
-using MOHU.Integration.Contracts.Dto.Kidana;
+﻿using MOHU.Integration.Contracts.Dto.Kidana;
 using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Ticket;
 using MOHU.Integration.Domain.Entitiy;
 
-namespace MOHU.Integration.Application.Service.Kidana
+namespace MOHU.Integration.Application.Service.Kidana;
+
+public class KidanaService(ITicketService ticketService) : IKidanaService
 {
-    public class KidanaService : IKidanaService 
+    public async Task<bool> UpdateStatusAsync(KidanaUpdateStatusRequest request)
     {
-        private readonly ITicketService _ticketService;
-        public KidanaService(ITicketService ticketService)
-        {
-            _ticketService = ticketService;
-        }
+        var ticketId = await ticketService.GetTicketByIntegrationTicketNumberAsync(
+            request.TicketId.ToString(), 
+            Incident.Fields.KidanaTicketNumber);
+            
+        var ticketStatusRequest = request.ToUpdateRequest(ticketId, Incident.Fields.IsKadanaUpdated);
+            
+        await ticketService.UpdateStatusAsync(ticketStatusRequest);
 
-        public async Task<bool> UpdateStatusAsync(KidanaUpdateStatusRequest request)
-        {
-            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(request.TicketId.ToString(), Incident.Fields.KidanaTicketNumber);
-
-            var ticketStatusRequest = new UpdateTicketStatusRequest
-            {
-                TicketId = ticketId,
-                IntegrationStatus = request.IntegrationStatus,
-                FlagLogicalName = Incident.Fields.IsKadanaUpdated,
-                Resolution = request.Resolution,
-                ResolutionDate = request.ResolutionDate
-            };
-            await _ticketService.UpdateStatusAsync(ticketStatusRequest);
-
-            return true;
-
-        }
-
+        return true;
     }
 }
