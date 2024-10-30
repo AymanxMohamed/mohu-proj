@@ -1,4 +1,5 @@
 ﻿var caseFields = {
+    ldv_name: "ldv_name",
     customerid: "customerid",
     ldv_fieldserviceofficeid: "ldv_fieldserviceofficeid",
     title: "title",
@@ -12,7 +13,7 @@
     ldv_seasoncode: "ldv_seasoncode",
     ldv_locationcode: "ldv_locationcode",
     ldv_beneficiarytypecode: "ldv_beneficiarytypecode",
-    ldv_requesttypeid:"ldv_requesttypeid",
+    ldv_requesttypeid: "ldv_requesttypeid",
     ldv_company: "ldv_company",
     ldv_filteredcompanyid: "ldv_filteredcompanyid",
     ldv_errorcodeid: "ldv_errorcodeid",
@@ -6685,4 +6686,33 @@ function OnChange_ParentRequestType(formContext) {
     }
 
 
+}
+
+function GetChildService(formContext, parentId) {
+    Xrm.WebApi.retrieveMultipleRecords("ldv_service", `?$select=${caseFields.ldv_serviceid},${caseFields.ldv_name}&$filter=_ldv_serviceparentid_value eq ${parentId}`).then(
+        function success(results) {
+            console.log(results);
+            if (results.entities.length === 1) {
+                console.log("services count " + results.entities.length);
+                for (var i = 0; i < 1; i++) {
+                    var result = results.entities[i];
+                    // Columns
+                    var childServiceId = result["ldv_serviceid"]; // Guid
+                    var childRecordName = result["ldv_name"]; // Text
+
+                    CommonGeneric.SetLookupRecord(formContext, caseFields.ldv_serviceid, childServiceId, "ldv_service", childRecordName);
+                    CommonGeneric.DisableField(formContext, caseFields.ldv_serviceid, true);
+                }
+            } else {
+                console.log("services count " + results.entities.length);
+
+                CommonGeneric.DisableField(formContext, caseFields.ldv_serviceid, false)
+
+            }
+            // FilterOriginsDependOnRequestType(formContext);
+        },
+        function (error) {
+            console.log(error.message);
+        }
+    );
 }
