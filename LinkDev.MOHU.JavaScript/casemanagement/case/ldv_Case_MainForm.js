@@ -2880,11 +2880,11 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             }
 
             if (currentStageId === qualityStageId) {
-                GeneralQualityOfficerStageDecisionR2_OnChange(executionContext);
+                GeneralQualityStageDecisionR2_OnChange(executionContext);
                 formContext
                     .getAttribute(caseFields.ldv_qualityofficerdecisioncode)
                     .addOnChange(function () {
-                        GeneralQualityOfficerStageDecisionR2_OnChange(executionContext);
+                        GeneralQualityStageDecisionR2_OnChange(executionContext);
                     });
             }
 
