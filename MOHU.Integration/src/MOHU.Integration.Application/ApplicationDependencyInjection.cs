@@ -41,7 +41,7 @@ namespace MOHU.Integration.Application
             services.AddTransient<IKidanaService, KidanaService>();
             services.AddTransient<IServiceDeskService, ServiceDeskService>();
             services.AddTransient<ISahabService, SahabService>();
-            services.AddTransient<INusukTicketsClient, NusukTicketsesClient>();
+            services.AddTransient<INusukTicketsClient, NusukTicketsClient>();
             
 
             return services;
