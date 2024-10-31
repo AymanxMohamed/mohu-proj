@@ -227,61 +227,127 @@ namespace LinkDev.MOHU.Plugin.Utilites
             return caseRecord;
         }
       
-        Entity FetchRequestRecord(string entitySchemaName, string regardingId, string slaLookupName)
+        //Entity FetchRequestRecord(string entitySchemaName, string regardingId, string slaLookupName)
+        //{
+        //    var query = new QueryExpression();
+
+        //    if (entitySchemaName == "task")
+        //    {
+        //        query = ExecuteRequestQuery("activityid", regardingId, slaLookupName);
+
+        //    }
+        //    else if (entitySchemaName == "incident")
+        //    {
+        //        query = ExecuteRequestQuery("incidentid", regardingId, slaLookupName);
+
+        //    }
+        //    var result = service.RetrieveMultiple(query)[0];
+
+        //    return result;
+        //}
+        //QueryExpression ExecuteRequestQuery(string entitySchemaName, string regardingId, string slaLookupName)
+        //{
+
+        //    // Instantiate QueryExpression query
+        //    var query = new QueryExpression("ldv_slahours");
+        //    query.Distinct = true;
+        //    // Add columns to query.ColumnSet
+        //    query.ColumnSet.AddColumns("ldv_name", "createdon", "ldv_code", "ldv_slahoursid", "ldv_warningdurationminutes", "ldv_warningdurationhours", "ldv_failuredurationminutes", "ldv_failuredurationhours");
+        //    query.AddOrder("createdon", OrderType.Descending);
+        //    var query_statecode = 0;
+        //    // Define filter query.Criteria
+        //    query.Criteria.AddCondition("statecode", ConditionOperator.Equal, query_statecode);
+        //    // Add link-entity aa
+        //    var aa = query.AddLink("ldv_casecategory", "ldv_slahoursid", slaLookupName);
+        //    aa.EntityAlias = "aa";
+        //    // Add link-entity ad
+        //    var ad = aa.AddLink(entitySchemaName, "ldv_casecategoryid", "ldv_subcategoryid");
+        //    ad.EntityAlias = "ad";
+        //    // Define filter ad.LinkCriteria
+        //    ad.LinkCriteria.AddCondition("activityid", ConditionOperator.Equal, regardingId);
+        //    //add execute query
+        //    return query;
+        //}
+
+        public string GetSLAConfigurationCriteria()
         {
-            var query = new QueryExpression();
+            tracingService.Trace($"GetSLAConfigurationCriteria");
 
-            if (entitySchemaName == "task")
+            // Query to retrieve the configuration record where ldv_name = 'SLATimeDependent'
+            QueryExpression query = new QueryExpression(ConfigurationEntity.EntityLogicalName)
             {
-                query = ExecuteRequestQuery("activityid", regardingId, slaLookupName);
+                ColumnSet = new ColumnSet(ConfigurationEntity.ValueLogicalName)
+            };
+            query.Criteria.AddCondition(ConfigurationEntity.NameLogicalName, ConditionOperator.Equal, "SLATimeDependent");
 
+            EntityCollection results = service.RetrieveMultiple(query);
+
+            // Check if the record was found
+            if (results.Entities.Count > 0)
+            {
+                // Extract the value from ldv_value field
+                string slaConfiguredBy = results.Entities[0].GetAttributeValue<string>(ConfigurationEntity.ValueLogicalName);
+                return slaConfiguredBy; // Output: 'Service' or 'SubCategory'
             }
-            else if (entitySchemaName == "incident")
+            else
             {
-                query = ExecuteRequestQuery("incidentid", regardingId, slaLookupName);
-
+                tracingService.Trace("SLATimeDependent configuration not found.");
+                return null;
             }
-            var result = service.RetrieveMultiple(query)[0];
-
-            return result;
-        }
-        QueryExpression ExecuteRequestQuery(string entitySchemaName, string regardingId, string slaLookupName)
-        {
-
-            // Instantiate QueryExpression query
-            var query = new QueryExpression("ldv_slahours");
-            query.Distinct = true;
-            // Add columns to query.ColumnSet
-            query.ColumnSet.AddColumns("ldv_name", "createdon", "ldv_code", "ldv_slahoursid", "ldv_warningdurationminutes", "ldv_warningdurationhours", "ldv_failuredurationminutes", "ldv_failuredurationhours");
-            query.AddOrder("createdon", OrderType.Descending);
-            var query_statecode = 0;
-            // Define filter query.Criteria
-            query.Criteria.AddCondition("statecode", ConditionOperator.Equal, query_statecode);
-            // Add link-entity aa
-            var aa = query.AddLink("ldv_casecategory", "ldv_slahoursid", slaLookupName);
-            aa.EntityAlias = "aa";
-            // Add link-entity ad
-            var ad = aa.AddLink(entitySchemaName, "ldv_casecategoryid", "ldv_subcategoryid");
-            ad.EntityAlias = "ad";
-            // Define filter ad.LinkCriteria
-            ad.LinkCriteria.AddCondition("activityid", ConditionOperator.Equal, regardingId);
-            //add execute query
-            return query;
         }
 
+        //Entity FetchCaseCategory(string entitySchemaName, string regardingId)
+        //{
+        //    tracingService.Trace($"in FetchCaseCategory");
 
-        Entity FetchCaseCategory(string entitySchemaName, string regardingId)
+        //    // Create a query expression for ldv_casecategory
+        //    var query = new QueryExpression(CategoryEntity.EntityLogicalName)
+        //    {
+        //        ColumnSet = new ColumnSet(CategoryEntity.SlaHourLevel1, CategoryEntity.SlaHourLevel2, CategoryEntity.SlaHourLevel3)
+        //    };
+
+        //    // Create a link entity to join with the task entity
+        //    var taskLink = new LinkEntity(CategoryEntity.EntityLogicalName, TaskEntity.EntityLogicalName, CategoryEntity.IDLogicalName, TaskEntity.SubCategory, JoinOperator.Inner);
+        //    taskLink.Columns.AddColumns(TaskEntity.IDLogicalName);
+
+        //    // Filter the link entity to include only the task with the specific activityid
+        //    taskLink.LinkCriteria.AddCondition(TaskEntity.IDLogicalName, ConditionOperator.Equal, new Guid(regardingId));
+
+        //    // Add the link entity to the main query
+        //    query.LinkEntities.Add(taskLink);
+
+        //    // Retrieve the ldv_casecategory entity
+        //    var result = service.RetrieveMultiple(query);
+
+        //    // Check if the result contains any entities
+        //    if (result.Entities.Count == 0)
+        //    {
+        //        //throw new InvalidPluginExecutionException($"No ldv_casecategory found for task with ID {regardingId}.");
+        //        tracingService.Trace($"No ldv_casecategory found for task with ID {regardingId}.");
+        //        return null;
+        //    }
+
+        //    // Return the first ldv_casecategory entity found (assuming there should be only one)
+        //    return result.Entities[0];
+        //}
+
+        public Entity FetchEntityWithTaskLink(
+                                string entitySchemaName,
+                                string taskLinkAttribute,
+                                string taskLinkField,
+                                string regardingId,
+                                ColumnSet columnSet)
         {
-            tracingService.Trace($"in FetchCaseCategory");
+            tracingService.Trace($"Fetching entity: {entitySchemaName}");
 
-            // Create a query expression for ldv_casecategory
-            var query = new QueryExpression(CategoryEntity.EntityLogicalName)
+            // Create a query expression for the provided entity
+            var query = new QueryExpression(entitySchemaName)
             {
-                ColumnSet = new ColumnSet(CategoryEntity.SlaHourLevel1, CategoryEntity.SlaHourLevel2, CategoryEntity.SlaHourLevel3)
+                ColumnSet = columnSet
             };
 
             // Create a link entity to join with the task entity
-            var taskLink = new LinkEntity(CategoryEntity.EntityLogicalName, TaskEntity.EntityLogicalName, CategoryEntity.IDLogicalName, TaskEntity.SubCategory, JoinOperator.Inner);
+            var taskLink = new LinkEntity(entitySchemaName, TaskEntity.EntityLogicalName, taskLinkAttribute, taskLinkField, JoinOperator.Inner);
             taskLink.Columns.AddColumns(TaskEntity.IDLogicalName);
 
             // Filter the link entity to include only the task with the specific activityid
@@ -290,20 +356,21 @@ namespace LinkDev.MOHU.Plugin.Utilites
             // Add the link entity to the main query
             query.LinkEntities.Add(taskLink);
 
-            // Retrieve the ldv_casecategory entity
+            // Retrieve the entity based on the query
             var result = service.RetrieveMultiple(query);
 
             // Check if the result contains any entities
             if (result.Entities.Count == 0)
             {
-                //throw new InvalidPluginExecutionException($"No ldv_casecategory found for task with ID {regardingId}.");
-                tracingService.Trace($"No ldv_casecategory found for task with ID {regardingId}.");
+                tracingService.Trace($"No entity found for {entitySchemaName} with task ID {regardingId}.");
                 return null;
             }
 
-            // Return the first ldv_casecategory entity found (assuming there should be only one)
+            // Return the first entity found (assuming there should be only one)
             return result.Entities[0];
         }
+
+
 
         Dictionary<Guid, Entity> FetchSLAHours(List<Guid> slaHoursIds)
         {
@@ -346,62 +413,163 @@ namespace LinkDev.MOHU.Plugin.Utilites
         }
 
 
+        //SLAHoursResult RetrieveSLAHours(string entityName, string regardingId)
+        //{
+        //    var result = new SLAHoursResult();
+
+        //    tracingService.Trace($"in RetrieveSLAHours");
+
+        //    // Fetch the case category
+        //    Entity caseCategoryEntity = FetchEntityWithTaskLink(
+        //                                        CategoryEntity.EntityLogicalName,
+        //                                        CategoryEntity.IDLogicalName,regardingId,
+        //                                        new ColumnSet(CategoryEntity.SlaHourLevel1, CategoryEntity.SlaHourLevel2, CategoryEntity.SlaHourLevel3)
+        //                                        );
+
+        //    if (caseCategoryEntity == null)
+        //    {
+        //        tracingService.Trace($"No case category found for entity {entityName} with regarding ID {regardingId}.");
+        //        return result;
+        //    }
+
+        //    // Retrieve SLA Hour Level IDs from the case category entity
+        //    if (caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel1) &&
+        //        caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel2) &&
+        //        caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel3))
+        //    {
+        //        Guid level1Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel1).Id;
+        //        Guid level2Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel2).Id;
+        //        Guid level3Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel3).Id;
+
+        //        var slaHoursIds = new List<Guid> { level1Id, level2Id, level3Id };
+
+        //        // Fetch the SLA hours for all three levels in one call
+        //        var slaHoursEntities = FetchSLAHours(slaHoursIds);
+
+        //        // Process each SLA Hours entity separately
+        //        if (slaHoursEntities.TryGetValue(level1Id, out Entity slaHoursLevel1))
+        //        {
+        //            result.Level1WarningTime = GetDurationMinutes(slaHoursLevel1, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+        //            result.Level1FailureTime = GetDurationMinutes(slaHoursLevel1, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+        //        }
+
+        //        if (slaHoursEntities.TryGetValue(level2Id, out Entity slaHoursLevel2))
+        //        {
+        //            result.Level2WarningTime = GetDurationMinutes(slaHoursLevel2, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+        //            result.Level2FailureTime = GetDurationMinutes(slaHoursLevel2, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+        //        }
+
+        //        if (slaHoursEntities.TryGetValue(level3Id, out Entity slaHoursLevel3))
+        //        {
+        //            result.Level3WarningTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+        //            result.Level3FailureTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        tracingService.Trace($"One or more SLA Hour Level fields missing in case category entity for entity {entityName} with regarding ID {regardingId}.");
+
+        //    }
+
+        //    return result;
+        //}
+
         SLAHoursResult RetrieveSLAHours(string entityName, string regardingId)
         {
             var result = new SLAHoursResult();
+            tracingService.Trace($"In RetrieveSLAHours");
 
-            tracingService.Trace($"in RetrieveSLAHours");
+            // Step 1: Check SLA configuration criteria (Service or SubCategory)
+            string slaCriteria = GetSLAConfigurationCriteria(); // 'Service' or 'SubCategory'
+            tracingService.Trace($"SLA is configured by: {slaCriteria}");
 
-            // Fetch the case category
-            Entity caseCategoryEntity = FetchCaseCategory(entityName, regardingId);
+            // Step 2: Set entity logical name, link attribute, and column set dynamically
+            string entityLogicalName;
+            string linkAttribute;
+            string slaHourLevel1;
+            string slaHourLevel2;
+            string slaHourLevel3;
+            string linkField;
 
-            if (caseCategoryEntity == null)
+            if (slaCriteria == "Service")
             {
-                tracingService.Trace($"No case category found for entity {entityName} with regarding ID {regardingId}.");
+                entityLogicalName = ServiceEntity.EntityLogicalName;
+                linkAttribute = ServiceEntity.IDLogicalName;
+                slaHourLevel1 = ServiceEntity.SlaHourLevel1;
+                slaHourLevel2 = ServiceEntity.SlaHourLevel2;
+                slaHourLevel3 = ServiceEntity.SlaHourLevel3;
+                linkField = TaskEntity.Service;
+
+            }
+            else
+            {
+                entityLogicalName = CategoryEntity.EntityLogicalName;
+                linkAttribute = CategoryEntity.IDLogicalName;
+                slaHourLevel1 = CategoryEntity.SlaHourLevel1;
+                slaHourLevel2 = CategoryEntity.SlaHourLevel2;
+                slaHourLevel3 = CategoryEntity.SlaHourLevel3;
+                linkField = TaskEntity.SubCategory;
+            }
+
+            // Create column set using the appropriate SLA Hour fields
+            var columnSet = new ColumnSet(slaHourLevel1, slaHourLevel2, slaHourLevel3);
+
+            // Step 3: Fetch the relevant entity (either Service or Case Category)
+            Entity relatedEntity = FetchEntityWithTaskLink(
+                entityLogicalName,
+                linkAttribute,
+                linkField,
+                regardingId,
+                columnSet
+            );
+
+            if (relatedEntity == null)
+            {
+                tracingService.Trace($"No {entityLogicalName} found for entity {entityName} with regarding ID {regardingId}.");
                 return result;
             }
 
-            // Retrieve SLA Hour Level IDs from the case category entity
-            if (caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel1) &&
-                caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel2) &&
-                caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel3))
+            // Step 4: Retrieve SLA Hour Level IDs using the dynamically selected field names
+            if (relatedEntity.Contains(slaHourLevel1) &&
+                relatedEntity.Contains(slaHourLevel2) &&
+                relatedEntity.Contains(slaHourLevel3))
             {
-                Guid level1Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel1).Id;
-                Guid level2Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel2).Id;
-                Guid level3Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel3).Id;
+                Guid level1Id = relatedEntity.GetAttributeValue<EntityReference>(slaHourLevel1).Id;
+                Guid level2Id = relatedEntity.GetAttributeValue<EntityReference>(slaHourLevel2).Id;
+                Guid level3Id = relatedEntity.GetAttributeValue<EntityReference>(slaHourLevel3).Id;
 
                 var slaHoursIds = new List<Guid> { level1Id, level2Id, level3Id };
 
-                // Fetch the SLA hours for all three levels in one call
+                // Step 5: Fetch SLA hours for all levels in one call
                 var slaHoursEntities = FetchSLAHours(slaHoursIds);
 
-                // Process each SLA Hours entity separately
-                if (slaHoursEntities.TryGetValue(level1Id, out Entity slaHoursLevel1))
+                // Step 6: Process each SLA Hours entity separately
+                if (slaHoursEntities.TryGetValue(level1Id, out Entity slaHoursLevel1Entity))
                 {
-                    result.Level1WarningTime = GetDurationMinutes(slaHoursLevel1, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
-                    result.Level1FailureTime = GetDurationMinutes(slaHoursLevel1, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+                    result.Level1WarningTime = GetDurationMinutes(slaHoursLevel1Entity, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+                    result.Level1FailureTime = GetDurationMinutes(slaHoursLevel1Entity, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
                 }
 
-                if (slaHoursEntities.TryGetValue(level2Id, out Entity slaHoursLevel2))
+                if (slaHoursEntities.TryGetValue(level2Id, out Entity slaHoursLevel2Entity))
                 {
-                    result.Level2WarningTime = GetDurationMinutes(slaHoursLevel2, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
-                    result.Level2FailureTime = GetDurationMinutes(slaHoursLevel2, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+                    result.Level2WarningTime = GetDurationMinutes(slaHoursLevel2Entity, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+                    result.Level2FailureTime = GetDurationMinutes(slaHoursLevel2Entity, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
                 }
 
-                if (slaHoursEntities.TryGetValue(level3Id, out Entity slaHoursLevel3))
+                if (slaHoursEntities.TryGetValue(level3Id, out Entity slaHoursLevel3Entity))
                 {
-                    result.Level3WarningTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
-                    result.Level3FailureTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
+                    result.Level3WarningTime = GetDurationMinutes(slaHoursLevel3Entity, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
+                    result.Level3FailureTime = GetDurationMinutes(slaHoursLevel3Entity, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
                 }
             }
             else
             {
-                tracingService.Trace($"One or more SLA Hour Level fields missing in case category entity for entity {entityName} with regarding ID {regardingId}.");
-
+                tracingService.Trace($"One or more SLA Hour Level fields are missing in the {entityLogicalName} entity for {entityName} with regarding ID {regardingId}.");
             }
 
             return result;
         }
+
 
         int GetDurationMinutes(Entity entity, string hoursFieldName, string minutesFieldName)
         {

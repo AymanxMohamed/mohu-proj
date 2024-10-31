@@ -140,9 +140,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CustomStep\LinDev.MOHU.Utilites\LinDev.MOHU.Utilites.csproj">
-      <Project>{62bb5a12-2707-40c2-9826-dc1153677234}</Project>
-      <Name>LinDev.MOHU.Utilites</Name>
+    <ProjectReference Include="..\..\Plugins\LinkDev.MOHU.Plugin.Utilites\LinkDev.MOHU.Plugin.Utilites.csproj">
+      <Project>{5906d4db-1cd8-4d59-8dec-043c3243d8e1}</Project>
+      <Name>LinkDev.MOHU.Plugin.Utilites</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

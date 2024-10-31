@@ -144,7 +144,7 @@ namespace Linkdev.Common.Moq
             {
                 { "regardingId", "994d3d0f-6a34-ef11-8409-6045bd8d9989" },
                 { "calendarId", "39825827-0ED1-EE11-9079-6045BD895E74" },
-                { "requestType", "getElapsedTime" }, //getEndTime
+                { "requestType", "getEndTime" }, //getEndTime //getElapsedTime
                 { "slaItemId", "a3a0e571-06dc-ee11-904b-6045bd895c76" },
                 { "previousInstanceId", "4e7ce19d-f033-ef11-8409-6045bd91711b" },
                 { "entityName", "task" },

@@ -25,10 +25,23 @@ namespace LinDev.MOHU.Utilites.Model
         public const string statecode = "statecode";
         public const string ProcessId = "processid";
     }
+
+    public static class ConfigurationEntity
+    {
+        public const string EntityLogicalName = "ldv_configuration";
+        public const string IDLogicalName = "ldv_configurationid";
+        public const string ValueLogicalName = "ldv_value";
+        public const string NameLogicalName = "ldv_name";
+    }
+
     public static class ServiceEntity
     {
         public const string EntityLogicalName = "ldv_service";
+        public const string IDLogicalName = "ldv_serviceid";
         public const string Process  = "ldv_processid";
+        public const string SlaHourLevel1 = "ldv_slahourlevel1id";
+        public const string SlaHourLevel2 = "ldv_slahourlevel2id";
+        public const string SlaHourLevel3 = "ldv_slahourlevel3id";
     }
 
     public static class CategoryEntity
@@ -56,6 +69,8 @@ namespace LinDev.MOHU.Utilites.Model
         public const string EntityLogicalName = "task";
         public const string IDLogicalName = "activityid";
         public const string SubCategory = "ldv_subcategoryid";
+        public const string Service = "ldv_servicedefinitionid";
+
 
     }
 

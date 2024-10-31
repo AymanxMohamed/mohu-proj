@@ -22,79 +22,79 @@ namespace Linkdev.Common.Moq
     class CustomStep
     {
         public static IOrganizationService service;
-        static void Main(string[] args)
-        {
-            Dictionary<string, object> inputs;
-            Guid PrimaryEntityID = new Guid("b88fb13a-b6f9-44c0-b3ca-3394c483d2ae");
-            string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
+        //static void Main(string[] args)
+        //{
+        //    Dictionary<string, object> inputs;
+        //    Guid PrimaryEntityID = new Guid("b88fb13a-b6f9-44c0-b3ca-3394c483d2ae");
+        //    string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
 
-            //Guid processstage = Guid.Empty;
+        //    //Guid processstage = Guid.Empty;
 
-            //  Activity activity = new SendNotification();
-            Activity activity = new GetServiceConfiguration();
-
-
-            #region Variables Intializations Admin
-            // Crm  AdminUserId  
-            Guid AdminUserId = new Guid("415a5fdc-62bd-ee11-9079-000d3aa84c36");
+        //    //  Activity activity = new SendNotification();
+        //    Activity activity = new GetServiceConfiguration();
 
 
-            #endregion
-
-            #region   Intializations
-            var invoker = new WorkflowInvoker(activity);
-            //create our mocks
-            var factoryMock = new Mock<IOrganizationServiceFactory>();
-            var tracingServiceMock = new Mock<ITracingService>();
-            var workflowContextMock = new Mock<IWorkflowContext>();
-            //set up a mock service for CRM organization service
-            //var connection = CrmConnection.Parse(@"Url=" + Credential.Url + "; Username=" + Credential.UserName + "; Password=" + Credential.Password + ";");
+        //    #region Variables Intializations Admin
+        //    // Crm  AdminUserId  
+        //    Guid AdminUserId = new Guid("415a5fdc-62bd-ee11-9079-000d3aa84c36");
 
 
-            //IOrganizationService service = GetCrmConnection("https://stc-dev-v9.linkdev.com/XRMServices/2011/Organization.svc", @"CRM365DC\crmadmin", "linkP@ss");
+        //    #endregion
 
-              service = getCRMAccess();
-
-
-               //createTicket();
-
-            //IOrganizationService service = new CRMAccess().GetAccessToCRM();
-            //set up a mock workflowcontext
-            workflowContextMock.Setup(t => t.InitiatingUserId).Returns(AdminUserId);
-            workflowContextMock.Setup(t => t.CorrelationId).Returns(Guid.NewGuid());
-            workflowContextMock.Setup(t => t.UserId).Returns(AdminUserId);
-            workflowContextMock.Setup(t => t.PrimaryEntityId).Returns(PrimaryEntityID);
-            workflowContextMock.Setup(t => t.PrimaryEntityName).Returns(PrimaryEntitySchemaName);
-            var workflowContext = workflowContextMock.Object;
-            //set up a mock tracingservice - will write output to console
-            tracingServiceMock.Setup(t => t.Trace(It.IsAny<string>(), It.IsAny<object[]>())).Callback<string, object[]>((t1, t2) => Console.WriteLine(t1, t2));
-            var tracingService = tracingServiceMock.Object;
-            //set up a mock servicefactory
-            factoryMock.Setup(t => t.CreateOrganizationService(AdminUserId)).Returns(service);
-            var factory = factoryMock.Object;
-            invoker.Extensions.Add<ITracingService>(() => tracingService);
-            invoker.Extensions.Add<IWorkflowContext>(() => workflowContext);
-            invoker.Extensions.Add<IOrganizationServiceFactory>(() => factory);
-            #endregion
+        //    #region   Intializations
+        //    var invoker = new WorkflowInvoker(activity);
+        //    //create our mocks
+        //    var factoryMock = new Mock<IOrganizationServiceFactory>();
+        //    var tracingServiceMock = new Mock<ITracingService>();
+        //    var workflowContextMock = new Mock<IWorkflowContext>();
+        //    //set up a mock service for CRM organization service
+        //    //var connection = CrmConnection.Parse(@"Url=" + Credential.Url + "; Username=" + Credential.UserName + "; Password=" + Credential.Password + ";");
 
 
-            #region MyRegion
-            inputs = new Dictionary<string, object>
-                {
+        //    //IOrganizationService service = GetCrmConnection("https://stc-dev-v9.linkdev.com/XRMServices/2011/Organization.svc", @"CRM365DC\crmadmin", "linkP@ss");
 
-                {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
-                //{ "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
+        //      service = getCRMAccess();
 
-                {"ServiceId" , "7980A868-2DCC-EE11-907A-6045BD8C92A2" },
-                {"TargetEntityId" , "9EA3726A-6E0D-4D6F-B9C2-9CDCB582B465" },
-                {"TargetEntitSchemaName" , "incident" },
 
-                };
-            #endregion
-            //inputs = new Dictionary<string, object>();
+        //       //createTicket();
 
-            var outputs = invoker.Invoke(inputs);
-        }
+        //    //IOrganizationService service = new CRMAccess().GetAccessToCRM();
+        //    //set up a mock workflowcontext
+        //    workflowContextMock.Setup(t => t.InitiatingUserId).Returns(AdminUserId);
+        //    workflowContextMock.Setup(t => t.CorrelationId).Returns(Guid.NewGuid());
+        //    workflowContextMock.Setup(t => t.UserId).Returns(AdminUserId);
+        //    workflowContextMock.Setup(t => t.PrimaryEntityId).Returns(PrimaryEntityID);
+        //    workflowContextMock.Setup(t => t.PrimaryEntityName).Returns(PrimaryEntitySchemaName);
+        //    var workflowContext = workflowContextMock.Object;
+        //    //set up a mock tracingservice - will write output to console
+        //    tracingServiceMock.Setup(t => t.Trace(It.IsAny<string>(), It.IsAny<object[]>())).Callback<string, object[]>((t1, t2) => Console.WriteLine(t1, t2));
+        //    var tracingService = tracingServiceMock.Object;
+        //    //set up a mock servicefactory
+        //    factoryMock.Setup(t => t.CreateOrganizationService(AdminUserId)).Returns(service);
+        //    var factory = factoryMock.Object;
+        //    invoker.Extensions.Add<ITracingService>(() => tracingService);
+        //    invoker.Extensions.Add<IWorkflowContext>(() => workflowContext);
+        //    invoker.Extensions.Add<IOrganizationServiceFactory>(() => factory);
+        //    #endregion
+
+
+        //    #region MyRegion
+        //    inputs = new Dictionary<string, object>
+        //        {
+
+        //        {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
+        //        //{ "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
+
+        //        {"ServiceId" , "7980A868-2DCC-EE11-907A-6045BD8C92A2" },
+        //        {"TargetEntityId" , "9EA3726A-6E0D-4D6F-B9C2-9CDCB582B465" },
+        //        {"TargetEntitSchemaName" , "incident" },
+
+        //        };
+        //    #endregion
+        //    //inputs = new Dictionary<string, object>();
+
+        //    var outputs = invoker.Invoke(inputs);
+        //}
         void mm()
         {
 
