@@ -3,34 +3,33 @@ using System.Net.Http.Json;
 using System.ServiceModel;
 using System.Text.Json;
 using MOHU.Integration.Application.Nusuk.Common.Dtos.Responses;
-using MOHU.Integration.Application.Nusuk.Tickets.Constatns;
 using MOHU.Integration.Application.Nusuk.Tickets.Dtos.Requests;
 using MOHU.Integration.Contracts.Interface.Common;
+using MOHU.Integration.Infrastructure.Settings;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace MOHU.Integration.Application.Nusuk.Tickets;
 
 internal class NusukTicketsClient(
     IConfigurationService configurationService,
+    NusukSettings nusukSettings,
     IHttpClientFactory httpClientFactory) : INusukTicketsClient
 {
-    public async Task<NusukRootResponse> UpdateAsync(UpdateNusukTicketRequest request)
+    public async Task<NusukResponseRoot> UpdateAsync(UpdateNusukTicketRequest request)
     {
-        var token = await configurationService
-            .GetConfigurationValueAsync(NusukConfigurationKeys.Token);
+        var token = nusukSettings.AccessToken;
         
-        var updateUrl = await configurationService
-            .GetConfigurationValueAsync(NusukConfigurationKeys.UpdateTicketStatusUrl);
+        var updateUrl = nusukSettings.NusukUpdateStatusUrl;
 
         using var httpClient = httpClientFactory.CreateClient();
         using var httpRequestMessage = CreateHttpRequestMessage(HttpMethod.Post, updateUrl, token, request);
-        
+
         var response = await httpClient.SendAsync(httpRequestMessage);
         
         var responseString = await response.Content.ReadAsStringAsync();
 
         return response.IsSuccessStatusCode 
-            ? DeserializeResponse<NusukRootResponse>(responseString) 
+            ? DeserializeResponse<NusukResponseRoot>(responseString) 
             : HandleFailureResponse(responseString, response.StatusCode);
     }
     
@@ -57,7 +56,7 @@ internal class NusukTicketsClient(
         return response ?? throw new FaultException("Nusuk ticket update failed");
     }
     
-    private static NusukRootResponse HandleFailureResponse(string responseString, HttpStatusCode statusCode)
+    private static NusukResponseRoot HandleFailureResponse(string responseString, HttpStatusCode statusCode)
     {
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var nusukFailureResponse = JsonSerializer.Deserialize<NusukFaultResponse>(responseString, options);

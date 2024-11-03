@@ -5,5 +5,5 @@ namespace MOHU.Integration.Application.Nusuk.Tickets;
 
 public interface INusukTicketsClient
 {
-    public Task<NusukRootResponse> UpdateAsync(UpdateNusukTicketRequest request);
+    public Task<NusukResponseRoot> UpdateAsync(UpdateNusukTicketRequest request);
 }

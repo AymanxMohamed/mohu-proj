@@ -12,9 +12,9 @@ namespace MOHU.Integration.WebApi.Features.Tickets.Nusuk.Proxies;
 public class NusukTicketsController(INusukTicketsClient nusukTicketsClient) : BaseController
 {
     [HttpPut]
-    [ProducesResponseType<NusukRootResponse>(StatusCodes.Status200OK)]
-    public async Task<ResponseMessage<NusukRootResponse>> Update(UpdateNusukTicketRequest request)
+    [ProducesResponseType<NusukResponse>(StatusCodes.Status200OK)]
+    public async Task<ResponseMessage<NusukResponse>> Update(UpdateNusukTicketRequest request)
     {
-        return Ok(await nusukTicketsClient.UpdateAsync(request));
+        return Ok((await nusukTicketsClient.UpdateAsync(request)).Response);
     }
 }

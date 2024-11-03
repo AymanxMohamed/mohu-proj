@@ -1,10 +1,6 @@
-﻿using MOHU.Integration.Application.Exceptions;
+using MOHU.Integration.Application.Exceptions;
 
 namespace MOHU.Integration.Application.Nusuk.Common.Dtos.Responses;
-
-public record NusukRootResponse(NusukResponse Response);
-
-public record NusukFaultResponse(FaultResponse Fault);
 
 public record FaultResponse(int Code, string Type, string Message, string Description)
 {
