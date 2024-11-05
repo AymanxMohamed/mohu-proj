@@ -235,13 +235,17 @@ var BPFs = {
                 name: `Department`,
                 id: "fd572bb5-921f-41ce-9418-b01ff043c3b6",
             },
+            department2: {
+                name: `Department2`,
+                id: "e582b543-7cc1-448b-8a9c-695588ff1ebe",
+            },
             customerApproval: {
                 name: "Customer Approval",
                 id: "7e3a329d-b187-4fd2-aa0b-6ccdf411a3ad",
             },
             supervisor: {
                 name: "Supervisor",
-                id: "6098e222-a3a9-4439-b83d-53548ec8c613",
+                id: "f3edc09a-680d-4457-bb12-34958826ae58",
             },
             quality: {
                 name: "Quality",
@@ -269,7 +273,7 @@ var BPFs = {
     //        },
 
     //        ministrySHajjAgency: {
-    //            name: "Ministryâ€™S Hajj Agency",
+    //            name: "MinistryÃ¢â‚¬â„¢S Hajj Agency",
 
     //            id: "5fafb075-cca2-4359-8431-806679d70732",
     //        },
@@ -334,11 +338,15 @@ var BPFs = {
             },
             supervisor: {
                 name: "Supervisor",
-                id: "0ce54429-414a-47ef-b003-64590980f79c",
+                id: "5bfbd82c-9ca8-4a8a-9cc9-698ad44d7cb0",
             },
             company: {
                 name: "Company",
                 id: "d170ccc5-5c2d-4299-b24d-cef5c0aded57",
+            },
+            company2: {
+                name: "Company2",
+                id: "8f4aa080-97bc-4514-bd91-5620eaed43a6",
             },
             customerApproval: {
                 name: "Customer Approval",
@@ -770,9 +778,11 @@ function addOnChangeHandlerEvents(executionContext) {
         CommonGeneric.EmptyField(formContext, caseFields.ldv_subsourceid);
         showAndHideSubSourceField(formContext);
     });
-    formContext.getAttribute(caseFields.ldv_requesttypeid).addOnChange(function () {
-        OnChange_ParentRequestType(formContext);
-    });
+    formContext
+        .getAttribute(caseFields.ldv_requesttypeid)
+        .addOnChange(function () {
+            OnChange_ParentRequestType(formContext);
+        });
 
     formContext
         .getAttribute(caseFields.ldv_beneficiarytypecode)
@@ -2792,24 +2802,12 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                 BPFs.DepartmentComplain.stages.supervisor.id.toLowerCase();
             var customerApprovalStageId =
                 BPFs.DepartmentComplain.stages.customerApproval.id.toLowerCase();
+            var department2StageId =
+                BPFs.DepartmentComplain.stages.department2.id.toLowerCase();
 
-            //if (currentStageId === customerApprovalStageId) {
-            //    var departmentDecision = CommonGeneric.GetFieldValue(
-            //        formContext,
-            //        "ldv_qualitydecisioncode"
-            //    );
-            //    if (departmentDecision === 2) {
-            //        formContext.data.process.setActiveStage(departmentStageId, function (result) {
-            //            if (result === "success") {
-            //                console.log("Successfully moved to department stage.");
-            //            } else {
-            //                console.log("Failed to set active stage: " + result);
-            //            }
-            //        });
-            //    }
-            //}
-
-            if (currentStageId === socialMediaStageId) {
+            if (currentStageId === customerApprovalStageId) {
+                GeneralCustomerApproval(executionContext);
+            } else if (currentStageId === socialMediaStageId) {
                 GeneralSocialMediaDecision_OnChange(executionContext);
                 formContext
                     .getAttribute(caseFields.ldv_socialMediaDecisioncode)
@@ -2827,12 +2825,23 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                             executionContext
                         );
                     });
+            } else if (currentStageId === department2StageId) {
+                FC_General_Department2AdministrationStageDecision_OnChange(
+                    executionContext
+                );
+                formContext
+                    .getAttribute(caseFields.ldv_departmentdecisioncode)
+                    .addOnChange(function () {
+                        FC_General_Department2AdministrationStageDecision_OnChange(
+                            executionContext
+                        );
+                    });
             } else if (currentStageId === supervisorStageId) {
-                GeneralSuperVisorDecision_OnChange(executionContext);
+                GeneralSuperVisorDecisionNext_OnChange(executionContext);
                 formContext
                     .getAttribute(caseFields.ldv_supervisordecisioncode)
                     .addOnChange(function () {
-                        GeneralSuperVisorDecision_OnChange(executionContext);
+                        GeneralSuperVisorDecisionNext_OnChange(executionContext);
                     });
             } else if (currentStageId === qualityStageId) {
                 GeneralQualityStageDecisionR2_OnChange(executionContext);
@@ -2894,68 +2903,18 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             break;
 
         case ServiceType.TechnicalComplainCompanyService.serviceDefinitionId.toLowerCase():
-            console.log(
-                currentStageId + " -------- " + "momentaryUmrahOrHajj company service"
+            TechnicalComplainCompanyService_OnChange_Case(
+                executionContext,
+                currentStageId,
+                formContext
             );
-            var qualityStageId =
-                BPFs.TechnicalComplainCompanyService.stages.quality.id.toLowerCase();
-            var supervisorStageId =
-                BPFs.TechnicalComplainCompanyService.stages.supervisor.id.toLowerCase();
-            var companyStageId =
-                BPFs.TechnicalComplainCompanyService.stages.company.id.toLowerCase();
-            var socialMediaStageId =
-                BPFs.TechnicalComplainCompanyService.stages.socialMedia.id.toLowerCase();
-            //var customerApprovalStageId = BPFs.TechnicalComplainCompanyService.stages.customerApproval.id.toLowerCase();
-
-            if (currentStageId === socialMediaStageId) {
-                console.log("socilla");
-
-                GeneralSocialMediaDecision_OnChange(executionContext);
+            break;
+        case ServiceType.TechnicalComplainMomentaryHajj.serviceDefinitionId.toLowerCase():
+            TechnicalComplainCompanyService_OnChange_Case(
+                executionContext,
+                currentStageId,
                 formContext
-                    .getAttribute(caseFields.ldv_socialMediaDecisioncode)
-                    .addOnChange(function () {
-                        GeneralSocialMediaDecision_OnChange(executionContext);
-                    });
-            }
-
-            //if (currentStageId === customerApprovalStageId) {
-            //    TechnicalComplainMomentaryUmrah_CustomerApprovalStage_OnChange(executionContext);
-            //    formContext.getAttribute(caseFields.ldv_Ispassedcustomerapproval).addOnChange(function () {
-            //        TechnicalComplainMomentaryUmrah_CustomerApprovalStage_OnChange(executionContext);
-            //    });
-            //}
-
-            if (currentStageId === companyStageId) {
-                TechnicalComplainMomentaryUmrah_CompanyDecision_OnChange(
-                    executionContext
-                );
-                formContext
-                    .getAttribute(caseFields.ldv_departmentdecisioncode)
-                    .addOnChange(function () {
-                        TechnicalComplainMomentaryUmrah_CompanyDecision_OnChange(
-                            executionContext
-                        );
-                    });
-            }
-
-            if (currentStageId === qualityStageId) {
-                GeneralQualityStageDecisionR2_OnChange(executionContext);
-                formContext
-                    .getAttribute(caseFields.ldv_qualitydecisioncode)
-                    .addOnChange(function () {
-                        GeneralQualityStageDecisionR2_OnChange(executionContext);
-                    });
-            }
-
-            if (currentStageId === supervisorStageId) {
-                GeneralSuperVisorDecision_OnChange(executionContext);
-                formContext
-                    .getAttribute(caseFields.ldv_supervisordecisioncode)
-                    .addOnChange(function () {
-                        GeneralSuperVisorDecision_OnChange(executionContext);
-                    });
-            }
-
+            );
             break;
         case ServiceType.TechnicalComplainMomentaryHajj.serviceDefinitionId.toLowerCase():
             var qualityStageId =
@@ -3346,6 +3305,12 @@ function GetDecisionsBasedOnService_OnLoad(formContext) {
             HideOriginOnSubmitStage(formContext);
 
             break;
+        case ServiceType.TechnicalComplainMomentaryHajj.serviceDefinitionId.toLowerCase():
+            TechnicalComplainMomentaryUmrah_OnLoad(formContext);
+            //HideFieldsOnSubmitStageTechnicalComplainMomentaryUmrah(formContext);
+            HideOriginOnSubmitStage(formContext);
+
+            break;
 
         case ServiceType.Inquiry.serviceDefinitionId.toLowerCase():
             Inquiry_QualityStageDecision_OnLoad(formContext);
@@ -3354,12 +3319,6 @@ function GetDecisionsBasedOnService_OnLoad(formContext) {
 
         case ServiceType.Suggestions.serviceDefinitionId.toLowerCase():
             Suggestions_OnLoad(formContext);
-            HideOriginOnSubmitStage(formContext);
-            break;
-
-        case ServiceType.TechnicalComplainMomentaryHajj.serviceDefinitionId.toLowerCase():
-            TechnicalComplainMomentaryUmrah_OnLoad(formContext);
-            //HideFieldsOnSubmitStageTechnicalComplainMomentaryHajj(formContext);
             HideOriginOnSubmitStage(formContext);
             break;
 
@@ -3390,13 +3349,36 @@ function FC_General_DepartmentAdministrationStageDecision_OnChange(
     var departmentClosureReasonOnBpf =
         "header_process_" + caseFields.ldv_departmentclosurereason;
 
-    DepartmentDecision_OnLoad(
-        formContext,
+    //DepartmentDecision_OnLoad(
+    //    formContext,
+    //    caseFields.ldv_departmentdecisioncode,
+    //    departmentNeedInfoOnBpf,
+    //    departmentClosureReasonOnBpf
+    //);
+    DepartmentDecision_OnChange(
+        executionContext,
         caseFields.ldv_departmentdecisioncode,
         departmentNeedInfoOnBpf,
         departmentClosureReasonOnBpf
     );
-    ShowNextStage(executionContext);
+}
+
+// Department 2 show next and previos buttons
+function FC_General_Department2AdministrationStageDecision_OnChange(
+    executionContext
+) {
+    var formContext = executionContext.getFormContext();
+    var departmentNeedInfoOnBpf =
+        "header_process_" + caseFields.ldv_departmentneededinformation + "_1";
+    var departmentClosureReasonOnBpf =
+        "header_process_" + caseFields.ldv_departmentclosurereason + "_1";
+
+    Department2Decision_OnChange(
+        executionContext,
+        caseFields.ldv_departmentdecisioncode,
+        departmentNeedInfoOnBpf,
+        departmentClosureReasonOnBpf
+    );
 }
 
 function FC_General_DepartmentComplain_OnLoad(formContext) {
@@ -3529,6 +3511,26 @@ function TechnicalComplainMomentaryUmrah_CompanyDecision_OnChange(
     );
 }
 
+function CompanyDecisionSupervisorSendBack_OnChange(executionContext) {
+    debugger;
+    var companyDecision = caseFields.ldv_departmentdecisioncode;
+    var companyNeedMoreInformation =
+        "header_process_" + caseFields.ldv_needsmoredetails + "_1";
+    var companyClosureReasonOnBpf =
+        "header_process_" + caseFields.ldv_closurereasons + "_1";
+    console.log(
+        companyDecision,
+        companyNeedMoreInformation,
+        companyClosureReasonOnBpf
+    );
+    DepartmentQualityDecisionForR2_OnChange(
+        executionContext,
+        companyDecision,
+        companyNeedMoreInformation,
+        companyClosureReasonOnBpf
+    );
+}
+
 function TechnicalComplainMomentaryUmrah_JadaStageDecision_OnChange(
     executionContext
 ) {
@@ -3648,6 +3650,12 @@ function TechnicalComplainMomentaryUmrah_OnLoad(formContext) {
     var companyClosureReasonOnBpf =
         "header_process_" + caseFields.ldv_closurereasons;
 
+    var company2NeedInfoOnBpf =
+        "header_process_" + caseFields.ldv_needsmoredetails + "_1";
+
+    var company2ClosureReasonOnBpf =
+        "header_process_" + caseFields.ldv_closurereasons + "_1";
+
     var supervisorCommentOnBpf =
         "header_process_" + caseFields.ldv_supervisorcomment;
 
@@ -3671,13 +3679,18 @@ function TechnicalComplainMomentaryUmrah_OnLoad(formContext) {
 
     GeneralQualityStageDecisionR2_OnLoad(formContext);
     GeneralSocialMediaDecision_OnLoad(formContext);
-    GeneralSupervisorDecision_OnLoad(formContext);
-
-    SupervisorDecision_OnLoad(
+    GeneralSuperVisorDecisionNext_OnLoad(formContext);
+    ConcernedDepartmentDecisionR2_OnLoad(
         formContext,
-        caseFields.ldv_supervisorDesision2,
-        supervisorCommentOnBpf
+        caseFields.ldv_departmentdecisioncode,
+        company2NeedInfoOnBpf,
+        company2ClosureReasonOnBpf
     );
+    //SupervisorDecisionNext_OnLoad(
+    //    formContext,
+    //    caseFields.ldv_supervisorDesision2,
+    //    supervisorCommentOnBpf
+    //);
 
     DepartmentQualityDecisionForR2_OnLoad(
         formContext,
@@ -4383,6 +4396,15 @@ function GeneralQualityStageDecisionR2_OnLoad(formContext) {
     );
 }
 
+// General Customer Approval Stage
+
+function GeneralCustomerApproval(executionContext) {
+    let formContext = executionContext.getFormContext();
+    let customerSatisfactionOnBPF =
+        "header_process_" + caseFields.ldv_customersatisfycode;
+    CommonGeneric.DisableField(formContext, customerSatisfactionOnBPF, true);
+}
+
 // General Social Media method
 function GeneralSocialMediaDecision_OnChange(executionContext) {
     var socialMediaCommentOnBpf =
@@ -4424,7 +4446,35 @@ function GeneralSupervisorDecision_OnLoad(formContext) {
         supervisorCommentOnBpf
     );
 }
+//Next Supervisor method
+function GeneralSuperVisorDecisionNext_OnChange(executionContext) {
+    var supervisorCommentOnBpf =
+        "header_process_" + caseFields.ldv_supervisorcomment;
+    SupervisorDecisionNext_OnChange(
+        executionContext,
+        caseFields.ldv_supervisordecisioncode,
+        supervisorCommentOnBpf
+    );
+}
 
+function GeneralSuperVisorDecisionNext_OnLoad(formContext) {
+    debugger;
+    var supervisorCommentOnBpf =
+        "header_process_" + caseFields.ldv_supervisorcomment;
+    var supervisorDecision =
+        "header_process_" + caseFields.ldv_supervisordecisioncode;
+    CommonGeneric.ShowAndReuiredField(
+        formContext,
+        supervisorDecision,
+        true,
+        true
+    );
+    SupervisorDecisionNext_OnLoad(
+        formContext,
+        caseFields.ldv_supervisordecisioncode,
+        supervisorCommentOnBpf
+    );
+}
 ///////////////////////////////////////////////////////////////////////Common Methods////////////////////
 
 // #region Common Functions For Decisions
@@ -4573,6 +4623,152 @@ function DepartmentDecision_OnChange(
                     );
                 });
         }
+    }
+}
+
+//SHOW next and previos button based on department decision for department2 stage
+function Department2Decision_OnChange(
+    executionContext,
+    decisionSchemaName,
+    needInformationSchemaNameOnBpf,
+    closureReasonSchemaNameOnBpf,
+    supervisorSchemaNameOnBpf
+) {
+    debugger;
+    var formContext = executionContext.getFormContext();
+
+    if (
+        !decisionSchemaName ||
+        !needInformationSchemaNameOnBpf ||
+        !closureReasonSchemaNameOnBpf
+    ) {
+        console.error("One or more parameters are null or undefined.");
+        return;
+    }
+
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+    // Clear the value of the needMoreDetails field if the decision is not "needMoreDetails"
+    if (decision !== caseFields.Enums.departmentDecision.needMoreDetails) {
+        CommonGeneric.EmptyField(formContext, caseFields.ldv_needsmoredetails);
+    }
+
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            needInformationSchemaNameOnBpf,
+            false,
+            false
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            false,
+            false
+        );
+
+        if (supervisorSchemaNameOnBpf) {
+            CommonGeneric.ShowAndReuiredField(
+                formContext,
+                supervisorSchemaNameOnBpf,
+                false,
+                false
+            );
+        }
+    }
+
+    if (decision === caseFields.Enums.departmentDecision.closeTheTicket) {
+        //Close
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            true,
+            true
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            needInformationSchemaNameOnBpf,
+            false,
+            false
+        );
+        if (supervisorSchemaNameOnBpf) {
+            CommonGeneric.ShowAndReuiredField(
+                formContext,
+                supervisorSchemaNameOnBpf,
+                false,
+                false
+            );
+            var supervisorSchemaNameOnForm = GetLogicalFieldName(
+                formContext,
+                supervisorSchemaNameOnBpf
+            );
+            if (supervisorSchemaNameOnForm) {
+                CommonGeneric.EmptyField(formContext, supervisorSchemaNameOnForm);
+            }
+        }
+        var needInfoSchemaNameOnForm = GetLogicalFieldName(
+            formContext,
+            needInformationSchemaNameOnBpf
+        );
+        if (needInfoSchemaNameOnForm) {
+            CommonGeneric.EmptyField(formContext, needInfoSchemaNameOnForm);
+        }
+        ShowNextStage(executionContext);
+    } else if (decision === caseFields.Enums.departmentDecision.needMoreDetails) {
+        //more Information
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            needInformationSchemaNameOnBpf,
+            true,
+            true
+        );
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            closureReasonSchemaNameOnBpf,
+            false,
+            false
+        );
+        if (supervisorSchemaNameOnBpf) {
+            CommonGeneric.ShowAndReuiredField(
+                formContext,
+                supervisorSchemaNameOnBpf,
+                true,
+                true
+            );
+        }
+        var closureReasonSchemaNameOnForm = GetLogicalFieldName(
+            formContext,
+            closureReasonSchemaNameOnBpf
+        );
+        if (closureReasonSchemaNameOnForm) {
+            CommonGeneric.EmptyField(formContext, closureReasonSchemaNameOnForm);
+        }
+
+        var needInformationSchemaNameOnForm = GetLogicalFieldName(
+            formContext,
+            needInformationSchemaNameOnBpf
+        );
+        if (needInformationSchemaNameOnForm) {
+            formContext
+                .getAttribute(needInformationSchemaNameOnForm)
+                .addOnChange(function () {
+                    // Set the value of the other field based on the changed value of needInformationSchemaNameOnBpf
+                    var needInformationValue = CommonGeneric.GetFieldValue(
+                        formContext,
+                        needInformationSchemaNameOnForm
+                    );
+
+                    CommonGeneric.SetFieldValue(
+                        formContext,
+                        caseFields.ldv_needsmoredetails,
+                        needInformationValue
+                    );
+                });
+        }
+        ShowPreviousStage(executionContext);
     }
 }
 function DepartmentDecision_OnLoad(
@@ -4907,6 +5103,46 @@ function DepartmentQualityDecision_OnLoad(
         );
     }
 }
+
+function SupervisorDecisionNext_OnChange(
+    executionContext,
+    decisionSchemaName,
+    commentSchemaNameOnBpf
+) {
+    debugger;
+    var formContext = executionContext.getFormContext();
+    if (!decisionSchemaName || !commentSchemaNameOnBpf) {
+        console.error("One or more parameters are null or undefined.");
+        return;
+    }
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowField(formContext, commentSchemaNameOnBpf, false, false);
+        return;
+    } else {
+        CommonGeneric.ShowField(formContext, commentSchemaNameOnBpf, true, true);
+        ShowNextStage(executionContext);
+    }
+}
+
+function SupervisorDecisionNext_OnLoad(
+    formContext,
+    decisionSchemaName,
+    commentSchemaNameOnBpf
+) {
+    debugger;
+    if (!decisionSchemaName || !commentSchemaNameOnBpf) {
+        console.error("One or more parameters are null or undefined.");
+        return;
+    }
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowField(formContext, commentSchemaNameOnBpf, false, false);
+    } else {
+        CommonGeneric.ShowField(formContext, commentSchemaNameOnBpf, true, true);
+    }
+}
+
 //Social Media
 
 function SocialMediaDecision_OnChange(
@@ -5473,7 +5709,7 @@ function DepartmentQualityDecisionForR2_OnLoad(
     }
 }
 
-//// supervicor >> show only back button
+//// supervicor >> show only next button
 function SupervisorDecision_OnChange(
     executionContext,
     decisionSchemaName,
@@ -5490,7 +5726,7 @@ function SupervisorDecision_OnChange(
         return;
     } else {
         CommonGeneric.ShowField(formContext, commentSchemaNameOnBpf, true, true);
-        ShowPreviousStage(executionContext);
+        ShowNextStage(executionContext);
     }
 }
 
@@ -6670,26 +6906,34 @@ function HideQualityAndResolvedStages(formContext) {
     }
 }
 function OnChange_ParentRequestType(formContext) {
-
-
-    var fieldValue = CommonGeneric.GetFieldValue(formContext, caseFields.ldv_requesttypeid);
+    var fieldValue = CommonGeneric.GetFieldValue(
+        formContext,
+        caseFields.ldv_requesttypeid
+    );
 
     if (fieldValue) {
         CommonGeneric.ShowField(formContext, caseFields.ldv_serviceid, true);
-        const selectedEntity = CommonGeneric.GetLookUpRecord(formContext, caseFields.ldv_requesttypeid);
+        const selectedEntity = CommonGeneric.GetLookUpRecord(
+            formContext,
+            caseFields.ldv_requesttypeid
+        );
         if (selectedEntity != null) {
-            const parentId = selectedEntity.id.replace('{', '').replace('}', '').toLowerCase();
-            GetChildService(formContext, parentId)
+            const parentId = selectedEntity.id
+                .replace("{", "")
+                .replace("}", "")
+                .toLowerCase();
+            GetChildService(formContext, parentId);
         }
     } else {
         CommonGeneric.ShowField(formContext, caseFields.ldv_serviceid, false);
     }
-
-
 }
 
 function GetChildService(formContext, parentId) {
-    Xrm.WebApi.retrieveMultipleRecords("ldv_service", `?$select=${caseFields.ldv_serviceid},${caseFields.ldv_name}&$filter=_ldv_serviceparentid_value eq ${parentId}`).then(
+    Xrm.WebApi.retrieveMultipleRecords(
+        "ldv_service",
+        `?$select=${caseFields.ldv_serviceid},${caseFields.ldv_name}&$filter=_ldv_serviceparentid_value eq ${parentId}`
+    ).then(
         function success(results) {
             console.log(results);
             if (results.entities.length === 1) {
@@ -6700,14 +6944,27 @@ function GetChildService(formContext, parentId) {
                     var childServiceId = result["ldv_serviceid"]; // Guid
                     var childRecordName = result["ldv_name"]; // Text
 
-                    CommonGeneric.SetLookupRecord(formContext, caseFields.ldv_serviceid, childServiceId, "ldv_service", childRecordName);
-                    CommonGeneric.DisableField(formContext, caseFields.ldv_serviceid, true);
+                    CommonGeneric.SetLookupRecord(
+                        formContext,
+                        caseFields.ldv_serviceid,
+                        childServiceId,
+                        "ldv_service",
+                        childRecordName
+                    );
+                    CommonGeneric.DisableField(
+                        formContext,
+                        caseFields.ldv_serviceid,
+                        true
+                    );
                 }
             } else {
                 console.log("services count " + results.entities.length);
 
-                CommonGeneric.DisableField(formContext, caseFields.ldv_serviceid, false)
-
+                CommonGeneric.DisableField(
+                    formContext,
+                    caseFields.ldv_serviceid,
+                    false
+                );
             }
             // FilterOriginsDependOnRequestType(formContext);
         },
@@ -6715,4 +6972,75 @@ function GetChildService(formContext, parentId) {
             console.log(error.message);
         }
     );
+}
+
+function TechnicalComplainCompanyService_OnChange_Case(
+    executionContext,
+    currentStageId,
+    formContext
+) {
+    var qualityStageId =
+        BPFs.TechnicalComplainCompanyService.stages.quality.id.toLowerCase();
+    var supervisorStageId =
+        BPFs.TechnicalComplainCompanyService.stages.supervisor.id.toLowerCase();
+    var companyStageId =
+        BPFs.TechnicalComplainCompanyService.stages.company.id.toLowerCase();
+    var company2StageId =
+        BPFs.TechnicalComplainCompanyService.stages.company2.id.toLowerCase();
+    var socialMediaStageId =
+        BPFs.TechnicalComplainCompanyService.stages.socialMedia.id.toLowerCase();
+    //var customerApprovalStageId = BPFs.TechnicalComplainCompanyService.stages.customerApproval.id.toLowerCase();
+
+    if (currentStageId === socialMediaStageId) {
+        GeneralSocialMediaDecision_OnChange(executionContext);
+        formContext
+            .getAttribute(caseFields.ldv_socialMediaDecisioncode)
+            .addOnChange(function () {
+                GeneralSocialMediaDecision_OnChange(executionContext);
+            });
+    }
+
+    //if (currentStageId === customerApprovalStageId) {
+    //    TechnicalComplainMomentaryUmrah_CustomerApprovalStage_OnChange(executionContext);
+    //    formContext.getAttribute(caseFields.ldv_Ispassedcustomerapproval).addOnChange(function () {
+    //        TechnicalComplainMomentaryUmrah_CustomerApprovalStage_OnChange(executionContext);
+    //    });
+    //}
+
+    if (currentStageId === companyStageId) {
+        TechnicalComplainMomentaryUmrah_CompanyDecision_OnChange(executionContext);
+        formContext
+            .getAttribute(caseFields.ldv_departmentdecisioncode)
+            .addOnChange(function () {
+                TechnicalComplainMomentaryUmrah_CompanyDecision_OnChange(
+                    executionContext
+                );
+            });
+    }
+    if (currentStageId === company2StageId) {
+        CompanyDecisionSupervisorSendBack_OnChange(executionContext);
+        formContext
+            .getAttribute(caseFields.ldv_departmentdecisioncode)
+            .addOnChange(function () {
+                CompanyDecisionSupervisorSendBack_OnChange(executionContext);
+            });
+    }
+
+    if (currentStageId === qualityStageId) {
+        GeneralQualityStageDecisionR2_OnChange(executionContext);
+        formContext
+            .getAttribute(caseFields.ldv_qualitydecisioncode)
+            .addOnChange(function () {
+                GeneralQualityStageDecisionR2_OnChange(executionContext);
+            });
+    }
+
+    if (currentStageId === supervisorStageId) {
+        GeneralSuperVisorDecisionNext_OnChange(executionContext);
+        formContext
+            .getAttribute(caseFields.ldv_supervisordecisioncode)
+            .addOnChange(function () {
+                GeneralSuperVisorDecisionNext_OnChange(executionContext);
+            });
+    }
 }
