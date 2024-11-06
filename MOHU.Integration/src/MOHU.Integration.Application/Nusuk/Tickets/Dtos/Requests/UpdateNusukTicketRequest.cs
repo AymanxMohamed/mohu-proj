@@ -1,5 +1,10 @@
 ﻿using MOHU.Integration.Application.Nusuk.Tickets.Enums;
+using Newtonsoft.Json;
+// ReSharper disable InconsistentNaming
 
 namespace MOHU.Integration.Application.Nusuk.Tickets.Dtos.Requests;
 
-public record UpdateNusukTicketRequest(string CrmTicketNumber, string Comments, NusukTicketStatusEnum Status);
+public record UpdateNusukTicketRequest(
+    [JsonProperty(nameof(CRMTicketNumber))] string CRMTicketNumber, 
+    [JsonProperty(nameof(Comments))] string Comments, 
+    [JsonProperty(nameof(Status))] NusukTicketStatusEnum Status);
