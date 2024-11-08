@@ -13,11 +13,12 @@ using Microsoft.Xrm.Sdk.Query;
 using System.ServiceModel.Description;
 using Microsoft.Xrm.Sdk.Client;
 
-using LinkDev.Common.Crm.Cs.NotificationTemplates;
+ 
 using Microsoft.Xrm.Tooling.Connector;
 using System.Web.Configuration;
-using LinkDev.Common.Crm.Cs.StageConfiguration;
+ 
 using Linkdev.Common.Moq.Model;
+using LinkDev.Common.Crm.Cs.NotificationTemplates;
 
 namespace Linkdev.Common.Moq
 {
@@ -27,13 +28,13 @@ namespace Linkdev.Common.Moq
         static void Main(string[] args)
         {
             Dictionary<string, object> inputs;
-            Guid PrimaryEntityID = new Guid("b88fb13a-b6f9-44c0-b3ca-3394c483d2ae");
+            Guid PrimaryEntityID = new Guid("{E6D58FBC-84AC-4E37-97FE-79DE36E29CA5}");
             string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
 
             //Guid processstage = Guid.Empty;
 
             //  Activity activity = new SendNotification();
-            Activity activity = new HistoricallyStageFields();
+            Activity activity = new SendNotificationsByNotificationConfig();
 
 
             #region Variables Intializations Admin
@@ -58,7 +59,7 @@ namespace Linkdev.Common.Moq
               service = getCRMAccess();
 
 
-               createTicket();
+               //createTicket();
 
             //IOrganizationService service = new CRMAccess().GetAccessToCRM();
             //set up a mock workflowcontext
@@ -569,8 +570,8 @@ namespace Linkdev.Common.Moq
             inputs = new Dictionary<string, object>
                 {
 
-                {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{0C222E05-87CF-EE11-9079-6045BD895E74}"))} ,
-                { "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
+                {"stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
+                { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("6a9ed1c4-dd9d-ef11-8a69-6045bdf273a7"))},
 
                 };
             #endregion

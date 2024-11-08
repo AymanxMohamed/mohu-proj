@@ -140,13 +140,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CustomStep\LinDev.MOHU.Utilites\LinDev.MOHU.Utilites.csproj">
-      <Project>{62bb5a12-2707-40c2-9826-dc1153677234}</Project>
-      <Name>LinDev.MOHU.Utilites</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\LinkDev.MOHU.Plugin.Utilites\LinkDev.MOHU.Plugin.Utilites.csproj">
-      <Project>{5906D4DB-1CD8-4D59-8DEC-043C3243D8E1}</Project>
-      <Name>LinkDev.MOHU.Plugin.Utilites</Name>
+    <ProjectReference Include="..\..\CustomStep\Generic\LinkDev.Common.Crm.Cs.NotificationTemplates\LinkDev.Common.Crm.Cs.NotificationTemplates.csproj">
+      <Project>{1169E619-FC34-41F7-847B-D5B191211407}</Project>
+      <Name>LinkDev.Common.Crm.Cs.NotificationTemplates</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

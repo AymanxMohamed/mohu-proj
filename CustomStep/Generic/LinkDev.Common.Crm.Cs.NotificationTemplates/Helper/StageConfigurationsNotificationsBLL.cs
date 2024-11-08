@@ -253,7 +253,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             {
                 // retrieve  from role configuration
                 #region retrieve user, team, queue from role cofiguration:
-                var roleConfiguration = CRMAccessLayer.RetrieveEntity(roleId.ToString(), "ldv_roleconfiguration", new string[] { "ldv_queue", "ldv_user", "ldv_type" });
+                var roleConfiguration = CRMAccessLayer.RetrieveEntity(roleId.ToString(), "ldv_roleconfiguration", new string[] { "ldv_queue", "ldv_user", "ldv_type", "ldv_team" });
                 #endregion
                 if (roleConfiguration == null) return null;
                 if (roleConfiguration.Attributes.Contains("ldv_type"))
@@ -263,6 +263,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                         To = (EntityReference)(roleConfiguration.Attributes["ldv_user"]);
                     else if (type == 3 && roleConfiguration.Attributes.Contains("ldv_queue"))
                         To = (EntityReference)(roleConfiguration.Attributes["ldv_queue"]);
+                    else if (type == 2 && roleConfiguration.Attributes.Contains("ldv_team"))
+                        To = (EntityReference)(roleConfiguration.Attributes["ldv_team"]);
                 }
                
             }
@@ -891,7 +893,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 }
 
                 tracingService.Trace($"   MailTitleWithFields {MailTitleWithFields}");
-                tracingService.Trace($"   MailWithFields {MailWithFields}");
+                //tracingService.Trace($"   MailWithFields {MailWithFields}");
 
 
                 #region send and create email
@@ -899,7 +901,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 tracingService.Trace($"   MailTitle {MailTitle}");
 
                 MailMessage = GetMessageWithValues(MailWithFields, OrganizationService, regardingObject);
-                tracingService.Trace($"   MailMessage {MailMessage}");
+                //tracingService.Trace($"   MailMessage {MailMessage}");
 
                 tracingService.Trace($" before CreateEmail ");
 

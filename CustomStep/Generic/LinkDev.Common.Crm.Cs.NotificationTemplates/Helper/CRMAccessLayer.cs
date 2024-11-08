@@ -233,7 +233,7 @@ namespace Linkdev.MOE.CRM.DAL
                     attributes = new ColumnSet(columns);
                 else
                     attributes = new ColumnSet() { AllColumns = true };
-
+             
                 TargetEntity = OrganizationService.Retrieve(EntityName, EntityId, attributes);
 
                 return TargetEntity;
