@@ -28,7 +28,7 @@ namespace Linkdev.Common.Moq
         static void Main(string[] args)
         {
             Dictionary<string, object> inputs;
-            Guid PrimaryEntityID = new Guid("{E6D58FBC-84AC-4E37-97FE-79DE36E29CA5}");
+            Guid PrimaryEntityID = new Guid("{7BB30E85-2F9E-EF11-8A6A-6045BD9EC6EF}");
             string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
 
             //Guid processstage = Guid.Empty;
@@ -571,7 +571,7 @@ namespace Linkdev.Common.Moq
                 {
 
                 {"stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
-                { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("6a9ed1c4-dd9d-ef11-8a69-6045bdf273a7"))},
+                { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("{7BB30E85-2F9E-EF11-8A6A-6045BD9EC6EF}"))},
 
                 };
             #endregion
