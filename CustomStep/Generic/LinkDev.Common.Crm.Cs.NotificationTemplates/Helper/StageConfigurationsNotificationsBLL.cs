@@ -18,6 +18,9 @@ using LinkDev.Common.Crm.Logger;
 using Linkdev.CRM.DataContracts.Enums;
 using LinkDev.Common.Crm.Utilities;
 using LinkDev.Common.Crm.Cs.StageConfiguration.Entities;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Workflow.Activities;
+using System.Xml.Linq;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 {
@@ -426,7 +429,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                         if (notifctaionConfigurationTemplate.notificationTemp.GetAttributeValue<bool>("ldv_useemail"))
                         {
                             tracingService.Trace($" before CreateAndSendEmail");
-                             CreateAndSendEmail(from, notifctaionConfigurationTemplate.Language, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.toParty, notifctaionConfigurationTemplate.ccParty, null, notifctaionConfigurationTemplate.NotificationConfiguration,null);
+                             CreateAndSendEmail(from, notifctaionConfigurationTemplate.Language, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.toParty, notifctaionConfigurationTemplate.ccParty, null, notifctaionConfigurationTemplate.NotificationConfiguration,null, null);
                             tracingService.Trace($" after CreateAndSendEmail");
 
                         }
@@ -620,7 +623,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         #endregion
 
         #region  Notification Template Methods
-        public void SendNotificationTemplate(EntityReference ToSystemUser, /*EntityReference ToTeam,*/ EntityReference ToAccount, EntityReference ToContact, EntityReference queues, string ccText, string bccText, string toText, EntityReference NotificationTemplates, EntityReference RegardingObject , EntityReference RegardingLookup)
+        public void SendNotificationTemplate(EntityReference ToSystemUser, /*EntityReference ToTeam,*/ EntityReference ToAccount, EntityReference ToContact, EntityReference queues, string ccText, string bccText, string toText, EntityReference NotificationTemplates, EntityReference RegardingObject , EntityReference RegardingLookup,string toEmailAddress)
         {
 
             #region variables
@@ -761,7 +764,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                     // retrieve from:
                     EntityReference from =  RetriveEmailFrom();
                     // to create and send email 
-                     CreateAndSendEmail(from, language, notificationTemplate, RegardingObject, toList, ccList, bccList, null,    RegardingLookup);
+                     CreateAndSendEmail(from, language, notificationTemplate, RegardingObject, toList, ccList, bccList, null, RegardingLookup  , toEmailAddress );
                 }
                 // to create sms and portal notifications to contact
                 if (ToContact != null)
@@ -863,7 +866,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 tracingService.Trace($" language {language} ");
 
                 if (notifySendEmail)
-                     CreateAndSendEmail(from, language, notificationTemplateCopy, regardingObject, new List<EntityReference>() { item.ToEntityReference() }, null, null, null,null);
+                     CreateAndSendEmail(from, language, notificationTemplateCopy, regardingObject, new List<EntityReference>() { item.ToEntityReference() }, null, null, null,null,null);
                 if (notifySendSMS)
                      CreateSMSAndPortalNotificationToContact(item, notificationTemplateCopy, regardingObject, null);
             }
@@ -873,7 +876,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         #region Common Bll
 
  
-        public void CreateAndSendEmail(EntityReference From, Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, List<EntityReference> toParty, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig,  EntityReference RegardingLookup)
+        public void CreateAndSendEmail(EntityReference From, Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, List<EntityReference> toParty, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig,  EntityReference RegardingLookup,string toEmailAddress)
         {
             try
             {
@@ -911,7 +914,14 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                     regardingObject = RegardingLookup;
                 }
                 Guid emailID = CRMAccessLayer.CreateEmail(From, toParty, regardingObject, MailTitle, MailMessage, ccList, bccList, notificationConfig);
-             
+                if (!string.IsNullOrEmpty(toEmailAddress))
+                {
+
+                    UpdateEmailWithExternalFromAddress(  emailID, MailTitle, MailMessage,   toEmailAddress );
+
+                    
+                }
+
                 if (emailID != Guid.Empty)
                     CRMAccessLayer.SendEmail(emailID);
                 tracingService.Trace($" after send email ");
@@ -925,6 +935,31 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
         }
 
+
+        public void UpdateEmailWithExternalFromAddress(Guid emailID,  string subject, string emailBody, string recipientEmail)
+        {
+            // Create the email entity
+            Entity email = new Entity("email", emailID);
+
+            // Set subject and description
+            email["subject"] = subject;
+            email["description"] = emailBody;
+
+            //// Set "from" using an external email address
+            //Entity from = new Entity("activityparty");
+            //from["addressused"] = senderEmail;  // Directly specify the external email address
+            //email["from"] = new EntityCollection(new List<Entity> { from });
+
+            // Set "to" to the recipient
+            Entity to = new Entity("activityparty");
+            to["addressused"] = recipientEmail;
+            email["to"] = new EntityCollection(new List<Entity> { to });
+
+            // Create the email in CRM
+             CRMAccessLayer.UpdateEntity(email);
+
+
+        }
         public void CreateSMS(Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, string mobile, EntityReference stageNotificationConfig)
         {
             try
