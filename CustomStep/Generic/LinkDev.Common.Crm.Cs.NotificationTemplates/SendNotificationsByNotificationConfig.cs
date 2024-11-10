@@ -15,6 +15,7 @@ using LinkDev.Common.Crm.Cs.Base;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 {
+
     public class SendNotificationsByNotificationConfig : CodeActivity
     {
         #region input parameter : 
