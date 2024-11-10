@@ -13,6 +13,8 @@ public class UpdateTicketStatusData
         Resolution = data.Resolution;
         ResolutionDate = data.ResolutionDate;
         IntegrationStatus = data.IntegrationStatus;
+        UpdatedBy = data.UpdatedBy;
+        LastActionDate = data.LastActionDate;
     }
 
     protected UpdateTicketStatusData()
@@ -25,6 +27,10 @@ public class UpdateTicketStatusData
     public DateTime? ResolutionDate { get; init; }
     
     public IntegrationStatus IntegrationStatus { get; init; }
+
+    public string? UpdatedBy { get; init; }
+
+    public DateTime? LastActionDate { get; init; }
 
     public UpdateTicketStatusRequest ToUpdateRequest(Guid ticketId, string flagLogicalName) => 
         new(flagLogicalName, ticketId, data: this);
