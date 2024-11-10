@@ -170,6 +170,14 @@
             public const string IntegrationClosureReason = "ldv_integrationclosurereason";
 
             public const string IntegrationClosureDate = "ldv_integrationclosuredate";
+                
+            public const string IntegrationUpdatedBy = "ldv_IntegrationUpdatedBy";
+            
+            public const string IntegrationComment = "ldv_IntegrationComment";
+            
+            public const string IntegrationLastActionDate = "ldv_IntegrationLastActionDate";
+            
+            
 
             public const string IsServiceDeskUpdated = "ldv_isservicedeskupdated";
 

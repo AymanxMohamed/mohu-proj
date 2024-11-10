@@ -14,6 +14,7 @@ public class UpdateTicketStatusData
         ResolutionDate = data.ResolutionDate;
         IntegrationStatus = data.IntegrationStatus;
         UpdatedBy = data.UpdatedBy;
+        Comment = data.Comment;
         LastActionDate = data.LastActionDate;
     }
 
@@ -28,6 +29,8 @@ public class UpdateTicketStatusData
     
     public IntegrationStatus IntegrationStatus { get; init; }
 
+    public string? Comment { get; init; }
+
     public string? UpdatedBy { get; init; }
 
     public DateTime? LastActionDate { get; init; }
@@ -41,6 +44,10 @@ public class UpdateTicketStatusData
         ticket.Attributes.Add(Incident.Fields.IntegrationClosureDate, ResolutionDate);
         ticket.Attributes.Add(Incident.Fields.IntegrationStatus,
             new OptionSetValue(Convert.ToInt32(IntegrationStatus)));
+        
+        ticket.Attributes.Add(Incident.Fields.IntegrationComment, Comment);
+        ticket.Attributes.Add(Incident.Fields.IntegrationUpdatedBy, UpdatedBy);
+        ticket.Attributes.Add(Incident.Fields.IntegrationLastActionDate, LastActionDate);
 
         return ticket;
     }
