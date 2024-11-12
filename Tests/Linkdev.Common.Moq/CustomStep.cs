@@ -28,7 +28,7 @@ namespace Linkdev.Common.Moq
         static void Main(string[] args)
         {
             Dictionary<string, object> inputs;
-            Guid PrimaryEntityID = new Guid("{7BB30E85-2F9E-EF11-8A6A-6045BD9EC6EF}");
+            Guid PrimaryEntityID = new Guid("5079a546-1f36-4fa8-80a1-80a16824b273");
             string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
 
             //Guid processstage = Guid.Empty;
