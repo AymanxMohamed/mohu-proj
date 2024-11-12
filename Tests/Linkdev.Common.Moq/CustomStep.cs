@@ -28,13 +28,13 @@ namespace Linkdev.Common.Moq
         static void Main(string[] args)
         {
             Dictionary<string, object> inputs;
-            Guid PrimaryEntityID = new Guid("5079a546-1f36-4fa8-80a1-80a16824b273");
+            Guid PrimaryEntityID = new Guid("efa3ba0b-99ac-4537-9ad1-bbe735429171");
             string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
 
             //Guid processstage = Guid.Empty;
 
             //  Activity activity = new SendNotification();
-            Activity activity = new SendNotificationsByNotificationConfig();
+            Activity activity = new SendNotification();
 
 
             #region Variables Intializations Admin
@@ -543,37 +543,32 @@ namespace Linkdev.Common.Moq
             #endregion
             string x = "2";
             #region Notification template
-            //inputs = new Dictionary<string, object>
-            //{
-
-            //     { "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("{afde4968-4cda-ee11-904c-6045bd895e74}"))},
-            //     {"ToUser",  new EntityReference("systemuser",  new Guid("c9cc971e-11c1-ee11-9079-6045bd895c76"))},
-            //    { "ToTeam", new EntityReference("team", new Guid("ceb05c27-26da-ee11-904b-6045bd895c76"))} ,
-            //     { "ToContact",new EntityReference("contact",  Guid.Empty)} ,
-
-            //    //{ "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("{0EA18FF0-ED95-EB11-BC88-005056AFB4AE}"))},
-            //    { "ToAccount", new EntityReference("account",  Guid.Empty)} ,
-            //     {"ToRecordsURLs",null },
-            //    { "ToQueue", new EntityReference("queue", Guid.Empty)} ,
-            //     {"CCRecordsURLs",null },
-            //     {"BCCRecordsURLs",null },
-            //     {"IsAnotherRegarding",true },
-            //     {"RegardingId","f5164848-4b86-4709-a32f-e29b2fca57fe" },
-            //     {"RegardingName","incident" },
-
-
-
-            //};
-            #endregion
-
-            #region MyRegion
             inputs = new Dictionary<string, object>
-                {
+            {
+                 { "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("6596098b-9f9c-ef11-8a6a-6045bd9ec6ef"))},
+                 {"ToUser",  null},
+                 { "ToTeam", null} ,
+                 { "ToContact",new EntityReference("contact", new Guid("7d070a8a-09ca-ee11-9079-6045bd895e74"))} ,
+                 { "ToAccount", null} ,
+                 { "ToRecordsURLs",null },
+                 { "ToEmailAddress",null },
+                 { "ToQueue", null} ,
+                 { "CCRecordsURLs",null },
+                 { "BCCRecordsURLs",null },
+                 { "IsAnotherRegarding",true },
+                 { "RegardingId","efa3ba0b-99ac-4537-9ad1-bbe735429171" },
+                 { "RegardingName","incident" },
+            };
+        #endregion
 
-                {"stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
-                { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("{7BB30E85-2F9E-EF11-8A6A-6045BD9EC6EF}"))},
+        #region MyRegion
+        //inputs = new Dictionary<string, object>
+        //        {
 
-                };
+        //        {"stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
+        //        { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("{7BB30E85-2F9E-EF11-8A6A-6045BD9EC6EF}"))},
+
+        //        };
             #endregion
             //inputs = new Dictionary<string, object>();
 

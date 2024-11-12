@@ -152,7 +152,12 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
                 bool isAnotherRegarding = IsAnotherRegarding.Get(executionContext);
                 string regardingId = RegardingId.Get(executionContext);
                 string regardingName = RegardingName.Get(executionContext);
-                string toEmailAddress = ToEmailAddress.Get(executionContext);
+                string toEmailAddress = "";
+
+                if (ToEmailAddress !=null)
+                {
+                    toEmailAddress = ToEmailAddress.Get(executionContext);
+                }
 
 
                 EntityReference RegardingLookup = new EntityReference();
