@@ -1,9 +1,5 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Interface.Common;
-using MOHU.Integration.WebApi.Common.Controllers;
 using SDIntegraion;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.ServiceDesk.Proxies;

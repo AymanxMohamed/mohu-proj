@@ -1,8 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
-using MOHU.Integration.Contracts.Dto.Activity;
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Domain.Entitiy;
+﻿using MOHU.Integration.Contracts.Dto.Activity;
 
 namespace MOHU.Integration.Application.Service
 {

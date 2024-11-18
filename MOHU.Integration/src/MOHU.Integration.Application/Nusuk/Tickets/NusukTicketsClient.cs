@@ -4,7 +4,6 @@ using System.ServiceModel;
 using System.Text.Json;
 using MOHU.Integration.Application.Nusuk.Common.Dtos.Responses;
 using MOHU.Integration.Application.Nusuk.Tickets.Dtos.Requests;
-using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Infrastructure.Settings;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 

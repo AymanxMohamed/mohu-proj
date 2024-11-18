@@ -1,14 +1,7 @@
-﻿using Microsoft.Extensions.Localization;
-using Microsoft.Xrm.Sdk;
-using MOHU.Integration.Application.Exceptions;
-using MOHU.Integration.Contracts.Dto.Document;
+﻿using MOHU.Integration.Contracts.Dto.Document;
 using MOHU.Integration.Contracts.Dto.Document.Download;
 using MOHU.Integration.Contracts.Dto.Document.List;
 using MOHU.Integration.Contracts.Dto.Document.Upload;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Common;
-using MOHU.Integration.Domain.Entitiy;
-using MOHU.Integration.Shared;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;

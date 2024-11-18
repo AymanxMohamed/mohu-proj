@@ -1,5 +1,3 @@
-using MOHU.Integration.Application.Exceptions;
-
 namespace MOHU.Integration.Application.Nusuk.Common.Dtos.Responses;
 
 public record FaultResponse(int Code, string Type, string Message, string Description)

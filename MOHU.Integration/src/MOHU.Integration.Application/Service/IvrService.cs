@@ -1,13 +1,7 @@
 ﻿using Microsoft.BusinessData.MetadataModel;
-using Microsoft.Xrm.Sdk;
-using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Activity;
-using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Ivr;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Contracts.Interface.Customer;
-using MOHU.Integration.Domain.Entitiy;
 
 namespace MOHU.Integration.Application.Service
 {

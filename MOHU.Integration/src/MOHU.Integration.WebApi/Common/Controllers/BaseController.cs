@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Contracts.Dto.Common;
-
-namespace MOHU.Integration.WebApi.Common.Controllers
+﻿namespace MOHU.Integration.WebApi.Common.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

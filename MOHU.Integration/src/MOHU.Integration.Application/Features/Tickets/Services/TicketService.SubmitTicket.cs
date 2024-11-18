@@ -1,8 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Application.Common.Extensions;
-using MOHU.Integration.Contracts.Dto.Ticket;
-using MOHU.Integration.Domain.Entitiy;
+﻿using MOHU.Integration.Application.Common.Extensions;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -38,13 +34,6 @@ public partial class TicketService
 
         var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
             
-        //if (caseId !=null && caseId!=Guid.Empty)
-        //{
-        //    var createdEntity = new Entity(Incident.EntityLogicalName, caseId);
-        //    createdEntity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
-        //    await _crmContext.ServiceClient.UpdateAsync(createdEntity);
-        //}
-
         var caseEntity = await _crmContext.ServiceClient.RetrieveAsync(Incident.EntityLogicalName, caseId, new ColumnSet(Incident.Fields.Title));
         response.TicketNumber = caseEntity.GetAttributeValue<string>(Incident.Fields.Title);
         response.TicketId = caseId;

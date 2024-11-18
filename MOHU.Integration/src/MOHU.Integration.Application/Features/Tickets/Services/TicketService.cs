@@ -1,18 +1,7 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.Localization;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Application.Exceptions;
+﻿using Microsoft.Xrm.Sdk.Messages;
 using MOHU.Integration.Contracts.Dto.CaseTypes;
-using MOHU.Integration.Contracts.Dto.Ticket;
-using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Cache;
-using MOHU.Integration.Contracts.Interface.Common;
-using MOHU.Integration.Contracts.Interface.Ticket;
 using MOHU.Integration.Contracts.Logging;
-using MOHU.Integration.Domain.Entitiy;
-using MOHU.Integration.Shared;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -102,6 +91,7 @@ public partial class TicketService : ITicketService
 
         return result;
     }
+    
     public async Task<TicketDetailsResponse> GetTicketDetailsAsync(Guid customerId, string ticketNumber)
     {
         var result = new TicketDetailsResponse();
@@ -125,6 +115,7 @@ public partial class TicketService : ITicketService
             Incident.Fields.ldv_Beneficiarytypecode,
             Incident.Fields.CreatedOn
         );
+        
         var filter = new FilterExpression(LogicalOperator.And);
         query.Criteria.AddFilter(filter);
 
@@ -176,7 +167,7 @@ public partial class TicketService : ITicketService
 
         return result;
     }
-    
+
     public async Task<List<TicketTypeResponse>> GetTicketTypesAsync()
     {
         var ticketTypes = new List<TicketTypeResponse>();

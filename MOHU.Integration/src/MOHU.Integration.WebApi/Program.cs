@@ -1,11 +1,9 @@
 
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Application;
 using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Infrastructure;
 using System.Net;
-using MOHU.Integration.WebApi.Common.Extensions;
 using MOHU.Integration.WebApi.Common.HttpInterceptors;
 using MOHU.Integration.WebApi.Common.SwaggerFilters;
 

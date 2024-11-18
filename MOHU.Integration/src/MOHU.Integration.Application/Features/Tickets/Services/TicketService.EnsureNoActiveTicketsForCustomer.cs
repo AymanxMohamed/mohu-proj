@@ -1,10 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Application.Common.Extensions;
-using MOHU.Integration.Application.Exceptions;
-using MOHU.Integration.Application.Features.Tickets.Enums;
-using MOHU.Integration.Contracts.Dto.Ticket;
-using MOHU.Integration.Domain.Entitiy;
+﻿using MOHU.Integration.Application.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -27,8 +21,17 @@ public partial class TicketService
             ColumnSet = new ColumnSet(Incident.Fields.Title)
         }; 
         
-        activeIncidentQuery.Criteria.AddCondition(Incident.Fields.CustomerId, ConditionOperator.Equal, customerId);
-        activeIncidentQuery.Criteria.AddCondition(Incident.Fields.StateCode, ConditionOperator.Equal, (int)TicketStateCodeEnum.Active);
+        activeIncidentQuery.Criteria
+            .AddCondition(
+                Incident.Fields.CustomerId,
+                ConditionOperator.Equal, 
+                customerId);
+        
+        activeIncidentQuery.Criteria
+            .AddCondition(
+                Incident.Fields.StateCode,
+                ConditionOperator.Equal,
+                (int)TicketStateCodeEnum.Active);
 
         var activeIncidents = await _crmContext.ServiceClient.RetrieveMultipleAsync(activeIncidentQuery);
 

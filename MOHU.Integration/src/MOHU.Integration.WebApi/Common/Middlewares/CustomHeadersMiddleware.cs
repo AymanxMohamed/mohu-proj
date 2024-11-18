@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Shared;
 
 namespace MOHU.Integration.WebApi.Common.Middlewares

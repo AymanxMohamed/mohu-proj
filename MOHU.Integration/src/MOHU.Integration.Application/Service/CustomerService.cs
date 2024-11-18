@@ -1,15 +1,6 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Contracts.Dto.CreateProfile;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Domain.Entitiy;
+﻿using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Enum;
 using MOHU.Integration.Contracts.Interface.Customer;
-using MOHU.Integration.Application.Exceptions;
-using Microsoft.Extensions.Localization;
-using MOHU.Integration.Shared;
-using FluentValidation;
-using MOHU.Integration.Contracts.Dto.Common;
 using System.Globalization;
 
 namespace MOHU.Integration.Application.Service

@@ -1,9 +1,4 @@
-﻿using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Domain.Entitiy;
-
-namespace MOHU.Integration.Application.Service
+﻿namespace MOHU.Integration.Application.Service
 {
     public class UserService : IUserService
     {

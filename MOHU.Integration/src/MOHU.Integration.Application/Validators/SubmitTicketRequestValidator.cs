@@ -1,9 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.Localization;
-using MOHU.Integration.Contracts.Dto.Ticket;
-using MOHU.Integration.Shared;
-
-namespace MOHU.Integration.Application.Validators
+﻿namespace MOHU.Integration.Application.Validators
 {
     public class SubmitTicketRequestValidator : AbstractValidator<SubmitTicketRequest>
     {

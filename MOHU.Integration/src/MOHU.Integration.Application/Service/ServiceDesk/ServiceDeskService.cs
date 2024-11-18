@@ -1,7 +1,4 @@
 ﻿using MOHU.Integration.Contracts.Dto.ServiceDesk;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Ticket;
-using MOHU.Integration.Domain.Entitiy;
 
 namespace MOHU.Integration.Application.Service.ServiceDesk;
 

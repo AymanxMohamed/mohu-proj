@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Application.Exceptions;
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Dto.CreateProfile;
+﻿using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Dto.Ivr;
-using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Customer;
-using MOHU.Integration.WebApi.Common.Controllers;
-using MOHU.Integration.WebApi.Common.Extensions;
 
 namespace MOHU.Integration.WebApi.Features.Customers.Controllers
 {

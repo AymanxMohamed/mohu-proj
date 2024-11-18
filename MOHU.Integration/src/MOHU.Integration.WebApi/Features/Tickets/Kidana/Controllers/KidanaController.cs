@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Dto.Kidana;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.WebApi.Common.Controllers;
+﻿using MOHU.Integration.Contracts.Dto.Kidana;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.Kidana.Controllers;
 
