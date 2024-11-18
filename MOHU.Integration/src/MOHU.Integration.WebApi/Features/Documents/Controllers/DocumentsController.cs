@@ -3,8 +3,9 @@ using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Document.Download;
 using MOHU.Integration.Contracts.Dto.Document.Upload;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.WebApi.Common.Controllers;
 
-namespace MOHU.Integration.WebApi.Controllers
+namespace MOHU.Integration.WebApi.Features.Documents.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

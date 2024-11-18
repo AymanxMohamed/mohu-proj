@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Dto.Sahab;
+using MOHU.Integration.Contracts.Dto.Kidana;
 using MOHU.Integration.Contracts.Interface;
+using MOHU.Integration.WebApi.Common.Controllers;
 
-namespace MOHU.Integration.WebApi.Controllers;
+namespace MOHU.Integration.WebApi.Features.Tickets.Kidana.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SahabController(ISahabService sahabService) : BaseController
+public class KidanaController(IKidanaService kidanaService) : BaseController
 {
     [Consumes("application/json")]
     [Produces("application/json")]
@@ -16,9 +17,9 @@ public class SahabController(ISahabService sahabService) : BaseController
     [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     [Route(nameof(UpdateStatus))]
-    public async Task<ResponseMessage<bool>> UpdateStatus(SahabUpdateStatusRequest request)
+    public async Task<ResponseMessage<bool>> UpdateStatus(KidanaUpdateStatusRequest request)
     {
-        var result =  await sahabService.UpdateStatusAsync(request);
+        var result = await kidanaService.UpdateStatusAsync(request);
         return Ok(result);
     }
 }

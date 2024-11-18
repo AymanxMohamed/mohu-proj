@@ -2,8 +2,9 @@
 using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Interface.Ticket;
+using MOHU.Integration.WebApi.Common.Controllers;
 
-namespace MOHU.Integration.WebApi.Controllers;
+namespace MOHU.Integration.WebApi.Features.Tickets.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

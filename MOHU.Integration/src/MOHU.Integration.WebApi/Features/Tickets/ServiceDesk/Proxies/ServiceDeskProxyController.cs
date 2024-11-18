@@ -1,25 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text;
 using System.Text.Json;
-using System.Text;
-using MOHU.Integration.Contracts.Interface.Common;
-using MOHU.Integration.WebApi.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Dto.Common;
+using MOHU.Integration.Contracts.Interface.Common;
+using MOHU.Integration.WebApi.Common.Controllers;
+using SDIntegraion;
 
-namespace SDIntegraion.Controllers;
+namespace MOHU.Integration.WebApi.Features.Tickets.ServiceDesk.Proxies;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ServiceDeskProxyController : BaseController
+public class ServiceDeskProxyController(IHttpClientFactory httpClientFactory, IConfigurationService configuration)
+    : BaseController
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IConfigurationService _configurationservice;
-
-    public ServiceDeskProxyController(IHttpClientFactory httpClientFactory, IConfigurationService configuration)
-    {
-
-        _httpClientFactory = httpClientFactory;
-        _configurationservice = configuration;
-    }
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status200OK)]
@@ -28,14 +21,14 @@ public class ServiceDeskProxyController : BaseController
     [HttpPost]
     public async Task<object> Post(ServiceDeskRequest request)
     {
-        var username = await _configurationservice.GetConfigurationValueAsync("SD_User Name");
-        var password = await _configurationservice.GetConfigurationValueAsync("SD_Password");
-        var servicedeskURL = await _configurationservice.GetConfigurationValueAsync("SD_URL");
+        var username = await configuration.GetConfigurationValueAsync("SD_User Name");
+        var password = await configuration.GetConfigurationValueAsync("SD_Password");
+        var servicedeskURL = await configuration.GetConfigurationValueAsync("SD_URL");
         var encoded = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, servicedeskURL.ToString());
         httpRequestMessage.Headers.Add("Authorization", "Basic " + encoded);
         httpRequestMessage.Content = JsonContent.Create(request, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var httpClient = _httpClientFactory.CreateClient();
+        var httpClient = httpClientFactory.CreateClient();
         var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
         var contentStream = (await httpResponseMessage.Content.ReadAsStringAsync()).Replace("\\", "")
             .Trim(['"']);

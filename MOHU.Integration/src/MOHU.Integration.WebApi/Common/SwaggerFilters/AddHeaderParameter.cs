@@ -2,7 +2,7 @@
 using MOHU.Integration.Shared;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace MOHU.Integration.WebApi.SwaggerFilter
+namespace MOHU.Integration.WebApi.Common.SwaggerFilters
 {
     public class AddHeaderParameter : IOperationFilter
     {

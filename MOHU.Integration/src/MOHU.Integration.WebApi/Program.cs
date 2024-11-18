@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Application;
 using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Infrastructure;
-using MOHU.Integration.WebApi.Extension;
-using MOHU.Integration.WebApi.HttpInterceptor;
-using MOHU.Integration.WebApi.SwaggerFilter;
 using System.Net;
+using MOHU.Integration.WebApi.Common.Extensions;
+using MOHU.Integration.WebApi.Common.HttpInterceptors;
+using MOHU.Integration.WebApi.Common.SwaggerFilters;
 
 namespace MOHU.Integration.WebApi
 {

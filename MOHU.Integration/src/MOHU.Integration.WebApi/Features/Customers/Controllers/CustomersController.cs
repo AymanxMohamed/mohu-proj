@@ -4,12 +4,11 @@ using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Dto.Ivr;
 using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Contracts.Interface.Customer;
-using MOHU.Integration.Domain.Entitiy;
-using MOHU.Integration.WebApi.Extension;
+using MOHU.Integration.WebApi.Common.Controllers;
+using MOHU.Integration.WebApi.Common.Extensions;
 
-namespace MOHU.Integration.WebApi.Controllers
+namespace MOHU.Integration.WebApi.Features.Customers.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.HttpLogging;
 using MOHU.Integration.Contracts.Interface;
 
-namespace MOHU.Integration.WebApi.HttpInterceptor
+namespace MOHU.Integration.WebApi.Common.HttpInterceptors
 {
     public class CorrelationIdHttpLoggingInterceptor : IHttpLoggingInterceptor
     {

@@ -3,7 +3,7 @@ using MOHU.Integration.Application.Nusuk.Common.Dtos.Responses;
 using MOHU.Integration.Application.Nusuk.Tickets;
 using MOHU.Integration.Application.Nusuk.Tickets.Dtos.Requests;
 using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.WebApi.Controllers;
+using MOHU.Integration.WebApi.Common.Controllers;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.Nusuk.Proxies;
 

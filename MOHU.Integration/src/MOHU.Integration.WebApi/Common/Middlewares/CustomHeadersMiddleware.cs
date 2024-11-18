@@ -1,8 +1,8 @@
-﻿using MOHU.Integration.Contracts.Interface;
+﻿using System.Globalization;
+using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Shared;
-using System.Globalization;
 
-namespace MOHU.Integration.WebApi.Middleware
+namespace MOHU.Integration.WebApi.Common.Middlewares
 {
     public class CustomHeadersMiddleware
     {

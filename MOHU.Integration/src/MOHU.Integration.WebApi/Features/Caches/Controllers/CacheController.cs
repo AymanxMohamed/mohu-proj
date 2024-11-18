@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOHU.Integration.Contracts.Interface.Cache;
 
-namespace MOHU.Integration.WebApi.Controllers
+namespace MOHU.Integration.WebApi.Features.Caches.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

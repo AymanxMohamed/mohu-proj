@@ -18,4 +18,9 @@
     <ProjectReference Include="..\MOHU.Integration.Infrastructure\MOHU.Integration.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\" />
+    <Folder Include="Features\Tickets\Nusuk\Controllers\" />
+  </ItemGroup>
+
 </Project>
