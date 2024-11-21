@@ -28,6 +28,7 @@ public class ServiceDeskProxyController : BaseController
     [HttpPost]
     public async Task<object> Post(ServiceDeskRequest request)
     {
+        request.AdjustPhoneNumber();
         var username = await _configurationservice.GetConfigurationValueAsync("SD_User Name");
         var password = await _configurationservice.GetConfigurationValueAsync("SD_Password");
         var servicedeskURL = await _configurationservice.GetConfigurationValueAsync("SD_URL");
