@@ -44,7 +44,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         [Input("To (Email Address)")]
         public InArgument<string> ToEmailAddress{ get; set; }
 
-
+         
         [Input("To (Records URLs)")]
         [Default("")]
         public InArgument<string> ToRecordsURLs { get; set; }
