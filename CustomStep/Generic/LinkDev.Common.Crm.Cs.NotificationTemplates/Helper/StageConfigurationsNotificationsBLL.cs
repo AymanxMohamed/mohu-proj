@@ -437,7 +437,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                         if (notifctaionConfigurationTemplate.notificationTemp.GetAttributeValue<bool>("ldv_usesms"))
                         {
                             tracingService.Trace($" before CreateSMSAndPortalNotificationToContactList");
-                             CreateSMSAndPortalNotificationToContactList(notifctaionConfigurationTemplate.contactLst, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.NotificationConfiguration);
+                             CreateSMSAndPortalNotificationToContactList(notifctaionConfigurationTemplate.contactLst, notifctaionConfigurationTemplate.accountLst, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.NotificationConfiguration);
                             tracingService.Trace($" after CreateSMSAndPortalNotificationToContactList");
 
                         }
@@ -470,6 +470,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 NotificationConfigrecipients.notificationTemp = new Entity();
                 NotificationConfigrecipients.ccParty = new List<EntityReference>();
                 NotificationConfigrecipients.toParty = new List<EntityReference>();
+                NotificationConfigrecipients.accountLst = new List<Entity>();
+
                 #endregion
                 #region retrieve notification Template : 
 
@@ -533,9 +535,15 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                             break;
                         case "account":
                             if (!notifySendEmail) return null;
-                            Entity Account = CRMAccessLayer.RetrieveEntity(item.Id.ToString(), "account", new string[] { "emailaddress1" });
+                            Entity Account = CRMAccessLayer.RetrieveEntity(item.Id.ToString(), "account", new string[] { "emailaddress1" , "telephone1", "ldv_preferredlanguagecode" });
                             if (Account != null && Account.Attributes.Contains("emailaddress1"))
                                 toParty.Add(item);
+                            // add Account data to be used in create sms  and portal notifications
+                            NotificationConfigrecipients.accountLst.Add(Account);
+                            // get contact preferrred language
+                            if (Account.Attributes.Contains("ldv_preferredlanguagecode"))
+                                NotificationConfigrecipients.Language = (Language)(((OptionSetValue)(Account.Attributes["ldv_preferredlanguagecode"])).Value);
+
                             break;
                         case "systemuser":
                             if (!notifySendEmail) return null;
@@ -1118,12 +1126,16 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 
             return isValid;
         }
-        public void CreateSMSAndPortalNotificationToContactList(List<Entity> contactLst, Entity notificationTemplate, EntityReference RegardingObject, EntityReference notificationConfig)
+        public void CreateSMSAndPortalNotificationToContactList(List<Entity> contactLst,List<Entity> accountLst, Entity notificationTemplate, EntityReference RegardingObject, EntityReference notificationConfig)
         {
-            if (contactLst == null && contactLst.Count == 0) return;
+            if ((contactLst == null && contactLst.Count == 0 ) || (accountLst == null && accountLst.Count == 0)) return;
             foreach (var contact in contactLst)
             {
                 CreateSMSAndPortalNotificationToContact(contact, notificationTemplate, RegardingObject, notificationConfig);
+            }
+            foreach (var account in accountLst)
+            {
+                CreateSMSAndPortalNotificationToContact(account,   notificationTemplate, RegardingObject, notificationConfig);
             }
         }
         public void CreateSMSAndPortalNotificationToContact(Entity contact, Entity notificationTemplate, EntityReference RegardingObject, EntityReference notificationConfig)
@@ -1136,9 +1148,14 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 int languageValue = ((OptionSetValue)contact.Attributes["ldv_preferredlanguagecode"]).Value;
                 language = (Language)languageValue;
             }
-            if (notifySendSMS && contact.Attributes.Contains("mobilephone"))
+            if (notifySendSMS && contact.Attributes.Contains("mobilephone") && contact.LogicalName=="contact")
             {
                 string mobile = contact.Attributes["mobilephone"].ToString();
+                CreateSMS(language, notificationTemplate, RegardingObject, mobile, notificationConfig);
+            }
+            else if (notifySendSMS && contact.Attributes.Contains("telephone1") && contact.LogicalName == "account")
+            {
+                string mobile = contact.Attributes["telephone1"].ToString();
                 CreateSMS(language, notificationTemplate, RegardingObject, mobile, notificationConfig);
             }
             if (notifySendPortal && contact.Id != Guid.Empty)

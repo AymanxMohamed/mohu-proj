@@ -123,7 +123,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
             IsAnotherRegarding = isAnotherRegarding;
             RegardingId = regardingId;
             RegardingName = regardingName;
-            ToEmailAddress = ToEmailAddress;
+            ToEmailAddress = toEmailAddress;
         }
 
         public void ExecuteLogic(CodeActivityContext executionContext)
