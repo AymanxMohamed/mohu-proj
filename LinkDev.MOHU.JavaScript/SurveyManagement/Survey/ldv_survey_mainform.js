@@ -1,5 +1,5 @@
 ﻿var surveyFields = {
-    caseorigincode : "caseorigincode",
+    caseorigincode: "caseorigincode",
     ldv_processid: "ldv_processid",
     ldv_serviceid: "ldv_serviceid",
     ldv_cxdecisioncode: "ldv_cxdecisioncode",
@@ -8,7 +8,7 @@
     Enums: {
         cxDecisions: {
             close: 1,
-            createNewTicket:2,
+            createNewTicket: 2,
         }
     }
 }
@@ -287,7 +287,7 @@ function CxDecisionWithClosureReason_OnChange(executionContext, decisionSchemaNa
         ShowNextStage(executionContext);
     }
     if (decision === surveyFields.Enums.cxDecisions.createNewTicket) {
-        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, false, false);
+        CommonGeneric.ShowAndReuiredField(formContext, closureReasonSchemaNameOnBpf, true, true);
         ShowNextStage(executionContext);
     }
 };
