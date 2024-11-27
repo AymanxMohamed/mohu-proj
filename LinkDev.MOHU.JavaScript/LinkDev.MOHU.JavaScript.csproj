@@ -46,6 +46,7 @@
     <Content Include="caseTest.js" />
     <Content Include="CaseManagement\Case\ldv_Case_CopyOfMainForm.js" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="SurveyManagement\Survey\ldv_survey_mainform.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CaseManagement\Category\" />

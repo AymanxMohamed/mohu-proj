@@ -196,7 +196,7 @@ namespace LinDev.MOHU.Utilites
 
                 if (selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.PortalStatus, out EntityReference portalstatus) && selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.StatusReason, out EntityReference statusreason) && selectedServiceConfigration.TryGetAttributeValue(ServiceConfigurationModel.Team, out EntityReference team))
                 {
-                    UpdateCaseStatus(portalstatus, statusreason);
+                    UpdateCaseStatus(statusreason,portalstatus );
                     Team.Set(executionContext, team);
                     tracingService.Trace($"team = {team.Id}");
 
