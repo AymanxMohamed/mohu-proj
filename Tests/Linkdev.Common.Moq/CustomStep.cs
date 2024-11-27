@@ -12,92 +12,113 @@ using Microsoft.Xrm.Client.Services;
 using Microsoft.Xrm.Sdk.Query;
 using System.ServiceModel.Description;
 using Microsoft.Xrm.Sdk.Client;
+
+ 
 using Microsoft.Xrm.Tooling.Connector;
 using System.Web.Configuration;
+ 
 using Linkdev.Common.Moq.Model;
-using LinDev.MOHU.Utilites;
+using LinkDev.Common.Crm.Cs.NotificationTemplates;
 
 namespace Linkdev.Common.Moq
 {
     class CustomStep
     {
         public static IOrganizationService service;
-        //static void Main(string[] args)
-        //{
-        //    Dictionary<string, object> inputs;
-        //    Guid PrimaryEntityID = new Guid("b88fb13a-b6f9-44c0-b3ca-3394c483d2ae");
-        //    string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
-
-        //    //Guid processstage = Guid.Empty;
-
-        //    //  Activity activity = new SendNotification();
-        //    Activity activity = new GetServiceConfiguration();
-
-
-        //    #region Variables Intializations Admin
-        //    // Crm  AdminUserId  
-        //    Guid AdminUserId = new Guid("415a5fdc-62bd-ee11-9079-000d3aa84c36");
-
-
-        //    #endregion
-
-        //    #region   Intializations
-        //    var invoker = new WorkflowInvoker(activity);
-        //    //create our mocks
-        //    var factoryMock = new Mock<IOrganizationServiceFactory>();
-        //    var tracingServiceMock = new Mock<ITracingService>();
-        //    var workflowContextMock = new Mock<IWorkflowContext>();
-        //    //set up a mock service for CRM organization service
-        //    //var connection = CrmConnection.Parse(@"Url=" + Credential.Url + "; Username=" + Credential.UserName + "; Password=" + Credential.Password + ";");
-
-
-        //    //IOrganizationService service = GetCrmConnection("https://stc-dev-v9.linkdev.com/XRMServices/2011/Organization.svc", @"CRM365DC\crmadmin", "linkP@ss");
-
-        //      service = getCRMAccess();
-
-
-        //       //createTicket();
-
-        //    //IOrganizationService service = new CRMAccess().GetAccessToCRM();
-        //    //set up a mock workflowcontext
-        //    workflowContextMock.Setup(t => t.InitiatingUserId).Returns(AdminUserId);
-        //    workflowContextMock.Setup(t => t.CorrelationId).Returns(Guid.NewGuid());
-        //    workflowContextMock.Setup(t => t.UserId).Returns(AdminUserId);
-        //    workflowContextMock.Setup(t => t.PrimaryEntityId).Returns(PrimaryEntityID);
-        //    workflowContextMock.Setup(t => t.PrimaryEntityName).Returns(PrimaryEntitySchemaName);
-        //    var workflowContext = workflowContextMock.Object;
-        //    //set up a mock tracingservice - will write output to console
-        //    tracingServiceMock.Setup(t => t.Trace(It.IsAny<string>(), It.IsAny<object[]>())).Callback<string, object[]>((t1, t2) => Console.WriteLine(t1, t2));
-        //    var tracingService = tracingServiceMock.Object;
-        //    //set up a mock servicefactory
-        //    factoryMock.Setup(t => t.CreateOrganizationService(AdminUserId)).Returns(service);
-        //    var factory = factoryMock.Object;
-        //    invoker.Extensions.Add<ITracingService>(() => tracingService);
-        //    invoker.Extensions.Add<IWorkflowContext>(() => workflowContext);
-        //    invoker.Extensions.Add<IOrganizationServiceFactory>(() => factory);
-        //    #endregion
-
-
-        //    #region MyRegion
-        //    inputs = new Dictionary<string, object>
-        //        {
-
-        //        {"StageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
-        //        //{ "ApplicationHeader",new EntityReference("ldv_applicationheader", new Guid("{244D5FE4-E5E5-EE11-904C-00224888C080}"))},
-
-        //        {"ServiceId" , "7980A868-2DCC-EE11-907A-6045BD8C92A2" },
-        //        {"TargetEntityId" , "9EA3726A-6E0D-4D6F-B9C2-9CDCB582B465" },
-        //        {"TargetEntitSchemaName" , "incident" },
-
-        //        };
-        //    #endregion
-        //    //inputs = new Dictionary<string, object>();
-
-        //    var outputs = invoker.Invoke(inputs);
-        //}
-        void mm()
+        static void Main(string[] args)
         {
+            Dictionary<string, object> inputs;
+            Guid PrimaryEntityID = new Guid("5ba7d8df-05b9-4ba8-bb6c-46c52b4b2eb5");
+            string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
 
+            //Guid processstage = Guid.Empty;
+
+            //  Activity activity = new SendNotification();
+            Activity activity = new SendNotificationsByNotificationConfig();// SendNotification();
+
+
+            #region Variables Intializations Admin
+            // Crm  AdminUserId  
+            Guid AdminUserId = new Guid("415a5fdc-62bd-ee11-9079-000d3aa84c36");
+
+
+            #endregion
+
+            #region   Intializations
+            var invoker = new WorkflowInvoker(activity);
+            //create our mocks
+            var factoryMock = new Mock<IOrganizationServiceFactory>();
+            var tracingServiceMock = new Mock<ITracingService>();
+            var workflowContextMock = new Mock<IWorkflowContext>();
+            //set up a mock service for CRM organization service
+            //var connection = CrmConnection.Parse(@"Url=" + Credential.Url + "; Username=" + Credential.UserName + "; Password=" + Credential.Password + ";");
+
+
+            //IOrganizationService service = GetCrmConnection("https://stc-dev-v9.linkdev.com/XRMServices/2011/Organization.svc", @"CRM365DC\crmadmin", "linkP@ss");
+
+              service = getCRMAccess();
+
+
+               //createTicket();
+
+            //IOrganizationService service = new CRMAccess().GetAccessToCRM();
+            //set up a mock workflowcontext
+            workflowContextMock.Setup(t => t.InitiatingUserId).Returns(AdminUserId);
+            workflowContextMock.Setup(t => t.CorrelationId).Returns(Guid.NewGuid());
+            workflowContextMock.Setup(t => t.UserId).Returns(AdminUserId);
+            workflowContextMock.Setup(t => t.PrimaryEntityId).Returns(PrimaryEntityID);
+            workflowContextMock.Setup(t => t.PrimaryEntityName).Returns(PrimaryEntitySchemaName);
+            var workflowContext = workflowContextMock.Object;
+            //set up a mock tracingservice - will write output to console
+            tracingServiceMock.Setup(t => t.Trace(It.IsAny<string>(), It.IsAny<object[]>())).Callback<string, object[]>((t1, t2) => Console.WriteLine(t1, t2));
+            var tracingService = tracingServiceMock.Object;
+            //set up a mock servicefactory
+            factoryMock.Setup(t => t.CreateOrganizationService(AdminUserId)).Returns(service);
+            var factory = factoryMock.Object;
+            invoker.Extensions.Add<ITracingService>(() => tracingService);
+            invoker.Extensions.Add<IWorkflowContext>(() => workflowContext);
+            invoker.Extensions.Add<IOrganizationServiceFactory>(() => factory);
+            #endregion
+
+       
+            string x = "2";
+            #region Notification template
+            //inputs = new Dictionary<string, object>
+            //{
+            //     { "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("428ff388-99d8-ee11-904b-6045bd895c76"))},
+            //     {"ToUser",  null},
+            //     { "ToTeam", null} ,
+            //     { "ToContact",null} , //new EntityReference("contact", new Guid("7d070a8a-09ca-ee11-9079-6045bd895e74"))} ,
+            //     { "ToAccount", null} , // ,new EntityReference("contact", new Guid("a147bd39-e099-ef11-8a6a-6045bd9ec6ef"))} ,
+            //     { "ToRecordsURLs",null },
+            //     { "ToEmailAddress","aya.alaam@linkdev.com" },
+            //     { "ToQueue", null} ,
+            //     { "CCRecordsURLs",null },
+            //     { "BCCRecordsURLs",null },
+            //     { "IsAnotherRegarding",true },
+            //     { "RegardingId","c9364278-6160-4c8b-b736-fbdaf0cca42b" },
+            //     { "RegardingName","incident" },
+            //};
+            inputs = new Dictionary<string, object>
+            {
+                // { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("b65e2990-fd5b-ec11-a9df-6045bd8810e2"))} ,
+                //{ "stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("d0825ca8-3bcc-eb11-a960-000d3a4573e4"))} ,
+
+                  { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("3a5f0109-02ac-ef11-b8e9-6045bd9ec6ef"))} ,
+                { "stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("868098b7-da28-ef11-840a-6045bd91711b"))} ,
+
+            };
+            #endregion
+
+
+            //inputs = new Dictionary<string, object>();
+
+            var outputs = invoker.Invoke(inputs);
+        }
+
+
+        static void DumyInput()
+        {
             #region GetEntityReferencePrimitives
             //var inputs = new Dictionary<string, object>
             //    {
@@ -557,31 +578,15 @@ namespace Linkdev.Common.Moq
 
             //};
 
-
             #endregion
-            string x = "2";
-            #region Notification template
+            #region MyRegion
             //inputs = new Dictionary<string, object>
-            //{
+            //        {
 
-            //     { "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("{afde4968-4cda-ee11-904c-6045bd895e74}"))},
-            //     {"ToUser",  new EntityReference("systemuser",  new Guid("c9cc971e-11c1-ee11-9079-6045bd895c76"))},
-            //    { "ToTeam", new EntityReference("team", new Guid("ceb05c27-26da-ee11-904b-6045bd895c76"))} ,
-            //     { "ToContact",new EntityReference("contact",  Guid.Empty)} ,
+            //        {"stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("{E70D2B35-EF8E-EF11-AC21-6045BDA22907}"))} ,
+            //        { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("{7BB30E85-2F9E-EF11-8A6A-6045BD9EC6EF}"))},
 
-            //    //{ "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("{0EA18FF0-ED95-EB11-BC88-005056AFB4AE}"))},
-            //    { "ToAccount", new EntityReference("account",  Guid.Empty)} ,
-            //     {"ToRecordsURLs",null },
-            //    { "ToQueue", new EntityReference("queue", Guid.Empty)} ,
-            //     {"CCRecordsURLs",null },
-            //     {"BCCRecordsURLs",null },
-            //     {"IsAnotherRegarding",true },
-            //     {"RegardingId","f5164848-4b86-4709-a32f-e29b2fca57fe" },
-            //     {"RegardingName","incident" },
-
-
-
-            //};
+            //        };
             #endregion
         }
         public static Entity RetrieveEntityById(IOrganizationService service, string entityLogicalName, Guid guidEntityId)
@@ -777,7 +782,7 @@ namespace Linkdev.Common.Moq
             //if (request.Location.HasValue)
             //    entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
 
-            //var caseId = service. Create (entity);
+            var caseId = service. Create (entity);
 
            
         }

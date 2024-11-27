@@ -18,6 +18,9 @@ using LinkDev.Common.Crm.Logger;
 using Linkdev.CRM.DataContracts.Enums;
 using LinkDev.Common.Crm.Utilities;
 using LinkDev.Common.Crm.Cs.StageConfiguration.Entities;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Workflow.Activities;
+using System.Xml.Linq;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 {
@@ -253,7 +256,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             {
                 // retrieve  from role configuration
                 #region retrieve user, team, queue from role cofiguration:
-                var roleConfiguration = CRMAccessLayer.RetrieveEntity(roleId.ToString(), "ldv_roleconfiguration", new string[] { "ldv_queue", "ldv_user", "ldv_type" });
+                var roleConfiguration = CRMAccessLayer.RetrieveEntity(roleId.ToString(), "ldv_roleconfiguration", new string[] { "ldv_queue", "ldv_user", "ldv_type", "ldv_team" });
                 #endregion
                 if (roleConfiguration == null) return null;
                 if (roleConfiguration.Attributes.Contains("ldv_type"))
@@ -263,6 +266,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                         To = (EntityReference)(roleConfiguration.Attributes["ldv_user"]);
                     else if (type == 3 && roleConfiguration.Attributes.Contains("ldv_queue"))
                         To = (EntityReference)(roleConfiguration.Attributes["ldv_queue"]);
+                    else if (type == 2 && roleConfiguration.Attributes.Contains("ldv_team"))
+                        To = (EntityReference)(roleConfiguration.Attributes["ldv_team"]);
                 }
                
             }
@@ -424,7 +429,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                         if (notifctaionConfigurationTemplate.notificationTemp.GetAttributeValue<bool>("ldv_useemail"))
                         {
                             tracingService.Trace($" before CreateAndSendEmail");
-                             CreateAndSendEmail(from, notifctaionConfigurationTemplate.Language, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.toParty, notifctaionConfigurationTemplate.ccParty, null, notifctaionConfigurationTemplate.NotificationConfiguration,null);
+                             CreateAndSendEmail(from, notifctaionConfigurationTemplate.Language, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.toParty, notifctaionConfigurationTemplate.ccParty, null, notifctaionConfigurationTemplate.NotificationConfiguration,null, null);
                             tracingService.Trace($" after CreateAndSendEmail");
 
                         }
@@ -432,7 +437,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                         if (notifctaionConfigurationTemplate.notificationTemp.GetAttributeValue<bool>("ldv_usesms"))
                         {
                             tracingService.Trace($" before CreateSMSAndPortalNotificationToContactList");
-                             CreateSMSAndPortalNotificationToContactList(notifctaionConfigurationTemplate.contactLst, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.NotificationConfiguration);
+                             CreateSMSAndPortalNotificationToContactList(notifctaionConfigurationTemplate.contactLst, notifctaionConfigurationTemplate.accountLst, notifctaionConfigurationTemplate.notificationTemp, regardingObject, notifctaionConfigurationTemplate.NotificationConfiguration);
                             tracingService.Trace($" after CreateSMSAndPortalNotificationToContactList");
 
                         }
@@ -465,6 +470,8 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 NotificationConfigrecipients.notificationTemp = new Entity();
                 NotificationConfigrecipients.ccParty = new List<EntityReference>();
                 NotificationConfigrecipients.toParty = new List<EntityReference>();
+                NotificationConfigrecipients.accountLst = new List<Entity>();
+
                 #endregion
                 #region retrieve notification Template : 
 
@@ -528,9 +535,15 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                             break;
                         case "account":
                             if (!notifySendEmail) return null;
-                            Entity Account = CRMAccessLayer.RetrieveEntity(item.Id.ToString(), "account", new string[] { "emailaddress1" });
+                            Entity Account = CRMAccessLayer.RetrieveEntity(item.Id.ToString(), "account", new string[] { "emailaddress1" , "telephone1", "ldv_preferredlanguagecode" });
                             if (Account != null && Account.Attributes.Contains("emailaddress1"))
                                 toParty.Add(item);
+                            // add Account data to be used in create sms  and portal notifications
+                            NotificationConfigrecipients.accountLst.Add(Account);
+                            // get contact preferrred language
+                            if (Account.Attributes.Contains("ldv_preferredlanguagecode"))
+                                NotificationConfigrecipients.Language = (Language)(((OptionSetValue)(Account.Attributes["ldv_preferredlanguagecode"])).Value);
+
                             break;
                         case "systemuser":
                             if (!notifySendEmail) return null;
@@ -618,7 +631,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         #endregion
 
         #region  Notification Template Methods
-        public void SendNotificationTemplate(EntityReference ToSystemUser, /*EntityReference ToTeam,*/ EntityReference ToAccount, EntityReference ToContact, EntityReference queues, string ccText, string bccText, string toText, EntityReference NotificationTemplates, EntityReference RegardingObject , EntityReference RegardingLookup)
+        public void SendNotificationTemplate(EntityReference ToSystemUser, /*EntityReference ToTeam,*/ EntityReference ToAccount, EntityReference ToContact, EntityReference queues, string ccText, string bccText, string toText, EntityReference NotificationTemplates, EntityReference RegardingObject , EntityReference RegardingLookup,string toEmailAddress)
         {
 
             #region variables
@@ -759,7 +772,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                     // retrieve from:
                     EntityReference from =  RetriveEmailFrom();
                     // to create and send email 
-                     CreateAndSendEmail(from, language, notificationTemplate, RegardingObject, toList, ccList, bccList, null,    RegardingLookup);
+                     CreateAndSendEmail(from, language, notificationTemplate, RegardingObject, toList, ccList, bccList, null, RegardingLookup  , toEmailAddress );
                 }
                 // to create sms and portal notifications to contact
                 if (ToContact != null)
@@ -861,7 +874,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 tracingService.Trace($" language {language} ");
 
                 if (notifySendEmail)
-                     CreateAndSendEmail(from, language, notificationTemplateCopy, regardingObject, new List<EntityReference>() { item.ToEntityReference() }, null, null, null,null);
+                     CreateAndSendEmail(from, language, notificationTemplateCopy, regardingObject, new List<EntityReference>() { item.ToEntityReference() }, null, null, null,null,null);
                 if (notifySendSMS)
                      CreateSMSAndPortalNotificationToContact(item, notificationTemplateCopy, regardingObject, null);
             }
@@ -871,7 +884,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         #region Common Bll
 
  
-        public void CreateAndSendEmail(EntityReference From, Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, List<EntityReference> toParty, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig,  EntityReference RegardingLookup)
+        public void CreateAndSendEmail(EntityReference From, Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, List<EntityReference> toParty, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig,  EntityReference RegardingLookup,string toEmailAddress)
         {
             try
             {
@@ -891,7 +904,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 }
 
                 tracingService.Trace($"   MailTitleWithFields {MailTitleWithFields}");
-                tracingService.Trace($"   MailWithFields {MailWithFields}");
+                //tracingService.Trace($"   MailWithFields {MailWithFields}");
 
 
                 #region send and create email
@@ -899,7 +912,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 tracingService.Trace($"   MailTitle {MailTitle}");
 
                 MailMessage = GetMessageWithValues(MailWithFields, OrganizationService, regardingObject);
-                tracingService.Trace($"   MailMessage {MailMessage}");
+                //tracingService.Trace($"   MailMessage {MailMessage}");
 
                 tracingService.Trace($" before CreateEmail ");
 
@@ -909,7 +922,14 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                     regardingObject = RegardingLookup;
                 }
                 Guid emailID = CRMAccessLayer.CreateEmail(From, toParty, regardingObject, MailTitle, MailMessage, ccList, bccList, notificationConfig);
-             
+                if (!string.IsNullOrEmpty(toEmailAddress))
+                {
+
+                    UpdateEmailWithExternalFromAddress(  emailID, MailTitle, MailMessage,   toEmailAddress );
+
+                    
+                }
+
                 if (emailID != Guid.Empty)
                     CRMAccessLayer.SendEmail(emailID);
                 tracingService.Trace($" after send email ");
@@ -923,6 +943,31 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
         }
 
+
+        public void UpdateEmailWithExternalFromAddress(Guid emailID,  string subject, string emailBody, string recipientEmail)
+        {
+            // Create the email entity
+            Entity email = new Entity("email", emailID);
+
+            // Set subject and description
+            email["subject"] = subject;
+            email["description"] = emailBody;
+
+            //// Set "from" using an external email address
+            //Entity from = new Entity("activityparty");
+            //from["addressused"] = senderEmail;  // Directly specify the external email address
+            //email["from"] = new EntityCollection(new List<Entity> { from });
+
+            // Set "to" to the recipient
+            Entity to = new Entity("activityparty");
+            to["addressused"] = recipientEmail;
+            email["to"] = new EntityCollection(new List<Entity> { to });
+
+            // Create the email in CRM
+             CRMAccessLayer.UpdateEntity(email);
+
+
+        }
         public void CreateSMS(Language preferredLanguage, Entity notificationTemplate, EntityReference regardingObject, string mobile, EntityReference stageNotificationConfig)
         {
             try
@@ -1081,12 +1126,16 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 
             return isValid;
         }
-        public void CreateSMSAndPortalNotificationToContactList(List<Entity> contactLst, Entity notificationTemplate, EntityReference RegardingObject, EntityReference notificationConfig)
+        public void CreateSMSAndPortalNotificationToContactList(List<Entity> contactLst,List<Entity> accountLst, Entity notificationTemplate, EntityReference RegardingObject, EntityReference notificationConfig)
         {
-            if (contactLst == null && contactLst.Count == 0) return;
+            if ((contactLst == null && contactLst.Count == 0 ) || (accountLst == null && accountLst.Count == 0)) return;
             foreach (var contact in contactLst)
             {
                 CreateSMSAndPortalNotificationToContact(contact, notificationTemplate, RegardingObject, notificationConfig);
+            }
+            foreach (var account in accountLst)
+            {
+                CreateSMSAndPortalNotificationToContact(account,   notificationTemplate, RegardingObject, notificationConfig);
             }
         }
         public void CreateSMSAndPortalNotificationToContact(Entity contact, Entity notificationTemplate, EntityReference RegardingObject, EntityReference notificationConfig)
@@ -1099,9 +1148,14 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 int languageValue = ((OptionSetValue)contact.Attributes["ldv_preferredlanguagecode"]).Value;
                 language = (Language)languageValue;
             }
-            if (notifySendSMS && contact.Attributes.Contains("mobilephone"))
+            if (notifySendSMS && contact.Attributes.Contains("mobilephone") && contact.LogicalName=="contact")
             {
                 string mobile = contact.Attributes["mobilephone"].ToString();
+                CreateSMS(language, notificationTemplate, RegardingObject, mobile, notificationConfig);
+            }
+            else if (notifySendSMS && contact.Attributes.Contains("telephone1") && contact.LogicalName == "account")
+            {
+                string mobile = contact.Attributes["telephone1"].ToString();
                 CreateSMS(language, notificationTemplate, RegardingObject, mobile, notificationConfig);
             }
             if (notifySendPortal && contact.Id != Guid.Empty)

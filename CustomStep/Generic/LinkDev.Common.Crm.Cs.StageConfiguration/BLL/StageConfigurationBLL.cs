@@ -1148,16 +1148,17 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
             {
                 tracingService.Trace($"1");
                 Entity target = crmAccess.RetrivePrimaryEntityOfBpf(entityReferenceName, new Guid(entityReferenceId));
-                tracingService.Trace($"2");
+                tracingService.Trace($"target {target.Id} schemaname {target.LogicalName}");
                 EntityReference stageConf = RetriveStageConfigurarionByProcessStage(new Guid(entityReferenceId), entityReferenceName, serviceId, tracingService);
-                tracingService.Trace($"3");
 
-                if (target?.Id == Guid.Empty) return false;
-                if (stageConf?.Id == Guid.Empty) return false;
-                tracingService.Trace($"Request id : {target.Id} - Request schemaName : {target.LogicalName}");
-                //tracingService.Trace($"stageConf id : {stageConf.Id} - stageConf schemaName : {stageConf.LogicalName}");
-
-                isBpfValid = RetrieveCurrentProcessFromRequest(target, stageConf, tracingService);
+                if (stageConf!=null)
+                {
+                    tracingService.Trace($"stageConf {stageConf.Id} schemaname {stageConf.LogicalName}");
+                    if (target?.Id == Guid.Empty || stageConf?.Id == Guid.Empty) return false;
+                    tracingService.Trace($"Request id : {target.Id} - Request schemaName : {target.LogicalName}");
+                    //tracingService.Trace($"stageConf id : {stageConf.Id} - stageConf schemaName : {stageConf.LogicalName}");
+                    isBpfValid = RetrieveCurrentProcessFromRequest(target, stageConf, tracingService);
+                }
             }
             return isBpfValid;
         }
@@ -1173,7 +1174,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
             requestQuery.Criteria.AddCondition(target.LogicalName + "id", ConditionOperator.Equal, target.Id);
             EntityCollection requestEntities = OrganizationService.RetrieveMultiple(requestQuery);
 
-            if (!requestEntities.Entities.Any()) return false;
+            if ( requestEntities.Entities.Count<1) return false;
+
             Entity requestEntity = requestEntities.Entities[0];
             EntityReference requestProcess = requestEntity.Contains(RequestEntity.Process) ? requestEntity.GetAttributeValue<EntityReference>(RequestEntity.Process) : null;
 

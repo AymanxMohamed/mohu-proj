@@ -41,6 +41,10 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         [ReferenceTarget("account")]
         public InArgument<EntityReference> ToAccount { get; set; }
 
+        [Input("To (Email Address)")]
+        public InArgument<string> ToEmailAddress{ get; set; }
+
+
         [Input("To (Records URLs)")]
         [Default("")]
         public InArgument<string> ToRecordsURLs { get; set; }
@@ -70,7 +74,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
 
         protected override void Execute(CodeActivityContext executionContext)
         {
-            SendNotificationLogics BL = new SendNotificationLogics(Notification, ToUser, ToTeam, ToAccount, ToContact, ToQueue, CCRecordsURLs, BCCRecordsURLs, ToRecordsURLs, IsAnotherRegarding, RegardingId, RegardingName);
+            SendNotificationLogics BL = new SendNotificationLogics(Notification, ToUser, ToTeam, ToAccount, ToContact, ToQueue, CCRecordsURLs, BCCRecordsURLs, ToRecordsURLs, IsAnotherRegarding, RegardingId, RegardingName, ToEmailAddress);
             BL.ExecuteLogic(executionContext);
         }
     }
@@ -87,7 +91,10 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
         public InArgument<EntityReference> Accounts { get; set; }
         public InArgument<EntityReference> Contacts { get; set; }
         public InArgument<EntityReference> Queues { get; set; }
+        public InArgument<string> ToEmailAddress { get; set; }
+
         public InArgument<string> CCRecordsURLs { get; set; }
+
         public InArgument<string> ToRecordsURLs { get; set; }
         public InArgument<string> BCCRecordsURLs { get; set; }
         public InArgument<bool> IsAnotherRegarding { get; set; }
@@ -102,7 +109,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
            InArgument<EntityReference> notification, InArgument<EntityReference> toUser, InArgument<EntityReference> toTeam,
            InArgument<EntityReference> toAccount, InArgument<EntityReference> toContact,
            InArgument<EntityReference> toQueue, InArgument<string> cCRecordsURLs, InArgument<string> bCCRecordsURLs, InArgument<string> toRecordsURLs,
-           InArgument<bool> isAnotherRegarding, InArgument<string> regardingId, InArgument<string> regardingName )
+           InArgument<bool> isAnotherRegarding, InArgument<string> regardingId, InArgument<string> regardingName, InArgument<string> toEmailAddress)
         {
             Notifications = notification;
             Users = toUser;
@@ -116,6 +123,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
             IsAnotherRegarding = isAnotherRegarding;
             RegardingId = regardingId;
             RegardingName = regardingName;
+            ToEmailAddress = toEmailAddress;
         }
 
         public void ExecuteLogic(CodeActivityContext executionContext)
@@ -144,14 +152,27 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
                 bool isAnotherRegarding = IsAnotherRegarding.Get(executionContext);
                 string regardingId = RegardingId.Get(executionContext);
                 string regardingName = RegardingName.Get(executionContext);
+                string toEmailAddress = "";
+
+                if (ToEmailAddress !=null)
+                {
+                    toEmailAddress = ToEmailAddress.Get(executionContext);
+                }
 
 
-                EntityReference RegardingLookup = new EntityReference(regardingName, new Guid(regardingId));
-                 
+                EntityReference RegardingLookup = new EntityReference();
+
+                if (isAnotherRegarding)
+                {
+                    RegardingLookup = new EntityReference(regardingName, new Guid(regardingId));
+                }
+                else 
+                    RegardingLookup = RegardingObject;
+
                 tracingService.Trace($" after RetrieveRelatedApplicationByApplicationHeader  ");
                 StageConfigurationsNotificationsBLL BLL = new StageConfigurationsNotificationsBLL(service, tracingService, RegardingObject);
 
-                BLL.SendNotificationTemplate(user,/*team,*/ account, contact, queue, cCRecordsURL, bCCRecordsURL, toRecordsURL, notifications, RegardingObject  , RegardingLookup);
+                BLL.SendNotificationTemplate(user,/*team,*/ account, contact, queue, cCRecordsURL, bCCRecordsURL, toRecordsURL, notifications, RegardingObject  , RegardingLookup, toEmailAddress);
           } 
             catch (Exception ex)
             {

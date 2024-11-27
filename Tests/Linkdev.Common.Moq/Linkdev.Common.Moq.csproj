@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Linkdev.Common.Moq</RootNamespace>
     <AssemblyName>Linkdev.Common.Moq</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -140,9 +140,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Plugins\LinkDev.MOHU.Plugin.Utilites\LinkDev.MOHU.Plugin.Utilites.csproj">
-      <Project>{5906d4db-1cd8-4d59-8dec-043c3243d8e1}</Project>
-      <Name>LinkDev.MOHU.Plugin.Utilites</Name>
+    <ProjectReference Include="..\..\CustomStep\Generic\LinkDev.Common.Crm.Cs.NotificationTemplates\LinkDev.Common.Crm.Cs.NotificationTemplates.csproj">
+      <Project>{1169E619-FC34-41F7-847B-D5B191211407}</Project>
+      <Name>LinkDev.Common.Crm.Cs.NotificationTemplates</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

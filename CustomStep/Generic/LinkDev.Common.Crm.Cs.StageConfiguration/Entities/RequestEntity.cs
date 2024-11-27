@@ -16,6 +16,8 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.Entities
         public const string Contact = "ldv_applicantid";//  
         public const string Account = "ldv_accountid";//  
         public const string Customer = "customerid";
+        public const string OtherCustomer = "ldv_applicantcustomerid";
+
         public const string Service = "ldv_serviceid";
         public const string ServiceSubStatus = "ldv_substatusid"; 
         public const string ServiceStatus = "ldv_statusid"; 
