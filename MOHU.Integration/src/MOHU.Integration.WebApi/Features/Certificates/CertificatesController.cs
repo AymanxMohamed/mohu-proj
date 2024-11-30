@@ -9,7 +9,9 @@ public class CertificatesController : ControllerBase
     public IActionResult Get(string certificateThumbprint)
     {
         var certificate = CertificatesFactory.GetByThumbprint(certificateThumbprint);
-        
-        return Ok(certificate);
+
+        return certificate is null
+            ? ValidationProblem($"Their is no certificate found with this {certificateThumbprint}")
+            : Ok(certificate.Thumbprint);
     }
 }

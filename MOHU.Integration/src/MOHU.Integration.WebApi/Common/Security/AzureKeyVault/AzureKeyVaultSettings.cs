@@ -20,7 +20,7 @@ public class AzureKeyVaultSettings
 
     public int ReloadIntervalInMinutes { get; init; } = 30;
 
-    public Uri KeyVaultUri => new($"https://{VaultName}.vault.azure.net/");
+    public Uri GetKeyVaultUri() => new($"https://{VaultName}.vault.azure.net/");
     
     public  X509Certificate2? Certificate => CertificatesFactory.GetByThumbprint(CertificateThumbprint);
 
@@ -41,7 +41,7 @@ public class AzureKeyVaultSettings
         }
         
         configuration.AddAzureKeyVault(
-            KeyVaultUri, 
+            GetKeyVaultUri(), 
             ClientCertificateCredential, 
             ApplicationKeyVaultSecretManager.GetConfigurationOptions(VaultSecretPrefix, ReloadIntervalInMinutes));
     }
