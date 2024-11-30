@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.HttpLogging;
-using MOHU.Integration.Contracts.Interface;
 
 namespace MOHU.Integration.WebApi.Common.HttpInterceptor
 {

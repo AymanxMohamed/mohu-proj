@@ -4,13 +4,11 @@ namespace MOHU.Integration.WebApi.Common.Security.Certificates;
 
 public static class CertificatesFactory
 {
-    public static X509Certificate2 GetByThumbprint(string certificateThumbprint)
+    public static X509Certificate2? GetByThumbprint(string certificateThumbprint)
     {
         if (string.IsNullOrWhiteSpace(certificateThumbprint))
         {
-            throw new ArgumentException(
-                "Certificate thumbprint must not be null or empty.",
-                nameof(certificateThumbprint));
+            return null;
         }
 
         using var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
@@ -20,6 +18,6 @@ public static class CertificatesFactory
 
         return certificateCollection.Count > 0 
             ? certificateCollection[0] 
-            : throw new InvalidOperationException($"Certificate with thumbprint '{certificateThumbprint}' not found.");
+            : null;
     }
 }

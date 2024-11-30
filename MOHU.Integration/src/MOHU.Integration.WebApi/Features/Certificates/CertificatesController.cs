@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.WebApi.Common.Security.Certificates;
+﻿using MOHU.Integration.WebApi.Common.Security.Certificates;
 
 namespace MOHU.Integration.WebApi.Features.Certificates;
 

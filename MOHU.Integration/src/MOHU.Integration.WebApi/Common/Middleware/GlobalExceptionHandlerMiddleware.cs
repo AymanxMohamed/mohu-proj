@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using MOHU.Integration.Application.Exceptions;
-using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Logging;
 
 namespace MOHU.Integration.WebApi.Common.Middleware

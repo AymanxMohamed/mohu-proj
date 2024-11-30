@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Contracts.Dto.CaseTypes;
-using MOHU.Integration.Contracts.Dto.Common;
+﻿using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Interface.Ticket;
 
 namespace MOHU.Integration.WebApi.Controllers;

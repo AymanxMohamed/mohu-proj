@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace MOHU.Integration.WebApi.Features.Configurations.Controllers;
+﻿namespace MOHU.Integration.WebApi.Features.Configurations.Controllers;
 
 [Route("api/configurations")]
 public class ConfigurationsController(IConfiguration configuration) : ControllerBase

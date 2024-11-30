@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Application.Nusuk.Common.Dtos.Responses;
+﻿using MOHU.Integration.Application.Nusuk.Common.Dtos.Responses;
 using MOHU.Integration.Application.Nusuk.Tickets;
 using MOHU.Integration.Application.Nusuk.Tickets.Dtos.Requests;
-using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.WebApi.Controllers;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.Nusuk.Proxies;

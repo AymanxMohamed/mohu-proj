@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Contracts.Interface.Cache;
+﻿using MOHU.Integration.Contracts.Interface.Cache;
 
 namespace MOHU.Integration.WebApi.Controllers
 {

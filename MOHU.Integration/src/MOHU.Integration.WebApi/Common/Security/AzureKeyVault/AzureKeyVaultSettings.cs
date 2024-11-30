@@ -1,4 +1,5 @@
-﻿using Azure.Identity;
+﻿using System.Security.Cryptography.X509Certificates;
+using Azure.Identity;
 using MOHU.Integration.WebApi.Common.Security.Certificates;
 
 namespace MOHU.Integration.WebApi.Common.Security.AzureKeyVault;
@@ -21,16 +22,16 @@ public class AzureKeyVaultSettings
 
     public Uri KeyVaultUri => new($"https://{VaultName}.vault.azure.net/");
     
-    public ClientCertificateCredential ClientCertificateCredential => new(
-        TenantId, 
-        ClientId, 
-        clientCertificate: CertificatesFactory.GetByThumbprint(CertificateThumbprint));
-    
+    public  X509Certificate2? Certificate => CertificatesFactory.GetByThumbprint(CertificateThumbprint);
+
+    public ClientCertificateCredential ClientCertificateCredential => new(TenantId, ClientId, Certificate);
+
     public bool IsValidSettings() => 
         !string.IsNullOrWhiteSpace(VaultName)
         && !string.IsNullOrWhiteSpace(ClientId)
         && !string.IsNullOrWhiteSpace(TenantId)
-        && !string.IsNullOrWhiteSpace(CertificateThumbprint);
+        && !string.IsNullOrWhiteSpace(CertificateThumbprint)
+        && Certificate is not null;
 
     public void Configure(ConfigurationManager configuration)
     {

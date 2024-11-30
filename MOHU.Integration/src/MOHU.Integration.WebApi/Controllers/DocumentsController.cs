@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Dto.Document.Download;
+﻿using MOHU.Integration.Contracts.Dto.Document.Download;
 using MOHU.Integration.Contracts.Dto.Document.Upload;
-using MOHU.Integration.Contracts.Interface;
 
 namespace MOHU.Integration.WebApi.Controllers
 {
