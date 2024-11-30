@@ -7,7 +7,7 @@ using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Domain.Entitiy;
-using MOHU.Integration.WebApi.Extension;
+using MOHU.Integration.WebApi.Common.Extension;
 
 namespace MOHU.Integration.WebApi.Controllers
 {

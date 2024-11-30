@@ -1,4 +1,4 @@
-﻿using MOHU.Integration.WebApi.Extension;
+﻿using MOHU.Integration.WebApi.Common.Extension;
 
 namespace MOHU.Integration.WebApi;
 

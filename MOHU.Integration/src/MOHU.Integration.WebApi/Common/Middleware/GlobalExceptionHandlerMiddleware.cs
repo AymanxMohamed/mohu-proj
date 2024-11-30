@@ -1,9 +1,9 @@
-﻿using MOHU.Integration.Application.Exceptions;
+﻿using System.Net;
+using MOHU.Integration.Application.Exceptions;
 using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Logging;
-using System.Net;
 
-namespace MOHU.Integration.WebApi.Middleware
+namespace MOHU.Integration.WebApi.Common.Middleware
 {
     public class GlobalExceptionHandlerMiddleware
     {

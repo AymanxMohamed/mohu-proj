@@ -2,8 +2,8 @@
 using MOHU.Integration.Application;
 using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Infrastructure;
-using MOHU.Integration.WebApi.HttpInterceptor;
-using MOHU.Integration.WebApi.SwaggerFilter;
+using MOHU.Integration.WebApi.Common.HttpInterceptor;
+using MOHU.Integration.WebApi.Common.SwaggerFilter;
 
 namespace MOHU.Integration.WebApi;
 

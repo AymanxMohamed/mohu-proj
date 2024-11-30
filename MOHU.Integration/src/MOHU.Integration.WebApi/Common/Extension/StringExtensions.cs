@@ -1,4 +1,4 @@
-﻿namespace MOHU.Integration.WebApi.Extension;
+﻿namespace MOHU.Integration.WebApi.Common.Extension;
 
 public static class StringExtensions
 {

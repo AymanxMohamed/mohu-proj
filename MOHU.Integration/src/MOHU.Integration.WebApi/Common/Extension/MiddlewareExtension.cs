@@ -1,6 +1,6 @@
-﻿using MOHU.Integration.WebApi.Middleware;
+﻿using MOHU.Integration.WebApi.Common.Middleware;
 
-namespace MOHU.Integration.WebApi.Extension
+namespace MOHU.Integration.WebApi.Common.Extension
 {
     public static class MiddlewareExtension
     {
