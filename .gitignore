@@ -531,3 +531,5 @@ XrmDefinitelyTyped
 *.DotSettings
 
 appsettings.Local.json
+
+*.pem
