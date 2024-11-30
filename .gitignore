@@ -533,3 +533,4 @@ XrmDefinitelyTyped
 appsettings.Local.json
 
 *.pem
+*.pfx
