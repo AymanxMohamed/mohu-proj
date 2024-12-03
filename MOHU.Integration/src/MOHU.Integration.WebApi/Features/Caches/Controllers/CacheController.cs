@@ -1,23 +1,17 @@
 ﻿using MOHU.Integration.Contracts.Interface.Cache;
 
-namespace MOHU.Integration.WebApi.Features.Caches.Controllers
+namespace MOHU.Integration.WebApi.Features.Caches.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CacheController(ICacheService cacheService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CacheController : ControllerBase
+    [HttpGet]
+    public async Task ClearCache(string cacheKey)
     {
-        private readonly ICacheService _cacheService;
-        public CacheController(ICacheService cacheService)
-        {
-            _cacheService = cacheService;
-        }
-        [HttpGet]
-        public async Task ClearCache(string cacheKey)
-        {
-            if (!string.IsNullOrEmpty(cacheKey))
-                await _cacheService.Remove(cacheKey);
-            else
-            await _cacheService.Clear();
-        }
+        if (!string.IsNullOrEmpty(cacheKey))
+            await cacheService.Remove(cacheKey);
+        else
+            await cacheService.Clear();
     }
 }

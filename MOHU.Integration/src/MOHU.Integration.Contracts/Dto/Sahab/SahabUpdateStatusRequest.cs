@@ -1,5 +1,4 @@
 ﻿using MOHU.Integration.Contracts.Interface.Ticket;
-using MOHU.Integration.Contracts.Tickets.Dtos;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Entitiy;
 

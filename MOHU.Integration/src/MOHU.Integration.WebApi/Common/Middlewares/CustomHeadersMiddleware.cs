@@ -1,40 +1,31 @@
 ﻿using System.Globalization;
 using MOHU.Integration.Shared;
 
-namespace MOHU.Integration.WebApi.Common.Middlewares
+namespace MOHU.Integration.WebApi.Common.Middlewares;
+
+public class CustomHeadersMiddleware(RequestDelegate next, IRequestInfo requestInfo)
 {
-    public class CustomHeadersMiddleware
+    public async Task InvokeAsync(HttpContext context)
     {
-        private readonly RequestDelegate _next;
-        private readonly IRequestInfo _requestInfo;
-        public CustomHeadersMiddleware(RequestDelegate next, IRequestInfo requestInfo)
+        string languageHeaderValue = context?.Request?.Headers[Header.Language];
+        var culture = Globals.DefaultLanguageHeaderCulture;
+        requestInfo.Language = "en";
+        // Set the current culture based on the language header value
+        if (!string.IsNullOrEmpty(languageHeaderValue))
         {
-            _next = next;
-            _requestInfo = requestInfo;
-        }
-
-        public async Task InvokeAsync(HttpContext context)
-        {
-            string languageHeaderValue = context?.Request?.Headers[Header.Language];
-            var culture = Globals.DefaultLanguageHeaderCulture;
-            _requestInfo.Language = "en";
-            // Set the current culture based on the language header value
-            if (!string.IsNullOrEmpty(languageHeaderValue))
+            if (languageHeaderValue.Contains("ar"))
             {
-                if (languageHeaderValue.Contains("ar"))
-                {
-                    culture = Globals.ArabicLanguageHeaderCulture;
-                    _requestInfo.Language = "ar";
-                }
-                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
-                CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
+                culture = Globals.ArabicLanguageHeaderCulture;
+                requestInfo.Language = "ar";
             }
-
-            string origin = context?.Request?.Headers[Header.Origin];
-            if (!string.IsNullOrEmpty(origin))
-                _requestInfo.Origin = Convert.ToInt32(origin);
-     
-            await _next(context);
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
         }
+
+        string origin = context?.Request?.Headers[Header.Origin];
+        if (!string.IsNullOrEmpty(origin))
+            requestInfo.Origin = Convert.ToInt32(origin);
+     
+        await next(context);
     }
 }

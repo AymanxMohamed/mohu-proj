@@ -1,108 +1,99 @@
 ﻿using System.Net;
 using MOHU.Integration.Contracts.Logging;
 
-namespace MOHU.Integration.WebApi.Common.Middlewares
+namespace MOHU.Integration.WebApi.Common.Middlewares;
+
+public class GlobalExceptionHandlerMiddleware(RequestDelegate next, IAppLogger logger)
 {
-    public class GlobalExceptionHandlerMiddleware
+    public async Task InvokeAsync(HttpContext context)
     {
-        private readonly RequestDelegate _next;
-        private readonly IAppLogger _logger;
-        public GlobalExceptionHandlerMiddleware(RequestDelegate next , IAppLogger logger)
+        try
         {
-            _next = next;
-            _logger = logger;
+            await next(context);
         }
-
-        public async Task InvokeAsync(HttpContext context)
+        catch (Exception ex)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                await _logger.LogError(ex);
-                await HandleExceptionAsync(context, ex);
-            }
+            await logger.LogError(ex);
+            await HandleExceptionAsync(context, ex);
         }
+    }
 
 
-        private Task HandleExceptionAsync(HttpContext context, Exception ex)
+    private Task HandleExceptionAsync(HttpContext context, Exception ex)
+    {
+        if(ex is BadRequestException)
+            HandleBadRequestException(context, ex);
+        else if(ex is NotFoundException)
+            HandleNotFoundException(context, ex);
+        else if(ex is ValidationException)
+            HandleValidationException(context, ex);             
+        else
+            HandleUnknownException(context, ex);
+
+        return Task.CompletedTask;
+    }
+
+    private Task HandleValidationException(HttpContext context, Exception ex)
+    {
+        var exception = ex as ValidationException;
+
+        var details = new ResponseMessage<object>
         {
-            if(ex is BadRequestException)
-                 HandleBadRequestException(context, ex);
-            else if(ex is NotFoundException)
-                HandleNotFoundException(context, ex);
-            else if(ex is ValidationException)
-                HandleValidationException(context, ex);             
-            else
-                HandleUnknownException(context, ex);
+            Status = Contracts.Enum.Status.Failure,
+            StatusCode = (int)HttpStatusCode.BadRequest,
+            Result = null,
+            ErrorMessage = exception?.Errors.FirstOrDefault().Value.FirstOrDefault()
+        };
 
-            return Task.CompletedTask;
-        }
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.ContentType = "application/json";
+        return context.Response.WriteAsJsonAsync(details);
+    }
 
-        private Task HandleValidationException(HttpContext context, Exception ex)
+    private Task HandleBadRequestException(HttpContext context, Exception ex)
+    {
+        var exception = ex as BadRequestException;
+
+        var details = new ResponseMessage<object>
         {
-            var exception = ex as ValidationException;
+            Status = Contracts.Enum.Status.Failure,
+            StatusCode =StatusCodes.Status400BadRequest,
+            Result = null,
+            ErrorMessage = exception?.Message
+        };
 
-            var details = new ResponseMessage<object>
-            {
-                Status = Contracts.Enum.Status.Failure,
-                StatusCode = (int)HttpStatusCode.BadRequest,
-                Result = null,
-                ErrorMessage = exception?.Errors.FirstOrDefault().Value.FirstOrDefault()
-            };
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.ContentType = "application/json";
+        return context.Response.WriteAsJsonAsync(details);
+    }
+    private Task HandleNotFoundException(HttpContext context, Exception ex)
+    {
+        var exception = ex as NotFoundException;
 
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsJsonAsync(details);
-        }
-
-        private Task HandleBadRequestException(HttpContext context, Exception ex)
+        var details = new ResponseMessage<object>
         {
-            var exception = ex as BadRequestException;
+            Status = Contracts.Enum.Status.Failure,
+            StatusCode = StatusCodes.Status404NotFound,
+            ErrorMessage = exception?.Message,
+            Result = null
+        };
+        context.Response.StatusCode = StatusCodes.Status404NotFound;
+        context.Response.ContentType = "application/json";
+        return context.Response.WriteAsJsonAsync(details);
+    }
 
-            var details = new ResponseMessage<object>
-            {
-                Status = Contracts.Enum.Status.Failure,
-                StatusCode =StatusCodes.Status400BadRequest,
-                Result = null,
-                ErrorMessage = exception?.Message
-            };
-
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsJsonAsync(details);
-        }
-        private Task HandleNotFoundException(HttpContext context, Exception ex)
+    private Task HandleUnknownException(HttpContext context, Exception ex)
+    {
+        var details = new ResponseMessage<object>
         {
-            var exception = ex as NotFoundException;
+            Status = Contracts.Enum.Status.Failure,
+            StatusCode = StatusCodes.Status500InternalServerError,
+            ErrorMessage= ex.Message,
+            Result = null
+        };
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+        return context.Response.WriteAsJsonAsync(details);
 
-            var details = new ResponseMessage<object>
-            {
-                Status = Contracts.Enum.Status.Failure,
-                StatusCode = StatusCodes.Status404NotFound,
-                ErrorMessage = exception?.Message,
-                Result = null
-            };
-            context.Response.StatusCode = StatusCodes.Status404NotFound;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsJsonAsync(details);
-        }
-
-        private Task HandleUnknownException(HttpContext context, Exception ex)
-        {
-            var details = new ResponseMessage<object>
-            {
-                Status = Contracts.Enum.Status.Failure,
-                StatusCode = StatusCodes.Status500InternalServerError,
-                 ErrorMessage= ex.Message,
-                Result = null
-            };
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsJsonAsync(details);
-
-        }
     }
 }

@@ -19,9 +19,9 @@ public class ServiceDeskProxyController(IHttpClientFactory httpClientFactory, IC
     {
         var username = await configuration.GetConfigurationValueAsync("SD_User Name");
         var password = await configuration.GetConfigurationValueAsync("SD_Password");
-        var servicedeskURL = await configuration.GetConfigurationValueAsync("SD_URL");
+        var serviceDeskUrl = await configuration.GetConfigurationValueAsync("SD_URL");
         var encoded = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
-        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, servicedeskURL.ToString());
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, serviceDeskUrl);
         httpRequestMessage.Headers.Add("Authorization", "Basic " + encoded);
         httpRequestMessage.Content = JsonContent.Create(request, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var httpClient = httpClientFactory.CreateClient();

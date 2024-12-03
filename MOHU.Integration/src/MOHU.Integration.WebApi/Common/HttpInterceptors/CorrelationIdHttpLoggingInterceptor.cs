@@ -1,25 +1,20 @@
 ﻿using Microsoft.AspNetCore.HttpLogging;
 
-namespace MOHU.Integration.WebApi.Common.HttpInterceptors
+namespace MOHU.Integration.WebApi.Common.HttpInterceptors;
+
+public class CorrelationIdHttpLoggingInterceptor(ICorrelationIdService correlationIdService)
+    : IHttpLoggingInterceptor
 {
-    public class CorrelationIdHttpLoggingInterceptor : IHttpLoggingInterceptor
+    public ValueTask OnRequestAsync(HttpLoggingInterceptorContext logContext)
     {
-        private readonly ICorrelationIdService _correlationIdService;
-        public CorrelationIdHttpLoggingInterceptor(ICorrelationIdService correlationIdService)
-        {
-            _correlationIdService = correlationIdService;
-        }
-        public ValueTask OnRequestAsync(HttpLoggingInterceptorContext logContext)
-        {
-            logContext.AddParameter("Request-Id", _correlationIdService.GenerateCorrelationId());
-            return default;
-        }
+        logContext.AddParameter("Request-Id", correlationIdService.GenerateCorrelationId());
+        return default;
+    }
 
-        public ValueTask OnResponseAsync(HttpLoggingInterceptorContext logContext)
-        {
-            logContext.AddParameter("Correlation-Id", _correlationIdService.GetCorrelationId());
-            return default;
+    public ValueTask OnResponseAsync(HttpLoggingInterceptorContext logContext)
+    {
+        logContext.AddParameter("Correlation-Id", correlationIdService.GetCorrelationId());
+        return default;
 
-        }
     }
 }
