@@ -5,27 +5,49 @@ namespace MOHU.Integration.WebApi.Common.Middlewares;
 
 public class CustomHeadersMiddleware(RequestDelegate next, IRequestInfo requestInfo)
 {
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext? context)
     {
-        string languageHeaderValue = context?.Request?.Headers[Header.Language];
+        if (context == null)
+        {
+            return;
+        }
+        
+        var languageHeaderValue = context.Request.Headers[Header.Language].FirstOrDefault();
         var culture = Globals.DefaultLanguageHeaderCulture;
+        
         requestInfo.Language = "en";
-        // Set the current culture based on the language header value
+        
         if (!string.IsNullOrEmpty(languageHeaderValue))
         {
-            if (languageHeaderValue.Contains("ar"))
+            if (languageHeaderValue.Contains("ar", StringComparison.OrdinalIgnoreCase))
             {
                 culture = Globals.ArabicLanguageHeaderCulture;
                 requestInfo.Language = "ar";
             }
-            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
-            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
+            
+            try
+            {
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+                CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
+            }
+            catch (CultureNotFoundException)
+            {
+                CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+                CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+            }
         }
 
-        string origin = context?.Request?.Headers[Header.Origin];
-        if (!string.IsNullOrEmpty(origin))
-            requestInfo.Origin = Convert.ToInt32(origin);
-     
+        var originHeaderValue = context.Request.Headers[Header.Origin].FirstOrDefault();
+        
+        if (!string.IsNullOrEmpty(originHeaderValue) && int.TryParse(originHeaderValue, out var origin))
+        {
+            requestInfo.Origin = origin;
+        }
+        else
+        {
+            requestInfo.Origin = default;
+        }
+
         await next(context);
     }
 }
