@@ -14,7 +14,7 @@ public class SubmitTicketRequest
     public int? BeneficiaryType { get; set; }
     public int? Location { get; set; }
 
-    public Entity ToTicket(Guid customerId, Guid ticketTypeProcess, int origin)
+    public Entity ToTicket(Guid customerId, int origin, (EntityReference Process, EntityReference ParentService) service)
     {
         var entity = new Entity(Incident.EntityLogicalName);
 
@@ -24,7 +24,8 @@ public class SubmitTicketRequest
         entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, CaseType));
         entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, CategoryId));
         entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, SubCategoryId));
-        entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", ticketTypeProcess));
+        entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", service.Process.Id));
+        entity.Attributes.Add(Incident.Fields.ldv_requesttypeid,  service.ParentService);
         entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
 
         if (SubCategoryId1.HasValue)
