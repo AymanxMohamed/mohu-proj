@@ -2,37 +2,22 @@
 using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Logging;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
-public partial class TicketService : ITicketService
+public partial class TicketService(
+    ICrmContext crmContext,
+    IAppLogger logger,
+    ICommonService commonService,
+    IValidator<SubmitTicketRequest> validator,
+    ICacheService cacheService,
+    IDocumentService documentService,
+    IStringLocalizer stringLocalizer,
+    IRequestInfo requestInfo,
+    IValidator<CreateHootSuiteTicketRequest> createHootSuiteTicketValidator)
+    : ITicketService
 {
-    private readonly ICrmContext _crmContext;
-    private readonly ICommonService _commonService;
-    private readonly IValidator<SubmitTicketRequest> _validator;
-    private readonly IAppLogger _logger;
-    private readonly ICacheService _cacheService;
-    private readonly IDocumentService _documentService;
-    private readonly IStringLocalizer _localizer;
-    private readonly IRequestInfo _requestInfo;
-    public TicketService(ICrmContext crmContext,
-        IAppLogger logger,
-        ICommonService commonService,
-        IValidator<SubmitTicketRequest> validator,
-        ICacheService cacheService,
-        IDocumentService documentService,
-        IStringLocalizer stringLocalizer,
-        IRequestInfo requestInfo)
-    {
-        _crmContext = crmContext;
-        _commonService = commonService;
-        _validator = validator;
-        _logger = logger;
-        _cacheService = cacheService;
-        _documentService = documentService;
-        _localizer = stringLocalizer;
-        _requestInfo = requestInfo;
-    }
     public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
     {
         var result = new TicketListResponse();
@@ -83,7 +68,7 @@ public partial class TicketService : ITicketService
 
         mainCategoryLink.Columns.AddColumns(ldv_casecategory.Fields.ldv_arabicname, ldv_casecategory.Fields.ldv_englishname);
 
-        var ticketCollection = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
+        var ticketCollection = await crmContext.ServiceClient.RetrieveMultipleAsync(query);
         result.TotalRecords = ticketCollection.TotalRecordCount;
 
         foreach (var entity in ticketCollection.Entities)
@@ -153,14 +138,14 @@ public partial class TicketService : ITicketService
         secondarySubCategoryLink.Columns.AddColumns(ldv_casecategory.Fields.ldv_englishname, ldv_casecategory.Fields.ldv_arabicname);
 
 
-        var ticket = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query)).Entities?.FirstOrDefault();
+        var ticket = (await crmContext.ServiceClient.RetrieveMultipleAsync(query)).Entities?.FirstOrDefault();
 
         if (ticket is null)
             throw new NotFoundException("Ticket does not exist");
 
         result = await MapTicketToDetailsDto(ticket);
 
-        var documents = await _documentService.GetFilesInFolderAsync(result?.Id.ToString());
+        var documents = await documentService.GetFilesInFolderAsync(result?.Id.ToString());
 
         foreach (var file in documents.Files)
             result.Documents.Add(new Contracts.Dto.Document.DocumentDto { Id = file.Id, Name = file.Name });
@@ -184,9 +169,9 @@ public partial class TicketService : ITicketService
     public async Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request)
     {
         if (request.TicketId == Guid.Empty)
-            throw new NotFoundException(_localizer[ErrorMessageCodes.TicketIdisRequired]);
+            throw new NotFoundException(stringLocalizer[ErrorMessageCodes.TicketIdisRequired]);
             
-        await _crmContext.ServiceClient.UpdateAsync(request.ToTicketEntity());
+        await crmContext.ServiceClient.UpdateAsync(request.ToTicketEntity());
             
         return true;
     }
@@ -194,7 +179,7 @@ public partial class TicketService : ITicketService
     private async Task<List<TicketTypeResponse>> GetTypesAsync()
     {
         var cacheKey = "CaseTypes";
-        var caseTypeEntities = await _cacheService.GetAsync<List<Entity>>(cacheKey);
+        var caseTypeEntities = await cacheService.GetAsync<List<Entity>>(cacheKey);
         var result = new List<TicketTypeResponse>();
         if (caseTypeEntities is null)
         {
@@ -210,7 +195,7 @@ public partial class TicketService : ITicketService
             var filter = new FilterExpression(LogicalOperator.And);
             ticketTypeQuery.Criteria.AddFilter(filter);
             filter.AddCondition(new ConditionExpression(RequestType.Fields.ShowonPortal, ConditionOperator.Equal, true));
-            var response = (await _crmContext.ServiceClient.RetrieveMultipleAsync(ticketTypeQuery)).Entities.ToList();
+            var response = (await crmContext.ServiceClient.RetrieveMultipleAsync(ticketTypeQuery)).Entities.ToList();
             if (response != null && response.Count != 0)
             {
 
@@ -223,7 +208,7 @@ public partial class TicketService : ITicketService
                 }));
 
             }
-            await _cacheService.SetAsync(cacheKey, response);
+            await cacheService.SetAsync(cacheKey, response);
             caseTypeEntities = response;
 
         }
@@ -255,8 +240,8 @@ public partial class TicketService : ITicketService
 
         ticketTypes.ForEach(async t =>
         {
-            var cacheKey = $"CaseType-{t.Id}-Categories_{languageKey}_Origin-{_requestInfo.Origin}";
-            var resultFromCache = await _cacheService.GetAsync<List<TicketCategoryDto>>(cacheKey);
+            var cacheKey = $"CaseType-{t.Id}-Categories_{languageKey}_Origin-{requestInfo.Origin}";
+            var resultFromCache = await cacheService.GetAsync<List<TicketCategoryDto>>(cacheKey);
             if (resultFromCache is not null)
                 t.Categories.AddRange(resultFromCache);
             else
@@ -278,7 +263,7 @@ public partial class TicketService : ITicketService
                     t.Id));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Null));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory, ConditionOperator.Null));
-                filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.ContainValues, _requestInfo.Origin));
+                filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.ContainValues, requestInfo.Origin));
 
 
                 executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
@@ -289,7 +274,7 @@ public partial class TicketService : ITicketService
 
         if (!executeMultipleRequest.Requests.Any())
             return;
-        var categoryResponse = (ExecuteMultipleResponse)await _crmContext.ServiceClient
+        var categoryResponse = (ExecuteMultipleResponse)await crmContext.ServiceClient
             .ExecuteAsync(executeMultipleRequest);
 
         if (categoryResponse.IsFaulted)
@@ -319,7 +304,7 @@ public partial class TicketService : ITicketService
         }
         foreach (var ticketType in ticketTypes)
         {
-            await _cacheService.SetAsync($"CaseType-{ticketType.Id}-Categories_{languageKey}", ticketType.Categories);
+            await cacheService.SetAsync($"CaseType-{ticketType.Id}-Categories_{languageKey}", ticketType.Categories);
         }
     }
     private async Task GetCategorySubCategoriesAsync(List<TicketTypeResponse> ticketTypes)
@@ -342,7 +327,7 @@ public partial class TicketService : ITicketService
             {
                 foreach (var ticketCategory in ticketType.Categories)
                 {
-                    var resultFromCache = await _cacheService.GetAsync<List<TicketSubCategoryDto>>($"CaseCategory-{ticketCategory.Id}-SubCategories_{languageKey}");
+                    var resultFromCache = await cacheService.GetAsync<List<TicketSubCategoryDto>>($"CaseCategory-{ticketCategory.Id}-SubCategories_{languageKey}");
 
                     if (resultFromCache is not null)
                         ticketCategory.SubCategories = resultFromCache;
@@ -374,7 +359,7 @@ public partial class TicketService : ITicketService
             if (!executeMultipleRequest.Requests.Any())
                 return;
 
-            var categoryResponse = (ExecuteMultipleResponse)await _crmContext.ServiceClient
+            var categoryResponse = (ExecuteMultipleResponse)await crmContext.ServiceClient
                 .ExecuteAsync(executeMultipleRequest);
 
             if (categoryResponse.IsFaulted)
@@ -423,7 +408,7 @@ public partial class TicketService : ITicketService
                     .FirstOrDefault(c => c.Id == subCategories.FirstOrDefault()?.ParentCategoryId)
                     ?.SubCategories.AddRange(subCategories);
 
-                await _cacheService.SetAsync($"{subCategories.FirstOrDefault().ParentCategoryId}-SubCategories_{languageKey}", subCategories);
+                await cacheService.SetAsync($"{subCategories.FirstOrDefault().ParentCategoryId}-SubCategories_{languageKey}", subCategories);
 
             }
 
@@ -432,7 +417,7 @@ public partial class TicketService : ITicketService
         }
         catch (Exception ex)
         {
-            await _logger.LogError(ex);
+            await logger.LogError(ex);
         }
 
     }
@@ -488,13 +473,13 @@ public partial class TicketService : ITicketService
     private async Task<string> GetNameFromOptionSetAsync(Entity entity, string fieldLogicalName, string language)
     {
         var name = string.Empty;
-        var options = await _commonService.GetOptionSet(entity.LogicalName, fieldLogicalName, language);
+        var options = await commonService.GetOptionSet(entity.LogicalName, fieldLogicalName, language);
         name = options.FirstOrDefault(x => x.Value == entity.GetAttributeValue<OptionSetValue>(fieldLogicalName)?.Value)?.Name;
         return name;
     }
     private async Task<Guid> GetTicketTypeProcessAsync(Guid ticketTypeId)
     {
-        var ticketTypeEntity = await _crmContext.ServiceClient.RetrieveAsync(ldv_service.EntityLogicalName, ticketTypeId, new ColumnSet(ldv_service.Fields.ldv_processid));
+        var ticketTypeEntity = await crmContext.ServiceClient.RetrieveAsync(ldv_service.EntityLogicalName, ticketTypeId, new ColumnSet(ldv_service.Fields.ldv_processid));
         var processId = ticketTypeEntity.GetAttributeValue<EntityReference>(ldv_service.Fields.ldv_processid).Id;
         return processId;
     }
@@ -508,7 +493,7 @@ public partial class TicketService : ITicketService
         var filter = new FilterExpression(LogicalOperator.And);
         filter.AddCondition(new ConditionExpression(Incident.Fields.Id, ConditionOperator.Equal, ticketId));
         ticketQuery.Criteria.AddFilter(filter);
-        var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(ticketQuery);
+        var result = await crmContext.ServiceClient.RetrieveMultipleAsync(ticketQuery);
         return result.Entities.Any();
     }
 
@@ -523,7 +508,7 @@ public partial class TicketService : ITicketService
         var filter = new FilterExpression(LogicalOperator.And);
         query.Criteria.AddFilter(filter);
         filter.AddCondition(new ConditionExpression(ticketNumberSchemaName, ConditionOperator.Equal, integrationTicketNumber.ToString()));
-        var entities = (await _crmContext.ServiceClient.RetrieveMultipleAsync(query))?.Entities;
+        var entities = (await crmContext.ServiceClient.RetrieveMultipleAsync(query))?.Entities;
 
 
         return entities.Count == 0

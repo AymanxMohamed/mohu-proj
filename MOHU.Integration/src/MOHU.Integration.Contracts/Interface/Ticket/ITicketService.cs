@@ -1,5 +1,6 @@
 ﻿using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Ticket;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Contracts.Interface.Ticket
 {
@@ -12,6 +13,8 @@ namespace MOHU.Integration.Contracts.Interface.Ticket
         Task<TicketStatusResponse> GetTicketStatusAsync(Guid customerId, string ticketNumber);
         
         Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request);
+        
+        Task<SubmitTicketResponse> SubmitHootSuiteTicketAsync(CreateHootSuiteTicketRequest request);
         
         Task<List<TicketTypeResponse>> GetTicketTypesAsync();
         

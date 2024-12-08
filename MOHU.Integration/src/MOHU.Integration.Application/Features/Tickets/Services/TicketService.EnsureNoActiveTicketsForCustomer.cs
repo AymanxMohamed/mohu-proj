@@ -33,7 +33,7 @@ public partial class TicketService
                 ConditionOperator.Equal,
                 (int)TicketStateCodeEnum.Active);
 
-        var activeIncidents = await _crmContext.ServiceClient.RetrieveMultipleAsync(activeIncidentQuery);
+        var activeIncidents = await crmContext.ServiceClient.RetrieveMultipleAsync(activeIncidentQuery);
 
         return activeIncidents.Entities.FirstOrDefault()?.GetAttributeValue<string>(Incident.Fields.Title);
     }

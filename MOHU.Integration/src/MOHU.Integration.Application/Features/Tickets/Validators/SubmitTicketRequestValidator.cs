@@ -1,4 +1,4 @@
-﻿namespace MOHU.Integration.Application.Validators
+﻿namespace MOHU.Integration.Application.Features.Tickets.Validators
 {
     public class SubmitTicketRequestValidator : AbstractValidator<SubmitTicketRequest>
     {

@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Common.Extensions;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -6,38 +7,38 @@ public partial class TicketService
 {
     public async Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
     {
-        var response = new SubmitTicketResponse();
-
-        (await _validator.ValidateAsync(request)).EnsureValidResult();
-        
+        (await validator.ValidateAsync(request)).EnsureValidResult();
         await EnsureNoActiveTicketForCustomerAsync(customerId);
 
-        var entity = new Entity(Incident.EntityLogicalName);
+        var ticket = request.ToTicket(
+            customerId, 
+            await GetTicketTypeProcessAsync(request.CaseType), 
+            requestInfo.Origin);
 
-        entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
-        entity.Attributes.Add(Incident.Fields.ldv_Description, request.Description);
-        entity.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(_requestInfo.Origin));
-        entity.Attributes.Add(Incident.Fields.ldv_serviceid, new EntityReference(ldv_service.EntityLogicalName, request.CaseType));
-        entity.Attributes.Add(Incident.Fields.ldv_MainCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.CategoryId));
-        entity.Attributes.Add(Incident.Fields.ldv_SubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId));
-        entity.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", await GetTicketTypeProcessAsync(request.CaseType)));
-        entity.Attributes.Add(Incident.Fields.ldv_IsSubmitted, true);
+        return await CreateTicketEntityAsync(ticket);
+    }
 
-        if (request.SubCategoryId1.HasValue)
-            entity.Attributes.Add(Incident.Fields.ldv_SecondarySubCategoryid, new EntityReference(ldv_casecategory.EntityLogicalName, request.SubCategoryId1.Value));
+    public async Task<SubmitTicketResponse> SubmitHootSuiteTicketAsync(CreateHootSuiteTicketRequest request)
+    {
+        (await createHootSuiteTicketValidator.ValidateAsync(request)).EnsureValidResult();
+        await EnsureNoActiveTicketForCustomerAsync(request.CustomerId);
 
-        if (request.BeneficiaryType.HasValue)
-            entity.Attributes.Add(Incident.Fields.ldv_Beneficiarytypecode, new OptionSetValue(request.BeneficiaryType.Value));
+        var ticket = request.ToTicket(await GetTicketTypeProcessAsync(request.CaseType));
+        
+        return await CreateTicketEntityAsync(ticket);
+    }
 
-        if (request.Location.HasValue)
-            entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(request.Location.Value));
+    private async Task<SubmitTicketResponse> CreateTicketEntityAsync(Entity entity)
+    {
+        var caseId = await crmContext.ServiceClient.CreateAsync(entity);
 
-        var caseId = await _crmContext.ServiceClient.CreateAsync(entity);
-            
-        var caseEntity = await _crmContext.ServiceClient.RetrieveAsync(Incident.EntityLogicalName, caseId, new ColumnSet(Incident.Fields.Title));
-        response.TicketNumber = caseEntity.GetAttributeValue<string>(Incident.Fields.Title);
-        response.TicketId = caseId;
+        return SubmitTicketResponse.Create(await GetCaseByIdAsync(caseId));
+    }
 
-        return response;
+    private async Task<Entity> GetCaseByIdAsync(Guid id)
+    {
+        return await crmContext.ServiceClient.RetrieveAsync(
+            Incident.EntityLogicalName, id, 
+            new ColumnSet(Incident.Fields.Title));
     }
 }
