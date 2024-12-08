@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using MOHU.Integration.Application.Common.Extensions;
+﻿using MOHU.Integration.Application.Common.Extensions;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
@@ -43,7 +42,7 @@ public partial class TicketService
             new ColumnSet(Incident.Fields.Title));
     }
 
-    private async Task<(EntityReference Process, EntityReference ParentService)> GetServiceAsync(Guid serviceId)
+    private async Task<Contracts.Services.Service> GetServiceAsync(Guid serviceId)
     {
         var ticketTypeEntity = await crmContext.ServiceClient
             .RetrieveAsync(ldv_service.EntityLogicalName, serviceId, 
@@ -53,7 +52,8 @@ public partial class TicketService
         
         var process = ticketTypeEntity.GetAttributeValue<EntityReference>(ldv_service.Fields.ldv_processid);
         var parentService = ticketTypeEntity.GetAttributeValue<EntityReference>(ldv_service.Fields.ldv_serviceparentid);
-        return (process, parentService);
+        
+        return Contracts.Services.Service.Create(process, parentService);
 
     }
 }
