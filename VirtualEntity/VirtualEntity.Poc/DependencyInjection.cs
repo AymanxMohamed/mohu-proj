@@ -12,14 +12,13 @@ public static class DependencyInjection
         mvcBuilder.AddOData(options =>
         {
             var odataBuilder = new ODataConventionModelBuilder();
-            odataBuilder.EntitySet<Contact>("Contacts"); // "Contacts" is the route
+            odataBuilder.EntitySet<Contact>("Contacts");
             options.AddRouteComponents("odata", odataBuilder.GetEdmModel())
                 .Select()
                 .Expand()
                 .Filter()
                 .OrderBy()
-                .Count()
-                .SetMaxTop(100);
+                .Count();
         });
         
         mvcBuilder.AddApplicationPart(VirtualEntityAssemblyMarker.Assembly);

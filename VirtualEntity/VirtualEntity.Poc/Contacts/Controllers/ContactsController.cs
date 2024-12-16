@@ -58,7 +58,7 @@ public class ContactsController : ODataController
         if (!root.TryGetProperty("value", out JsonElement valueArray) ||
             valueArray.ValueKind != JsonValueKind.Array) return contacts;
             
-        foreach (JsonElement item in valueArray.EnumerateArray())
+        foreach (var item in valueArray.EnumerateArray())
         {
             contacts.Add(Contact.Create(
                 contactId: item.GetProperty("contactid").GetString(),
