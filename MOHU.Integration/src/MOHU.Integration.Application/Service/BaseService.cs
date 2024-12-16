@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Localization;
-
-namespace MOHU.Integration.Application.Service
+﻿namespace MOHU.Integration.Application.Service
 {
     public class BaseService
     {

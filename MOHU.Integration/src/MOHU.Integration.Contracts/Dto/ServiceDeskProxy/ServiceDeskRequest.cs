@@ -1,11 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
-namespace SDIntegraion
+namespace SDIntegraion;
+
+public partial class ServiceDeskRequest
 {
+    [JsonProperty("Interaction")]
+    public InteractionDto Interaction { get; set; }
 
-    public class ServiceDeskRequest
+    public void AdjustPhoneNumber()
     {
-        [JsonProperty("Interaction")]
-        public InteractionDto Interaction { get; set; }
+        Interaction.PhoneNumber = NonNumericRegex().Replace(Interaction.PhoneNumber, "");
     }
+
+    [GeneratedRegex(@"\D")]
+    private static partial Regex NonNumericRegex();
 }
+

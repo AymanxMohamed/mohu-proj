@@ -1,8 +1,4 @@
-﻿using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Cache;
-using MOHU.Integration.Contracts.Interface.Common;
-using MOHU.Integration.Domain.Entitiy;
+﻿using MOHU.Integration.Contracts.Interface.Cache;
 
 namespace MOHU.Integration.Application.Service
 {

@@ -99,6 +99,7 @@
             public const string ldv_servicedeskneededinformation = "ldv_servicedeskneededinformation";
             public const string ldv_servicedeskresolution = "ldv_servicedeskresolution";
             public const string ldv_serviceid = "ldv_serviceid";
+            public const string ldv_requesttypeid = "ldv_requesttypeid";
             public const string ldv_StageConfigurationid = "ldv_stageconfigurationid";
             public const string ldv_stagenameid = "ldv_stagenameid";
             public const string ldv_SubCategoryid = "ldv_subcategoryid";
@@ -170,6 +171,14 @@
             public const string IntegrationClosureReason = "ldv_integrationclosurereason";
 
             public const string IntegrationClosureDate = "ldv_integrationclosuredate";
+                
+            public const string IntegrationUpdatedBy = "ldv_IntegrationUpdatedBy";
+            
+            public const string IntegrationComment = "ldv_IntegrationComment";
+            
+            public const string IntegrationLastActionDate = "ldv_IntegrationLastActionDate";
+            
+            
 
             public const string IsServiceDeskUpdated = "ldv_isservicedeskupdated";
 
