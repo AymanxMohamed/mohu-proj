@@ -1,15 +1,15 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Identity.Client;
-using VirtualEntity.Poc.Common;
 using VirtualEntity.Poc.Contacts.Models;
 
 namespace VirtualEntity.Poc.Contacts.Controllers;
 
-
+[ApiExplorerSettings(IgnoreApi = true)]
 public class ContactsController : ODataController
 {
     private readonly HttpClient _httpClient;
@@ -34,14 +34,39 @@ public class ContactsController : ODataController
             new AuthenticationHeaderValue("Bearer", result.AccessToken);
     }
 
-    [NonAction]
     [EnableQuery]
     public async Task<IActionResult> Get()
     {
         var response = await _httpClient.GetAsync("contacts?$select=contactid,fullname,emailaddress1,telephone1");
+
+
         if (!response.IsSuccessStatusCode) return StatusCode((int)response.StatusCode);
+        
         var json = await response.Content.ReadAsStringAsync();
+        
+        var contacts = ParseDynamicsContacts(json);
+
+        return Ok(contacts);
+    }
+
+    private static IEnumerable<Contact> ParseDynamicsContacts(string json)
+    {
+        var contacts = new List<Contact>();
+        using var document = JsonDocument.Parse(json);
+        var root = document.RootElement;
+
+        if (!root.TryGetProperty("value", out JsonElement valueArray) ||
+            valueArray.ValueKind != JsonValueKind.Array) return contacts;
             
-        return Ok(JsonSerializer.Deserialize<OdataResponse<Contact>>(json));
+        foreach (JsonElement item in valueArray.EnumerateArray())
+        {
+            contacts.Add(Contact.Create(
+                contactId: item.GetProperty("contactid").GetString(),
+                fullName: item.GetProperty("fullname").GetString(),
+                email: item.GetProperty("emailaddress1").GetString(),
+                phoneNumber: item.GetProperty("telephone1").GetString()));
+        }
+
+        return contacts;
     }
 }

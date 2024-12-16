@@ -10,11 +10,7 @@
         <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.1.1" />
         <PackageReference Include="Microsoft.Identity.Client" Version="4.66.2" />
         <PackageReference Include="Microsoft.OData.ModelBuilder" Version="2.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <ProjectReference Include="..\POCVirtualEntity\POCVirtualEntity.csproj" />
     </ItemGroup>
 </Project>
