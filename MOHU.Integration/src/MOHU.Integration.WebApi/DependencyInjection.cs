@@ -4,6 +4,7 @@ using MOHU.Integration.Contracts.Dto.Config;
 using MOHU.Integration.Infrastructure;
 using MOHU.Integration.WebApi.Common.HttpInterceptors;
 using MOHU.Integration.WebApi.Common.SwaggerFilters;
+using VirtualEntity.Poc;
 
 namespace MOHU.Integration.WebApi;
 
@@ -28,7 +29,8 @@ internal static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddControllers();
+        var mvcBuilder = services.AddControllers();
+        services.AddVirtualEntitiesSupport(mvcBuilder);
         services.AddEndpointsApiExplorer();
         return services;
     }

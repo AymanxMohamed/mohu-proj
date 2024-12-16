@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Identity.Client;
@@ -38,6 +37,8 @@ namespace POCVirtualEntity.Controllers
         public async Task<IActionResult> Get()
         {
             var response = await _httpClient.GetAsync("contacts?$select=contactid,fullname,emailaddress1,telephone1");
+            
+            
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
