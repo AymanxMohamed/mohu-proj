@@ -10,10 +10,6 @@ public class CreateHootSuiteTicketRequestValidator : AbstractValidator<CreateHoo
             .NotEmpty()
             .WithErrorCode(ErrorMessageCodes.DescriptionisRequired);
 
-        RuleFor(x => x.CustomerId)
-            .NotEmpty()
-            .WithErrorCode(ErrorMessageCodes.CustomerIdRquired);
-
         RuleFor(x => x.CaseType)
             .NotEmpty()
             .WithErrorCode(ErrorMessageCodes.CaseTypeisRequired);

@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Contracts.Dto.Ticket;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.Controllers;
 
@@ -58,6 +59,18 @@ public class TicketsController(ITicketService ticketService) : BaseController
         [FromBody] SubmitTicketRequest request)
     {
         var result = await ticketService.SubmitTicketAsync(customerId, request);
+        return Ok(result);
+    }
+    
+    [HttpPost("CreateTicket")]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ResponseMessage<SubmitTicketResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<SubmitTicketResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseMessage<SubmitTicketResponse>), StatusCodes.Status404NotFound)]
+    public async Task<ResponseMessage<SubmitTicketResponse>> Post(Guid customerId, CreateHootSuiteTicketRequest request)
+    {
+        var result = await ticketService.SubmitHootSuiteTicketAsync(customerId, request);
         return Ok(result);
     }
 }

@@ -7,13 +7,11 @@ namespace MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 public class CreateHootSuiteTicketRequest : CreateTicketRequest
 {
-    public Guid CustomerId { get; init; }
-
-    public Entity ToTicket(Service service)
+    public Entity ToTicket(Guid customerId, Service service)
     {
         var entity  = base.ToTicket(service, (int)CaseOriginEnum.SocialMedia);
         
-        entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, CustomerId));
+        entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
 
         return entity;
     }

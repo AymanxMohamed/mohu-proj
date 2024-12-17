@@ -18,12 +18,12 @@ public partial class TicketService
         return await CreateTicketEntityAsync(ticket);
     }
 
-    public async Task<SubmitTicketResponse> SubmitHootSuiteTicketAsync(CreateHootSuiteTicketRequest request)
+    public async Task<SubmitTicketResponse> SubmitHootSuiteTicketAsync(Guid customerId, CreateHootSuiteTicketRequest request)
     {
         (await createHootSuiteTicketValidator.ValidateAsync(request)).EnsureValidResult();
-        await EnsureNoActiveTicketForCustomerAsync(request.CustomerId);
+        await EnsureNoActiveTicketForCustomerAsync(customerId);
 
-        var ticket = request.ToTicket(await GetServiceAsync(request.CaseType));
+        var ticket = request.ToTicket(customerId, await GetServiceAsync(request.CaseType));
         
         return await CreateTicketEntityAsync(ticket);
     }

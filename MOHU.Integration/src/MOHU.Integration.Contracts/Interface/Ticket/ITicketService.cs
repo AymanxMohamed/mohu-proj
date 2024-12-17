@@ -14,7 +14,7 @@ namespace MOHU.Integration.Contracts.Interface.Ticket
         
         Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request);
         
-        Task<SubmitTicketResponse> SubmitHootSuiteTicketAsync(CreateHootSuiteTicketRequest request);
+        Task<SubmitTicketResponse> SubmitHootSuiteTicketAsync(Guid customerId, CreateHootSuiteTicketRequest request);
         
         Task<List<TicketTypeResponse>> GetTicketTypesAsync();
         
