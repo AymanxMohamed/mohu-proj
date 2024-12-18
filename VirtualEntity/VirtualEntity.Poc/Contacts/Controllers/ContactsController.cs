@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Identity.Client;
@@ -37,7 +38,7 @@ public class ContactsController : ODataController
     [EnableQuery]
     public async Task<IActionResult> Get()
     {
-        var response = await _httpClient.GetAsync("contacts?$select=contactid,fullname,emailaddress1,telephone1");
+        var response = await _httpClient.GetAsync("contacts?$select=contactid,fullname,emailaddress1,mobilephone");
 
 
         if (!response.IsSuccessStatusCode) return StatusCode((int)response.StatusCode);
@@ -47,6 +48,38 @@ public class ContactsController : ODataController
         var contacts = ParseDynamicsContacts(json);
 
         return Ok(contacts);
+    }
+
+    [EnableQuery]
+    public async Task<IActionResult> Get([FromODataUri] Guid key)
+    {
+        // Construct the Dynamics API URL with the GUID key
+        var response = await _httpClient.GetAsync($"contacts({key})?$select=contactid,fullname,emailaddress1,mobilephone");
+
+        if (!response.IsSuccessStatusCode)
+            return StatusCode((int)response.StatusCode);
+
+        var json = await response.Content.ReadAsStringAsync();
+
+        // Parse the response into a Contact object
+        var contact = ParseSingleDynamicsContact(json);
+
+        return Ok(contact);
+    }
+
+
+
+    private static Contact ParseSingleDynamicsContact(string json)
+    {
+        using var document = JsonDocument.Parse(json);
+        var root = document.RootElement;
+
+        return Contact.Create(
+            contactId: root.GetProperty("contactid").GetString(),
+            fullName: root.GetProperty("fullname").GetString(),
+            email: root.GetProperty("emailaddress1").GetString(),
+            phoneNumber: root.GetProperty("mobilephone").GetString()
+        );
     }
 
     private static IEnumerable<Contact> ParseDynamicsContacts(string json)
@@ -64,7 +97,7 @@ public class ContactsController : ODataController
                 contactId: item.GetProperty("contactid").GetString(),
                 fullName: item.GetProperty("fullname").GetString(),
                 email: item.GetProperty("emailaddress1").GetString(),
-                phoneNumber: item.GetProperty("telephone1").GetString()));
+                phoneNumber: item.GetProperty("mobilephone").GetString()));
         }
 
         return contacts;
