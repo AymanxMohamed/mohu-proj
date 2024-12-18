@@ -18,7 +18,8 @@ public static class DependencyInjection
                 .Expand()
                 .Filter()
                 .OrderBy()
-                .Count();
+                .Count()
+                .SetMaxTop(10000);
         });
         
         mvcBuilder.AddApplicationPart(VirtualEntityAssemblyMarker.Assembly);
