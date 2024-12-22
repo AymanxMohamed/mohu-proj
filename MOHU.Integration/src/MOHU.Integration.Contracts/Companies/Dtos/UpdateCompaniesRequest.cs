@@ -1,24 +1,33 @@
-﻿namespace MOHU.Integration.Contracts.Companies.Dtos;
+﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 
-public record UpdateCompaniesRequest(
-    string Key,
-    int SicCode,
-    UpdateCompaniesKeyType KeyType = UpdateCompaniesKeyType.CompanyName,
-    string? NewCompanyName = null,
-    string? LicenseNumber = null);
+namespace MOHU.Integration.Contracts.Companies.Dtos;
 
-public enum UpdateCompaniesKeyType
+public record UpdateCompaniesRequest(List<UpdateCompanyRequest> Requests)
 {
-    CompanyName,
-    Id
-}
+    public List<Entity> Update(List<Entity> entities, Action<string> fireNotFoundException)
+    {
+        return Requests.Select(request => request.Update(entities, fireNotFoundException)).ToList();
+    }
+    
+    public QueryExpression ToQueryExpression() => new()
+        {   
+            ColumnSet = UpdateCompanyRequest.GetColumnSet(),
+            Criteria = ToFilterExpression()
+        };
 
-// {
-//     public string CompanyName { get; set; }
-//
-//     public string NewCompanyName { get; set; }
-//
-//     public long SicCode { get; set; }
-//
-//     public string? LicenseNumber { get; set; }
-// }
+    private FilterExpression ToFilterExpression()
+    {
+        var filterExpression = new FilterExpression
+        {
+            FilterOperator = LogicalOperator.Or,
+        };
+            
+        foreach (var request in Requests)
+        {
+            filterExpression.AddFilter(request.ToFilterExpression());
+        }
+        
+        return filterExpression;
+    }
+}
