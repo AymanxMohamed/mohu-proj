@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Contracts.Companies.Enums;
+using MOHU.Integration.Domain.Features.Companies;
 
 namespace MOHU.Integration.Contracts.Companies.Dtos;
 
@@ -20,22 +21,25 @@ public record UpdateCompanyRequest(
             fireNotFoundException($"No company found with the specified key: {Key}");
         }
 
-        if (!string.IsNullOrWhiteSpace(NewCompanyName) && company!.Attributes.Contains("ldv_name"))
+        if (!string.IsNullOrWhiteSpace(NewCompanyName))
         {
-            company["ldv_name"] = NewCompanyName;
+            company![CompaniesConstants.Fields.Name] = NewCompanyName;
         }
         
-        company!["ldv_siccode"] = SicCode;
+        company![CompaniesConstants.Fields.SicCode] = SicCode;
 
         if (!string.IsNullOrWhiteSpace(LicenseNumber))
         {
-            company["ldv_licensenumber"] = LicenseNumber;
+            company[CompaniesConstants.Fields.LicenseNumber] = LicenseNumber;
         }
 
         return company;
     }
     
-    public static ColumnSet GetColumnSet() => new("ldv_name", "ldv_siccode", "ldv_licensenumber");
+    public static ColumnSet GetColumnSet() => new(
+        CompaniesConstants.Fields.Name, 
+        CompaniesConstants.Fields.SicCode, 
+        CompaniesConstants.Fields.LicenseNumber);
 
     public FilterExpression ToFilterExpression() => new()
     {
@@ -50,8 +54,8 @@ public record UpdateCompanyRequest(
     
     private string GetKeyLogicalName() => KeyType switch
     {
-        UpdateCompaniesKeyType.CompanyName => "ldv_name",
-        UpdateCompaniesKeyType.Id => "ldv_companyid",
+        UpdateCompaniesKeyType.CompanyName => CompaniesConstants.Fields.Name,
+        UpdateCompaniesKeyType.Id => CompaniesConstants.Fields.Id,
         _ => throw new ArgumentOutOfRangeException()
     };
 }

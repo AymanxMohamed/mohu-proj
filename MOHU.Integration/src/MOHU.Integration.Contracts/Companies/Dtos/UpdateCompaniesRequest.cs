@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using MOHU.Integration.Domain.Features.Companies;
 
 namespace MOHU.Integration.Contracts.Companies.Dtos;
 
@@ -10,7 +11,7 @@ public record UpdateCompaniesRequest(List<UpdateCompanyRequest> Requests)
         return Requests.Select(request => request.Update(entities, fireNotFoundException)).ToList();
     }
     
-    public QueryExpression ToQueryExpression() => new()
+    public QueryExpression ToQueryExpression() => new(CompaniesConstants.EntityLogicalName)
         {   
             ColumnSet = UpdateCompanyRequest.GetColumnSet(),
             Criteria = ToFilterExpression()
