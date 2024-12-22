@@ -7,8 +7,7 @@ namespace MOHU.Integration.Contracts.Companies.Dtos;
 
 public record UpdateCompanyRequest(
     string Key,
-    int SicCode,
-    UpdateCompaniesKeyType KeyType = UpdateCompaniesKeyType.CompanyName,
+    string SicCode,
     string? NewCompanyName = null,
     string? LicenseNumber = null)
 {
@@ -52,7 +51,7 @@ public record UpdateCompanyRequest(
         }
     };
     
-    private string GetKeyLogicalName() => KeyType switch
+    private string GetKeyLogicalName() => UpdateCompaniesKeyType.CompanyName switch
     {
         UpdateCompaniesKeyType.CompanyName => CompaniesConstants.Fields.Name,
         UpdateCompaniesKeyType.Id => CompaniesConstants.Fields.Id,
