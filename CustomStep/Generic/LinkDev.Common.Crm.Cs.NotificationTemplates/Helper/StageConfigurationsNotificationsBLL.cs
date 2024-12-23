@@ -21,6 +21,10 @@ using LinkDev.Common.Crm.Cs.StageConfiguration.Entities;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Workflow.Activities;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
+using System.ServiceModel.MsmqIntegration;
+using System.Net.Http;
+using System.Security.Policy;
 
 namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 {
@@ -631,7 +635,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
         #endregion
 
         #region  Notification Template Methods
-        public void SendNotificationTemplate(EntityReference ToSystemUser, /*EntityReference ToTeam,*/ EntityReference ToAccount, EntityReference ToContact, EntityReference queues, string ccText, string bccText, string toText, EntityReference NotificationTemplates, EntityReference RegardingObject , EntityReference RegardingLookup,string toEmailAddress)
+        public void SendNotificationTemplate(EntityReference ToSystemUser,  EntityReference ToTeam,  EntityReference ToAccount, EntityReference ToContact, EntityReference queues, string ccText, string bccText, string toText, EntityReference NotificationTemplates, EntityReference RegardingObject , EntityReference RegardingLookup,string toEmailAddress)
         {
 
             #region variables
@@ -667,14 +671,14 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                         if (Contact.Attributes.Contains("ldv_preferredlanguagecode"))
                             language = (Language)(((OptionSetValue)(Contact.Attributes["ldv_preferredlanguagecode"])).Value);
                     }
-                    else if (ToAccount != null && ToAccount.Id != Guid.Empty)
+                      if (ToAccount != null && ToAccount.Id != Guid.Empty)
                     {
                         Entity Account = CRMAccessLayer.RetrieveEntity(ToAccount.Id.ToString(), "account", new string[] { "emailaddress1" });
                         if (Account != null && Account.Attributes.Contains("emailaddress1"))
                             toList.Add(new EntityReference("account", ToAccount.Id));
 
                     }
-                    else if (ToSystemUser != null && ToSystemUser.Id != Guid.Empty)
+                      if (ToSystemUser != null && ToSystemUser.Id != Guid.Empty)
                     {
                         if (ToSystemUser.LogicalName == "systemuser")
                         {
@@ -713,7 +717,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                                         if (User != null)
                                         {
                                             if (User.Attributes.Contains("internalemailaddress"))
-                                                toList.Add(new EntityReference("systemuser", ToSystemUser.Id));
+                                                toList.Add(new EntityReference("systemuser", User.Id));
                                             if (User.Attributes.Contains("ldv_preferredlanguagecode"))
                                                 language = (Language)(((OptionSetValue)(User.Attributes["ldv_preferredlanguagecode"])).Value);
                                         }
@@ -722,12 +726,39 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                             }
                         }
                     }
-                   
-                   
+                    if (ToTeam != null && ToTeam.Id != Guid.Empty  && ToTeam.LogicalName == "team")
+                    {
+                        tracingService.Trace($"  in team ");
+                        var query = new QueryExpression("systemuser");
+                        query.Distinct = true;
+                        query.ColumnSet.AddColumns("fullname", "businessunitid", "title", "address1_telephone1", "positionid", "systemuserid");
+                        query.AddOrder("fullname", OrderType.Ascending);
+                        var query_teammembership = query.AddLink("teammembership", "systemuserid", "systemuserid");
+                        var ab = query_teammembership.AddLink("team", "teamid", "teamid");
+                        ab.EntityAlias = "ab";
+                        ab.LinkCriteria.AddCondition("teamid", ConditionOperator.Equal, ToTeam.Id);
+                        EntityCollection memebers = OrganizationService.RetrieveMultiple(query);
+                        if (memebers.Entities.Count > 0)
+                        {
+                            tracingService.Trace($"  # members = {memebers.Entities.Count}");
+                            foreach (var member in memebers.Entities)
+                            {
+                                Entity User = CRMAccessLayer.RetrieveEntity(member.Id.ToString(), "systemuser", new string[] { "ldv_preferredlanguagecode", "internalemailaddress" });
+                                if (User != null)
+                                {
+                                    if (User.Attributes.Contains("internalemailaddress"))
+                                        toList.Add(new EntityReference("systemuser", User.Id));
+                                    if (User.Attributes.Contains("ldv_preferredlanguagecode"))
+                                        language = (Language)(((OptionSetValue)(User.Attributes["ldv_preferredlanguagecode"])).Value);
+                                }
+                            }
+                        }
+                    }
+
                     #endregion
 
                     #region Send email to record Url Users:
-                    else if (!string.IsNullOrEmpty(toText))
+                    if (!string.IsNullOrEmpty(toText))
                     {
                         List<EntityReference> DynamicList = new List<EntityReference>();
                         DynamicList =  getEntityReferencesFromURLs(toText, OrganizationService);
@@ -742,7 +773,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                     #endregion
 
                     #region To Queue: language default is english
-                    else if (queues != null)
+                      if (queues != null)
                     {
                         // check if the queue has email if yes so add the queue id to to list:
                         if ( CheckTheQueueHasEmail(queues.Id.ToString()))
@@ -907,6 +938,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 //tracingService.Trace($"   MailWithFields {MailWithFields}");
 
 
+
                 #region send and create email
                 MailTitle = GetMessageWithValues(MailTitleWithFields, OrganizationService, regardingObject);
                 tracingService.Trace($"   MailTitle {MailTitle}");
@@ -916,23 +948,24 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
 
                 tracingService.Trace($" before CreateEmail ");
 
-
                 if (RegardingLookup!=null)
                 {
                     regardingObject = RegardingLookup;
                 }
-                Guid emailID = CRMAccessLayer.CreateEmail(From, toParty, regardingObject, MailTitle, MailMessage, ccList, bccList, notificationConfig);
-                if (!string.IsNullOrEmpty(toEmailAddress))
-                {
-
-                    UpdateEmailWithExternalFromAddress(  emailID, MailTitle, MailMessage,   toEmailAddress );
-
-                    
-                }
+                Guid emailID = CRMAccessLayer.CreateEmail(From, toParty, regardingObject, MailTitle, MailMessage, ccList, bccList, notificationConfig );
+                
 
                 if (emailID != Guid.Empty)
                     CRMAccessLayer.SendEmail(emailID);
                 tracingService.Trace($" after send email ");
+
+                if (!string.IsNullOrEmpty(toEmailAddress))
+                {
+                    Guid emailID2 = CRMAccessLayer.CreateEmailtoEmailAddress(From, regardingObject, MailTitle, MailMessage, notificationConfig, toEmailAddress);
+                        if (emailID2 != Guid.Empty)
+                        CRMAccessLayer.SendEmail(emailID2);
+                    tracingService.Trace($" after send email toEmailAddress ");
+                }
 
                 #endregion
             }
@@ -943,7 +976,52 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
             }
         }
 
+        public string ReplaceTempValue(string mailBody, EntityReference regardingObject , Entity notificationTemplate)
+        {
+            if (mailBody.Contains("$ldv_notitemp_") )
+            {
+                // Regex to find fields enclosed in $$
+                var matches = Regex.Matches(mailBody, @"\$(.*?)\$", RegexOptions.Singleline);
+                foreach (Match match in matches)
+                {
+                    string fieldName = match.Groups[1].Value;
+                    if (fieldName.Contains("ldv_notitemp_"))
+                        // Check if field exists in the first entity
+                        if (notificationTemplate.Contains(fieldName))
+                        {
+                            string urlSchemaName   = notificationTemplate.Attributes.Contains(fieldName) ? notificationTemplate.Attributes[fieldName].ToString() : "";
+                            string urlmessage = GetMessageWithValues(urlSchemaName, OrganizationService, regardingObject);
+                            string urlShorten=Shorten(urlmessage);
+                            //replace field with url
+                            mailBody = mailBody.Replace("$" + fieldName + "$", urlShorten);
+                        }
+                }
+            }
+            return mailBody;
+        }
+            string Shorten(string url)
+        {
+            string apiUrl = "https://is.gd/create.php";
+            string shortenedUrl = null;
+            string requestUrl = $"{apiUrl}?format=simple&url={Uri.EscapeDataString(url)}";
 
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = client.GetAsync(requestUrl).Result;
+
+                    response.EnsureSuccessStatusCode();
+
+                    shortenedUrl = response.Content.ReadAsStringAsync().Result;
+                }
+                catch (HttpRequestException e)
+                {
+                    Console.WriteLine($"Request error: {e.Message}");
+                }
+            }
+            return shortenedUrl;
+        }
         public void UpdateEmailWithExternalFromAddress(Guid emailID,  string subject, string emailBody, string recipientEmail)
         {
             // Create the email entity
@@ -975,10 +1053,23 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates.Helper
                 string SMSMessage = string.Empty, SMSWithFields = string.Empty;
                 string subject = notificationTemplate.Attributes.Contains("ldv_name") ? (notificationTemplate.Attributes["ldv_name"]).ToString() : string.Empty;
 
+
+
                 if (preferredLanguage == Language.English)
                     SMSWithFields = notificationTemplate.Attributes.Contains("ldv_englishsmsmessage") ? notificationTemplate.Attributes["ldv_englishsmsmessage"].ToString() : "";
                 else
                     SMSWithFields = notificationTemplate.Attributes.Contains("ldv_arabicsmsmessage") ? notificationTemplate.Attributes["ldv_arabicsmsmessage"].ToString() : "";
+
+
+
+                /////// replace url fields
+               
+
+                if (SMSWithFields.Contains("$ldv_notitemp_"))
+                {
+                    SMSWithFields = ReplaceTempValue(SMSWithFields, regardingObject, notificationTemplate);
+                }
+
 
                 SMSMessage = GetMessageWithValues(SMSWithFields, OrganizationService, regardingObject);
                 Guid activityId = CreateSms(regardingObject, mobile, SMSMessage, subject, stageNotificationConfig, preferredLanguage);

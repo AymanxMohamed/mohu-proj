@@ -73,11 +73,11 @@ namespace LinkDev.Common.Crm.Cs.StageConfiguration.BLL
 
                             newApplicationHeader.Attributes.Add("subject", targetEntity.Attributes["ldv_name"]);
                         }
-                        if (targetEntity.Attributes.Contains(RequestEntity.OtherCustomer))
-                        {
-                            tracingService.Trace($" LogicalName {((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).LogicalName} , Id {((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).Id} ");
-                            newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Customer, new EntityReference(((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).Id));
-                        }
+                        //if (targetEntity.Attributes.Contains(RequestEntity.OtherCustomer))
+                        //{
+                        //    tracingService.Trace($" LogicalName {((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).LogicalName} , Id {((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).Id} ");
+                        //    newApplicationHeader.Attributes.Add(ApplicationHeaderEntity.Customer, new EntityReference(((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).LogicalName, ((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).Id));
+                        //}
 
                         if (((EntityReference)targetEntity.Attributes[RequestEntity.OtherCustomer]).LogicalName == "account")
                         {

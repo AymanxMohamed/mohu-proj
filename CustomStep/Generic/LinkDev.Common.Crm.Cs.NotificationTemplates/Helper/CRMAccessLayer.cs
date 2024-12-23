@@ -1174,13 +1174,13 @@ namespace Linkdev.MOE.CRM.DAL
         /// <param name="subject"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public Guid CreateEmail(EntityReference From, List<EntityReference> partyIds, EntityReference regardingObject, string subject, string message, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig)
+        public Guid CreateEmail(EntityReference From, List<EntityReference> partyIds, EntityReference regardingObject, string subject, string message, List<EntityReference> ccList, List<EntityReference> bccList, EntityReference notificationConfig )
         {
             try
             {
                 tracingService.Trace($"  in CreateEmail");
-
-                Entity[] toPartyList = new Entity[partyIds.Count];
+                 
+                List<Entity> toPartyList = new List<Entity>();
                 Entity[] frompartyList = new Entity[1];
 
                 Entity email = new Entity("email");
@@ -1192,16 +1192,20 @@ namespace Linkdev.MOE.CRM.DAL
                     fromParty.Attributes.Add("partyid", From);
                     frompartyList[i] = fromParty;
                 }
-
-                for (int i = 0; i < partyIds.Count; i++)
+                
+                foreach (var partyIdsItem in partyIds)
                 {
-                    if (partyIds[i].LogicalName=="team")
+
+                //}
+                //for (int i = 0; i < partyIds.Count; i++)
+                //{
+                    if (partyIdsItem.LogicalName=="team")
                     {
                         tracingService.Trace($"  in party is team ");
 
                         //get all members in the teams
                         // Define Condition Values
-                        var ab_teamid = partyIds[i].Id;
+                        var ab_teamid = partyIdsItem.Id;
 
                         // Instantiate QueryExpression query
                         var query = new QueryExpression("systemuser");
@@ -1216,23 +1220,24 @@ namespace Linkdev.MOE.CRM.DAL
                         EntityCollection memebers= OrganizationService.RetrieveMultiple(query);
                         if (memebers.Entities.Count>0)
                         {
-                            tracingService.Trace($"  # members = {memebers.Entities.Count}");
+                            tracingService.Trace($"  # team members = {memebers.Entities.Count}");
                             foreach (var member in memebers.Entities)
                             {
                                 Entity toParty = new Entity("activityparty");
                                 toParty.Attributes.Add("partyid", member.ToEntityReference());
-                                toPartyList[i] = toParty;
+                                toPartyList.Add( toParty);
                             }
                         }
                     }
                     else
                     {
                         Entity toParty = new Entity("activityparty");
-                        toParty.Attributes.Add("partyid", partyIds[i]);
-                        toPartyList[i] = toParty;
+                        toParty.Attributes.Add("partyid", partyIdsItem);
+                        toPartyList.Add(toParty);
                     }
+                    
                 }
-
+               
                 #region send email to cc ids if there is cc 
                 if (ccList != null && ccList.Count > 0)
                 {
@@ -1261,16 +1266,70 @@ namespace Linkdev.MOE.CRM.DAL
                 }
                 #endregion
 
+                tracingService.Trace($"  # team members = {toPartyList.Count}");
+
+
                 email.Attributes.Add("subject", subject);
                 email.Attributes.Add("description", message);
                 email.Attributes.Add("from", frompartyList);
-                email.Attributes.Add("to", toPartyList);
+                email.Attributes.Add("to", toPartyList.ToArray());
                 email.Attributes.Add("regardingobjectid", (EntityReference)regardingObject);
                 email.Attributes.Add("ldv_notificationconfigurationid", notificationConfig);
+                Guid emailGuid = new Guid();
+                if (toPartyList.Count>0)
+                {
+                    tracingService.Trace($"toPartyList.Count = {toPartyList.Count} ");
 
-                Guid emailGuid = OrganizationService.Create(email);
+                    emailGuid = OrganizationService.Create(email);
+                }
+                else
+                {
+                    tracingService.Trace($"toPartyList.Count = {toPartyList.Count} ");
+                }
+
                 tracingService.Trace($" emailGuid {emailGuid} ");
 
+                return emailGuid;
+            }
+            catch (Exception ex)
+            {
+                tracingService.Trace($" Err {ex}");
+                throw;
+            }
+        }
+
+        public Guid CreateEmailtoEmailAddress(EntityReference From, EntityReference regardingObject, string subject, string message, EntityReference notificationConfig, string toEmailAddress)
+        {
+            try
+            {
+                tracingService.Trace($"  in CreateEmailtoEmailAddress");
+                Guid emailGuid = new Guid();
+                Entity[] frompartyList = new Entity[1];
+                Entity email = new Entity("email");
+                tracingService.Trace($"  email {email}");
+                for (var i = 0; i < frompartyList.Length; i++)
+                {
+                    Entity fromParty = new Entity("activityparty");
+                    fromParty.Attributes.Add("partyid", From);
+                    frompartyList[i] = fromParty;
+                }
+                if (!string.IsNullOrEmpty(toEmailAddress))
+                {
+                    
+                    Entity[] toPartyList = new Entity[1]; // Create an array for "to" party
+                    Entity to = new Entity("activityparty");
+                    to["addressused"] = toEmailAddress;
+                    toPartyList[0] = to; // Add the "to" party to the list
+                    email.Attributes.Add("to", toPartyList); // Set the "to" attribute as an array of activityparty
+                    email.Attributes.Add("subject", subject);
+                    email.Attributes.Add("description", message);
+                    email.Attributes.Add("from", frompartyList);
+                    email.Attributes.Add("regardingobjectid", (EntityReference)regardingObject);
+                    email.Attributes.Add("ldv_notificationconfigurationid", notificationConfig);
+                      emailGuid = OrganizationService.Create(email);
+                    tracingService.Trace($" emailGuid {emailGuid} ");
+                }
+ 
                 return emailGuid;
             }
             catch (Exception ex)
