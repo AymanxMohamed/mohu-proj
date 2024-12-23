@@ -28,13 +28,13 @@ namespace Linkdev.Common.Moq
         static void Main(string[] args)
         {
             Dictionary<string, object> inputs;
-            Guid PrimaryEntityID = new Guid("5ba7d8df-05b9-4ba8-bb6c-46c52b4b2eb5");
-            string PrimaryEntitySchemaName = /*"task";//*/ "incident";   /*"contact";  */
+            Guid PrimaryEntityID = new Guid("c4d81889-c84b-4e90-ad2e-43bf90a34319");
+            string PrimaryEntitySchemaName = "incident"; // "task" /*"task";//*/ /*"incident"*/;   /*"contact";  */
 
             //Guid processstage = Guid.Empty;
 
             //  Activity activity = new SendNotification();
-            Activity activity = new SendNotificationsByNotificationConfig();// SendNotification();
+            Activity activity = new SendNotification();  // SendNotificationsByNotificationConfig(); //
 
 
             #region Variables Intializations Admin
@@ -83,31 +83,31 @@ namespace Linkdev.Common.Moq
        
             string x = "2";
             #region Notification template
-            //inputs = new Dictionary<string, object>
-            //{
-            //     { "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("428ff388-99d8-ee11-904b-6045bd895c76"))},
-            //     {"ToUser",  null},
-            //     { "ToTeam", null} ,
-            //     { "ToContact",null} , //new EntityReference("contact", new Guid("7d070a8a-09ca-ee11-9079-6045bd895e74"))} ,
-            //     { "ToAccount", null} , // ,new EntityReference("contact", new Guid("a147bd39-e099-ef11-8a6a-6045bd9ec6ef"))} ,
-            //     { "ToRecordsURLs",null },
-            //     { "ToEmailAddress","aya.alaam@linkdev.com" },
-            //     { "ToQueue", null} ,
-            //     { "CCRecordsURLs",null },
-            //     { "BCCRecordsURLs",null },
-            //     { "IsAnotherRegarding",true },
-            //     { "RegardingId","c9364278-6160-4c8b-b736-fbdaf0cca42b" },
-            //     { "RegardingName","incident" },
-            //};
             inputs = new Dictionary<string, object>
             {
-                // { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("b65e2990-fd5b-ec11-a9df-6045bd8810e2"))} ,
-                //{ "stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("d0825ca8-3bcc-eb11-a960-000d3a4573e4"))} ,
-
-                  { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("3a5f0109-02ac-ef11-b8e9-6045bd9ec6ef"))} ,
-                { "stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("868098b7-da28-ef11-840a-6045bd91711b"))} ,
-
+                 { "Notification" , new EntityReference("ldv_notificationtemplate", new Guid("6ba41432-9ab1-ef11-b8e8-6045bd9b090f"))},
+                 {"ToUser",  null},
+                 { "ToTeam",  new EntityReference("team", new Guid("6827a08a-b4bb-ef11-b8e9-6045bd9ec6ef"))} ,
+                 { "ToContact", new EntityReference("contact", new Guid("7d070a8a-09ca-ee11-9079-6045bd895e74"))} ,
+                 { "ToAccount", null} , // ,new EntityReference("contact", new Guid("a147bd39-e099-ef11-8a6a-6045bd9ec6ef"))} ,
+                 { "ToRecordsURLs",null },
+                 { "ToEmailAddress","aya.alaam@linkdev.com" },
+                 { "ToQueue", null} ,
+                 { "CCRecordsURLs",null },
+                 { "BCCRecordsURLs",null },
+                 { "IsAnotherRegarding",true },
+                 { "RegardingId","6b7166f0-7fa3-4ef2-9828-ed7680d679ba" },
+                 { "RegardingName","incident" },
             };
+            //inputs = new Dictionary<string, object>
+            //{
+            //    // { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("b65e2990-fd5b-ec11-a9df-6045bd8810e2"))} ,
+            //    //{ "stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("d0825ca8-3bcc-eb11-a960-000d3a4573e4"))} ,
+
+            //      { "applicationHeader",new EntityReference("ldv_applicationheader", new Guid("c97f9e6a-88c0-ef11-b8e9-6045bd9ec6ef"))} ,
+            //    { "stageConfiguration", new EntityReference("ldv_stageconfiguration", new Guid("9a5d2b57-0f92-ef11-8a69-6045bd8fae55"))} ,
+
+            //};
             #endregion
 
 
