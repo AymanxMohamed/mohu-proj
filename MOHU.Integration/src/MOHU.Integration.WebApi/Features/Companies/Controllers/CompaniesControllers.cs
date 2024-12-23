@@ -7,14 +7,4 @@ namespace MOHU.Integration.WebApi.Features.Companies.Controllers;
 
 
 [Route("api/companies")]
-public class CompaniesControllers(ICompaniesService service) : BaseController
-{
-    [HttpPatch]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Update(UpdateCompaniesRequest request)
-    {
-        await service.UpdateAsync(request);
-        return NoContent();
-    }
-}
+public class CompaniesControllers(ICompaniesService service) : BaseController;
