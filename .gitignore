@@ -531,3 +531,10 @@ XrmDefinitelyTyped
 *.DotSettings
 /LinkDev.MOHU.JavaScript
 /Reports/LinkDev.MOHU.Reports
+
+appsettings.Local.json
+appsettings.LocalBackUp.json
+
+*.pem
+*.pfx
+

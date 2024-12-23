@@ -40,6 +40,10 @@ namespace MOHU.Integration.Infrastructure
             IConfiguration configuration)
         {
             services.Configure<CrmContextSettings>(configuration.GetSection(nameof(CrmContextSettings)));
+            var nusukSettings = configuration.GetSection(nameof(NusukSettings)).Get<NusukSettings>() 
+                                ?? throw new ApplicationException("Nusuk Settings must exists in appsettings.json");
+            
+            services.AddSingleton(nusukSettings);
             return services;
         }
     }

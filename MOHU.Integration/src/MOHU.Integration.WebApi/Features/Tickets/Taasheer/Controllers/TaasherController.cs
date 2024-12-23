@@ -1,0 +1,21 @@
+﻿using MOHU.Integration.Contracts.Dto.Taasher;
+
+namespace MOHU.Integration.WebApi.Features.Tickets.Taasheer.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class TaasherController(ITaasherService taasherService) : BaseController
+{
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
+    [HttpPost]
+    [Route(nameof(UpdateStatus))]
+    public async Task<ResponseMessage<bool>> UpdateStatus(TaasherUpdateStatusRequest request)
+    {
+        var result =  await taasherService.UpdateStatusAsync(request);
+        return Ok(result);
+    }
+}

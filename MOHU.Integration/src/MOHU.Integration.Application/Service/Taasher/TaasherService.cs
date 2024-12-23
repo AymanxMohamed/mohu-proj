@@ -1,37 +1,19 @@
-﻿using MOHU.Integration.Contracts.Dto;
-using MOHU.Integration.Contracts.Dto.Taasher;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Ticket;
-using MOHU.Integration.Domain.Entitiy;
+﻿using MOHU.Integration.Contracts.Dto.Taasher;
 
-namespace MOHU.Integration.Application.Service.Taasher
+namespace MOHU.Integration.Application.Service.Taasher;
+
+public class TaasherService(ITicketService ticketService) : ITaasherService
 {
-    public class TaasherService : ITaasherService
+    public async Task<bool> UpdateStatusAsync(TaasherUpdateStatusRequest request)
     {
+        var ticketId = await ticketService.GetTicketByIntegrationTicketNumberAsync(
+            request.TicketNumber, 
+            Incident.Fields.TaasherTicketNumber);
+            
+        var ticketStatusRequest = request.ToUpdateRequest(ticketId, Incident.Fields.IsTashirUpdated);
+            
+        await ticketService.UpdateStatusAsync(ticketStatusRequest);
 
-        private readonly ITicketService _ticketService;
-        public TaasherService(ITicketService ticketService)
-        {
-            _ticketService = ticketService;
-        }
-
-        public async Task<bool> UpdateStatusAsync(TaasherUpdateStatusRequest request)
-        {
-            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(request.TicketNumber, Incident.Fields.TaasherTicketNumber);
-            var ticketStatusRequest = new UpdateTicketStatusRequest
-            {
-                TicketId = ticketId,
-                IntegrationStatus = request.IntegrationStatus,
-                FlagLogicalName = Incident.Fields.IsTashirUpdated,
-                Resolution = request.Resolution,
-                ResolutionDate = request.ResolutionDate
-
-            };
-            await _ticketService.UpdateStatusAsync(ticketStatusRequest);
-
-            return true;
-         
-        }
-
+        return true;
     }
 }

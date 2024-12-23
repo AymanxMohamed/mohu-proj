@@ -1,23 +1,13 @@
 ﻿using MOHU.Integration.Contracts.Interface.Ticket;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Entitiy;
 
 namespace MOHU.Integration.Contracts.Dto.Sahab;
 
-public class SahabUpdateStatusRequest
+public class SahabUpdateStatusRequest : UpdateTicketStatusData
 {
-    public string TicketNumber { get; set; } = null!;
-    public string Resolution { get; set; } = null!;
-    public DateTime? ResolutionDate { get; set; }
-    public IntegrationStatus IntegrationStatus { get; set; }
-
+    public string TicketNumber { get; init; } = null!;
 
     public UpdateTicketStatusRequest ToUpdateTicketStatusRequest(Guid ticketId) =>
-        new()
-        {
-            TicketId = ticketId,
-            IntegrationStatus = IntegrationStatus,
-            FlagLogicalName = Incident.Fields.IsSahabUpdated,
-            Resolution = Resolution,
-            ResolutionDate = ResolutionDate
-        };
+        ToUpdateRequest(ticketId, Incident.Fields.IsSahabUpdated);
 }

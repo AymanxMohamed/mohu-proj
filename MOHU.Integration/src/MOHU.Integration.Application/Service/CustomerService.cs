@@ -1,15 +1,6 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Contracts.Dto.CreateProfile;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Domain.Entitiy;
+﻿using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Enum;
 using MOHU.Integration.Contracts.Interface.Customer;
-using MOHU.Integration.Application.Exceptions;
-using Microsoft.Extensions.Localization;
-using MOHU.Integration.Shared;
-using FluentValidation;
-using MOHU.Integration.Contracts.Dto.Common;
 using System.Globalization;
 
 namespace MOHU.Integration.Application.Service
@@ -37,12 +28,18 @@ namespace MOHU.Integration.Application.Service
             var results = await _validator.ValidateAsync(model);
 
             if (results?.IsValid == false)
-                throw new BadRequestException(results?.Errors?.FirstOrDefault()?.ErrorMessage);
+            {
+                throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
+            }
 
 
             var entity = new Entity(Individual.EntityLogicalName);
 
-            var profileId = await IsProfileExists($"{model.MobileCountryCode}{model.MobileNumber}",model.Email,model.IdNumber);
+            var profileId = await IsProfileExists(
+                $"{model.MobileCountryCode}{model.MobileNumber}",
+                model.Email,
+                model.IdNumber);
+
             if (profileId is not null)
                 return profileId.Value;
 
@@ -245,11 +242,12 @@ namespace MOHU.Integration.Application.Service
             {
                 filter.AddCondition(new ConditionExpression(Individual.Fields.PassportNumber, ConditionOperator.Equal, contextId));
                 filter.AddCondition(new ConditionExpression(Individual.Fields.IDNumber, ConditionOperator.Equal, contextId));
-
+            
             }
             var response = await _crmContext.ServiceClient.RetrieveMultipleAsync(contactQuery);
             return response.Entities.Count > 0? response?.Entities?.FirstOrDefault()?.Id : null;
         }
+
         public static DateTime GregorianToHijriDateConversion(DateTime gregorianDate)
         {
             Calendar umAlQura = new UmAlQuraCalendar();

@@ -1,12 +1,8 @@
 ﻿using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
-using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Interface;
 using MOHU.Integration.Contracts.Interface.Cache;
-using MOHU.Integration.Contracts.Interface.Common;
 
-namespace MOHU.Integration.Infrastructure.Repository
+namespace MOHU.Integration.Application.Service
 {
     public class CommonService : ICommonService
     {

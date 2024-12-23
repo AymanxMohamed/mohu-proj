@@ -1,11 +1,4 @@
-﻿using Microsoft.Xrm.Sdk.Query;
-using MOHU.Integration.Contracts.Dto.Common;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Common;
-using MOHU.Integration.Domain.Entitiy;
-using MOHU.Integration.Shared;
-
-namespace MOHU.Integration.Application.Localization
+﻿namespace MOHU.Integration.Application.Localization
 {
     public class MessageService : IMessageService
     {

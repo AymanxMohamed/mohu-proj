@@ -1,10 +1,8 @@
-﻿using MOHU.Integration.Contracts.Dto;
-using MOHU.Integration.Contracts.Dto.Taasher;
+﻿using MOHU.Integration.Contracts.Dto.Taasher;
 
-namespace MOHU.Integration.Contracts.Interface
+namespace MOHU.Integration.Contracts.Interface;
+
+public interface ITaasherService
 {
-    public interface ITaasherService
-    {
-        Task<bool> UpdateStatusAsync(TaasherUpdateStatusRequest request);
-    }
+    Task<bool> UpdateStatusAsync(TaasherUpdateStatusRequest request);
 }

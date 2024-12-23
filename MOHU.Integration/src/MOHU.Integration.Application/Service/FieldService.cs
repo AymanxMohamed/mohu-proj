@@ -1,10 +1,5 @@
-﻿using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Xrm.Sdk;
-using MOHU.Integration.Contracts.Dto.Field;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Domain.Entitiy;
+﻿using MOHU.Integration.Contracts.Dto.Field;
 using MOHU.Integration.Domain.Enum;
-using MOHU.Integration.Shared;
 
 namespace MOHU.Integration.Application.Service
 {

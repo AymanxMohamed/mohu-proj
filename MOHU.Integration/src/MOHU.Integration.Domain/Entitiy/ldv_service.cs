@@ -23,6 +23,7 @@
             public const string ldv_PaymentCode = "ldv_paymentcode";
             public const string ldv_PortalURL = "ldv_portalurl";
             public const string ldv_processid = "ldv_processid";
+            public const string ldv_serviceparentid  = "ldv_serviceparentid";
             public const string ldv_ProcessStageId = "ldv_processstageid";
             public const string ldv_queueid = "ldv_queueid";
             public const string ldv_regulationsar = "ldv_regulationsar";

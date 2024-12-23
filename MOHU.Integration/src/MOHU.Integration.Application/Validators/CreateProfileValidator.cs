@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.Localization;
-using MOHU.Integration.Contracts.Dto.CreateProfile;
-using MOHU.Integration.Shared;
+﻿using MOHU.Integration.Contracts.Dto.CreateProfile;
 
 namespace MOHU.Integration.Application.Validators
 {

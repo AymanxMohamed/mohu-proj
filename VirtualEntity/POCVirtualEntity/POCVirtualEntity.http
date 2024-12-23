@@ -1,0 +1,6 @@
+@POCVirtualEntity_HostAddress = http://localhost:5138
+
+GET {{POCVirtualEntity_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

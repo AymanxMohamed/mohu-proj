@@ -1,15 +1,11 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MOHU.Integration.Application.Features.Tickets.Services;
 using MOHU.Integration.Application.Service;
-using MOHU.Integration.Contracts.Interface;
-using MOHU.Integration.Contracts.Interface.Common;
 using MOHU.Integration.Contracts.Interface.Customer;
-using MOHU.Integration.Contracts.Interface.Ticket;
 using MOHU.Integration.Application.Validators;
 using MOHU.Integration.Infrastructure.Localization;
-using MOHU.Integration.Infrastructure.Repository;
 using MOHU.Integration.Application.Localization;
+using MOHU.Integration.Application.Nusuk.Tickets;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Application.Service.Taasher;
 using MOHU.Integration.Application.Service.Kidana;
@@ -40,6 +36,8 @@ namespace MOHU.Integration.Application
             services.AddTransient<IKidanaService, KidanaService>();
             services.AddTransient<IServiceDeskService, ServiceDeskService>();
             services.AddTransient<ISahabService, SahabService>();
+            services.AddTransient<INusukTicketsClient, NusukTicketsClient>();
+            
 
             return services;
         }
