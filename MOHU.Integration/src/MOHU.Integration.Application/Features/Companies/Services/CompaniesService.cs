@@ -13,13 +13,12 @@ public class CompaniesService(ICrmContext crmContext) : ICompaniesService
     {
         if (request == null || request.Requests.Count == 0)
         {
-            throw new ArgumentException("The request list is empty.", nameof(request));
+            throw new BadRequestException("The request list is empty.");
         }
 
         var companies = await GetAsync(request.ToQueryExpression());
         
-        var updatedCompanies = request
-            .Update(companies, message => throw new NotFoundException(message));
+        var updatedCompanies = request.Update(companies);
         
         foreach (var updatedCompany in updatedCompanies)
         {

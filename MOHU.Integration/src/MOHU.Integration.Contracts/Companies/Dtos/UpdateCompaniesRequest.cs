@@ -6,11 +6,11 @@ namespace MOHU.Integration.Contracts.Companies.Dtos;
 
 public record UpdateCompaniesRequest(List<UpdateCompanyRequest> Requests)
 {
-    public List<Entity> Update(List<Entity> entities, Action<string> fireNotFoundException)
-    {
-        return Requests.Select(request => request.Update(entities, fireNotFoundException)).ToList();
-    }
-    
+    public List<Entity> Update(List<Entity> entities) =>
+        Requests
+            .SelectMany(request => request.Update(entities))
+            .ToList();
+
     public QueryExpression ToQueryExpression() => new(CompaniesConstants.EntityLogicalName)
         {   
             ColumnSet = UpdateCompanyRequest.GetColumnSet(),

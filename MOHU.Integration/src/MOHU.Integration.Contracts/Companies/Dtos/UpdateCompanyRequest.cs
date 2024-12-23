@@ -7,33 +7,44 @@ namespace MOHU.Integration.Contracts.Companies.Dtos;
 
 public record UpdateCompanyRequest(
     string Key,
-    string SicCode,
+    int SicCode,
     string? NewCompanyName = null,
     string? LicenseNumber = null)
 {
-    public Entity Update(List<Entity> entities, Action<string> fireNotFoundException)
+    public List<Entity> Update(List<Entity> entities)
     {
-        var company = entities.FirstOrDefault(x => x.GetAttributeValue<string>(GetKeyLogicalName()) == Key);
+        var companies = entities
+            .Where(x => x.GetAttributeValue<string>(
+                GetKeyLogicalName())
+                .Contains(Key, StringComparison.OrdinalIgnoreCase))
+            .ToList();
 
-        if (company == null)
+        foreach (var company in companies)
         {
-            fireNotFoundException($"No company found with the specified key: {Key}");
+            Update(company);
         }
 
+        return companies;
+    }
+    
+    public Entity Update(Entity entity)
+    {
         if (!string.IsNullOrWhiteSpace(NewCompanyName))
         {
-            company![CompaniesConstants.Fields.Name] = NewCompanyName;
+            entity[CompaniesConstants.Fields.Name] = NewCompanyName;
         }
         
-        company![CompaniesConstants.Fields.SicCode] = SicCode;
+        entity[CompaniesConstants.Fields.SicCode] = SicCode.ToString();
 
         if (!string.IsNullOrWhiteSpace(LicenseNumber))
         {
-            company[CompaniesConstants.Fields.LicenseNumber] = LicenseNumber;
+            entity[CompaniesConstants.Fields.LicenseNumber] = LicenseNumber;
         }
 
-        return company;
+        return entity;
     }
+    
+    
     
     public static ColumnSet GetColumnSet() => new(
         CompaniesConstants.Fields.Name, 
@@ -46,8 +57,8 @@ public record UpdateCompanyRequest(
         {
             new ConditionExpression(
                 GetKeyLogicalName(),
-                ConditionOperator.Equal,
-                Key)
+                ConditionOperator.Like,
+                $"%{Key}%")
         }
     };
     
