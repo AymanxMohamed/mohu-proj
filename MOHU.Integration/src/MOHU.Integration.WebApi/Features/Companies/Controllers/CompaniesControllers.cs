@@ -5,7 +5,6 @@ using MOHU.Integration.WebApi.Controllers;
 
 namespace MOHU.Integration.WebApi.Features.Companies.Controllers;
 
-
 [Route("api/companies")]
 public class CompaniesControllers(ICompaniesService service) : BaseController
 {
@@ -16,5 +15,13 @@ public class CompaniesControllers(ICompaniesService service) : BaseController
     {
         await service.UpdateAsync(request);
         return NoContent();
+    }
+
+    [HttpPost("populate-teams")]
+    [ProducesResponseType((int)HttpStatusCode.Accepted)]
+    public IActionResult PopulateTeams()
+    {
+        Task.Run(service.MapDeactivatedCompaniesToNewCompanies);
+        return Accepted();
     }
 }

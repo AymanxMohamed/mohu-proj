@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MOHU.Integration.Domain.Entitiy
+﻿namespace MOHU.Integration.Domain.Entitiy
 {
     public class ldv_country
     {
