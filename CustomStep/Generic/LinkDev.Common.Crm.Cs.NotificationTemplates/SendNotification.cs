@@ -142,7 +142,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
             {
                 EntityReference notifications = Notifications.Get(executionContext);
                 EntityReference user = Users.Get(executionContext);
-               // EntityReference team = Teams.Get(executionContext);
+                 EntityReference team = Teams.Get(executionContext);
                 EntityReference account = Accounts.Get(executionContext);
                 EntityReference contact =  Contacts.Get(executionContext);
                 EntityReference queue =  Queues.Get(executionContext);
@@ -172,7 +172,7 @@ namespace LinkDev.Common.Crm.Cs.NotificationTemplates
                 tracingService.Trace($" after RetrieveRelatedApplicationByApplicationHeader  ");
                 StageConfigurationsNotificationsBLL BLL = new StageConfigurationsNotificationsBLL(service, tracingService, RegardingObject);
 
-                BLL.SendNotificationTemplate(user,/*team,*/ account, contact, queue, cCRecordsURL, bCCRecordsURL, toRecordsURL, notifications, RegardingObject  , RegardingLookup, toEmailAddress);
+                BLL.SendNotificationTemplate(user, team,  account, contact, queue, cCRecordsURL, bCCRecordsURL, toRecordsURL, notifications, RegardingObject  , RegardingLookup, toEmailAddress);
           } 
             catch (Exception ex)
             {
