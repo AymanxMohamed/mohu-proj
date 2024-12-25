@@ -4,12 +4,14 @@
 public class ConfigurationsController(IConfiguration configuration) : ControllerBase
 {
     [HttpGet]
+    [NonAction]
     public IActionResult Get()
     {
         var result = configuration.AsEnumerable().ToDictionary(kv => kv.Key, kv => kv.Value);
         return result.Count == 0 ? ValidationProblem("No configurations available") : Ok(result);
     }
     
+    [NonAction]
     [HttpGet("{configurationKey}")]
     public IActionResult Get(string configurationKey)
     {

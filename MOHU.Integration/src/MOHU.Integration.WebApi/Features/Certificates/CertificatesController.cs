@@ -5,6 +5,7 @@ namespace MOHU.Integration.WebApi.Features.Certificates;
 [Route("api/certificates")]
 public class CertificatesController : ControllerBase
 {
+    [NonAction]
     [HttpGet("{certificateThumbprint}")]
     public IActionResult Get(string certificateThumbprint)
     {
