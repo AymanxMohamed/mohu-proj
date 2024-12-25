@@ -32,7 +32,6 @@ public class TicketsController(ITicketService ticketService) : BaseController
         return Ok(result);
     }
     
-        
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<TicketListResponse>), StatusCodes.Status200OK)]
@@ -43,6 +42,7 @@ public class TicketsController(ITicketService ticketService) : BaseController
         Guid customerId, 
         [FromQuery] int pageNumber = 1, 
         [FromQuery] int pageSize = 10)
+
     {
         var result = await ticketService.GetAllTicketsAsync(customerId, pageNumber, pageSize);
         return Ok(result);
@@ -57,6 +57,7 @@ public class TicketsController(ITicketService ticketService) : BaseController
     public async Task<ResponseMessage<SubmitTicketResponse>> Post(
         Guid customerId, 
         [FromBody] SubmitTicketRequest request)
+
     {
         var result = await ticketService.SubmitTicketAsync(customerId, request);
         return Ok(result);

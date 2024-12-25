@@ -14,7 +14,7 @@ public partial class TicketService
         }
     }
     
-    private async Task<string?> DoesCustomerHaveActiveTicketsAsync (Guid customerId)
+    private async Task<string?> DoesCustomerHaveActiveTicketsAsync(Guid customerId)
     {
         var activeIncidentQuery = new QueryExpression(Incident.EntityLogicalName)
         {
