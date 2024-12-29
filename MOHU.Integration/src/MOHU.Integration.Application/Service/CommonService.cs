@@ -38,11 +38,23 @@ namespace MOHU.Integration.Application.Service
 
                 foreach (var record in result.Entities)
                 {
-                    var concatenatedName = record.GetAttributeValue<string>(primaryField).Split('-');
+                    string[] concatenatedName;
+                    string? lookupName;
+                    if (entityName == "ldv_service")
+                    {
+
+                        lookupName  = record.GetAttributeValue<string>(primaryField);
+                    }
+                    else
+                    {
+                        concatenatedName = record.GetAttributeValue<string>(primaryField).Split('-');
+                        lookupName = !language.Contains("ar") ? concatenatedName?.FirstOrDefault() : concatenatedName?.LastOrDefault();
+
+                    }
                     var lookup = new LookupValueDto
                     {
                         Id = record.Id,
-                        Name = !language.Contains("ar") ? concatenatedName?.FirstOrDefault() : concatenatedName?.LastOrDefault()
+                        Name = lookupName!
                     };
 
                     lookups.Add(lookup);
