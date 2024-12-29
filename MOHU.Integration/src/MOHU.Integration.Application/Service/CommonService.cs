@@ -27,10 +27,12 @@ namespace MOHU.Integration.Application.Service
             {
                 var query = new QueryExpression(entityName)
                 {
-                    ColumnSet = new ColumnSet(primaryField),
+                    ColumnSet = new ColumnSet([primaryField]),
                     NoLock = true
                 };
-
+                var filter = new FilterExpression(LogicalOperator.And);
+                filter.AddCondition( new ConditionExpression("statecode", ConditionOperator.Equal, 0));
+                query.Criteria.AddFilter(filter);
                 var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
                 var lookups = new List<LookupValueDto>();
 
