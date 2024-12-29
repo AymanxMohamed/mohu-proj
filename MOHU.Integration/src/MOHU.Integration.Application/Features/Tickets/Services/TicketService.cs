@@ -195,6 +195,7 @@ public partial class TicketService(
             var filter = new FilterExpression(LogicalOperator.And);
             ticketTypeQuery.Criteria.AddFilter(filter);
             filter.AddCondition(new ConditionExpression(RequestType.Fields.ShowonPortal, ConditionOperator.Equal, true));
+            filter.AddCondition(new ConditionExpression(RequestType.Fields.Status, ConditionOperator.Equal, 0));
             var response = (await crmContext.ServiceClient.RetrieveMultipleAsync(ticketTypeQuery)).Entities.ToList();
             if (response != null && response.Count != 0)
             {

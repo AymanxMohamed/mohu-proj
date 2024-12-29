@@ -27,20 +27,34 @@ namespace MOHU.Integration.Application.Service
             {
                 var query = new QueryExpression(entityName)
                 {
-                    ColumnSet = new ColumnSet(primaryField),
+                    ColumnSet = new ColumnSet([primaryField]),
                     NoLock = true
                 };
-
+                var filter = new FilterExpression(LogicalOperator.And);
+                filter.AddCondition( new ConditionExpression("statecode", ConditionOperator.Equal, 0));
+                query.Criteria.AddFilter(filter);
                 var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
                 var lookups = new List<LookupValueDto>();
 
                 foreach (var record in result.Entities)
                 {
-                    var concatenatedName = record.GetAttributeValue<string>(primaryField).Split('-');
+                    string[] concatenatedName;
+                    string? lookupName;
+                    if (entityName == "ldv_service")
+                    {
+
+                        lookupName  = record.GetAttributeValue<string>(primaryField);
+                    }
+                    else
+                    {
+                        concatenatedName = record.GetAttributeValue<string>(primaryField).Split('-');
+                        lookupName = !language.Contains("ar") ? concatenatedName?.FirstOrDefault() : concatenatedName?.LastOrDefault();
+
+                    }
                     var lookup = new LookupValueDto
                     {
                         Id = record.Id,
-                        Name = !language.Contains("ar") ? concatenatedName?.FirstOrDefault() : concatenatedName?.LastOrDefault()
+                        Name = lookupName!
                     };
 
                     lookups.Add(lookup);
