@@ -25,12 +25,12 @@ namespace MOHU.Integration.Application.Service
 
         public async Task<Guid> CreateProfileAsync(CreateProfileRequest model)
         {
-            //var results = await _validator.ValidateAsync(model);
+            var results = await _validator.ValidateAsync(model);
 
-            //if (results?.IsValid == false)
-            //{
-            //    throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
-            //}
+            if (results?.IsValid == false)
+            {
+                throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
+            }
 
 
             var entity = new Entity(Individual.EntityLogicalName);
