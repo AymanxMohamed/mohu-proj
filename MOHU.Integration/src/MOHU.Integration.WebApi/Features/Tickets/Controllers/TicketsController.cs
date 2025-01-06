@@ -24,8 +24,8 @@ public class TicketsController(ITicketService ticketService) : BaseController
     [ProducesResponseType(typeof(ResponseMessage<TicketStatusResponse>),StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{ticketNumber}/status")]
-    public async Task<ResponseMessage<TicketStatusResponse>> GetStatus(Guid customerId, string ticketNumber)
+    [HttpGet("status/{ticketNumber}")]
+    public async Task<ResponseMessage<TicketStatusResponse>> GetStatus(Guid customerId, string? ticketNumber)
     {
         var result = await ticketService.GetTicketStatusAsync(customerId, ticketNumber);
         
