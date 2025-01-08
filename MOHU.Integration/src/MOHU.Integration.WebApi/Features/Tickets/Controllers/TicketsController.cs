@@ -33,14 +33,14 @@ public class TicketsController(ITicketService ticketService, ICustomerService cu
         return Ok(result);
     }
 
-    [Route("/api/{mobileNumber}/Tickets/status/{ticketNumber}")]
+    [Route("api/tickets/status/{mobileNumber}/{ticketNumber}")]
     [HttpGet]
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<TicketStatusResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ResponseMessage<TicketStatusResponse>> GetStatus(string mobileNumber, string? ticketNumber)
+    public async Task<ResponseMessage<TicketStatusResponse>> GetStatusByMobile(string mobileNumber, string? ticketNumber)
     {
         var internationalFormatNumber = StringExtensions.ConvertPhoneNumberToInternationalFormat(mobileNumber);
 
