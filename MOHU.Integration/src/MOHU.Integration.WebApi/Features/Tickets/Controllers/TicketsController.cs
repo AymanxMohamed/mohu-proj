@@ -1,11 +1,12 @@
 ﻿using MOHU.Integration.Contracts.Dto.Ticket;
+using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.Controllers;
 
 [Route("api/{customerId:guid}/[controller]")]
 [ApiController]
-public class TicketsController(ITicketService ticketService) : BaseController
+public class TicketsController(ITicketService ticketService, ICustomerService customerService) : BaseController
 {
     [Consumes("application/json")]
     [Produces("application/json")]
@@ -31,7 +32,27 @@ public class TicketsController(ITicketService ticketService) : BaseController
         
         return Ok(result);
     }
-    
+
+    [Route("/api/{mobileNumber}/Tickets/status/{ticketNumber}")]
+    [HttpGet]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ResponseMessage<TicketStatusResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ResponseMessage<TicketStatusResponse>> GetStatus(string mobileNumber, string? ticketNumber)
+    {
+        var internationalFormatNumber = StringExtensions.ConvertPhoneNumberToInternationalFormat(mobileNumber);
+
+        var individual = await customerService.GetIndividualByMobileNumberAsync(internationalFormatNumber) ?? throw new NotFoundException("Customer with mobile number does not exist");
+
+        var customerId = individual.Id;
+
+        var result = await ticketService.GetTicketStatusAsync(customerId, ticketNumber);
+
+        return Ok(result);
+    }
+
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<TicketListResponse>), StatusCodes.Status200OK)]
@@ -74,4 +95,5 @@ public class TicketsController(ITicketService ticketService) : BaseController
         var result = await ticketService.SubmitHootSuiteTicketAsync(customerId, request);
         return Ok(result);
     }
+
 }
