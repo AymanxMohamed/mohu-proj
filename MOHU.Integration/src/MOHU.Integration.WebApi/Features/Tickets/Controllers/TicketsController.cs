@@ -33,7 +33,7 @@ public class TicketsController(ITicketService ticketService, ICustomerService cu
         return Ok(result);
     }
 
-    [Route("api/tickets/status/{mobileNumber}/{ticketNumber}")]
+    [Route("/api/tickets/status/{mobileNumber}/{ticketNumber}")]
     [HttpGet]
     [Consumes("application/json")]
     [Produces("application/json")]
