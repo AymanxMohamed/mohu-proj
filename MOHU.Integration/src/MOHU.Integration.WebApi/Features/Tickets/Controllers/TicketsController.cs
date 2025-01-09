@@ -6,7 +6,7 @@ namespace MOHU.Integration.WebApi.Features.Tickets.Controllers;
 
 [Route("api/{customerId:guid}/[controller]")]
 [ApiController]
-public class TicketsController(ITicketService ticketService, ICustomerService customerService) : BaseController
+public class TicketsController(ITicketService ticketService) : BaseController
 {
     [Consumes("application/json")]
     [Produces("application/json")]
@@ -33,25 +33,7 @@ public class TicketsController(ITicketService ticketService, ICustomerService cu
         return Ok(result);
     }
 
-    [Route("/api/tickets/status/{mobileNumber}/{ticketNumber}")]
-    [HttpGet]
-    [Consumes("application/json")]
-    [Produces("application/json")]
-    [ProducesResponseType(typeof(ResponseMessage<TicketStatusResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ResponseMessage<TicketStatusResponse>> GetStatusByMobile(string mobileNumber, string? ticketNumber)
-    {
-        var internationalFormatNumber = StringExtensions.ConvertPhoneNumberToInternationalFormat(mobileNumber);
 
-        var individual = await customerService.GetIndividualByMobileNumberAsync(internationalFormatNumber) ?? throw new NotFoundException("Customer with mobile number does not exist");
-
-        var customerId = individual.Id;
-
-        var result = await ticketService.GetTicketStatusAsync(customerId, ticketNumber);
-
-        return Ok(result);
-    }
 
     [Consumes("application/json")]
     [Produces("application/json")]
