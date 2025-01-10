@@ -37,4 +37,22 @@ public partial class TicketService
 
         return activeIncidents.Entities.FirstOrDefault()?.GetAttributeValue<string>(Incident.Fields.Title);
     }
+
+    private async Task<string?> DoesCustomerHaveTicketsAsync(Guid customerId)
+    {
+        var IncidentQuery = new QueryExpression(Incident.EntityLogicalName)
+        {
+            ColumnSet = new ColumnSet(Incident.Fields.Title)
+        };
+
+        IncidentQuery.Criteria
+            .AddCondition(
+                Incident.Fields.CustomerId,
+                ConditionOperator.Equal,
+                customerId);
+
+        var Incidents = await crmContext.ServiceClient.RetrieveMultipleAsync(IncidentQuery);
+
+        return Incidents.Entities.FirstOrDefault()?.GetAttributeValue<string>(Incident.Fields.Title);
+    }
 }
