@@ -55,8 +55,7 @@ public class CustomersController(IIvrService ivrService, ICustomerService custom
         return Ok(result);
     }
 
-    [Route("TicketStatus/{mobileNumber}/{ticketNumber}")]
-    [HttpGet]
+    [HttpGet("TicketStatus/{mobileNumber}/{ticketNumber}")]
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<TicketStatusResponse>), StatusCodes.Status200OK)]
