@@ -23,7 +23,7 @@ public class UpdateTicketStatusData
     }
     
     [MaxLength(400)] 
-    public string Resolution { get; init; } = null!;
+    public string? Resolution { get; init; } = null!;
     
     public DateTime? ResolutionDate { get; init; }
     
@@ -40,14 +40,20 @@ public class UpdateTicketStatusData
 
     protected Entity UpdateTicketEntity(Entity ticket)
     {
-        ticket.Attributes.Add(Incident.Fields.IntegrationClosureReason, Resolution);
-        ticket.Attributes.Add(Incident.Fields.IntegrationClosureDate, ResolutionDate);
         ticket.Attributes.Add(Incident.Fields.IntegrationStatus,
-            new OptionSetValue(Convert.ToInt32(IntegrationStatus)));
-        
-        ticket.Attributes.Add(Incident.Fields.IntegrationComment, Comment);
-        ticket.Attributes.Add(Incident.Fields.IntegrationUpdatedBy, UpdatedBy);
-        ticket.Attributes.Add(Incident.Fields.IntegrationLastActionDate, LastActionDate);
+           new OptionSetValue(Convert.ToInt32(IntegrationStatus)));
+
+        if (!string.IsNullOrEmpty(Resolution))
+            ticket.Attributes.Add(Incident.Fields.IntegrationClosureReason, Resolution);
+        if ( ResolutionDate.HasValue )
+            ticket.Attributes.Add(Incident.Fields.IntegrationClosureDate, ResolutionDate);
+
+        if (!string.IsNullOrEmpty(Comment))
+            ticket.Attributes.Add(Incident.Fields.IntegrationComment, Comment);
+        if (!string.IsNullOrEmpty(UpdatedBy))
+            ticket.Attributes.Add(Incident.Fields.IntegrationUpdatedBy, UpdatedBy);
+        if (LastActionDate.HasValue)
+            ticket.Attributes.Add(Incident.Fields.IntegrationLastActionDate, LastActionDate);
 
         return ticket;
     }
