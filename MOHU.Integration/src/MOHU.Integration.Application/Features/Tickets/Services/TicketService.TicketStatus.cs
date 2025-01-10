@@ -7,7 +7,7 @@ public partial class TicketService
 
         if (ticketNumber is null)
         {
-            ticketNumber = await DoesCustomerHaveActiveTicketsAsync(customerId);
+            ticketNumber = await DoesCustomerHaveTicketsAsync(customerId);
         }
         if(ticketNumber is null)
         {
