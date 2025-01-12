@@ -38,7 +38,7 @@ public class ServiceDeskProxyController(IHttpClientFactory httpClientFactory, IC
     [ProducesResponseType(typeof(ResponseMessage<object?>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status500InternalServerError)]
     [HttpPost("/{CallID}")]
-    public async Task<object> PostUpdate(ServiceDeskRequest request)
+    public async Task<object> PostUpdate(ServiceDeskRequest request, string CallID)
     {
         var username = await configuration.GetConfigurationValueAsync("SD_User Name");
         var password = await configuration.GetConfigurationValueAsync("SD_Password");
