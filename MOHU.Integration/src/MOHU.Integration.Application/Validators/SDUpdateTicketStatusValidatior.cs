@@ -31,18 +31,18 @@ public class SDUpdateTicketStatusValidatior : AbstractValidator<ServiceDeskUpdat
 
         RuleFor(req => req.Comment)
             .NotNull()
-            .When(req => req.IntegrationStatus == IntegrationStatus.Canceled)
-            .WithMessage("Comment is required when Integration Status is Canceled");
+            .When(req => req.IntegrationStatus == IntegrationStatus.NeedMoreDetails)
+            .WithMessage("Comment is required when Integration Status is Need More Details");
 
         RuleFor(req => req.LastActionDate)
             .NotNull()
-            .When(req => req.IntegrationStatus == IntegrationStatus.Canceled)
-            .WithMessage("Last Action Date is required when Integration Status is Canceled");
+            .When(req => req.IntegrationStatus == IntegrationStatus.NeedMoreDetails)
+            .WithMessage("Last Action Date is required when Integration Status is Need More Details");
 
         RuleFor(req => req.UpdatedBy)
             .NotNull()
-            .When(req => req.IntegrationStatus == IntegrationStatus.Canceled)
-            .WithMessage("Updated By is required when Integration Status is Canceled");
+            .When(req => req.IntegrationStatus == IntegrationStatus.NeedMoreDetails)
+            .WithMessage("Updated By is required when Integration Status is Need More Details");
     }
 
 }
