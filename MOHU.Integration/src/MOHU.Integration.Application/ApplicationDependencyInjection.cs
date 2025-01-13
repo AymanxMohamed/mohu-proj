@@ -26,6 +26,7 @@ namespace MOHU.Integration.Application
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddValidatorsFromAssembly(typeof(CreateProfileValidator).Assembly);
+            services.AddValidatorsFromAssembly(typeof(SDUpdateTicketStatusValidatior).Assembly);
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<IStringLocalizer, MessageStringLocalizer>();
             services.AddTransient<ICommonService, CommonService>();
