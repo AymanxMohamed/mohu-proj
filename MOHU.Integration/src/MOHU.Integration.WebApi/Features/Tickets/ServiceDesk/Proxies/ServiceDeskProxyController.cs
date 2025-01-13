@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using MOHU.Integration.Contracts.Dto.ServiceDeskProxy;
 using SDIntegraion;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.ServiceDesk.Proxies;
@@ -37,14 +38,14 @@ public class ServiceDeskProxyController(IHttpClientFactory httpClientFactory, IC
     [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseMessage<object?>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status500InternalServerError)]
-    [HttpPost("/{CallID}")]
-    public async Task<object> PostUpdate(ServiceDeskRequest request, string CallID)
+    [HttpPost("/api/ServiceDeskProxy/{CallID}")]
+    public async Task<object> PostUpdate(ServiceDeskRequestUpdate request, string CallID)
     {
         var username = await configuration.GetConfigurationValueAsync("SD_User Name");
         var password = await configuration.GetConfigurationValueAsync("SD_Password");
         var serviceDeskUrl = await configuration.GetConfigurationValueAsync("SD_URL");
         var encoded = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
-        var  httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, serviceDeskUrl + "/" + request.Interaction.CallID);
+        var  httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, serviceDeskUrl + "/" + CallID);
         httpRequestMessage.Headers.Add("Authorization", "Basic " + encoded);
         httpRequestMessage.Content = JsonContent.Create(request, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var httpClient = httpClientFactory.CreateClient();
