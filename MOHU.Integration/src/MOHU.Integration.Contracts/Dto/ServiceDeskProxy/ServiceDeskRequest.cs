@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using MOHU.Integration.Contracts.Dto.ServiceDeskProxy;
 using Newtonsoft.Json;
 
 namespace SDIntegraion;

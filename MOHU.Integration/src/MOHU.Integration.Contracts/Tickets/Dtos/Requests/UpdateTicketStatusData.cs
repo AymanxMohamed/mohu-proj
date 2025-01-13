@@ -21,16 +21,16 @@ namespace MOHU.Integration.Contracts.Tickets.Dtos.Requests
             LastActionDate = data.LastActionDate;
         }
 
-        protected UpdateTicketStatusData()
-        {
-        }
-
-        [MaxLength(400)]
-        public string? Resolution { get; init; }
-
-        public DateTime? ResolutionDate { get; init; }
-
-        public IntegrationStatus IntegrationStatus { get; init; }
+    protected UpdateTicketStatusData()
+    {
+    }
+    
+    [MaxLength(400)] 
+    public string? Resolution { get; init; } = null!;
+    
+    public DateTime? ResolutionDate { get; init; }
+    
+    public IntegrationStatus IntegrationStatus { get; init; }
 
         public string? Comment { get; init; }
 

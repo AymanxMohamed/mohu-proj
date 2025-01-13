@@ -6,6 +6,6 @@ public enum IntegrationStatus
 {
     [Display(Name = "Close The Ticket")]
     CloseTheTicket = 1,
-    [Display(Name = "Cancel")]
-    Canceled = 2,
+    [Display(Name = "Need More details")]
+    NeedMoreDetails = 2,
 }

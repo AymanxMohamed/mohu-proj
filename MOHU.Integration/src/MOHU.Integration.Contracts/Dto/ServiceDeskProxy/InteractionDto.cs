@@ -6,6 +6,8 @@ namespace SDIntegraion
     {
         [JsonProperty("AffectedService")]
         public string AffectedService { get; set; }
+
+
         [JsonProperty("PassportNumber")]
         public string PassportNumber { get; set; }
         [JsonProperty("PhoneNumber")]

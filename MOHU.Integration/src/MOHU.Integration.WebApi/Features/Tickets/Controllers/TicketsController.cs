@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Contracts.Dto.Ticket;
+using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.Controllers;
@@ -24,15 +25,16 @@ public class TicketsController(ITicketService ticketService) : BaseController
     [ProducesResponseType(typeof(ResponseMessage<TicketStatusResponse>),StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{ticketNumber}/status")]
-    public async Task<ResponseMessage<TicketStatusResponse>> GetStatus(Guid customerId, string ticketNumber)
+    [HttpGet("status/{ticketNumber}")]
+    public async Task<ResponseMessage<TicketStatusResponse>> GetStatus(Guid customerId, string? ticketNumber)
     {
         var result = await ticketService.GetTicketStatusAsync(customerId, ticketNumber);
         
         return Ok(result);
     }
-    
-        
+
+
+
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<TicketListResponse>), StatusCodes.Status200OK)]
@@ -43,6 +45,7 @@ public class TicketsController(ITicketService ticketService) : BaseController
         Guid customerId, 
         [FromQuery] int pageNumber = 1, 
         [FromQuery] int pageSize = 10)
+
     {
         var result = await ticketService.GetAllTicketsAsync(customerId, pageNumber, pageSize);
         return Ok(result);
@@ -57,6 +60,7 @@ public class TicketsController(ITicketService ticketService) : BaseController
     public async Task<ResponseMessage<SubmitTicketResponse>> Post(
         Guid customerId, 
         [FromBody] SubmitTicketRequest request)
+
     {
         var result = await ticketService.SubmitTicketAsync(customerId, request);
         return Ok(result);
@@ -73,4 +77,5 @@ public class TicketsController(ITicketService ticketService) : BaseController
         var result = await ticketService.SubmitHootSuiteTicketAsync(customerId, request);
         return Ok(result);
     }
+
 }
