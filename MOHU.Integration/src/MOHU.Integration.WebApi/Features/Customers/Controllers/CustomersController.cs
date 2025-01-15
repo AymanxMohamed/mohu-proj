@@ -55,13 +55,13 @@ public class CustomersController(IIvrService ivrService, ICustomerService custom
         return Ok(result);
     }
 
-    [HttpGet("TicketStatus/{mobileNumber}/{ticketNumber}")]
+    [HttpGet(nameof(TicketStatus))]
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<TicketStatusResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ResponseMessage<TicketStatusResponse>> GetStatusByMobile(string mobileNumber, string? ticketNumber)
+    public async Task<ResponseMessage<TicketStatusResponse>> TicketStatus(string mobileNumber, string? ticketNumber)
     {
         var internationalFormatNumber = StringExtensions.ConvertPhoneNumberToInternationalFormat(mobileNumber);
 
