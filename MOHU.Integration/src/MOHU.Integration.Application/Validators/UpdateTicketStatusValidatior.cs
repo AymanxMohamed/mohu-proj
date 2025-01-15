@@ -1,6 +1,7 @@
 ﻿using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Dto.ServiceDesk;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MOHU.Integration.Application.Validators;
-public class SDUpdateTicketStatusValidatior : AbstractValidator<ServiceDeskUpdateStatusRequest>
+public class UpdateTicketStatusValidatior : AbstractValidator<UpdateTicketStatusData>
 {
 
-    public SDUpdateTicketStatusValidatior()
+    public UpdateTicketStatusValidatior()
     {
-        RuleFor(req => req.TicketNumber)
-            .NotEmpty().WithMessage("Ticket Number is Required");
-
         RuleFor(req => req.IntegrationStatus)
             .NotEmpty().WithMessage("Integration Status is Required");
 

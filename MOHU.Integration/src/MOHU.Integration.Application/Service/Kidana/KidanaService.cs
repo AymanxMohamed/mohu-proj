@@ -1,11 +1,18 @@
 ﻿using MOHU.Integration.Contracts.Dto.Kidana;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Application.Service.Kidana;
 
-public class KidanaService(ITicketService ticketService) : IKidanaService
+public class KidanaService(ITicketService ticketService , IValidator<UpdateTicketStatusData> validator) : IKidanaService
 {
     public async Task<bool> UpdateStatusAsync(KidanaUpdateStatusRequest request)
     {
+        var results = await validator.ValidateAsync(request);
+
+        if (results?.IsValid == false)
+        {
+            throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
+        }
         var ticketId = await ticketService.GetTicketByIntegrationTicketNumberAsync(
             request.TicketId.ToString(), 
             Incident.Fields.KidanaTicketNumber);

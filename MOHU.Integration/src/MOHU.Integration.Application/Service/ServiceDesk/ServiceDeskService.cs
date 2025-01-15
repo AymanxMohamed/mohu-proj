@@ -1,17 +1,14 @@
 ﻿using MOHU.Integration.Application.Validators;
 using MOHU.Integration.Contracts.Dto.ServiceDesk;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using System.ComponentModel.DataAnnotations;
 
 namespace MOHU.Integration.Application.Service.ServiceDesk;
 
-public class ServiceDeskService(ITicketService ticketService, IValidator<ServiceDeskUpdateStatusRequest> validator) : IServiceDeskService
+public class ServiceDeskService(ITicketService ticketService, IValidator<UpdateTicketStatusData> validator) : IServiceDeskService
 {
     public async Task<bool> UpdateStatusAsync(ServiceDeskUpdateStatusRequest request)
     {
-        //var validatationMessage = request.Validate();
-        //if (validatationMessage != null) { 
-        //    throw new BadRequestException(validatationMessage);
-        //}
         var results = await validator.ValidateAsync(request);
 
         if (results?.IsValid == false)
