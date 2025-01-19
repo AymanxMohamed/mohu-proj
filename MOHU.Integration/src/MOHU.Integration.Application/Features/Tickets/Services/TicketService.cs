@@ -3,6 +3,7 @@ using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Logging;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
+using MOHU.Integration.Domain.Enum;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -262,9 +263,11 @@ public partial class TicketService(
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
                     ConditionOperator.Equal,
                     t.Id));
+                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.StateCode, ConditionOperator.Equal,0));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Null));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory, ConditionOperator.Null));
-                filter.AddCondition(new ConditionExpression("ldv_availableforcode", ConditionOperator.ContainValues, requestInfo.Origin));
+                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.AvailableFor, ConditionOperator.ContainValues, requestInfo.Origin));
+                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal, ConditionOperator.Equal,true));
 
 
                 executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
@@ -344,6 +347,9 @@ public partial class TicketService(
                                 ldv_casecategory.Fields.ParentCategory),
                         };
                         var filter = new FilterExpression(LogicalOperator.And);
+
+                        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.StateCode,
+                            ConditionOperator.Equal, 0));
                         subCategoryQuery.Criteria.AddFilter(filter);
                         filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
                             ConditionOperator.Equal, ticketType.Id));
@@ -405,7 +411,7 @@ public partial class TicketService(
                         }).ToList();
                 }
 
-                (ticketTypes.FirstOrDefault(c => c.Id == subCategories?.FirstOrDefault().TicketTypeId)?.Categories)
+                (ticketTypes.FirstOrDefault(c => c.Id == subCategories?.FirstOrDefault()?.TicketTypeId)?.Categories)
                     .FirstOrDefault(c => c.Id == subCategories.FirstOrDefault()?.ParentCategoryId)
                     ?.SubCategories.AddRange(subCategories);
 
