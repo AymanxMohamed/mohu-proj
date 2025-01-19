@@ -35,6 +35,7 @@
             public const string ShowOnPortal = "ldv_isshowonportal";
             public const string SecondarySubCategory = "ldv_secondarysubcategoryid";
             public const string MainCategory = "ldv_maincategoryid";
+            public const string AvailableFor = "ldv_availableforcode";
 
         }
 
