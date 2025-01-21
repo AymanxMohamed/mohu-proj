@@ -53,7 +53,5 @@ public class ServiceDeskProxyController(IHttpClientFactory httpClientFactory, IC
         var contentStream = (await httpResponseMessage.Content.ReadAsStringAsync()).Replace("\\", "")
             .Trim(['"']);
         return contentStream;
-
     }
-
 }

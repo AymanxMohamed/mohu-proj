@@ -76,5 +76,16 @@ namespace SDIntegraion
 
         public object? LoginMethod { get; set; }
 
+        [JsonProperty("PartyID")]
+        public string? PartyID { get; set; }
+
+
+        [JsonProperty("PartyTypeID")]
+
+        public string? PartyTypeID { get; set; }
+
+        [JsonProperty("Source")]
+
+        public int? Source { get; set; }
     }
 }
