@@ -522,4 +522,38 @@ public partial class TicketService(
             ? throw new NotFoundException($"Ticket with #{integrationTicketNumber} was not found")
             : entities.FirstOrDefault().Id;
     }
+
+    public async Task<TicketDetailsResponse> GetTicketDetailByNumberAsync(string ticketNumber)
+    {
+        var result = new TicketDetailsResponse();
+
+        var query = new QueryExpression(Incident.EntityLogicalName)
+        {
+            NoLock = true
+        };
+
+        query.ColumnSet.AddColumns(
+            Incident.Fields.Title,
+            Incident.Fields.Id
+        );
+
+        var filter = new FilterExpression(LogicalOperator.And);
+        query.Criteria.AddFilter(filter);
+
+        filter.AddCondition(new ConditionExpression(Incident.Fields.Title, ConditionOperator.Equal, ticketNumber));
+
+        var ticket = (await crmContext.ServiceClient.RetrieveMultipleAsync(query)).Entities?.FirstOrDefault();
+
+        if (ticket is null)
+            throw new NotFoundException("Ticket does not exist");
+
+        result = await MapTicketToDetailsDto(ticket);
+
+        var documents = await documentService.GetFilesInFolderAsync(result?.Id.ToString());
+
+        foreach (var file in documents.Files)
+            result.Documents.Add(new Contracts.Dto.Document.DocumentDto { Id = file.Id, Name = file.Name });
+
+        return result;
+    }
 }
