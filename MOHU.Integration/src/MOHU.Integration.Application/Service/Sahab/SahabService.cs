@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Contracts.Dto;
+﻿using AngleSharp.Css.Values;
+using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Sahab;
 using MOHU.Integration.Contracts.Enum;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
@@ -29,7 +30,7 @@ public class SahabService(ITicketService _ticketService, ICrmContext _crmContext
 
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_caseid, new EntityReference(Incident.EntityLogicalName,ticket.Id));
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_comment, request.Comment);
-        inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_inspector, request.Inspector);
+        inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_inspector, request.InspectorName);
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_statuscode, SahabStatusEnum.Assigned);
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_branch, request.Branch);
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_checklist, request.Checklist);
@@ -49,7 +50,22 @@ public class SahabService(ITicketService _ticketService, ICrmContext _crmContext
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_visitdate, request.VisitDate);
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_visitstatus, request.VisitStatus);
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_visittype, request.VisitType);
+
+
         Guid? inspectionDetailsId =  await _crmContext.ServiceClient.CreateAsync(inspectionDetails);
+        if(request.IntegrationStatus.GetValueOrDefault() == IntegrationStatus.CloseTheTicket)
+        {
+           SahabUpdateStatusRequest caseUpdateStatusRequest = new SahabUpdateStatusRequest { Resolution = request.ClosureReason , ResolutionDate = request.ClosureDateTime , IntegrationStatus = request.IntegrationStatus.GetValueOrDefault()};
+
+           await _ticketService.UpdateStatusAsync(caseUpdateStatusRequest.ToUpdateTicketStatusRequest(ticket.Id));
+        }else if(request.IntegrationStatus.GetValueOrDefault() == IntegrationStatus.PendingOnInspection)
+        {
+            SahabUpdateStatusRequest caseUpdateStatusRequest = new SahabUpdateStatusRequest { Resolution = null, ResolutionDate = null, IntegrationStatus = request.IntegrationStatus.GetValueOrDefault() };
+
+            await _ticketService.UpdateStatusAsync(caseUpdateStatusRequest.ToUpdateTicketStatusRequest(ticket.Id));
+        }
+
         return inspectionDetailsId != null ? true: false;
+
     }
 }

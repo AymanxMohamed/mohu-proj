@@ -9,7 +9,7 @@ namespace MOHU.Integration.Contracts.Dto.Sahab;
 public class SahabCreateInspectionDetailsRequest
 {
     public string TicketNumber { get; set; } = string.Empty;
-    public string Inspector { get; set; } = string.Empty;
+    public string InspectorName { get; set; } = string.Empty;
     public string Comment { get; set; } = string.Empty; 
     public DateTime ActionDate { get; set; } = DateTime.Now;
     public SahabStatusEnum Status { get; set; }
@@ -31,6 +31,8 @@ public class SahabCreateInspectionDetailsRequest
     public string VisitCode { get; set; } = string.Empty;
     public string VisitStatus { get; set; } = string.Empty;
     public string VisitType { get; set; } = string.Empty;
-
-    public IntegrationStatus IntegrationStatus { get; init; }
+    public string? ClosureReason { get; init; } = null!;
+    public DateTime? ClosureDateTime { get; init; }
+    public IntegrationStatus? IntegrationStatus { get; init; } // 1 : close 
+    public int? IntegrationType { get; init; }
 }
