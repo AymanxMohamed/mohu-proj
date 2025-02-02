@@ -26,7 +26,7 @@ public class SahabService(ITicketService _ticketService, ICrmContext _crmContext
     {
         var inspectionDetails = new Entity(ldv_inspectiondetails.EntityLogicalName);
         //TODO: Check Case is exists
-        var ticket = await _ticketService.GetTicketDetailByNumberAsync(request.TicketNumber);
+        var ticket = await _ticketService.GetTicketDetailByNumberAsync(request.CaseTicketNumber);
 
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_caseid, new EntityReference(Incident.EntityLogicalName,ticket.Id));
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_comment, request.Comment);
@@ -53,14 +53,14 @@ public class SahabService(ITicketService _ticketService, ICrmContext _crmContext
 
 
         Guid? inspectionDetailsId =  await _crmContext.ServiceClient.CreateAsync(inspectionDetails);
-        if(request.IntegrationStatus.GetValueOrDefault() == IntegrationStatus.CloseTheTicket)
+        if(request.CaseIntegrationStatus.GetValueOrDefault() == IntegrationStatus.CloseTheTicket)
         {
-           SahabUpdateStatusRequest caseUpdateStatusRequest = new SahabUpdateStatusRequest { Resolution = request.ClosureReason , ResolutionDate = request.ClosureDateTime , IntegrationStatus = request.IntegrationStatus.GetValueOrDefault()};
+           SahabUpdateStatusRequest caseUpdateStatusRequest = new SahabUpdateStatusRequest { Resolution = request.CaseClosureReason , ResolutionDate = request.CaseClosureDateTime , IntegrationStatus = request.CaseIntegrationStatus.GetValueOrDefault()};
 
            await _ticketService.UpdateStatusAsync(caseUpdateStatusRequest.ToUpdateTicketStatusRequest(ticket.Id));
-        }else if(request.IntegrationStatus.GetValueOrDefault() == IntegrationStatus.PendingOnInspection)
+        }else if(request.CaseIntegrationStatus.GetValueOrDefault() == IntegrationStatus.PendingOnInspection)
         {
-            SahabUpdateStatusRequest caseUpdateStatusRequest = new SahabUpdateStatusRequest { Resolution = null, ResolutionDate = null, IntegrationStatus = request.IntegrationStatus.GetValueOrDefault() };
+            SahabUpdateStatusRequest caseUpdateStatusRequest = new SahabUpdateStatusRequest { Resolution = null, ResolutionDate = null, IntegrationStatus = request.CaseIntegrationStatus.GetValueOrDefault() };
 
             await _ticketService.UpdateStatusAsync(caseUpdateStatusRequest.ToUpdateTicketStatusRequest(ticket.Id));
         }

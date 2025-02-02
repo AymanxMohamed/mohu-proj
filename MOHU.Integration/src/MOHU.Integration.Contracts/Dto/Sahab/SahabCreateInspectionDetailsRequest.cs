@@ -8,7 +8,11 @@ using System.Threading.Tasks;
 namespace MOHU.Integration.Contracts.Dto.Sahab;
 public class SahabCreateInspectionDetailsRequest
 {
-    public string TicketNumber { get; set; } = string.Empty;
+    public string CaseTicketNumber { get; set; } = string.Empty;
+    public string? CaseClosureReason { get; set; } = string.Empty;
+    public DateTime? CaseClosureDateTime { get; init; }
+    public IntegrationStatus? CaseIntegrationStatus { get; init; } = IntegrationStatus.PendingOnInspection;// 1 : close 
+    public int? CaseIntegrationType { get; init; }
     public string InspectorName { get; set; } = string.Empty;
     public string Comment { get; set; } = string.Empty; 
     public DateTime ActionDate { get; set; } = DateTime.Now;
@@ -31,8 +35,5 @@ public class SahabCreateInspectionDetailsRequest
     public string VisitCode { get; set; } = string.Empty;
     public string VisitStatus { get; set; } = string.Empty;
     public string VisitType { get; set; } = string.Empty;
-    public string? ClosureReason { get; init; } = null!;
-    public DateTime? ClosureDateTime { get; init; }
-    public IntegrationStatus? IntegrationStatus { get; init; } // 1 : close 
-    public int? IntegrationType { get; init; }
+   
 }
