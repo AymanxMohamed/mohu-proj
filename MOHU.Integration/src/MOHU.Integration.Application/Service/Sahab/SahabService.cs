@@ -53,18 +53,20 @@ public class SahabService(ITicketService _ticketService, ICrmContext _crmContext
 
 
         Guid? inspectionDetailsId =  await _crmContext.ServiceClient.CreateAsync(inspectionDetails);
-        if(request.CaseIntegrationStatus.GetValueOrDefault() == IntegrationStatus.CloseTheTicket)
-        {
-           SahabUpdateStatusRequest caseUpdateStatusRequest = new SahabUpdateStatusRequest { Resolution = request.CaseClosureReason , ResolutionDate = request.CaseClosureDateTime , IntegrationStatus = request.CaseIntegrationStatus.GetValueOrDefault()};
 
-           await _ticketService.UpdateStatusAsync(caseUpdateStatusRequest.ToUpdateTicketStatusRequest(ticket.Id));
-        }else if(request.CaseIntegrationStatus.GetValueOrDefault() == IntegrationStatus.PendingOnInspection)
+        UpdateSahabTicket ticketToUpdate = new UpdateSahabTicket
         {
-            SahabUpdateStatusRequest caseUpdateStatusRequest = new SahabUpdateStatusRequest { Resolution = null, ResolutionDate = null, IntegrationStatus = request.CaseIntegrationStatus.GetValueOrDefault() };
-
-            await _ticketService.UpdateStatusAsync(caseUpdateStatusRequest.ToUpdateTicketStatusRequest(ticket.Id));
+            TicketId = ticket.Id,
+            StatusReason = request.caseStatusReason,
+            IntegrationStatus = request.CaseIntegrationStatus.GetValueOrDefault()
+        };
+        if (request.CaseIntegrationStatus.GetValueOrDefault() == IntegrationStatus.CloseTheTicket)
+        {
+            ticketToUpdate.ClouserReason = request.CaseClosureReason;
+            ticketToUpdate.ClouserDateTime = request.CaseClosureDateTime;
         }
 
+        await _ticketService.UpdateSahabTicket(ticketToUpdate);
         return inspectionDetailsId != null ? true: false;
 
     }

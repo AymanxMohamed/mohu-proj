@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Contracts.Dto.CaseTypes;
+using MOHU.Integration.Contracts.Dto.Sahab;
 using MOHU.Integration.Contracts.Dto.Ticket;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
@@ -20,7 +21,9 @@ namespace MOHU.Integration.Contracts.Interface.Ticket
         Task<List<TicketTypeResponse>> GetTicketTypesAsync();
         
         Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request);
-        
+        Task<bool> UpdateSahabTicket(UpdateSahabTicket ticket);
+
+
         Task<Guid> GetTicketByIntegrationTicketNumberAsync(string integrationTicketNumber, string ticketNumberSchemaName);
     }
 }
