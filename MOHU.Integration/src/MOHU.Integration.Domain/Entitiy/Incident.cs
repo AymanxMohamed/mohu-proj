@@ -99,6 +99,8 @@
             public const string ldv_servicedeskneededinformation = "ldv_servicedeskneededinformation";
             public const string ldv_servicedeskresolution = "ldv_servicedeskresolution";
             public const string ldv_serviceid = "ldv_serviceid";
+            public const string ldv_sahabstatusreason = "ldv_sahabstatusreason";
+
             public const string ldv_requesttypeid = "ldv_requesttypeid";
             public const string ldv_StageConfigurationid = "ldv_stageconfigurationid";
             public const string ldv_stagenameid = "ldv_stagenameid";

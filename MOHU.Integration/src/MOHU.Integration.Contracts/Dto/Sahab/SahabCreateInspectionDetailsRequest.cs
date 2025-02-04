@@ -12,6 +12,8 @@ public class SahabCreateInspectionDetailsRequest
     public string? CaseClosureReason { get; set; } = string.Empty;
     public DateTime? CaseClosureDateTime { get; init; }
     public IntegrationStatus? CaseIntegrationStatus { get; init; } = IntegrationStatus.PendingOnInspection;// 1 : close 
+    public string? caseStatusReason { get; set; } = string.Empty;
+
     public int? CaseIntegrationType { get; init; }
     public string InspectorName { get; set; } = string.Empty;
     public string Comment { get; set; } = string.Empty; 

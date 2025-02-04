@@ -1,9 +1,12 @@
 ﻿using Microsoft.Xrm.Sdk.Messages;
+using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.CaseTypes;
+using MOHU.Integration.Contracts.Dto.Sahab;
 using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Logging;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Enum;
+using System.Net.Sockets;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -174,6 +177,22 @@ public partial class TicketService(
             
         await crmContext.ServiceClient.UpdateAsync(request.ToTicketEntity());
             
+        return true;
+    }
+
+    public async Task<bool> UpdateSahabTicket(UpdateSahabTicket ticket)
+    {
+        if (ticket.TicketId == Guid.Empty)
+            throw new NotFoundException(stringLocalizer[ErrorMessageCodes.TicketIdisRequired]);
+        var ticketEntity = new Entity(Incident.EntityLogicalName, ticket.TicketId);
+        ticketEntity.Attributes.Add(Incident.Fields.IntegrationClosureReason, ticket.ClouserReason);
+        ticketEntity.Attributes.Add(Incident.Fields.IntegrationClosureDate, ticket.ClouserDateTime);
+        ticketEntity.Attributes.Add(Incident.Fields.ldv_sahabstatusreason, ticket.StatusReason);
+        ticketEntity.Attributes.Add(Incident.Fields.IntegrationStatus,
+            new OptionSetValue(Convert.ToInt32(ticket.IntegrationStatus)));
+        ticketEntity.Attributes.Add(Incident.Fields.IsSahabUpdated, ticket.IsSahabUpdated);
+
+        await crmContext.ServiceClient.UpdateAsync(ticketEntity);
         return true;
     }
         
