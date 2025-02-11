@@ -1,0 +1,70 @@
+﻿using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using MOHU.Integration.Contracts.Interface.Common;
+using SDIntegraion;
+
+namespace MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Configurations;
+
+public class ServiceDeskConfigurations
+{
+    private const string UserNameKey = "SD_User Name";
+    private const string PasswordKey = "SD_Password";
+    private const string MohuCrmUrlKey = "SD_URL";
+    
+    public ServiceDeskConfigurations(string userName, string password, string mohuCrmUrl)
+    {
+        UserName = userName;
+        Password = password;
+        MohuCrmUrl = mohuCrmUrl;
+    }
+
+    public string UserName { get; init; }
+
+    public string Password { get; init; }
+
+    public string MohuCrmUrl { get; init; }
+
+    public string EncodedCredentials => Convert.ToBase64String(Encoding.ASCII.GetBytes($"{UserName}:{Password}"));
+
+    public HttpClient HttpClient
+    {
+        get
+        {
+            var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(MohuCrmUrl)
+            };
+        
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {EncodedCredentials}");
+
+            return httpClient;
+        }
+    }
+
+    public HttpRequestMessage GetCreateMessage(ServiceDeskRequest request)
+    {
+        return new HttpRequestMessage(HttpMethod.Post, new Uri(MohuCrmUrl))
+        {
+            Content = JsonContent.Create(
+                request,
+                options: new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                })
+        };
+    }
+    
+    public HttpRequestMessage GetGetMessage(string title)
+    {
+        return new HttpRequestMessage(HttpMethod.Get, new Uri($"{MohuCrmUrl}?query=title%3D%{title}%22"));
+    }
+
+    public static async Task<ServiceDeskConfigurations> Create(IConfigurationService configurationService)
+    {
+        return new ServiceDeskConfigurations(
+            userName: await configurationService.GetConfigurationValueAsync(UserNameKey),
+            password: await configurationService.GetConfigurationValueAsync(PasswordKey),
+            mohuCrmUrl: await configurationService.GetConfigurationValueAsync(MohuCrmUrlKey));
+    }
+}

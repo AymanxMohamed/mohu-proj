@@ -7,17 +7,19 @@ namespace MOHU.Integration.WebApi.Controllers
     public class CacheController : ControllerBase
     {
         private readonly ICacheService _cacheService;
+        
         public CacheController(ICacheService cacheService)
         {
             _cacheService = cacheService;
         }
+        
         [HttpGet]
         public async Task ClearCache(string cacheKey)
         {
             if (!string.IsNullOrEmpty(cacheKey))
                 await _cacheService.Remove(cacheKey);
             else
-            await _cacheService.Clear();
+                await _cacheService.Clear();
         }
     }
 }

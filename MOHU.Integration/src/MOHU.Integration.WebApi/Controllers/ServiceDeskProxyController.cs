@@ -1,43 +1,21 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Tickets.Services;
+using MOHU.Integration.Contracts.ThirdParties.ServiceDesk.Tickets.Dtos.Responses;
 using SDIntegraion;
 
 namespace MOHU.Integration.WebApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ServiceDeskProxyController : BaseController
+public class ServiceDeskProxyController(IServiceDeskTicketsClient serviceDeskTicketsClient) : BaseController
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IConfigurationService _configurationservice;
-
-    public ServiceDeskProxyController(IHttpClientFactory httpClientFactory, IConfigurationService configuration)
-    {
-
-        _httpClientFactory = httpClientFactory;
-        _configurationservice = configuration;
-    }
     [Consumes("application/json")]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ResponseMessage<object?>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ResponseMessage<TicketResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<TicketResponse?>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseMessage<TicketResponse>), StatusCodes.Status500InternalServerError)]
     [HttpPost]
-    public async Task<object> Post(ServiceDeskRequest request)
+    public async Task<TicketResponse> Post(ServiceDeskRequest request)
     {
-        request.AdjustPhoneNumber();
-        var username = await _configurationservice.GetConfigurationValueAsync("SD_User Name");
-        var password = await _configurationservice.GetConfigurationValueAsync("SD_Password");
-        var servicedeskURL = await _configurationservice.GetConfigurationValueAsync("SD_URL");
-        var encoded = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
-        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, servicedeskURL.ToString());
-        httpRequestMessage.Headers.Add("Authorization", "Basic " + encoded);
-        httpRequestMessage.Content = JsonContent.Create(request, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var httpClient = _httpClientFactory.CreateClient();
-        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-        var contentStream = (await httpResponseMessage.Content.ReadAsStringAsync()).Replace("\\", "")
-            .Trim(['"']);
-        return contentStream;
-
+        return await serviceDeskTicketsClient.GetOrCreateServiceDeskTicket(request);
     }
 }
