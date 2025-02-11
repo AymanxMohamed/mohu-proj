@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MOHU.Integration.Application.Features.Companies.Services;
+using MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Tickets.Services;
 using MOHU.Integration.Application.Features.Tickets.Services;
 using MOHU.Integration.Application.Service;
 using MOHU.Integration.Contracts.Interface;
@@ -44,9 +45,8 @@ namespace MOHU.Integration.Application
             services.AddTransient<IServiceDeskService, ServiceDeskService>();
             services.AddTransient<ISahabService, SahabService>();
             services.AddTransient<INusukTicketsClient, NusukTicketsClient>();
+            services.AddTransient<IServiceDeskTicketsClient, ServiceDeskTicketsClient>();
             services.AddTransient<ICompaniesService, CompaniesService>();
-            
-
             return services;
         }
     }
