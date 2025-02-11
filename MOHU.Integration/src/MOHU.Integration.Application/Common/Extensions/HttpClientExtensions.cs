@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json;
 
 namespace MOHU.Integration.Application.Common.Extensions;
 
@@ -8,16 +8,14 @@ public static class HttpClientExtensions
     {
         var response = await httpClient.SendAsync(request);
         
-        if (!response.IsSuccessStatusCode)
+        var contentStream = await response.Content.ReadAsStringAsync();
+
+        if (contentStream == null)
         {
-            throw new HttpRequestException($"Request failed with status code: {response.StatusCode}");
+            throw new InvalidOperationException("Failed to deserialize response");
         }
 
-        var contentStream = await response.Content.ReadAsStreamAsync();
-
-        return await JsonSerializer.DeserializeAsync<TResult>(
-            contentStream,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-        ) ?? throw new InvalidOperationException("Failed to deserialize response");
+        return JsonConvert.DeserializeObject<TResult>(contentStream) 
+               ?? throw new InvalidOperationException("Failed to deserialize response");
     }
 }

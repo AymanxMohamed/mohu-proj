@@ -15,7 +15,7 @@ public class GetInteractionCallIdResponse : RootServiceDeskPaginationResponse<In
             Interaction = new InteractionResponse
             {
                 CallId = interaction.CallId,
-                CrmNumber = interaction.CrmNumber
+                CRMNumber = interaction.CRMNumber
             }
         };
     }    

@@ -18,7 +18,7 @@ public partial class ServiceDeskTicketsClient
 
         var getInteractionResponse = await GetServiceDeskTicketAsync(request, sdConfigurations);
 
-        if (getInteractionResponse.Content.FirstOrDefault() != null)
+        if (getInteractionResponse.Content?.FirstOrDefault() != null)
         {
             return getInteractionResponse.ToTicketResponse();
         }
