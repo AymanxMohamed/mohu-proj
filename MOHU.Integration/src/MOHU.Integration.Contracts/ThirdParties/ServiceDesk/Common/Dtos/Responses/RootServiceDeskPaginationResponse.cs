@@ -16,5 +16,5 @@ public class RootServiceDeskPaginationResponse<TContent> : BaseServiceDeskRespon
     public int TotalCount { get; set; }
 
     [JsonProperty("content")]
-    public List<TContent> Content { get; set; } = null!;
+    public List<TContent>? Content { get; set; }
 }

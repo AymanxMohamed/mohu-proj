@@ -7,6 +7,5 @@ public class InteractionCallIdReadModel
 {
     public string CRMNumber { get; set; } = null!;
     
-    [JsonProperty("CallID")]
-    public string CallId { get; set; } = null!;
+    public string CallID { get; set; } = null!;
 }
