@@ -1,4 +1,6 @@
 ﻿using AngleSharp.Css.Values;
+using FluentValidation;
+using MOHU.Integration.Application.Validators;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Sahab;
 using MOHU.Integration.Contracts.Enum;
@@ -8,12 +10,12 @@ using System.Diagnostics;
 
 namespace MOHU.Integration.Application.Service.Sahab;
 
-public class SahabService(ITicketService _ticketService, ICrmContext _crmContext,IValidator<UpdateTicketStatusData> _validator) : ISahabService
+public class SahabService(ITicketService _ticketService, ICrmContext _crmContext,IValidator<UpdateTicketStatusData> _updateTicketValidator,IValidator<SahabCreateInspectionDetailsRequest> _incpectionValidator) : ISahabService
 {
 
     public async Task<bool> UpdateStatusAsync(SahabUpdateStatusRequest request)
     {
-        var results = await _validator.ValidateAsync(request);
+        var results = await _updateTicketValidator.ValidateAsync(request);
 
         if (results?.IsValid == false)
         {
@@ -24,9 +26,17 @@ public class SahabService(ITicketService _ticketService, ICrmContext _crmContext
     }
     public async Task<bool> CreateInspectionDetails(SahabCreateInspectionDetailsRequest request)
     {
+
+
+        var results = await _incpectionValidator.ValidateAsync(request);
+
+        if (results?.IsValid == false)
+        {
+            throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
+        }
         var inspectionDetails = new Entity(ldv_inspectiondetails.EntityLogicalName);
         //TODO: Check Case is exists
-        var ticket = await _ticketService.GetTicketDetailByNumberAsync(request.CaseTicketNumber);
+        var ticket = await _ticketService.GetTicketDetailByNumberAsync(request.CaseTicketNumber!);
 
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_caseid, new EntityReference(Incident.EntityLogicalName,ticket.Id));
         inspectionDetails.Attributes.Add(ldv_inspectiondetails.Fields.ldv_comment, request.Comment);
@@ -57,7 +67,7 @@ public class SahabService(ITicketService _ticketService, ICrmContext _crmContext
         UpdateSahabTicket ticketToUpdate = new UpdateSahabTicket
         {
             TicketId = ticket.Id,
-            StatusReason = request.caseStatusReason,
+            StatusReason = request.CaseStatusReason,
             IntegrationStatus = request.CaseIntegrationStatus.GetValueOrDefault()
         };
         if (request.CaseIntegrationStatus.GetValueOrDefault() == IntegrationStatus.CloseTheTicket)
