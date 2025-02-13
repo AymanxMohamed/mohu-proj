@@ -10,8 +10,4 @@
     <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.24614.12000" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\Common\CRM\Common.Crm.Domain\Common.Crm.Domain.csproj" />
-  </ItemGroup>
-
 </Project>
