@@ -32,17 +32,6 @@ IServiceDeskTicketsClient serviceDeskTicketsClient)
     [HttpPost("/api/ServiceDeskProxy/{CallID}")]
     public async Task<object> PostUpdate(ServiceDeskRequestUpdate request, string CallID)
     {
-        var username = await configuration.GetConfigurationValueAsync("SD_User Name");
-        var password = await configuration.GetConfigurationValueAsync("SD_Password");
-        var serviceDeskUrl = await configuration.GetConfigurationValueAsync("SD_URL");
-        var encoded = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
-        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, serviceDeskUrl + "/" + CallID);
-        httpRequestMessage.Headers.Add("Authorization", "Basic " + encoded);
-        httpRequestMessage.Content = JsonContent.Create(request, options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var httpClient = httpClientFactory.CreateClient();
-        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-        var contentStream = (await httpResponseMessage.Content.ReadAsStringAsync()).Replace("\\", "")
-            .Trim(['"']);
-        return contentStream;
+        return await serviceDeskTicketsClient.UpdateTicket(request, CallID);
     }
 }

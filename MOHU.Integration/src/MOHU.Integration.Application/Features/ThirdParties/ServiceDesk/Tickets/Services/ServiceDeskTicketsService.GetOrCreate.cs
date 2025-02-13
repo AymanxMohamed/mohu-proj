@@ -25,7 +25,7 @@ public partial class ServiceDeskTicketsClient
 
         return await CreateServiceDeskTicketAsync(request, sdConfigurations);
     }
-    
+
     private async Task<TicketResponse> CreateServiceDeskTicketAsync(
         ServiceDeskRequest request,
         ServiceDeskConfigurations sdConfigurations)

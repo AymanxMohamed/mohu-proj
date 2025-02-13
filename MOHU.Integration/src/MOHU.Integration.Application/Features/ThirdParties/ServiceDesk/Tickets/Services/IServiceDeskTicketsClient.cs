@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Contracts.ThirdParties.ServiceDesk.Tickets.Dtos.Responses;
+﻿using MOHU.Integration.Contracts.Dto.ServiceDeskProxy;
+using MOHU.Integration.Contracts.ThirdParties.ServiceDesk.Tickets.Dtos.Responses;
 using SDIntegraion;
 
 namespace MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Tickets.Services;
@@ -6,4 +7,6 @@ namespace MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Tickets
 public interface IServiceDeskTicketsClient
 {
     public Task<TicketResponse> GetOrCreateServiceDeskTicket(ServiceDeskRequest request);
+    
+    public Task<TicketResponse> UpdateTicket(ServiceDeskRequestUpdate request, string callId);
 }

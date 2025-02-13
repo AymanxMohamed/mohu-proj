@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using MOHU.Integration.Contracts.Dto.ServiceDeskProxy;
 using MOHU.Integration.Contracts.Interface.Common;
 using SDIntegraion;
 
@@ -45,6 +46,19 @@ public class ServiceDeskConfigurations
     public HttpRequestMessage GetCreateMessage(ServiceDeskRequest request)
     {
         return new HttpRequestMessage(HttpMethod.Post, new Uri(MohuCrmUrl))
+        {
+            Content = JsonContent.Create(
+                request,
+                options: new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                })
+        };
+    }
+    
+    public HttpRequestMessage GetUpdateMessage(ServiceDeskRequestUpdate request, string callId)
+    {
+        return new HttpRequestMessage(HttpMethod.Post, new Uri($"{MohuCrmUrl}/{callId}"))
         {
             Content = JsonContent.Create(
                 request,
