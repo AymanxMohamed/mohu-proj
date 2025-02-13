@@ -7,7 +7,7 @@ using MOHU.Integration.Contracts.Interface;
 
 namespace MOHU.Integration.Application.Features.Companies.Services;
 
-public class CompaniesService(ICrmContext crmContext) : ICompaniesService
+public partial class CompaniesService(ICrmContext crmContext) : ICompaniesService
 {
     public async Task UpdateAsync(UpdateCompaniesRequest request)
     {

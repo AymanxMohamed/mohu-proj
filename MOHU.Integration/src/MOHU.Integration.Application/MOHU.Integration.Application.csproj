@@ -12,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Common\CRM\Common.Crm.Application\Common.Crm.Application.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Common\CRM\Common.Crm.Infrastructure\Common.Crm.Infrastructure.csproj" />
     <ProjectReference Include="..\MOHU.Integration.Contracts\MOHU.Integration.Contracts.csproj" />
     <ProjectReference Include="..\MOHU.Integration.Domain\MOHU.Integration.Domain.csproj" />
     <ProjectReference Include="..\MOHU.Integration.Infrastructure\MOHU.Integration.Infrastructure.csproj" />
