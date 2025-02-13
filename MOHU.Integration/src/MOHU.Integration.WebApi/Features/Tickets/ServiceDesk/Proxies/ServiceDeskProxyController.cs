@@ -29,7 +29,7 @@ IServiceDeskTicketsClient serviceDeskTicketsClient)
     [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseMessage<object?>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status500InternalServerError)]
-    [HttpPost("/api/ServiceDeskProxy/{CallID}")]
+    [HttpPost("{CallID}")]
     public async Task<object> PostUpdate(ServiceDeskRequestUpdate request, string CallID)
     {
         return await serviceDeskTicketsClient.UpdateTicket(request, CallID);
