@@ -18,7 +18,7 @@ public partial class ServiceDeskTicketsClient
             .DeserializeSendAsync<TicketResponse>(request: sdConfigurations.GetUpdateMessage(request, callId));
     }
     
-    private async Task<object> OldVersion(ServiceDeskRequestUpdate request, string callId)
+    public async Task<object> UpdateTicketOldVersion(ServiceDeskRequestUpdate request, string callId)
     {
         var username = await configurationService.GetConfigurationValueAsync("SD_User Name");
         var password = await configurationService.GetConfigurationValueAsync("SD_Password");
