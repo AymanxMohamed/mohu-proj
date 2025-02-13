@@ -5,7 +5,10 @@ namespace MOHU.Integration.Contracts.ThirdParties.ServiceDesk.Tickets.Dtos.Respo
 
 public class InteractionCallIdReadModel
 {
-    public string CRMNumber { get; set; } = null!;
+    [JsonProperty("CRMNumber")]
+    public string CrmNumber { get; set; } = null!;
+
     
-    public string CallID { get; set; } = null!;
+    [JsonProperty("CallID")]
+    public string CallId { get; set; } = null!;
 }

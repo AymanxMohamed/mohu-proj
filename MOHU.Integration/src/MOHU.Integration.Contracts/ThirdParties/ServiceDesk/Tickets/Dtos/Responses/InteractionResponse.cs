@@ -1,5 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 
+using Newtonsoft.Json;
+
 namespace MOHU.Integration.Contracts.ThirdParties.ServiceDesk.Tickets.Dtos.Responses;
 
 public class InteractionResponse
@@ -10,7 +12,8 @@ public class InteractionResponse
     
     public string? Phase { get; set; }
     
-    public string CallID { get; set; } = null!;
+    [JsonProperty("CallID")]
+    public string CallId { get; set; } = null!;
     
     public string? AffectedService { get; set; }
     
@@ -23,7 +26,9 @@ public class InteractionResponse
     public string? ServiceRecipient { get; set; }
     
     public bool? SLABreached { get; set; }
-    public string CRMNumber { get; set; } = null!;
+    
+    [JsonProperty("CRMNumber")]
+    public string CrmNumber { get; set; } = null!;
     
     public string? Status { get; set; }
     
