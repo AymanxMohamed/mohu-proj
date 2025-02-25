@@ -7,6 +7,7 @@ using MOHU.Integration.Contracts.Logging;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Enum;
 using System.Net.Sockets;
+using MOHU.Integration.Application.Features.TicketCategories;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -19,7 +20,8 @@ public partial class TicketService(
     IDocumentService documentService,
     IStringLocalizer stringLocalizer,
     IRequestInfo requestInfo,
-    IValidator<CreateHootSuiteTicketRequest> createHootSuiteTicketValidator)
+    IValidator<CreateHootSuiteTicketRequest> createHootSuiteTicketValidator,
+    ITicketCategoriesService ticketCategoriesService)
     : ITicketService
 {
     public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
@@ -285,7 +287,10 @@ public partial class TicketService(
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.StateCode, ConditionOperator.Equal,0));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Null));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory, ConditionOperator.Null));
-                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.AvailableFor, ConditionOperator.ContainValues, requestInfo.Origin));
+                filter.AddCondition(new ConditionExpression(
+                    ldv_casecategory.Fields.AvailableFor, 
+                    ConditionOperator.ContainValues, 
+                    requestInfo.Origin));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal, ConditionOperator.Equal,true));
 
 

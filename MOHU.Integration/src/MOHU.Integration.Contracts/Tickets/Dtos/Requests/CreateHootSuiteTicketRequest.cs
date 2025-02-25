@@ -13,6 +13,12 @@ public class CreateHootSuiteTicketRequest : CreateTicketRequest
     public int? BeneficiaryType { get; set; }
     public int? Location { get; set; }
 
+    public List<Guid> CategoryIds => 
+        new[] { CategoryId, SubCategoryId, SubCategoryId1 }
+            .Where(id => id.HasValue && id.Value != Guid.Empty)
+            .Select(id => id!.Value)
+            .ToList();
+    
     public Entity ToTicket(Guid customerId, Service service)
     {
         var entity  = base.ToTicket(service, (int)CaseOriginEnum.SocialMedia, false);

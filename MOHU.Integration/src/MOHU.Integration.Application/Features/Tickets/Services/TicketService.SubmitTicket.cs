@@ -7,6 +7,7 @@ public partial class TicketService
 {
     public async Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request)
     {
+        await ticketCategoriesService.EnsureValidCategoriesAsync(request.CategoryIds);
         (await validator.ValidateAsync(request)).EnsureValidResult();
         await EnsureNoActiveTicketForCustomerAsync(customerId);
 
@@ -20,6 +21,7 @@ public partial class TicketService
 
     public async Task<SubmitTicketResponse> SubmitHootSuiteTicketAsync(Guid customerId, CreateHootSuiteTicketRequest request)
     {
+        await ticketCategoriesService.EnsureValidCategoriesAsync(request.CategoryIds);
         (await createHootSuiteTicketValidator.ValidateAsync(request)).EnsureValidResult();
         await EnsureNoActiveTicketForCustomerAsync(customerId);
 
