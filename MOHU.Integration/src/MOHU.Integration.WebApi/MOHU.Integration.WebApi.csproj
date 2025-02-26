@@ -21,8 +21,4 @@
     <ProjectReference Include="..\MOHU.Integration.Infrastructure\MOHU.Integration.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
-
 </Project>
