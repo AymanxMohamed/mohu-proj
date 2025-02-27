@@ -1,5 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.ApplicantData.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
 
 namespace MOHU.Integration.WebApi.Elm.InformationCenter.Controllers;
 
@@ -9,8 +9,8 @@ public class LookupsController(IElmInformationCenterApplicantDataClient client) 
     [HttpGet("applicant-data")]
     public IActionResult GetApplicantData(FilterRequest? filterRequest = null)
     {
-        var data = client.GetLookups<object>(filterRequest);
+        var applicants = client.GetAll(filterRequest).ToValueOrException();
 
-        return Ok(data.ToValueOrException());
+        return Ok(applicants);
     }
 }

@@ -1,4 +1,4 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.ApplicantData.Clients;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups;
 
