@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using MOHU.Integration.Contracts.Dto.ServiceDeskProxy;
 using MOHU.Integration.Contracts.Interface.Common;

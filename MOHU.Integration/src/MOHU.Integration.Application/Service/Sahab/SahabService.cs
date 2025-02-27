@@ -4,7 +4,6 @@ using MOHU.Integration.Application.Validators;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Dto.Sahab;
 using MOHU.Integration.Contracts.Enum;
-using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 

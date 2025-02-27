@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POCVirtualEntity", "Virtual
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualEntity.Poc", "VirtualEntity\VirtualEntity.Poc\VirtualEntity.Poc.csproj", "{E736707B-E6A6-4F20-892C-B764834DCFFE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{C18161D4-FAE5-4023-83A7-EFF8A96E9024}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{E736707B-E6A6-4F20-892C-B764834DCFFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E736707B-E6A6-4F20-892C-B764834DCFFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E736707B-E6A6-4F20-892C-B764834DCFFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18161D4-FAE5-4023-83A7-EFF8A96E9024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18161D4-FAE5-4023-83A7-EFF8A96E9024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18161D4-FAE5-4023-83A7-EFF8A96E9024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18161D4-FAE5-4023-83A7-EFF8A96E9024}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +82,7 @@ Global
 		{964891D8-9B04-4934-B76B-A87AC5979981} = {BDF6F2C1-A091-4AF4-8B7E-211F8FBF9589}
 		{19B7C49D-A89F-4CD4-A022-5FC48C2F97C0} = {482C92BB-95B3-4B7C-B4B3-BC698209D77E}
 		{E736707B-E6A6-4F20-892C-B764834DCFFE} = {482C92BB-95B3-4B7C-B4B3-BC698209D77E}
+		{C18161D4-FAE5-4023-83A7-EFF8A96E9024} = {BDF6F2C1-A091-4AF4-8B7E-211F8FBF9589}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97544989-0147-44D8-8E22-0DDF06BA8253}

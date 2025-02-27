@@ -1,6 +1,5 @@
 ﻿using MOHU.Integration.Application.Validators;
 using MOHU.Integration.Contracts.Dto.ServiceDesk;
-using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using System.ComponentModel.DataAnnotations;
 
 namespace MOHU.Integration.Application.Service.ServiceDesk;

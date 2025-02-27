@@ -1,5 +1,4 @@
 ﻿using MOHU.Integration.Application.Common.Extensions;
-using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 

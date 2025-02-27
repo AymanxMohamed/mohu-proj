@@ -1,5 +1,4 @@
 ﻿using MOHU.Integration.Contracts.Dto.Kidana;
-using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Application.Service.Kidana;
 

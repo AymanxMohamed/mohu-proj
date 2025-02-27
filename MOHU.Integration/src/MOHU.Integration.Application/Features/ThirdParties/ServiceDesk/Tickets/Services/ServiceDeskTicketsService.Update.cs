@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using MOHU.Integration.Application.Common.Extensions;
 using MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Configurations;

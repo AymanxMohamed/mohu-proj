@@ -1,10 +1,9 @@
-﻿namespace MOHU.Integration.Application.Exceptions
+﻿namespace MOHU.Integration.Application.Exceptions;
+
+public class BadRequestException : Exception
 {
-    public class BadRequestException : Exception
+    public BadRequestException(string message): base(message)
     {
-        public BadRequestException(string message): base(message)
-        {
             
-        }
     }
 }

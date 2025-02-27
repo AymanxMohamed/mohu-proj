@@ -4,7 +4,6 @@ using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Sahab;
 using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Logging;
-using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Enum;
 using System.Net.Sockets;
 using MOHU.Integration.Application.Features.TicketCategories;

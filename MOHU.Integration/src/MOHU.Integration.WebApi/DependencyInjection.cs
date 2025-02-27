@@ -16,7 +16,7 @@ internal static class DependencyInjection
     {
         return services
             .AddInfrastructure(configuration)
-            .AddApplication()
+            .AddApplication(configuration)
             .AddPresentation(configuration)
             .AddSwaggerSupport()
             .AddApplicationCors()

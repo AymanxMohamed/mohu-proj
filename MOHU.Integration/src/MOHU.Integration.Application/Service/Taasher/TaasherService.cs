@@ -1,5 +1,4 @@
 ﻿using MOHU.Integration.Contracts.Dto.Taasher;
-using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using System.ComponentModel.DataAnnotations;
 
 namespace MOHU.Integration.Application.Service.Taasher;

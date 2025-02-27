@@ -3,7 +3,6 @@ using MOHU.Integration.Contracts.Dto.Document.Download;
 using MOHU.Integration.Contracts.Dto.Document.List;
 using MOHU.Integration.Contracts.Dto.Document.Upload;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 
 namespace MOHU.Integration.Application.Service
