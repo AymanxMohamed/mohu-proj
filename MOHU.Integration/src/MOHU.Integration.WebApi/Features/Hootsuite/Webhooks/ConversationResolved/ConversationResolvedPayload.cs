@@ -27,10 +27,10 @@ public class ConversationResolvedPayloadEvent
     public string StatusUpdatedComment { get; set; }
 
     [JsonProperty("messages")]
-    public List<object> Messages { get; set; } = new List<object>();
+    public List<object> Messages { get; set; } = [];
 
     [JsonProperty("contactAttributes")]
-    public List<object> ContactAttributes { get; set; } = new List<object>();
+    public List<object> ContactAttributes { get; set; } = [];
 
     [JsonProperty("notes")]
     public List<object> Notes { get; set; } = [];
@@ -38,4 +38,5 @@ public class ConversationResolvedPayloadEvent
     [JsonProperty("topics")]
     public List<object> Topics { get; set; } = [];
 }
+
 
