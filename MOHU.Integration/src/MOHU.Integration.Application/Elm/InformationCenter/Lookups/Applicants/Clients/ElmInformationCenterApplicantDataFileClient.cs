@@ -2,6 +2,7 @@
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Responses;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 using Newtonsoft.Json;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
