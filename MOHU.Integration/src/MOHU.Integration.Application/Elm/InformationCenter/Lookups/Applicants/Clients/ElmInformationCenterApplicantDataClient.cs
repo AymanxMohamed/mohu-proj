@@ -11,6 +11,7 @@ internal class ElmInformationCenterApplicantDataClient(IElmInformationCenterClie
             client), 
         IElmInformationCenterApplicantDataClient
 {
-    public ErrorOr<List<ApplicantResponse>> GetAll(FilterRequest? request = null) => 
-        GetLookups<List<ApplicantResponse>>(request);
+    public ErrorOr<List<ElmApplicant>> GetAll(FilterRequest? request = null) => 
+        GetLookups<List<ApplicantResponse>>(request)
+            .Then(x => x.Select(ElmApplicant.Create).ToList());
 }

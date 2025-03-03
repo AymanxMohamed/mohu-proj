@@ -1,0 +1,94 @@
+﻿{
+  "id": 1204,
+  "basicInformation": {
+    "englishName": {
+      "firstName": "ahmad",
+      "fatherName": "aasd",
+      "grandFatherName": "asd",
+      "familyName": "ahmad",
+      "fullName": "ahmad aasd asd ahmad"
+    },
+    "arabicName": {
+      "firstName": "احمد",
+      "fatherName": null,
+      "grandFatherName": null,
+      "familyName": "احمد",
+      "fullName": "احمد احمد"
+    },
+    "gender": 1,
+    "martialStatus": 1
+  },
+  "identification": {
+    "citizenId": null,
+    "iqama": {
+      "iqamaNo": null,
+      "issuedBy": null,
+      "issueDate": null,
+      "expiryDate": null
+    },
+    "passport": {
+      "issuancePlace": "بغداد",
+      "passportType": "1",
+      "number": "A1203",
+      "issuanceDate": "2025-01-05T00:00:00",
+      "expiryDate": "2025-09-27T00:00:00"
+    }
+  },
+  "nationality": {
+    "currentNationalityId": 964,
+    "previousNationalityId": null,
+    "residenceCountryId": null
+  },
+  "birthInformation": {
+    "placeOfBirth": "asd",
+    "birthDate": "2025-01-01T00:00:00",
+    "dateOfBirthHij": 14460701,
+    "ageStageId": 3
+  },
+  "contactInformation": {
+    "email": "test1@gmail.com",
+    "phoneNumber": {
+      "mobileCountryCode": "+966",
+      "mobileNumber": "548767543",
+      "fullNumber": "+966548767543"
+    }
+  },
+  "visaDetails": {
+    "hajVisaPermitStatus": "ISSUED",
+    "permitNo": null,
+    "permitDate": null,
+    "visaNumber": null
+  },
+  "otherDetails": {
+    "embassyInformation": {
+      "embassyId": 203
+    },
+    "locationInformation": {
+      "entryPort": null,
+      "campId": null,
+      "spcCompanyIdMecca": null,
+      "spcCompanyIdMadina": null,
+      "campSquareNoAr": "101A",
+      "campSquareNoEn": "101A",
+      "campGateNo": "11",
+      "campStreetNo": 210,
+      "groupNo": 227,
+      "groupNameAr": "dfsfdsfdsfds 5555",
+      "groupNameEn": "dfsfdsfdsfds 5555"
+    },
+    "applicationInformation": {
+      "entityId": 116,
+      "agenciesId": null,
+      "applicantTypeId": 1,
+      "hmMemberTypesId": null,
+      "isB2C": null,
+      "isGcc": 0
+    },
+    "timestampInformation": {
+      "timestamp": "2025-02-11T12:33:16",
+      "state": 130,
+      "plannedArrivalDate": "2025-01-10T00:00:00",
+      "plannedDepartureDate": "2025-01-28T00:00:00"
+    }
+  }
+}

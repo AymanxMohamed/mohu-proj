@@ -1,4 +1,7 @@
-﻿namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Enums;
+using Individual = MOHU.Integration.Domain.Individuals.Individual;
+
+namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
 
 public class ApplicantResponse
 {
@@ -32,11 +35,11 @@ public class ApplicantResponse
     
     public DateTime? AdIdIssueDate { get; set; }
     
-    public DateTime? AdIdIssueDateHij { get; set; }
+    public long? AdIdIssueDateHij { get; set; }
     
     public DateTime? AdIdExpiryDate { get; set; }
     
-    public DateTime? AdIdExpiryDateHij { get; set; }
+    public long? AdIdExpiryDateHij { get; set; }
     
     public string? AdIqamaNo { get; set; }
     
@@ -48,7 +51,7 @@ public class ApplicantResponse
     
     public string? AdPassportNo { get; set; }
     
-    public int AdPassportTypeId { get; set; }
+    public string? AdPassportTypeId { get; set; }
     
     public string? AdPassportIssuePlace { get; set; }
     
@@ -80,9 +83,9 @@ public class ApplicantResponse
     
     public DateTime? AdPermitDate { get; set; }
     
-    public int AdMaritalStatusId { get; set; }
+    public ElmMartialStatus AdMaritalStatusId { get; set; }
     
-    public int AdGender { get; set; }
+    public ElmGender AdGender { get; set; }
     
     public int AdEmbassyId { get; set; }
     
@@ -131,4 +134,21 @@ public class ApplicantResponse
     public string? AdGroupNameEn { get; set; }
     
     public string? AdHajVisaPermitStatus { get; set; }
+
+    public Individual ToIndividual()
+    {
+        return new Individual
+        {
+            FirstName = AdFirstNameEn,
+            LastName = AdFamilyNameEn,
+            EnglishName = AdFullNameEn,
+            ArabicName = AdFullNameAr,
+            ElmReferenceId = Id,
+            BirthDate = AdDateOfBirth,
+            PassportNumber = AdPassportNo,
+            HijriBirthDate = AdDateOfBirthHij.ToString(),
+            PhoneNumber = $"+{AdMobileCountryCode}{AdMobileNumber}",
+            Email = AdEmail
+        };
+    }
 }

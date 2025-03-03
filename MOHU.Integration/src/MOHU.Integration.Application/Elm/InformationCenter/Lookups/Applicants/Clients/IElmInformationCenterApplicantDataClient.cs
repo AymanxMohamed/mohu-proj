@@ -5,5 +5,5 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.
 
 public interface IElmInformationCenterApplicantDataClient
 {
-    ErrorOr<List<ApplicantResponse>> GetAll(FilterRequest? request = null);
+    ErrorOr<List<ElmApplicant>> GetAll(FilterRequest? request = null);
 }
