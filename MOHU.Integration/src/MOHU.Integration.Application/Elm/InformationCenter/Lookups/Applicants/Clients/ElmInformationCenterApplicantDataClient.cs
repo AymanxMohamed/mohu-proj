@@ -13,7 +13,7 @@ internal class ElmInformationCenterApplicantDataClient(IElmInformationCenterClie
             client), 
         IElmInformationCenterApplicantDataClient
 {
-    public ErrorOr<List<Individual>> GetAll(FilterRequest? request = null) => 
+    public ErrorOr<List<ElmApplicant>> GetAll(ElmFilterRequest? request = null) => 
         GetLookups<List<ApplicantResponse>>(request)
-            .Then(x => x.Select(y => y.ToIndividual()).ToList());
+            .Then(x => x.Select(y => y.ToElmApplicant()).ToList());
 }

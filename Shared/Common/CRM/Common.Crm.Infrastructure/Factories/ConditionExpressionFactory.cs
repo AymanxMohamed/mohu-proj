@@ -29,6 +29,11 @@ public static class ConditionExpressionFactory
             ?  new ConditionExpression(columnLogicalName, conditionOperator)
             :  new ConditionExpression(columnLogicalName, conditionOperator, value);
     
+    public static ConditionExpression CreateConditionExpression(
+        string columnLogicalName,
+        ConditionOperator conditionOperator, 
+        params object[] values) => new(columnLogicalName, conditionOperator, values);
+    
     public static ConditionExpression CreateStatusCondition(StatusEnum status) =>
         new(
             CommonConstants.Fields.Status,

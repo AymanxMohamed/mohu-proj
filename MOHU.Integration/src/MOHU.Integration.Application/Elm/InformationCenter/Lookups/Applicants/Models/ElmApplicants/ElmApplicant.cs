@@ -11,7 +11,7 @@ using Individual = MOHU.Integration.Domain.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 
-public class ElmApplicant
+public partial class ElmApplicant
 {
     private ElmApplicant(ApplicantResponse applicant)
     {

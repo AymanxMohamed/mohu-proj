@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+using MOHU.Integration.Domain.Individuals.Enums;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.Identification;
 
@@ -9,7 +10,7 @@ public class ElmApplicantIqama : ElmApplicantId
         DateTime? issuanceDate,
         DateTime? expiryDate,
         string? issuanceBy) 
-        : base(number, issuanceDate, expiryDate, Contracts.Enum.IdType.Accommodation)
+        : base(number, issuanceDate, expiryDate, IdTypeEnum.Accommodation)
     {
         IssuanceBy = issuanceBy;
     }

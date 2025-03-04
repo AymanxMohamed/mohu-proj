@@ -7,7 +7,7 @@ namespace MOHU.Integration.WebApi.Elm.InformationCenter.ProxiesControllers;
 public class LookupsProxyController(IElmInformationCenterApplicantDataClient client) : ControllerBase
 {
     [HttpGet("applicants")]
-    public IActionResult GetApplicantData(FilterRequest? filterRequest = null)
+    public IActionResult GetApplicantData(ElmFilterRequest? filterRequest = null)
     {
         var applicants = client.GetAll(filterRequest).ToValueOrException();
 

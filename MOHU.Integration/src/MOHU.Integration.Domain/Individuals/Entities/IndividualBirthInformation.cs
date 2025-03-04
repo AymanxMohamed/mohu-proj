@@ -17,7 +17,7 @@ public class IndividualBirthInformation
 
     private IndividualBirthInformation(DateTime? birthDate, string? placeOfBirth, string? hijriBirthDate)
     {
-        BirthDate = birthDate;
+        BirthDate = birthDate?.ToUniversalTime();
         PlaceOfBirth = placeOfBirth;
         HijriBirthDate = hijriBirthDate;
     }

@@ -1,16 +1,17 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+using MOHU.Integration.Domain.Individuals.Enums;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.Identification;
 
 public class ElmApplicantPassport : ElmApplicantId
 {
-    protected ElmApplicantPassport(
+    private ElmApplicantPassport(
         string number,
         DateTime? issuanceDate,
         DateTime? expiryDate,
         string? issuancePlace,
         string? passportType) 
-        : base(number, issuanceDate, expiryDate, Contracts.Enum.IdType.Passport)
+        : base(number, issuanceDate, expiryDate, IdTypeEnum.Passport)
     {
         IssuancePlace = issuancePlace;
         PassportType = passportType;

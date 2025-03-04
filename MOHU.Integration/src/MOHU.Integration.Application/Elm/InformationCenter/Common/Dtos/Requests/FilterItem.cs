@@ -2,7 +2,19 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Request
 
 public class FilterItem
 {
-    public required string PropertyName { get; set; }
-    public required string Operation { get; set; } 
-    public required object PropertyValue { get; set; }
+    private FilterItem(string propertyName, string operation, object propertyValue)
+    {
+        PropertyName = propertyName;
+        Operation = operation;
+        PropertyValue = propertyValue;
+    }
+
+    public string PropertyName { get; set; }
+    
+    public string Operation { get; set; } 
+    
+    public object PropertyValue { get; set; }
+    
+    public static FilterItem Create(string propertyName, string operation, object propertyValue)
+        => new(propertyName, operation, propertyValue);
 }

@@ -6,8 +6,8 @@ public static partial class IndividualConstants
     {
         public static class ContactInformation
         {
-            public const string Email = "birthdate";
-            public const string MobileNumber = "ldv_placeofbirth";
+            public const string Email = "emailaddress1";
+            public const string MobileNumber = "ldv_mobilenumber";
         }
     }
 }

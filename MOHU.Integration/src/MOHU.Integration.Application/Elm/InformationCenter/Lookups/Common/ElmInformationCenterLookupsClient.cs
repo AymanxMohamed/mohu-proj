@@ -11,13 +11,13 @@ public abstract class ElmInformationCenterLookupsClient(
     IElmInformationCenterClient client)
 {
     protected ErrorOr<TLookupData> GetLookups<TLookupData>(
-        FilterRequest? request = null)
+        ElmFilterRequest? request = null)
     {
         return client
             .PrepareAndExecuteRequest<ElmInformationCenterResponseRoot<TLookupData>>(
                 resourceUrl: $"{lookupCollectionName}",
                 method: Method.Post,
-                body: request)
+                body: request ?? new object())
             .Then(x => x.EnsureNotNull())
             .Then(x => x.EnsureSuccessResult());
     }

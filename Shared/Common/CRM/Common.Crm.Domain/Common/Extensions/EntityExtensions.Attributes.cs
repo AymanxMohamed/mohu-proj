@@ -19,13 +19,13 @@
             return entity.GetAttributeValue<AliasedValue>($"{alias}.{logicalName}");
         }
 
-        public static void AssignIfNotNull(this Entity entity, string attributeLogicalName, object? value)
+        public static void AssignIfNotNull<TValue>(this Entity entity, string attributeLogicalName, TValue? value)
         {
             if (value is null)
             {
                 return;
             }
-            
+
             entity[attributeLogicalName] = value;
         }
         

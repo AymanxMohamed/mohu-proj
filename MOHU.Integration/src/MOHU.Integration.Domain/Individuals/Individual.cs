@@ -4,7 +4,7 @@ using MOHU.Integration.Domain.Individuals.Entities;
 
 namespace MOHU.Integration.Domain.Individuals;
 
-public class Individual
+public partial class Individual
 {
     private Individual(Entity entity)
         : this(

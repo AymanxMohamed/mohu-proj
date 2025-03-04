@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+using MOHU.Integration.Domain.Individuals.Enums;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.Identification;
 
@@ -11,7 +12,7 @@ public class ElmApplicantCitizenId : ElmApplicantId
         string? source,
         long? issuanceDateHij,
         long? expiryDateHij) 
-        : base(number, issuanceDate, expiryDate, Contracts.Enum.IdType.NationalIdentity)
+        : base(number, issuanceDate, expiryDate, IdTypeEnum.NationalIdentity)
     {
         Source = source;
         IssuanceDateHij = issuanceDateHij;

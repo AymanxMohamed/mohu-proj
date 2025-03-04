@@ -48,5 +48,10 @@ public class IndividualIdentification
             IndividualConstants.Fields.Identification.IdType, 
             IdType.ToOptionSetValue()
         );
+        
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.Identification.IdNumber, 
+            IdNumber
+        );
     }
 }

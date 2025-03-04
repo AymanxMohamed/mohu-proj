@@ -136,9 +136,9 @@ public class ApplicantResponse
     
     public string? AdHajVisaPermitStatus { get; set; }
     
-    public Entity ToEntity() => ToIndividual().ToEntity();
+    public Entity ToEntity(EntityReference? id = null) => ToIndividual(id).ToEntity();
     
-    public Individual ToIndividual() => ToElmApplicant().ToIndividual();
+    public Individual ToIndividual(EntityReference? id = null) => ToElmApplicant().ToIndividual(id);
     
     public ElmApplicant ToElmApplicant() => ElmApplicant.Create(this);
 }

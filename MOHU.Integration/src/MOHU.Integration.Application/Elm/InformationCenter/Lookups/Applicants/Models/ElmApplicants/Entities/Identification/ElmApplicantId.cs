@@ -5,11 +5,12 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.
 
 public class ElmApplicantId
 {
-    protected ElmApplicantId(string number, DateTime? issuanceDate, DateTime? expiryDate, IdType idType)
+    protected ElmApplicantId(string number, DateTime? issuanceDate, DateTime? expiryDate, IdTypeEnum idType)
     {
         Number = number;
         IssuanceDate = issuanceDate;
         ExpiryDate = expiryDate;
+        IdType = idType;
     }
 
     public IdTypeEnum IdType { get; set; }

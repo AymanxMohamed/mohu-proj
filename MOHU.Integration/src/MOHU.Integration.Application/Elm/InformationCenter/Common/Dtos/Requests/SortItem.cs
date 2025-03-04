@@ -2,6 +2,16 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Request
 
 public class SortItem
 {
-    public required string PropertyName { get; set; }
-    public required string OrderDir { get; set; }
+    private SortItem(string propertyName, string orderDir)
+    {
+        PropertyName = propertyName;
+        OrderDir = orderDir;
+    }
+    
+    public string PropertyName { get; set; }
+    
+    public string OrderDir { get; set; }
+
+    public static SortItem Create(string propertyName, string orderDir)
+        => new(propertyName, orderDir);
 }
