@@ -22,7 +22,7 @@ public class ElmApplicantIdentification
 
     public static ElmApplicantIdentification Create(ApplicantResponse applicant) => new(applicant);
 
-    public IndividualIdentification ToIndividualInformation() => IndividualIdentification
+    internal IndividualIdentification ToIndividualInformation() => IndividualIdentification
         .Create(
             idType:  MainIdentification?.IdType,
             idNumber: MainIdentification?.Number,

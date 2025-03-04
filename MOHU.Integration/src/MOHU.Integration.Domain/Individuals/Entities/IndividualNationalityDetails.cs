@@ -2,42 +2,44 @@
 
 namespace MOHU.Integration.Domain.Individuals.Entities;
 
-public class IndividualContactInformation
+public class IndividualNationalityDetails
 {
-    private IndividualContactInformation(Entity entity)
+    private IndividualNationalityDetails(Entity entity)
     {
-        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualContactInformation), IndividualConstants.LogicalName);
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualNationalityDetails), IndividualConstants.LogicalName);
         
-        Email = entity.GetAttributeValue<string>(IndividualConstants.Fields.ContactInformation.Email);
+        NationalityId = entity.GetAttributeValue<EntityReference>(IndividualConstants.Fields.NationalityInformation.Nationality);
         
-        MobileNumber = entity.GetAttributeValue<string>(IndividualConstants.Fields.ContactInformation.MobileNumber);
+        CountryOfResidence = entity.GetAttributeValue<EntityReference>(IndividualConstants.Fields.NationalityInformation.CountryOfResidence);
     }
 
-    private IndividualContactInformation(string? email, string? mobileNumber)
+    private IndividualNationalityDetails(EntityReference? nationalityId, EntityReference? countryOfResidence)
     {
-        Email = email;
-        MobileNumber = mobileNumber;
+        NationalityId = nationalityId;
+        CountryOfResidence = countryOfResidence;
     }
 
-    public string? Email { get; init; }
+    public EntityReference? NationalityId { get; init; }
 
-    public string? MobileNumber { get; init; }
+    public EntityReference? CountryOfResidence { get; init; }
     
-    public static IndividualContactInformation Create(Entity entity) => new(entity);
+    public static IndividualNationalityDetails Create(Entity entity) => new(entity);
 
-    public static IndividualContactInformation Create(string? email, string? mobileNumber)
-        => new(email, mobileNumber);
+    public static IndividualNationalityDetails Create(
+        EntityReference? nationalityId,
+        EntityReference? countryOfResidence)
+        => new(nationalityId, countryOfResidence);
     
     internal void UpdateEntity(Entity entity)
     {
-        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualContactInformation), IndividualConstants.LogicalName);
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualNationalityDetails), IndividualConstants.LogicalName);
 
         entity.AssignIfNotNull(
-            IndividualConstants.Fields.ContactInformation.Email, 
-            Email);
+            IndividualConstants.Fields.NationalityInformation.Nationality, 
+            NationalityId);
         
         entity.AssignIfNotNull(
-            IndividualConstants.Fields.ContactInformation.MobileNumber, 
-            MobileNumber);
+            IndividualConstants.Fields.NationalityInformation.CountryOfResidence, 
+            CountryOfResidence);
     }
 }

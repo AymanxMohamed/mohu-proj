@@ -1,4 +1,6 @@
-﻿using MOHU.Integration.Domain.Individuals.Entities;
+﻿using Common.Crm.Domain.Common.Factories;
+using MOHU.Integration.Domain.Individuals.Constants;
+using MOHU.Integration.Domain.Individuals.Entities;
 
 namespace MOHU.Integration.Domain.Individuals;
 
@@ -56,7 +58,7 @@ public class Individual
     public static Individual Create(Entity entity) => new(entity);
 
     public static Individual Create(
-        EntityReference id, 
+        EntityReference? id, 
         IndividualBasicInformation basicInformation, 
         IndividualBirthInformation birthInformation, 
         IndividualContactInformation contactInformation, 
@@ -64,7 +66,7 @@ public class Individual
         IndividualIntegrationDetails integrationDetails, 
         IndividualIdentification identification, 
         IndividualVisaDetails visaDetails) => new(
-        id,
+        id ?? EntityReferenceFactory.Create(IndividualConstants.LogicalName),
         basicInformation, 
         birthInformation,
         contactInformation, 

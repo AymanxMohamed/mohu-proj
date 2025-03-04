@@ -19,7 +19,7 @@ public class ElmApplicantContactInformation
         => new(applicant);
     
     
-    public IndividualContactInformation ToIndividualInformation() => IndividualContactInformation
+    internal IndividualContactInformation ToIndividualInformation() => IndividualContactInformation
         .Create(
             email: Email,
             mobileNumber: PhoneNumber.FullNumber);

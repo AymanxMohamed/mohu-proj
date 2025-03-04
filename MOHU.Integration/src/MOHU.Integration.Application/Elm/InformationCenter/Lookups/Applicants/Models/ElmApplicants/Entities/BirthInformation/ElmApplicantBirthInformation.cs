@@ -28,7 +28,7 @@ public class ElmApplicantBirthInformation
             applicant.AdDateOfBirthHij,
             applicant.AdAgeStageId);
     
-    public IndividualBirthInformation ToIndividualInformation() => IndividualBirthInformation
+    internal IndividualBirthInformation ToIndividualInformation() => IndividualBirthInformation
         .Create(
             placeOfBirth: PlaceOfBirth,
             birthDate: BirthDate,
