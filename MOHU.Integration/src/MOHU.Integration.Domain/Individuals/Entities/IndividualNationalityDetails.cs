@@ -12,10 +12,19 @@ public class IndividualContactInformation
         
         MobileNumber = entity.GetAttributeValue<string>(IndividualConstants.Fields.ContactInformation.MobileNumber);
     }
-    
+
+    private IndividualContactInformation(string? email, string? mobileNumber)
+    {
+        Email = email;
+        MobileNumber = mobileNumber;
+    }
+
     public string? Email { get; init; }
 
     public string? MobileNumber { get; init; }
     
     public static IndividualContactInformation Create(Entity entity) => new(entity);
+
+    public static IndividualContactInformation Create(string? email, string? mobileNumber)
+        => new(email, mobileNumber);
 }

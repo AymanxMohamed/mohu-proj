@@ -12,11 +12,21 @@ public class IndividualNationalityDetails
         
         CountryOfResidence = entity.GetAttributeValue<EntityReference>(IndividualConstants.Fields.NationalityInformation.CountryOfResidence);
     }
-    
+
+    private IndividualNationalityDetails(EntityReference? nationalityId, EntityReference? countryOfResidence)
+    {
+        NationalityId = nationalityId;
+        CountryOfResidence = countryOfResidence;
+    }
 
     public EntityReference? NationalityId { get; init; }
 
     public EntityReference? CountryOfResidence { get; init; }
     
     public static IndividualNationalityDetails Create(Entity entity) => new(entity);
+
+    public static IndividualNationalityDetails Create(
+        EntityReference? nationalityId,
+        EntityReference? countryOfResidence)
+        => new(nationalityId, countryOfResidence);
 }

@@ -17,7 +17,14 @@ public class IndividualIdentification
             .GetOptionSetValue(IndividualConstants.Fields.Identification.IdType)
             .ToEnum<IdTypeEnum>();
     }
-    
+
+    private IndividualIdentification(IdTypeEnum? idType, string? idNumber, string? passportNumber)
+    {
+        IdType = idType;
+        IdNumber = idNumber;
+        PassportNumber = passportNumber;
+    }
+
     public IdTypeEnum? IdType { get; init; }
 
     public string? IdNumber { get; init; }
@@ -25,4 +32,7 @@ public class IndividualIdentification
     public string? PassportNumber { get; init; }
     
     public static IndividualIdentification Create(Entity entity) => new(entity);
+
+    public static IndividualIdentification Create(IdTypeEnum? idType, string? idNumber, string? passportNumber)
+        => new(idType, idNumber, passportNumber);
 }

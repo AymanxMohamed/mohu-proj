@@ -16,10 +16,19 @@ public class IndividualIntegrationDetails
         
         ElmReferenceId = entity.GetAttributeValue<int>(IndividualConstants.Fields.IntegrationDetails.ElmReferenceId);
     }
-    
+
+    private IndividualIntegrationDetails(OriginEnum? originCode, int? elmReferenceId)
+    {
+        OriginCode = originCode;
+        ElmReferenceId = elmReferenceId;
+    }
+
     public OriginEnum? OriginCode { get; init; }
     
     public int? ElmReferenceId { get; init; }
     
     public static IndividualIntegrationDetails Create(Entity entity) => new(entity);
+
+    public static IndividualIntegrationDetails Create(OriginEnum? originCode, int? elmReferenceId) =>
+        new(originCode, elmReferenceId);
 }

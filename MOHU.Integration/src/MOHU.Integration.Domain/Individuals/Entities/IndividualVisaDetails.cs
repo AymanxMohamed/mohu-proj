@@ -10,9 +10,16 @@ public class IndividualVisaDetails
         
         HajVisaPermitStatus = entity.GetAttributeValue<string>(IndividualConstants.Fields.VisaDetails.HajVisaPermitStatus);
     }
-    
+
+    private IndividualVisaDetails(string? hajVisaPermitStatus)
+    {
+        HajVisaPermitStatus = hajVisaPermitStatus;
+    }
+
     public string? HajVisaPermitStatus { get; init; }
 
     
     public static IndividualVisaDetails Create(Entity entity) => new(entity);
+
+    public static IndividualVisaDetails Create(string? hajVisaPermitStatus) => new(hajVisaPermitStatus);
 }

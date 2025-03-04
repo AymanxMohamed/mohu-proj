@@ -55,4 +55,13 @@ public class IndividualBasicInformation
     public MartialStatusEnum? MartialStatus { get; init; }
     
     public static IndividualBasicInformation Create(Entity entity) => new(entity);
+
+    public static IndividualBasicInformation Create(
+        string? firstName,
+        string? lastName,
+        string? englishName,
+        string? arabicName,
+        GenderEnum? gender,
+        MartialStatusEnum? martialStatus) => 
+        new(firstName, lastName, englishName, arabicName, gender, martialStatus);
 }
