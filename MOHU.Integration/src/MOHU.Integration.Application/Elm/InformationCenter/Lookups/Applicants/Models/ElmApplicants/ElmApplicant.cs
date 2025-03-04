@@ -24,7 +24,6 @@ public partial class ElmApplicant
         BirthInformation = ElmApplicantBirthInformation.Create(applicant);
         ContactInformation = ElmApplicantContactInformation.Create(applicant);
         VisaDetails = ElmApplicantVisaDetails.Create(applicant);
-        
     }
     
     public int Id { get; init; }

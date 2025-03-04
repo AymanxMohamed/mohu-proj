@@ -4,7 +4,7 @@ public class ElmFilterRequest
 {
     private const int DefaultPage = 1;
 
-    private const int DefaultPageSize = 10;
+    public const int DefaultPageSize = 10;
 
     private ElmFilterRequest()
     {

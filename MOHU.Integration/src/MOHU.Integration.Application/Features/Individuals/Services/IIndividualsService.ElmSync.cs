@@ -49,11 +49,16 @@ public partial class IndividualsService
         
         _genericRepository.Commit();
 
+        if (elmApplicants.Count != ElmFilterRequest.DefaultPageSize)
+        {
+            return (NextPage: 0, Result: elmApplicants.Select(x => x.ToIndividual()).ToList());
+        }     
+        
         await configurationService
             .SetOrUpdateConfigurationValueAsync(
                 key: ElmConstants.ConfigurationKeys.SyncKeys.LastSyncedApplicantDataPage,
                 value: page.ToString());
-
+        
         return (NextPage: page + 1, Result: elmApplicants.Select(x => x.ToIndividual()).ToList());
     }
 
