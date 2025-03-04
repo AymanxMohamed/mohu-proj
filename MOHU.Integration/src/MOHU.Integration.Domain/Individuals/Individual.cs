@@ -1,46 +1,75 @@
-﻿using MOHU.Integration.Domain.Individuals.Enums;
+﻿using MOHU.Integration.Domain.Individuals.Entities;
 
 namespace MOHU.Integration.Domain.Individuals;
 
 public class Individual
 {
     private Individual(Entity entity)
+        : this(
+            entity.ToEntityReference(),
+            IndividualBasicInformation.Create(entity),
+            IndividualBirthInformation.Create(entity),
+            IndividualContactInformation.Create(entity),
+            IndividualNationalityDetails.Create(entity),
+            IndividualIntegrationDetails.Create(entity),
+            IndividualIdentification.Create(entity),
+            IndividualVisaDetails.Create(entity))
     {
-        Id = entity.ToEntityReference();
     }
-    
+
+    private Individual(
+        EntityReference id, 
+        IndividualBasicInformation basicInformation, 
+        IndividualBirthInformation birthInformation, 
+        IndividualContactInformation contactInformation, 
+        IndividualNationalityDetails nationalityDetails, 
+        IndividualIntegrationDetails integrationDetails, 
+        IndividualIdentification identification, 
+        IndividualVisaDetails visaDetails)
+    {
+        Id = id;
+        BasicInformation = basicInformation;
+        BirthInformation = birthInformation;
+        ContactInformation = contactInformation;
+        NationalityDetails = nationalityDetails;
+        IntegrationDetails = integrationDetails;
+        Identification = identification;
+        VisaDetails = visaDetails;
+    }
+
     public EntityReference Id { get; init; }
-
-    public DateTime BirthDate { get; init; }
-
-    public string? PlaceOfBirth { get; init; }
     
-    public string? HijriBirthDate { get; init; }
+    public IndividualBasicInformation BasicInformation { get; init; }
     
-    public string? Email { get; init; }
-
-    public string? MobileNumber { get; init; }
+    public IndividualBirthInformation BirthInformation { get; init; }
     
-    public IdTypeEnum IdType { get; init; }
-
-    public string? IdNumber { get; init; }
-
-    public string? PassportNumber { get; init; }
-
-    public EntityReference? NationalityId { get; init; }
-
-    public EntityReference? CountryOfResidence { get; init; }
+    public IndividualContactInformation ContactInformation { get; init; }
     
-    public string? HajVisaPermitStatus { get; init; }
+    public IndividualNationalityDetails NationalityDetails { get; init; }
     
-    public string? OriginCode { get; init; }
+    public IndividualIntegrationDetails IntegrationDetails { get; init; }
     
-    public int ElmReferenceId { get; init; }
+    public IndividualIdentification Identification { get; init; }
+    
+    public IndividualVisaDetails VisaDetails { get; init; }
 
-    
+    public static Individual Create(Entity entity) => new(entity);
 
-    public static Individual Create(Entity entity)
-    {
-        return new Individual(entity);
-    }
+    public static Individual Create(
+        EntityReference id, 
+        IndividualBasicInformation basicInformation, 
+        IndividualBirthInformation birthInformation, 
+        IndividualContactInformation contactInformation, 
+        IndividualNationalityDetails nationalityDetails, 
+        IndividualIntegrationDetails integrationDetails, 
+        IndividualIdentification identification, 
+        IndividualVisaDetails visaDetails) => new(
+        id,
+        basicInformation, 
+        birthInformation,
+        contactInformation, 
+        nationalityDetails,
+        integrationDetails, 
+        identification,
+        visaDetails);
 }

@@ -1,7 +1,5 @@
-﻿using Common.Crm.Domain.Common.Extensions;
-using Common.Crm.Domain.Common.OptionSets.Extensions;
+﻿using Common.Crm.Domain.Common.OptionSets.Extensions;
 using MOHU.Integration.Domain.Individuals.Constants;
-using MOHU.Integration.Domain.Individuals.Enums;
 
 namespace MOHU.Integration.Domain.Individuals.Entities;
 
@@ -27,7 +25,23 @@ public class IndividualBasicInformation
             .GetOptionSetValue(IndividualConstants.Fields.BasicInformation.MartialStatus)
             .ToEnum<MartialStatusEnum>();
     }
-    
+
+    private IndividualBasicInformation(
+        string? firstName, 
+        string? lastName, 
+        string? englishName, 
+        string? arabicName, 
+        GenderEnum? gender, 
+        MartialStatusEnum? martialStatus)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        EnglishName = englishName;
+        ArabicName = arabicName;
+        Gender = gender;
+        MartialStatus = martialStatus;
+    }
+
     public string? FirstName { get; init; }
 
     public string? LastName { get; init; }
@@ -36,9 +50,9 @@ public class IndividualBasicInformation
     
     public string? ArabicName { get; init; }
     
-    public GenderEnum Gender { get; init; }
+    public GenderEnum? Gender { get; init; }
     
-    public MartialStatusEnum MartialStatus { get; init; }
+    public MartialStatusEnum? MartialStatus { get; init; }
     
-    public static IndividualBasicInformation FromEntity(Entity entity) => new(entity);
+    public static IndividualBasicInformation Create(Entity entity) => new(entity);
 }

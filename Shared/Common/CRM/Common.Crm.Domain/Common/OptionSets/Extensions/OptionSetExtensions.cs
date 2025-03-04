@@ -2,7 +2,7 @@
 
 public static class OptionSetExtensions
 {
-    public static TEnum ToEnum<TEnum>(this OptionSetValue? optionSetValue) 
+    public static TEnum? ToEnum<TEnum>(this OptionSetValue? optionSetValue) 
         where TEnum : struct, Enum
     {
         if (optionSetValue == null)
