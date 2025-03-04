@@ -14,4 +14,11 @@
       <PackageReference Include="Throw" Version="1.4.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\Common\CRM\Common.Crm.Application\Common.Crm.Application.csproj" />
+      <ProjectReference Include="..\Shared\Common\CRM\Common.Crm.Domain\Common.Crm.Domain.csproj" />
+      <ProjectReference Include="..\Shared\Common\CRM\Common.Crm.Infrastructure\Common.Crm.Infrastructure.csproj" />
+      <ProjectReference Include="..\Shared\Common\CRM\Common.Crm.Presentation\Common.Crm.Presentation.csproj" />
+    </ItemGroup>
+
 </Project>

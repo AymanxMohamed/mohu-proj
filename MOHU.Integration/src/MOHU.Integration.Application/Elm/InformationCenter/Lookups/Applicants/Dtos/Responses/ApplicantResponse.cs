@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Domain.Individuals.Enums;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
+using MOHU.Integration.Domain.Individuals.Enums;
 using Individual = MOHU.Integration.Domain.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
@@ -134,21 +135,6 @@ public class ApplicantResponse
     public string? AdGroupNameEn { get; set; }
     
     public string? AdHajVisaPermitStatus { get; set; }
-
-    public Individual ToIndividual()
-    {
-        return new Individual
-        {
-            FirstName = AdFirstNameEn,
-            LastName = AdFamilyNameEn,
-            EnglishName = AdFullNameEn,
-            ArabicName = AdFullNameAr,
-            ElmReferenceId = Id,
-            BirthDate = AdDateOfBirth,
-            PassportNumber = AdPassportNo,
-            HijriBirthDate = AdDateOfBirthHij.ToString(),
-            MobileNumber = $"+{AdMobileCountryCode}{AdMobileNumber}",
-            Email = AdEmail
-        };
-    }
+    
+    public ElmApplicant ToElmApplicant() => ElmApplicant.Create(this);
 }

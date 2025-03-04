@@ -6,7 +6,7 @@ public class Individual
 {
     private Individual(Entity entity)
     {
-        Id = new EntityReference(entity.LogicalName, entity.Id);
+        Id = entity.ToEntityReference();
     }
     
     public EntityReference Id { get; init; }

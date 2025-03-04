@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Common\CRM\Common.Crm.Application\Common.Crm.Application.csproj" />
     <ProjectReference Include="..\MOHU.Integration.Contracts\MOHU.Integration.Contracts.csproj" />
   </ItemGroup>
 

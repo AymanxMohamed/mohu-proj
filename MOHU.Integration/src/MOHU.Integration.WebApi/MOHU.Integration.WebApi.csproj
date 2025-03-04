@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Common\CRM\Common.Crm.Presentation\Common.Crm.Presentation.csproj" />
     <ProjectReference Include="..\..\..\VirtualEntity\VirtualEntity.Poc\VirtualEntity.Poc.csproj" />
     <ProjectReference Include="..\MOHU.Integration.Application\MOHU.Integration.Application.csproj" />
     <ProjectReference Include="..\MOHU.Integration.Contracts\MOHU.Integration.Contracts.csproj" />
