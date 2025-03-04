@@ -4,14 +4,14 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.
 
 public class ElmApplicantCitizenId : ElmApplicantId
 {
-    protected ElmApplicantCitizenId(
+    private ElmApplicantCitizenId(
         string number,
         DateTime? issuanceDate,
         DateTime? expiryDate,
         string? source,
         long? issuanceDateHij,
         long? expiryDateHij) 
-        : base(number, issuanceDate, expiryDate)
+        : base(number, issuanceDate, expiryDate, Contracts.Enum.IdType.NationalIdentity)
     {
         Source = source;
         IssuanceDateHij = issuanceDateHij;

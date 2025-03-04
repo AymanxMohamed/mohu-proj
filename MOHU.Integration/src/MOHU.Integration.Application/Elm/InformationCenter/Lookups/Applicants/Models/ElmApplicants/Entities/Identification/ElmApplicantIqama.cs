@@ -9,7 +9,7 @@ public class ElmApplicantIqama : ElmApplicantId
         DateTime? issuanceDate,
         DateTime? expiryDate,
         string? issuanceBy) 
-        : base(number, issuanceDate, expiryDate)
+        : base(number, issuanceDate, expiryDate, Contracts.Enum.IdType.Accommodation)
     {
         IssuanceBy = issuanceBy;
     }

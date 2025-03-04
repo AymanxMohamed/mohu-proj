@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+using MOHU.Integration.Domain.Individuals.Entities;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.BirthInformation;
 
@@ -26,4 +27,10 @@ public class ElmApplicantBirthInformation
             applicant.AdDateOfBirth,
             applicant.AdDateOfBirthHij,
             applicant.AdAgeStageId);
+    
+    public IndividualBirthInformation ToIndividualInformation() => IndividualBirthInformation
+        .Create(
+            placeOfBirth: PlaceOfBirth,
+            birthDate: BirthDate,
+            hijriBirthDate:DateOfBirthHij.ToString());
 }

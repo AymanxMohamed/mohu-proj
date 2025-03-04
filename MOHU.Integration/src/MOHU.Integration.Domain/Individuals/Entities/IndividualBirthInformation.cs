@@ -15,14 +15,14 @@ public class IndividualBirthInformation
         HijriBirthDate = entity.GetAttributeValue<string>(IndividualConstants.Fields.BirthInformation.HijriBirthDate);
     }
 
-    private IndividualBirthInformation(DateTime birthDate, string? placeOfBirth, string? hijriBirthDate)
+    private IndividualBirthInformation(DateTime? birthDate, string? placeOfBirth, string? hijriBirthDate)
     {
         BirthDate = birthDate;
         PlaceOfBirth = placeOfBirth;
         HijriBirthDate = hijriBirthDate;
     }
 
-    public DateTime BirthDate { get; init; }
+    public DateTime? BirthDate { get; init; }
 
     public string? PlaceOfBirth { get; init; }
     
@@ -30,7 +30,7 @@ public class IndividualBirthInformation
     
     public static IndividualBirthInformation Create(Entity entity) => new(entity);
 
-    public static IndividualBirthInformation Create(DateTime birthDate, string? placeOfBirth, string? hijriBirthDate)
+    public static IndividualBirthInformation Create(DateTime? birthDate, string? placeOfBirth, string? hijriBirthDate)
         => new(birthDate, placeOfBirth, hijriBirthDate);
     
     internal void UpdateEntity(Entity entity)

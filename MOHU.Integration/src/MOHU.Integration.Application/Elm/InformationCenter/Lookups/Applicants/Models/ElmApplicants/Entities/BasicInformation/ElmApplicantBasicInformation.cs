@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+using MOHU.Integration.Domain.Individuals.Entities;
 using MOHU.Integration.Domain.Individuals.Enums;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.BasicInformation;
@@ -21,4 +22,13 @@ public class ElmApplicantBasicInformation
     public MartialStatusEnum MartialStatus { get; init; }
     
     public static ElmApplicantBasicInformation Create(ApplicantResponse applicant) => new(applicant);
+
+    internal IndividualBasicInformation ToIndividualInformation() => IndividualBasicInformation
+        .Create(
+            firstName: EnglishName.FirstName,
+            lastName: EnglishName.FamilyName,
+            englishName: EnglishName.FullName,
+            arabicName: ArabicName.FullName,
+            gender: Gender,
+            martialStatus: MartialStatus);
 }

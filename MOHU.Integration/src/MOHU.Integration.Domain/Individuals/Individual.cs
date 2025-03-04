@@ -1,5 +1,4 @@
-﻿using Common.Crm.Domain.Common.Factories;
-using MOHU.Integration.Domain.Individuals.Entities;
+﻿using MOHU.Integration.Domain.Individuals.Entities;
 
 namespace MOHU.Integration.Domain.Individuals;
 

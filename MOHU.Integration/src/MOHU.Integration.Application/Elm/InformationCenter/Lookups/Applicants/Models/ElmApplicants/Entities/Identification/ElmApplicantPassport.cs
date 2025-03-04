@@ -10,7 +10,7 @@ public class ElmApplicantPassport : ElmApplicantId
         DateTime? expiryDate,
         string? issuancePlace,
         string? passportType) 
-        : base(number, issuanceDate, expiryDate)
+        : base(number, issuanceDate, expiryDate, Contracts.Enum.IdType.Passport)
     {
         IssuancePlace = issuancePlace;
         PassportType = passportType;
