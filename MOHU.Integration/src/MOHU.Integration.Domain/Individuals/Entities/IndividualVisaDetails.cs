@@ -22,4 +22,13 @@ public class IndividualVisaDetails
     public static IndividualVisaDetails Create(Entity entity) => new(entity);
 
     public static IndividualVisaDetails Create(string? hajVisaPermitStatus) => new(hajVisaPermitStatus);
+    
+    internal void UpdateEntity(Entity entity)
+    {
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualVisaDetails), IndividualConstants.LogicalName);
+
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.VisaDetails.HajVisaPermitStatus, 
+            HajVisaPermitStatus);
+    }
 }

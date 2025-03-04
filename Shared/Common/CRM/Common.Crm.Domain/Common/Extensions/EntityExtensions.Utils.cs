@@ -25,7 +25,7 @@
             string objectToCreate,
             string logicalName)
         {
-            if (entity.LogicalName != logicalName)
+            if (entity is null || entity.LogicalName != logicalName)
             {
                 throw new InvalidOperationException($"{objectToCreate} can be created only from an ${logicalName}");
             }

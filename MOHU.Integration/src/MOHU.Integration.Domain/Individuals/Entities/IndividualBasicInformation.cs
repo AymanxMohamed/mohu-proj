@@ -64,4 +64,24 @@ public class IndividualBasicInformation
         GenderEnum? gender,
         MartialStatusEnum? martialStatus) => 
         new(firstName, lastName, englishName, arabicName, gender, martialStatus);
+    
+    internal void UpdateEntity(Entity entity)
+    {
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualBasicInformation), IndividualConstants.LogicalName);
+
+        entity.AssignIfNotNull(IndividualConstants.Fields.BasicInformation.FirstName, FirstName);
+        entity.AssignIfNotNull(IndividualConstants.Fields.BasicInformation.LastName, LastName);
+        entity.AssignIfNotNull(IndividualConstants.Fields.BasicInformation.EnglishName, EnglishName);
+        entity.AssignIfNotNull(IndividualConstants.Fields.BasicInformation.ArabicName, ArabicName);
+
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.BasicInformation.Gender, 
+            Gender.ToOptionSetValue()
+        );
+
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.BasicInformation.MartialStatus, 
+            MartialStatus.ToOptionSetValue()
+        );
+    }
 }
