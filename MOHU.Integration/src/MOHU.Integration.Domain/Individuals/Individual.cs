@@ -4,28 +4,13 @@ namespace MOHU.Integration.Domain.Individuals;
 
 public class Individual
 {
-    public Individual()
-    {
-    }
-
     private Individual(Entity entity)
     {
+        Id = new EntityReference(entity.LogicalName, entity.Id);
     }
     
-    public Guid Id { get; init; }
+    public EntityReference Id { get; init; }
 
-    public string? FirstName { get; init; }
-
-    public string? LastName { get; init; }
-    
-    public string? EnglishName { get; init; }
-    
-    public string? ArabicName { get; init; }
-    
-    public GenderEnum Gender { get; init; }
-    
-    public MartialStatusEnum MartialStatus { get; init; }
-    
     public DateTime BirthDate { get; init; }
 
     public string? PlaceOfBirth { get; init; }
@@ -42,9 +27,9 @@ public class Individual
 
     public string? PassportNumber { get; init; }
 
-    public Guid? NationalityId { get; init; }
+    public EntityReference? NationalityId { get; init; }
 
-    public Guid? CountryOfResidence { get; init; }
+    public EntityReference? CountryOfResidence { get; init; }
     
     public string? HajVisaPermitStatus { get; init; }
     
@@ -56,6 +41,6 @@ public class Individual
 
     public static Individual Create(Entity entity)
     {
-        return new Individual();
+        return new Individual(entity);
     }
 }
