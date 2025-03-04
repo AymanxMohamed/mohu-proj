@@ -4,9 +4,10 @@ using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clie
 namespace MOHU.Integration.WebApi.Elm.InformationCenter.ProxiesControllers;
 
 [Route("api/elm/information-center/proxies/lookups")]
+[ApiController]
 public class LookupsProxyController(IElmInformationCenterApplicantDataClient client) : ControllerBase
 {
-    [HttpGet("applicants")]
+    [HttpPost("applicants")]
     public IActionResult GetApplicantData(ElmFilterRequest? filterRequest)
     {
         var applicants = client.GetAll(filterRequest).ToValueOrException();
