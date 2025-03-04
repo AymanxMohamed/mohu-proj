@@ -29,4 +29,17 @@ public class IndividualNationalityDetails
         EntityReference? nationalityId,
         EntityReference? countryOfResidence)
         => new(nationalityId, countryOfResidence);
+    
+    internal void UpdateEntity(Entity entity)
+    {
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualNationalityDetails), IndividualConstants.LogicalName);
+
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.NationalityInformation.Nationality, 
+            NationalityId);
+        
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.NationalityInformation.CountryOfResidence, 
+            CountryOfResidence);
+    }
 }

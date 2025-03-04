@@ -31,4 +31,18 @@ public class IndividualIntegrationDetails
 
     public static IndividualIntegrationDetails Create(OriginEnum? originCode, int? elmReferenceId) =>
         new(originCode, elmReferenceId);
+    
+    internal void UpdateEntity(Entity entity)
+    {
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualNationalityDetails), IndividualConstants.LogicalName);
+
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.IntegrationDetails.OriginCode, 
+            OriginCode.ToOptionSetValue()
+        );
+        
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.IntegrationDetails.ElmReferenceId, 
+            ElmReferenceId);
+    }
 }

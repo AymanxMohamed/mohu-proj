@@ -32,4 +32,21 @@ public class IndividualBirthInformation
 
     public static IndividualBirthInformation Create(DateTime birthDate, string? placeOfBirth, string? hijriBirthDate)
         => new(birthDate, placeOfBirth, hijriBirthDate);
+    
+    internal void UpdateEntity(Entity entity)
+    {
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualBirthInformation), IndividualConstants.LogicalName);
+
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.BirthInformation.BirthDate, 
+            BirthDate);
+        
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.BirthInformation.PlaceOfBirth, 
+            PlaceOfBirth);
+        
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.BirthInformation.HijriBirthDate, 
+            HijriBirthDate);
+    }
 }

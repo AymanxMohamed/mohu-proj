@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Domain.Individuals.Entities;
+﻿using Common.Crm.Domain.Common.Factories;
+using MOHU.Integration.Domain.Individuals.Entities;
 
 namespace MOHU.Integration.Domain.Individuals;
 
@@ -72,4 +73,19 @@ public class Individual
         integrationDetails, 
         identification,
         visaDetails);
+
+    public Entity ToEntity()
+    {
+        var entity = Id.ToEntity();
+        
+        BasicInformation.UpdateEntity(entity);
+        BirthInformation.UpdateEntity(entity);
+        ContactInformation.UpdateEntity(entity);
+        NationalityDetails.UpdateEntity(entity);
+        IntegrationDetails.UpdateEntity(entity);
+        Identification.UpdateEntity(entity);
+        VisaDetails.UpdateEntity(entity);
+
+        return entity;
+    }
 }

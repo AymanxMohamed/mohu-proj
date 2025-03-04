@@ -27,4 +27,17 @@ public class IndividualContactInformation
 
     public static IndividualContactInformation Create(string? email, string? mobileNumber)
         => new(email, mobileNumber);
+    
+    internal void UpdateEntity(Entity entity)
+    {
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualContactInformation), IndividualConstants.LogicalName);
+
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.ContactInformation.Email, 
+            Email);
+        
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.ContactInformation.MobileNumber, 
+            MobileNumber);
+    }
 }

@@ -35,4 +35,18 @@ public class IndividualIdentification
 
     public static IndividualIdentification Create(IdTypeEnum? idType, string? idNumber, string? passportNumber)
         => new(idType, idNumber, passportNumber);
+    
+    internal void UpdateEntity(Entity entity)
+    {
+        entity.EnsureCanCreateFrom(objectToCreate: nameof(IndividualIdentification), IndividualConstants.LogicalName);
+
+        entity.AssignIfNotNull(
+                IndividualConstants.Fields.Identification.PassportNumber, 
+                PassportNumber);
+
+        entity.AssignIfNotNull(
+            IndividualConstants.Fields.Identification.IdType, 
+            IdType.ToOptionSetValue()
+        );
+    }
 }
