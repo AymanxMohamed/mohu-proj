@@ -18,6 +18,17 @@
 
             entity[entity.GetPrimaryKey()] = entity.Id;
         }
-        
+
+
+        public static void EnsureCanCreateFrom(
+            this Entity entity, 
+            string objectToCreate,
+            string logicalName)
+        {
+            if (entity.LogicalName != logicalName)
+            {
+                throw new InvalidOperationException($"{objectToCreate} can be created only from an ${logicalName}");
+            }
+        }
     }
 }
