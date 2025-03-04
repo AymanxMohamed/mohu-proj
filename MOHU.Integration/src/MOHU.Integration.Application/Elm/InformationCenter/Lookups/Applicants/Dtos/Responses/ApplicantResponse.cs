@@ -1,4 +1,4 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Enums;
+﻿using MOHU.Integration.Domain.Individuals.Enums;
 using Individual = MOHU.Integration.Domain.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
@@ -83,9 +83,9 @@ public class ApplicantResponse
     
     public DateTime? AdPermitDate { get; set; }
     
-    public ElmMartialStatus AdMaritalStatusId { get; set; }
+    public MartialStatusEnum AdMaritalStatusId { get; set; }
     
-    public ElmGender AdGender { get; set; }
+    public GenderEnum AdGender { get; set; }
     
     public int AdEmbassyId { get; set; }
     
@@ -147,7 +147,7 @@ public class ApplicantResponse
             BirthDate = AdDateOfBirth,
             PassportNumber = AdPassportNo,
             HijriBirthDate = AdDateOfBirthHij.ToString(),
-            PhoneNumber = $"+{AdMobileCountryCode}{AdMobileNumber}",
+            MobileNumber = $"+{AdMobileCountryCode}{AdMobileNumber}",
             Email = AdEmail
         };
     }

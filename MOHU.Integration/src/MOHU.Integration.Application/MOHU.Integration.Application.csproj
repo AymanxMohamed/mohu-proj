@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Elm\InformationCenter\Lookups\Applicants\Models\ElmApplicants\Enums\" />
     <Folder Include="Nusuk\Tickets\Dtos\" />
   </ItemGroup>
 

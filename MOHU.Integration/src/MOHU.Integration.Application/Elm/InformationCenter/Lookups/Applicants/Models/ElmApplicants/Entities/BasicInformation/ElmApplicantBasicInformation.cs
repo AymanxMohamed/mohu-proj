@@ -1,5 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Enums;
+using MOHU.Integration.Domain.Individuals.Enums;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.BasicInformation;
 
@@ -16,9 +16,9 @@ public class ElmApplicantBasicInformation
     public ElmApplicantName EnglishName { get; init; }
     public ElmApplicantName ArabicName { get; init; }
 
-    public ElmGender Gender { get; init; }
+    public GenderEnum Gender { get; init; }
     
-    public ElmMartialStatus MartialStatus { get; init; }
+    public MartialStatusEnum MartialStatus { get; init; }
     
     public static ElmApplicantBasicInformation Create(ApplicantResponse applicant) => new(applicant);
 }

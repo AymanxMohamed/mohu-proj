@@ -1,4 +1,4 @@
-﻿namespace MOHU.Integration.Domain.Individuals.Constants;
+﻿namespace MOHU.Integration.Domain.Individuals.Enums;
 
 public enum OriginEnum
 {
