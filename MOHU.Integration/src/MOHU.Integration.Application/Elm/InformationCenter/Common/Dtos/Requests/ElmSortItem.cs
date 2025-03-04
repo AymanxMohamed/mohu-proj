@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 
 public class ElmSortItem
@@ -14,9 +16,11 @@ public class ElmSortItem
         PropertyName = propertyName;
         OrderDir = orderDir;
     }
-
+    
+    [JsonProperty("propertyName")]
     public string PropertyName { get; set; } = null!;
 
+    [JsonProperty("orderDir")]
     public string OrderDir { get; set; } = null!;
 
     public static ElmSortItem Create(string propertyName, string orderDir = Ascending)

@@ -16,7 +16,9 @@ internal class ElmInformationCenterApplicantDataClient(IElmInformationCenterClie
     {
         request ??= ElmFilterRequest.Create();
         
-        request.AddSortColumn(ElmSortItem.CreateDesc(nameof(ApplicantResponse.Timestamp).ToLower()));
+        request
+            .AddSortColumn(ElmSortItem.CreateDesc(nameof(ApplicantResponse.Timestamp).ToLower()))
+            .AddDefaultPaginationIfNull();
         
         return GetLookups<List<ApplicantResponse>>(request)
                 .Then(x => x.Select(y => y.ToElmApplicant()).ToList());

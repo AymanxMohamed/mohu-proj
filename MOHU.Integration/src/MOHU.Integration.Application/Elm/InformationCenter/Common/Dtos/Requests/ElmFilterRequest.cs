@@ -1,4 +1,6 @@
-﻿namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
+﻿using Newtonsoft.Json;
+
+namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 
 public class ElmFilterRequest
 {
@@ -32,20 +34,28 @@ public class ElmFilterRequest
         List<ElmSortItem>? sortCriteria = null,
         List<FilterItem>? filterList = null)
     {
-        Limit = limit;
-        Offset = offset;
+        Limit = limit ?? DefaultPageSize;
+        Offset = offset ?? (DefaultPage - 1) * DefaultPageSize;
         SortColumn = sortColumn;
         SortCriteria = sortCriteria ?? [];
         FilterList = filterList ?? [];
     }
     
+    [JsonProperty("limit")]
     public int? Limit { get; set; }
+    
+    [JsonProperty("offset")]
     public int? Offset { get; set; }
+    
+    [JsonProperty("sortColumn")]
     public ElmSortItem? SortColumn { get; set; }
-
+    
+    [JsonProperty("filterList")]
     public List<FilterItem> FilterList { get; set; } = [];
-
+    
+    [JsonProperty("sortCriteria")]
     public List<ElmSortItem> SortCriteria { get; set; } = [];
+    
 
     public static ElmFilterRequest Create(
         int page = DefaultPage,
@@ -55,5 +65,16 @@ public class ElmFilterRequest
         List<FilterItem>? filterList = null) =>
         new(page: page, pageSize, sortColumn, sortCriteria, filterList);
 
-    public void AddSortColumn(ElmSortItem sortColumn) => SortColumn = sortColumn;
+    public ElmFilterRequest AddSortColumn(ElmSortItem sortColumn)
+    {
+        SortColumn ??= sortColumn;
+        return this;
+    }
+
+    public ElmFilterRequest AddDefaultPaginationIfNull()
+    {
+        Limit ??= DefaultPageSize;
+        Offset ??= (DefaultPage - 1) * DefaultPageSize;
+        return this;
+    }
 }
