@@ -30,7 +30,7 @@ public partial class IndividualsService
     private async Task<(int NextPage, List<Individual> Result)> SyncPageAsync(int page)
     {
         var elmApplicants = client
-            .GetAll(ElmFilterRequest.Create(page: page++))
+            .GetAll(ElmFilterRequest.Create(page: page))
             .ToValueOrException();
         
         if (elmApplicants.Count == 0)
