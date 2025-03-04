@@ -12,7 +12,7 @@ public static class DependencyInjection
     
     private static IServiceCollection AddApplicantData(this IServiceCollection services)
     {
-        // return services.AddScoped<IElmInformationCenterApplicantDataClient, ElmInformationCenterApplicantDataClient>();
-        return services.AddScoped<IElmInformationCenterApplicantDataClient, ElmInformationCenterApplicantDataFileClient>();
+        return services.AddScoped<IElmInformationCenterApplicantDataClient, ElmInformationCenterApplicantDataClient>();
+        // return services.AddScoped<IElmInformationCenterApplicantDataClient, ElmInformationCenterApplicantDataFileClient>();
     }
 }

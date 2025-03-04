@@ -12,7 +12,13 @@ internal class ElmInformationCenterApplicantDataClient(IElmInformationCenterClie
             client), 
         IElmInformationCenterApplicantDataClient
 {
-    public ErrorOr<List<ElmApplicant>> GetAll(ElmFilterRequest? request = null) => 
-        GetLookups<List<ApplicantResponse>>(request)
-            .Then(x => x.Select(y => y.ToElmApplicant()).ToList());
+    public ErrorOr<List<ElmApplicant>> GetAll(ElmFilterRequest? request = null)
+    {
+        request ??= ElmFilterRequest.Create();
+        
+        request.AddSortColumn(ElmSortItem.CreateDesc(nameof(ApplicantResponse.Timestamp).ToLower()));
+        
+        return GetLookups<List<ApplicantResponse>>(request)
+                .Then(x => x.Select(y => y.ToElmApplicant()).ToList());
+    }
 }

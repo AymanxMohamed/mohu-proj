@@ -1,13 +1,14 @@
-﻿using MOHU.Integration.Application.Features.Individuals.Services;
-using MOHU.Integration.Domain.Individuals;
+﻿using MOHU.Integration.Application.Features.Individuals.Services;   
 
 namespace MOHU.Integration.WebApi.Features.Individuals.Controllers;
 
-[Route("api/individuals")]
 [ApiController]
-public class IndividualsControllers(IIndividualsService service) : BaseController
+[Route("api/individuals")]
+public class IndividualsControllers(IIndividualsService service) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(typeof(ResponseMessage<List<Individual>>),StatusCodes.Status200OK)]
-    public async Task<ResponseMessage<List<Individual>>> Create() => Ok(await service.SyncWithElm());
+    public async Task<IActionResult> Create()
+    {
+        return Ok(await service.SyncWithElm());
+    }
 }

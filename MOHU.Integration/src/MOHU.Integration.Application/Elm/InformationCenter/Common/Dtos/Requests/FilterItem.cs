@@ -2,6 +2,11 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Request
 
 public class FilterItem
 {
+    public FilterItem()
+    {
+        
+    }
+    
     private FilterItem(string propertyName, string operation, object propertyValue)
     {
         PropertyName = propertyName;
@@ -9,11 +14,11 @@ public class FilterItem
         PropertyValue = propertyValue;
     }
 
-    public string PropertyName { get; set; }
+    public string PropertyName { get; set; } = null!;
     
-    public string Operation { get; set; } 
+    public string Operation { get; set; } = null!;
     
-    public object PropertyValue { get; set; }
+    public object PropertyValue { get; set; } = null!;
     
     public static FilterItem Create(string propertyName, string operation, object propertyValue)
         => new(propertyName, operation, propertyValue);

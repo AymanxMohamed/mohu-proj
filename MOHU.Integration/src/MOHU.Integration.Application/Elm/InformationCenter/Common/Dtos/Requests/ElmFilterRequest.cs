@@ -6,15 +6,15 @@ public class ElmFilterRequest
 
     public const int DefaultPageSize = 10;
 
-    private ElmFilterRequest()
-    {
+    public ElmFilterRequest()
+    {   
     }
     
     private ElmFilterRequest(
         int page = DefaultPage,
         int pageSize = DefaultPageSize,
-        SortItem? sortColumn = null,
-        List<SortItem>? sortCriteria = null,
+        ElmSortItem? sortColumn = null,
+        List<ElmSortItem>? sortCriteria = null,
         List<FilterItem>? filterList = null)
         : this(
             limit: pageSize, 
@@ -28,8 +28,8 @@ public class ElmFilterRequest
     private ElmFilterRequest(
         int? limit = null,  
         int? offset = null, 
-        SortItem? sortColumn = null,
-        List<SortItem>? sortCriteria = null,
+        ElmSortItem? sortColumn = null,
+        List<ElmSortItem>? sortCriteria = null,
         List<FilterItem>? filterList = null)
     {
         Limit = limit;
@@ -41,17 +41,19 @@ public class ElmFilterRequest
     
     public int? Limit { get; set; }
     public int? Offset { get; set; }
-    public SortItem? SortColumn { get; set; }
+    public ElmSortItem? SortColumn { get; set; }
 
     public List<FilterItem> FilterList { get; set; } = [];
 
-    public List<SortItem> SortCriteria { get; set; } = [];
+    public List<ElmSortItem> SortCriteria { get; set; } = [];
 
     public static ElmFilterRequest Create(
         int page = DefaultPage,
         int pageSize = DefaultPageSize,
-        SortItem? sortColumn = null,
-        List<SortItem>? sortCriteria = null,
+        ElmSortItem? sortColumn = null,
+        List<ElmSortItem>? sortCriteria = null,
         List<FilterItem>? filterList = null) =>
         new(page: page, pageSize, sortColumn, sortCriteria, filterList);
+
+    public void AddSortColumn(ElmSortItem sortColumn) => SortColumn = sortColumn;
 }
