@@ -2,10 +2,11 @@
 
 public static partial class IndividualConstants
 {
-    public const string LogicalName = "contact";
-
     public static partial class Fields
     {
-        public const string Id = $"{LogicalName}{nameof(Id)}";
+        public static class VisaDetails
+        {
+            public const string HajVisaPermitStatus = "ldv_hajvisapermitstatus";
+        }
     }
 }

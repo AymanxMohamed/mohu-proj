@@ -27,13 +27,13 @@ public class ElmApplicant
 
     public ElmApplicantBasicInformation BasicInformation { get; init; }
     
-    public ElmApplicantIdentification Identification { get; init; }
-    
-    public ElmApplicantNationality Nationality { get; init; }
-    
     public ElmApplicantBirthInformation BirthInformation { get; init; }
     
     public ElmApplicantContactInformation ContactInformation { get; init; }
+    
+    public ElmApplicantIdentification Identification { get; init; }
+    
+    public ElmApplicantNationality Nationality { get; init; }
     
     public ElmApplicantVisaDetails VisaDetails { get; init; }
     
