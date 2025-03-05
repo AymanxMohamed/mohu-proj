@@ -2,6 +2,7 @@
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Contracts.Companies.Enums;
 using MOHU.Integration.Domain.Features.Companies;
+using MOHU.Integration.Domain.Features.Companies.Constants;
 
 namespace MOHU.Integration.Contracts.Companies.Dtos;
 

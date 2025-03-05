@@ -1,7 +1,7 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Constants;
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
-using Individual = MOHU.Integration.Domain.Individuals.Individual;
+using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Features.Individuals.Services;
 

@@ -4,7 +4,7 @@ using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Responses;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 using Newtonsoft.Json;
-using Individual = MOHU.Integration.Domain.Individuals.Individual;
+using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
 

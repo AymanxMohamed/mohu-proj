@@ -5,9 +5,9 @@ using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Mode
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.Identification;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.Nationality;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.VisaDetails;
-using MOHU.Integration.Domain.Individuals.Entities;
-using MOHU.Integration.Domain.Individuals.Enums;
-using Individual = MOHU.Integration.Domain.Individuals.Individual;
+using MOHU.Integration.Domain.Features.Individuals.Entities;
+using MOHU.Integration.Domain.Features.Individuals.Enums;
+using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 
@@ -44,7 +44,7 @@ public partial class ElmApplicant
 
     public static implicit operator ElmApplicant(ApplicantResponse applicant) => new(applicant);
 
-    public Entity ToEntity(EntityReference? id = null) => ToIndividual(id).ToEntity();
+    public Entity ToEntity(EntityReference? id = null) => ToIndividual(id).ToCrmEntity();
 
     public Individual ToIndividual(EntityReference? id = null) =>
         Individual.Create(

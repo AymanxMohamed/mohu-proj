@@ -1,4 +1,4 @@
-﻿namespace MOHU.Integration.Domain.Features.Companies;
+﻿namespace MOHU.Integration.Domain.Features.Companies.Constants;
 
 public static class CompaniesConstants
 {

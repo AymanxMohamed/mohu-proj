@@ -1,5 +1,5 @@
 ﻿using MOHU.Integration.Contracts.Enum;
-using MOHU.Integration.Domain.Individuals.Enums;
+using MOHU.Integration.Domain.Features.Individuals.Enums;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.Identification;
 

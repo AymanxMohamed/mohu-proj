@@ -1,6 +1,6 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
-using MOHU.Integration.Domain.Individuals.Enums;
-using Individual = MOHU.Integration.Domain.Individuals.Individual;
+using MOHU.Integration.Domain.Features.Individuals.Enums;
+using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
 
@@ -136,7 +136,7 @@ public class ApplicantResponse
     
     public string? AdHajVisaPermitStatus { get; set; }
     
-    public Entity ToEntity(EntityReference? id = null) => ToIndividual(id).ToEntity();
+    public Entity ToEntity(EntityReference? id = null) => ToIndividual(id).ToCrmEntity();
     
     public Individual ToIndividual(EntityReference? id = null) => ToElmApplicant().ToIndividual(id);
     

@@ -1,5 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
-using MOHU.Integration.Domain.Individuals.Entities;
+using MOHU.Integration.Domain.Features.Individuals.Entities;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.ContactInformation;
 

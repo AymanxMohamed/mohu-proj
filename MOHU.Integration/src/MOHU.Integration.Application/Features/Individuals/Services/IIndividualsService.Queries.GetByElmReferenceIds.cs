@@ -1,6 +1,6 @@
 ﻿using Common.Crm.Infrastructure.Factories;
-using MOHU.Integration.Domain.Individuals.Constants;
-using Individual = MOHU.Integration.Domain.Individuals.Individual;
+using MOHU.Integration.Domain.Features.Individuals.Constants;
+using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Features.Individuals.Services;
 

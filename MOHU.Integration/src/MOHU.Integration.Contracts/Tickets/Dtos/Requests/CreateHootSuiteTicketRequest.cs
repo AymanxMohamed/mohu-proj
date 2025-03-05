@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 using MOHU.Integration.Contracts.Services;
 using MOHU.Integration.Domain.Entitiy;
-using MOHU.Integration.Domain.Tickets.Enums;
+using MOHU.Integration.Domain.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 

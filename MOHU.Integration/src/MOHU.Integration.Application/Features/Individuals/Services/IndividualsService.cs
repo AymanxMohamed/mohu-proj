@@ -1,4 +1,4 @@
-﻿using Individual = MOHU.Integration.Domain.Individuals.Individual;
+﻿using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Features.Individuals.Services;
 
