@@ -15,6 +15,7 @@ using MOHU.Integration.Application.Validators;
 using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Infrastructure.Localization;
+using MOHU.Integration.Application.Service.Hootsuite;
 
 namespace MOHU.Integration.Application;
 
@@ -42,6 +43,7 @@ public static class ApplicationDependencyInjection
         services.AddTransient<ICommonService, CommonService>();
         services.AddTransient<IDocumentService, DocumentService>();
         services.AddScoped<IConfigurationService, ConfigurationService>();
+        services.AddScoped<IHootsuiteService, HootsuiteService>();
         services.AddSingleton<IRequestInfo, RequestInfo>();
         services.AddTransient<ITaasherService, TaasherService>();
         services.AddTransient<IKidanaService, KidanaService>();
@@ -52,7 +54,7 @@ public static class ApplicationDependencyInjection
         services.AddTransient<ITicketCategoriesService, TicketCategoriesService>();
         services.AddTransient<IIndividualsService, IndividualsService>();
         services.AddTransient<ICountriesService, CountriesService>();
-            
+
         return services;
-    } 
+    }
 }

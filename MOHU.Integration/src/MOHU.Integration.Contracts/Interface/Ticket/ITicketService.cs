@@ -1,5 +1,7 @@
 ﻿using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Sahab;
+using MOHU.Integration.Contracts.Dto.Common;
+using MOHU.Integration.Contracts.Dto.Hootsuite;
 using MOHU.Integration.Contracts.Dto.Ticket;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
@@ -17,7 +19,8 @@ namespace MOHU.Integration.Contracts.Interface.Ticket
         Task<SubmitTicketResponse> SubmitTicketAsync(Guid customerId, SubmitTicketRequest request);
         
         Task<SubmitTicketResponse> SubmitHootSuiteTicketAsync(Guid customerId, CreateHootSuiteTicketRequest request);
-        
+        Task<SubmitTicketResponse> SubmitHootSuiteTicketWithCategoryAsync(Guid customerId, CreateHootsuiteTicketWithCategoryRequest request);
+
         Task<List<TicketTypeResponse>> GetTicketTypesAsync();
         
         Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request);
@@ -25,5 +28,9 @@ namespace MOHU.Integration.Contracts.Interface.Ticket
 
 
         Task<Guid> GetTicketByIntegrationTicketNumberAsync(string integrationTicketNumber, string ticketNumberSchemaName);
+
+        Task<Guid> GetCategoryRequestType(Guid categoryId);
+        Task<Guid> GetParentCategory(Guid categoryId);
+        Task<List<TicketCategoryLevel>> GetCategoriesLevel(List<Guid> categoriesIds);
     }
 }

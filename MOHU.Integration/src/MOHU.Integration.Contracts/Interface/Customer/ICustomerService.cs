@@ -1,5 +1,6 @@
 ﻿using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
+using MOHU.Integration.Contracts.Dto.Hootsuite;
 
 namespace MOHU.Integration.Contracts.Interface.Customer
 {
@@ -8,5 +9,6 @@ namespace MOHU.Integration.Contracts.Interface.Customer
         Task<Guid> CreateProfileAsync(CreateProfileRequest model);
         Task<LookupDto> CreateProfilelAsync(string mobileNumber);
         Task<LookupDto?> GetIndividualByMobileNumberAsync(string mobileNumber);
+        Task<Guid?> FindOrCreateProfileAsync(ContactProfileDto contactProfile);
     }
 }

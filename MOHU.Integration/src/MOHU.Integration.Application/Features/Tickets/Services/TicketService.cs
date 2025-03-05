@@ -4,6 +4,8 @@ using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Dto.Sahab;
 using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Logging;
+using MOHU.Integration.Contracts.Services;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Enum;
 using System.Net.Sockets;
 using MOHU.Integration.Application.Features.TicketCategories;
@@ -81,7 +83,7 @@ public partial class TicketService(
 
         return result;
     }
-    
+
     public async Task<TicketDetailsResponse> GetTicketDetailsAsync(Guid customerId, string ticketNumber)
     {
         var result = new TicketDetailsResponse();
@@ -105,7 +107,7 @@ public partial class TicketService(
             Incident.Fields.ldv_Beneficiarytypecode,
             Incident.Fields.CreatedOn
         );
-        
+
         var filter = new FilterExpression(LogicalOperator.And);
         query.Criteria.AddFilter(filter);
 
@@ -170,14 +172,14 @@ public partial class TicketService(
 
         return ticketTypes;
     }
-        
+
     public async Task<bool> UpdateStatusAsync(UpdateTicketStatusRequest request)
     {
         if (request.TicketId == Guid.Empty)
             throw new NotFoundException(stringLocalizer[ErrorMessageCodes.TicketIdisRequired]);
-            
+
         await crmContext.ServiceClient.UpdateAsync(request.ToTicketEntity());
-            
+
         return true;
     }
 
@@ -196,7 +198,68 @@ public partial class TicketService(
         await crmContext.ServiceClient.UpdateAsync(ticketEntity);
         return true;
     }
-        
+
+
+    public async Task<Guid> GetCategoryRequestType(Guid categoryId)
+    {
+
+        var categoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+        {
+            NoLock = true,
+            ColumnSet = new ColumnSet(
+
+                ldv_casecategory.Fields.TicketType,
+                ldv_casecategory.Fields.ldv_arabicname,
+                ldv_casecategory.Fields.ldv_englishname
+            ),
+        };
+        var filter = new FilterExpression(LogicalOperator.And);
+        categoryQuery.Criteria.AddFilter(filter);
+        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.Id,
+            ConditionOperator.Equal,
+            categoryId));
+
+        var result = await crmContext.ServiceClient.RetrieveMultipleAsync(categoryQuery);
+        var category = result.Entities[0];
+        if (category.Contains(ldv_casecategory.Fields.TicketType) && category[ldv_casecategory.Fields.TicketType] is EntityReference parentServiceRef)
+        {
+            Guid parentServiceId = parentServiceRef.Id;
+            string parentServiceEntity = parentServiceRef.LogicalName;
+            return parentServiceId;
+
+        }
+        return Guid.Empty;
+    }
+    public async Task<Guid> GetParentCategory(Guid categoryId)
+    {
+        var categoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+        {
+            NoLock = true,
+            ColumnSet = new ColumnSet(
+
+               ldv_casecategory.Fields.ldv_casecategoryId,
+               ldv_casecategory.Fields.ldv_arabicname,
+               ldv_casecategory.Fields.ldv_englishname
+           ),
+        };
+        var filter = new FilterExpression(LogicalOperator.And);
+        categoryQuery.Criteria.AddFilter(filter);
+        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.Id,
+            ConditionOperator.Equal,
+            categoryId));
+        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.StateCode,
+          ConditionOperator.Equal,
+          0));
+
+        var result = await crmContext.ServiceClient.RetrieveMultipleAsync(categoryQuery);
+        var category = result.Entities[0];
+        if (category.Contains(ldv_casecategory.Fields.ldv_casecategoryId) && category[ldv_casecategory.Fields.ldv_casecategoryId] is Guid parentCategoryGuid)
+        {
+            return parentCategoryGuid;
+
+        }
+        return Guid.Empty;
+    }
     private async Task<List<TicketTypeResponse>> GetTypesAsync()
     {
         var cacheKey = "CaseTypes";
@@ -247,6 +310,8 @@ public partial class TicketService(
 
         return result;
     }
+
+
     private async Task GetTypesCategoriesAsync(List<TicketTypeResponse> ticketTypes)
     {
         var executeMultipleRequest = new ExecuteMultipleRequest
@@ -283,14 +348,14 @@ public partial class TicketService(
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.TicketType,
                     ConditionOperator.Equal,
                     t.Id));
-                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.StateCode, ConditionOperator.Equal,0));
+                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.StateCode, ConditionOperator.Equal, 0));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.SubCategory, ConditionOperator.Null));
                 filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ParentCategory, ConditionOperator.Null));
                 filter.AddCondition(new ConditionExpression(
-                    ldv_casecategory.Fields.AvailableFor, 
-                    ConditionOperator.ContainValues, 
+                    ldv_casecategory.Fields.AvailableFor,
+                    ConditionOperator.ContainValues,
                     requestInfo.Origin));
-                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal, ConditionOperator.Equal,true));
+                filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.ShowOnPortal, ConditionOperator.Equal, true));
 
 
                 executeMultipleRequest.Requests.AddRange(new RetrieveMultipleRequest { Query = categoryQuery });
