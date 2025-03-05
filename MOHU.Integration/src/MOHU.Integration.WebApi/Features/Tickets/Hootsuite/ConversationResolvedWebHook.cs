@@ -13,7 +13,7 @@ public class ConversationResolvedWebHook : AppWebHook
     {
         _hootsuiteService = hootsuiteService;
     }
-    public override async Task<ResponseMessage<Guid>> HandleWebhook(JsonElement jsonElement)
+    public override async Task<ResponseMessage<string>> HandleWebhook(JsonElement jsonElement)
     {
         var conversation = jsonElement.ToObject<HootsuiteBaseEvent<ConversationResolvedPayloadEvent>>();
 
@@ -30,9 +30,9 @@ public class ConversationResolvedWebHook : AppWebHook
             Categories = conversation.Data.Topics,
             Notes = conversation.Data.Notes
         };
-        var caseid = await _hootsuiteService.ConversationResolved(contactProfile);
+        var caseNumber = await _hootsuiteService.ConversationResolved(contactProfile);
 
 
-        return Ok(caseid.GetValueOrDefault());
+        return Ok(caseNumber);
     }
 }

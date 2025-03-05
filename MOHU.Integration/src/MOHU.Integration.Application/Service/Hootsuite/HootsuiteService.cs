@@ -9,7 +9,7 @@ using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 namespace MOHU.Integration.Application.Service.Hootsuite;
 internal class HootsuiteService(ICustomerService customerService,ITicketService ticketService) : IHootsuiteService
 {
-    public async Task<Guid?> ConversationResolved(ConversationResolvedRequest conversationResolvedRequest)
+    public async Task<string> ConversationResolved(ConversationResolvedRequest conversationResolvedRequest)
     {
         Guid? customerId =  await customerService.FindOrCreateProfileAsync(conversationResolvedRequest);
         var categoryId = conversationResolvedRequest.Categories.FirstOrDefault()?.Id;
@@ -35,7 +35,7 @@ internal class HootsuiteService(ICustomerService customerService,ITicketService 
             Categories = categoriesWithLevels
         };
 
-        await ticketService.SubmitHootSuiteTicketWithCategoryAsync(customerId.GetValueOrDefault(), newCase);
-        return customerId;
+        var ticket = await ticketService.SubmitHootSuiteTicketWithCategoryAsync(customerId.GetValueOrDefault(), newCase);
+        return ticket.TicketNumber;
     }
 };
