@@ -9,5 +9,6 @@ public static partial class CountriesConstants
         public const string ArabicName = "ldv_name_ar";
         public const string EnglishName = "ldv_name_en";
         public const string Code = "ldv_code";
+        public const string ElmEntityType = "ldv_elmentitytypecode";
     }
 }
