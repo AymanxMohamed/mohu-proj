@@ -9,6 +9,6 @@ public static class DependencyInjection
     {
         return services
             .AddCommon(configuration)
-            .AddLookups();
+            .AddLookups(configuration);
     }
 }
