@@ -1,5 +1,4 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Constants;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 using MOHU.Integration.Application.Elm.InformationCenter.Services;
 using MOHU.Integration.Domain.Features.Individuals.Constants;
@@ -15,5 +14,6 @@ public partial class IndividualsService(
         client, 
         crmContext, 
         IndividualConstants.LogicalName,
-        Individual.Create), 
+        Individual.Create,
+        x => x.ToCrmEntity()), 
     IIndividualsService;

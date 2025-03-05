@@ -9,6 +9,9 @@ public partial class Country : IEquatable<Country>
     public bool Equals(Country? other) => 
         other is not null && (
             ElmReferenceId == other.ElmReferenceId
+            || string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) 
+            || string.Equals(EnglishName, other.EnglishName, StringComparison.OrdinalIgnoreCase) 
+            || string.Equals(ArabicName, other.ArabicName, StringComparison.OrdinalIgnoreCase) 
             || base.Equals(other));
     
 

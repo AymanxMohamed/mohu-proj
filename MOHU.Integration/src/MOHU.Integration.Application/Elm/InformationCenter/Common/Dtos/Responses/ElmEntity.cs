@@ -6,8 +6,6 @@ public abstract class ElmEntity<TCrmEntity>
     where TCrmEntity : CrmEntity
 {
     public int Id { get; set; }
-    
-    public Entity ToEntity(EntityReference? id = null) => ToCrmEntity(id).ToCrmEntity();
-    
+
     public abstract TCrmEntity ToCrmEntity(EntityReference? id = null);
 }

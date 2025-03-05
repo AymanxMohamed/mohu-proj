@@ -15,6 +15,7 @@ public partial class Country : CrmElmReferencedEntity, IElmReferenceIdResolver
         ArabicName = entity.GetAttributeValue<string>(CountriesConstants.Fields.ArabicName);
         EnglishName = entity.GetAttributeValue<string>(CountriesConstants.Fields.EnglishName);
         Code = entity.GetAttributeValue<string>(CountriesConstants.Fields.Code);
+        Name = entity.GetAttributeValue<string>(CountriesConstants.Fields.Name);
     }
     
     private Country(
@@ -29,10 +30,13 @@ public partial class Country : CrmElmReferencedEntity, IElmReferenceIdResolver
     {
         ElmEntityType = elmEntityType;
         LdvId = ldvId;
-        ArabicName = arabicName;
         EnglishName = englishName;
+        ArabicName = arabicName;
+        Name = $"{englishName} - {arabicName}";
         Code = code;
     }
+
+    public string? Name { get; init; }
     
     public string? LdvId { get; init; }
 
@@ -65,7 +69,9 @@ public partial class Country : CrmElmReferencedEntity, IElmReferenceIdResolver
             CountriesConstants.Fields.ElmEntityType, 
             ElmEntityType.ToOptionSetValue()
         );
+        
         entity.AssignIfNotNull(CountriesConstants.Fields.LdvId,  LdvId);
+        entity.AssignIfNotNull(CountriesConstants.Fields.Name,  Name);
         entity.AssignIfNotNull(CountriesConstants.Fields.ArabicName,  ArabicName);
         entity.AssignIfNotNull(CountriesConstants.Fields.EnglishName,  EnglishName);
         entity.AssignIfNotNull(CountriesConstants.Fields.Code,  Code);

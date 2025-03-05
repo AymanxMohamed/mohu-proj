@@ -13,7 +13,8 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>(
     TElmClient client,
     ICrmContext crmContext,
     string entityLogicalName,
-    Func<Entity, TCrmEntity> factory) : IElmSyncService<TCrmEntity>
+    Func<Entity, TCrmEntity> factory,
+    Func<TCrmEntity, Entity> entityConverter) : IElmSyncService<TCrmEntity>
     where TElmClient : IElmEntityClient<TElmEntity>
     where TElmEntity : ElmEntity<TCrmEntity>
     where TCrmEntity : CrmEntity, IElmReferenceIdResolver
@@ -79,12 +80,12 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>(
     {
         if (existingIndividuals.TryGetValue(elmApplicant.Id, out var existingIndividual))
         {
-            _genericRepository.Update(elmApplicant.ToEntity(existingIndividual.Id));
+            _genericRepository.Update(entityConverter(elmApplicant.ToCrmEntity(existingIndividual.Id)));
             return;
         }
 
-        var entity = elmApplicant.ToEntity();
+        var entity = elmApplicant.ToCrmEntity();
         
-        _genericRepository.Create(entity);
+        _genericRepository.Create(entityConverter(entity));
     }
 }

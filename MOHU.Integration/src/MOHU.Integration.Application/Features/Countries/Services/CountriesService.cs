@@ -14,5 +14,6 @@ public class CountriesService(
         client, 
         crmContext, 
         CountriesConstants.LogicalName,
-        Country.Create), 
+        Country.Create,
+        x => x.ToCrmEntity()), 
     ICountriesService;
