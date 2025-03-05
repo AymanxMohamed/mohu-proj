@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 namespace MOHU.Integration.Contracts.Interface;
 public interface IHootsuiteService
 {
-    Task<Guid?> ConversationResolved(ConversationResolvedRequest conversationResolvedRequest);
+    Task<string> ConversationResolved(ConversationResolvedRequest conversationResolvedRequest);
 }
