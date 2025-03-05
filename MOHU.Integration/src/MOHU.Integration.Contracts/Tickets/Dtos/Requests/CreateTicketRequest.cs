@@ -18,7 +18,11 @@ public class CreateTicketRequest
         var ticket = new Entity(Incident.EntityLogicalName);
         ticket.Attributes.Add(Incident.Fields.CaseOriginCode, new OptionSetValue(origin));
         ticket.Attributes.Add(Incident.Fields.ldv_Description, Description);
-        ticket.Attributes.Add(Incident.Fields.ldv_serviceid,  new EntityReference(ldv_service.EntityLogicalName, CaseType));
+        if(CaseType != Guid.Empty)
+        {
+         ticket.Attributes.Add(Incident.Fields.ldv_serviceid,  new EntityReference(ldv_service.EntityLogicalName, CaseType));
+
+        }
 
         if (service.ParentService is not null)
         {
@@ -29,8 +33,16 @@ public class CreateTicketRequest
         {
             ticket.Attributes.Add(Incident.Fields.ldv_processid, new EntityReference("workflow", service.Process.Id));
         }
-        
+
+        if (CaseType == Guid.Empty)
+        {
+        ticket.Attributes.Add(Incident.Fields.ldv_IsSubmitted, false);
+        }
+        else
+        {
         ticket.Attributes.Add(Incident.Fields.ldv_IsSubmitted, isSubmitted);
+
+        }
         
         return ticket;
     }

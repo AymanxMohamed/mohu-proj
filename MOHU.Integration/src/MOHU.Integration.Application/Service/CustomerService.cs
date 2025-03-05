@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Contracts.Dto.CreateProfile;
+using MOHU.Integration.Contracts.Dto.Hootsuite;
 using MOHU.Integration.Contracts.Enum;
 using MOHU.Integration.Contracts.Interface.Customer;
 using System.Globalization;
@@ -125,7 +126,32 @@ namespace MOHU.Integration.Application.Service
             throw new BadRequestException(_localizer[ErrorMessageCodes.CustomerExist]);
 
         }
+        private async Task<Guid> CreateProfileWithoutValidation(CreateProfileRequest model)
+        {
 
+            var entity = new Entity(Individual.EntityLogicalName);
+
+            var profileId = await IsProfileExists(
+                $"{model.MobileCountryCode}{model.MobileNumber}",
+                model.Email,
+                model.IdNumber);
+
+            if (profileId is not null)
+                return profileId.Value;
+
+            entity.Attributes.Add(Individual.Fields.FirstName, model.FirstName);
+            entity.Attributes.Add(Individual.Fields.LastName, model.LastName);
+
+            entity.Attributes.Add(Individual.Fields.ArabicName, model.ArabicName);
+            entity.Attributes.Add(Individual.Fields.Email, model.Email);
+            entity.Attributes.Add(Individual.Fields.MobileCountryCode, model.MobileCountryCode);
+            entity.Attributes.Add(Individual.Fields.MobileNumber, $"{model.MobileCountryCode}{model.MobileNumber}");
+            var customerId = await _crmContext.ServiceClient.CreateAsync(entity);
+            return customerId;
+
+            throw new BadRequestException(_localizer[ErrorMessageCodes.CustomerExist]);
+
+        }
         public async Task<LookupDto?> GetIndividualByMobileNumberAsync(string mobileNumber)
         {
             var query = new QueryExpression(Contact.EntityLogicalName)
@@ -255,6 +281,33 @@ namespace MOHU.Integration.Application.Service
             var hijriMonth = umAlQura.GetMonth(gregorianDate);
             var hijriDay = umAlQura.GetDayOfMonth(gregorianDate);
             return new DateTime(hijriYear, hijriMonth, hijriDay);
+        }
+
+        public async Task<Guid?> FindOrCreateProfileAsync(ContactProfileDto contactProfile)
+        {
+            if (contactProfile == null || contactProfile.PhoneNumber is null)
+            {
+                return null;
+            }
+
+            LookupDto? customer = await GetIndividualByMobileNumberAsync(contactProfile.PhoneNumber);
+            Guid? customerID = customer?.Id;
+            if (customer is null && contactProfile.Name is not null)
+            {
+                {
+                    string[] spilitedName = contactProfile.Name.Split(" ");
+                    var newProfile = new CreateProfileRequest
+                    {
+                        MobileNumber = contactProfile.PhoneNumber,
+                        Email = contactProfile.Email!,
+                        FirstName = spilitedName[0],
+                        LastName = spilitedName[1],
+                    };
+                    customerID = await CreateProfileWithoutValidation(newProfile);
+                }
+
+            }
+            return customerID.GetValueOrDefault();
         }
     }
 }

@@ -13,6 +13,7 @@ using MOHU.Integration.Application.Service.Taasher;
 using MOHU.Integration.Application.Service.Kidana;
 using MOHU.Integration.Application.Service.Sahab;
 using MOHU.Integration.Application.Service.ServiceDesk;
+using MOHU.Integration.Application.Service.Hootsuite;
 
 namespace MOHU.Integration.Application
 {
@@ -34,6 +35,7 @@ namespace MOHU.Integration.Application
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddScoped<IConfigurationService, ConfigurationService>();
+            services.AddScoped<IHootsuiteService, HootsuiteService>();
             services.AddSingleton<IRequestInfo, RequestInfo>();
             services.AddTransient<ITaasherService, TaasherService>();
             services.AddTransient<IKidanaService, KidanaService>();
