@@ -1,17 +1,28 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Countries.Clients;
 
 namespace MOHU.Integration.WebApi.Elm.InformationCenter.ProxiesControllers;
 
 [Route("api/elm/information-center/proxies/lookups")]
 [ApiController]
-public class LookupsProxyController(IElmInformationCenterApplicantDataClient client) : ControllerBase
+public class LookupsProxyController(
+    IElmInformationCenterApplicantDataClient applicantDataClient,
+    IElmInformationCenterCountriesClient countriesClient) : ControllerBase
 {
     [HttpPost("applicants")]
     public IActionResult GetApplicantData(ElmFilterRequest? filterRequest)
     {
-        var applicants = client.GetAll(filterRequest).ToValueOrException();
+        var entities = applicantDataClient.GetAll(filterRequest).ToValueOrException();
 
-        return Ok(applicants);
+        return Ok(entities);
+    }
+    
+    [HttpPost("countries")]
+    public IActionResult GetCountries(ElmFilterRequest? filterRequest)
+    {
+        var entities = countriesClient.GetAll(filterRequest).ToValueOrException();
+
+        return Ok(entities);
     }
 }

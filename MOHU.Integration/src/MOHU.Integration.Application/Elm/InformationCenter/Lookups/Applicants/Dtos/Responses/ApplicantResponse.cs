@@ -1,13 +1,12 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Responses;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 using MOHU.Integration.Domain.Features.Individuals.Enums;
 using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
 
-public class ApplicantResponse
+public class ApplicantResponse : ElmEntity<Individual>
 {
-    public int Id { get; set; }
-    
     public int AdApplicationNo { get; set; }
     
     public string? AdFirstNameEn { get; set; }
@@ -110,8 +109,6 @@ public class ApplicantResponse
     
     public int? AdSpcCompanyIdMadina { get; set; }
     
-    public DateTime Timestamp { get; set; }
-    
     public int State { get; set; }
     
     public DateTime AdPlannedArrivalDate { get; set; }
@@ -136,9 +133,9 @@ public class ApplicantResponse
     
     public string? AdHajVisaPermitStatus { get; set; }
     
-    public Entity ToEntity(EntityReference? id = null) => ToIndividual(id).ToCrmEntity();
+    public DateTime Timestamp { get; set; }
     
-    public Individual ToIndividual(EntityReference? id = null) => ToElmApplicant().ToIndividual(id);
+    public override Individual ToCrmEntity(EntityReference? id = null) => ToElmApplicant().ToCrmEntity(id);
     
     public ElmApplicant ToElmApplicant() => ElmApplicant.Create(this);
 }

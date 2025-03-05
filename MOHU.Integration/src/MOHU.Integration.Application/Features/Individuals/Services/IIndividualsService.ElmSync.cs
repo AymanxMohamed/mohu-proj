@@ -51,7 +51,7 @@ public partial class IndividualsService
 
         if (elmApplicants.Count != ElmFilterRequest.DefaultPageSize)
         {
-            return (NextPage: 0, Result: elmApplicants.Select(x => x.ToIndividual()).ToList());
+            return (NextPage: 0, Result: elmApplicants.Select(x => x.ToCrmEntity()).ToList());
         }     
         
         await configurationService
@@ -59,7 +59,7 @@ public partial class IndividualsService
                 key: ElmConstants.ConfigurationKeys.SyncKeys.LastSyncedApplicantDataPage,
                 value: page.ToString());
         
-        return (NextPage: page + 1, Result: elmApplicants.Select(x => x.ToIndividual()).ToList());
+        return (NextPage: page + 1, Result: elmApplicants.Select(x => x.ToCrmEntity()).ToList());
     }
 
     private void SyncIndividual(ElmApplicant elmApplicant, Dictionary<int, Individual> existingIndividuals)

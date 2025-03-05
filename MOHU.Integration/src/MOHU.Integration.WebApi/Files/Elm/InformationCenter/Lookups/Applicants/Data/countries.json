@@ -1,0 +1,90 @@
+﻿{
+  "response": {
+    "responseCode": "0",
+    "responseDesc": "Success",
+    "requestUUID": "f52914b8-47f3-47c9-8389-9b0628848cf0",
+    "traceError": null,
+    "data": [
+      {
+        "id": 57,
+        "countryNameAr": "كولومبيا",
+        "countryNameEn": "Colombia",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "COL",
+        "cntryState": 0
+      },
+      {
+        "id": 597,
+        "countryNameAr": "سورينام",
+        "countryNameEn": "Suriname",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "SUR",
+        "cntryState": 0
+      },
+      {
+        "id": 598,
+        "countryNameAr": "الاوروغواي",
+        "countryNameEn": "Uruguay",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "URY",
+        "cntryState": 0
+      },
+      {
+        "id": 972,
+        "countryNameAr": "فلسطين عرب",
+        "countryNameEn": "Philistine (Arab 48)",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "PSE-1",
+        "cntryState": 0
+      },
+      {
+        "id": 686,
+        "countryNameAr": "كيريباتي",
+        "countryNameEn": "Kiribati",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "KIR",
+        "cntryState": 0
+      },
+      {
+        "id": 6702,
+        "countryNameAr": "جزر ماريانا الشمالية",
+        "countryNameEn": "Northern Marianas Islands",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "MNP",
+        "cntryState": 0
+      },
+      {
+        "id": 677,
+        "countryNameAr": "جزيرة سليمان",
+        "countryNameEn": "Solomon Islands",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "SLB",
+        "cntryState": 0
+      },
+      {
+        "id": 501,
+        "countryNameAr": "بيليز",
+        "countryNameEn": "Belize",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "BLZ",
+        "cntryState": 0
+      },
+      {
+        "id": 27,
+        "countryNameAr": "جنوب افريقيا",
+        "countryNameEn": "South Africa",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "ZAF",
+        "cntryState": 0
+      },
+      {
+        "id": 291,
+        "countryNameAr": "إرتريا",
+        "countryNameEn": "Eritrea",
+        "countryMoiNumber": null,
+        "countryMofaNumber": "ERI",
+        "cntryState": 0
+      }
+    ]
+  }
+}

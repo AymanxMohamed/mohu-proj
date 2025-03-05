@@ -1,4 +1,5 @@
-﻿using Common.Crm.Domain.Common.OptionSets.Extensions;
+﻿using Common.Crm.Domain.Common.Factories;
+using Common.Crm.Domain.Common.OptionSets.Extensions;
 using MOHU.Integration.Domain.Features.Common.ElmReferencedEntities;
 using MOHU.Integration.Domain.Features.Countries.Constants;
 using MOHU.Integration.Domain.Features.Countries.Enums;
@@ -17,14 +18,14 @@ public partial class Country : CrmElmReferencedEntity
     }
     
     private Country(
-        EntityReference id, 
+        EntityReference? id, 
         int? elmReferenceId,
         ElmEntityTypeEnum? elmEntityType,
         string? ldvId,
         string? arabicName,
         string? englishName,
         string? code)
-        : base(id, elmReferenceId)
+        : base(id ?? EntityReferenceFactory.Create(CountriesConstants.LogicalName), elmReferenceId)
     {
         ElmEntityType = elmEntityType;
         LdvId = ldvId;
@@ -46,7 +47,7 @@ public partial class Country : CrmElmReferencedEntity
     public static Country Create(Entity entity) => new(entity);
 
     public static Country Create(
-        EntityReference id,
+        EntityReference? id,
         int? elmReferenceId,
         ElmEntityTypeEnum? elmEntityType,
         string? ldvId,

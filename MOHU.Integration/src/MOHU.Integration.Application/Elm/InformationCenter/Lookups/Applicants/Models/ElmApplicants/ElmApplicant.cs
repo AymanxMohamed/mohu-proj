@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Responses;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.BasicInformation;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.BirthInformation;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.ContactInformation;
@@ -11,7 +12,7 @@ using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 
-public partial class ElmApplicant
+public partial class ElmApplicant : ElmEntity<Individual>
 {
     private ElmApplicant(ApplicantResponse applicant)
     {
@@ -44,9 +45,7 @@ public partial class ElmApplicant
 
     public static implicit operator ElmApplicant(ApplicantResponse applicant) => new(applicant);
 
-    public Entity ToEntity(EntityReference? id = null) => ToIndividual(id).ToCrmEntity();
-
-    public Individual ToIndividual(EntityReference? id = null) =>
+    public override Individual ToCrmEntity(EntityReference? id = null) =>
         Individual.Create(
             id: id,
             basicInformation: BasicInformation.ToIndividualInformation(),
