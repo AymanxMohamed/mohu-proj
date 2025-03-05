@@ -4,3 +4,8 @@ public interface IElmReferencedEntity
 {
     int? ElmReferenceId { get; }
 }
+
+public interface IElmReferenceIdResolver
+{
+    int? ResolveElmReferenceId();
+}

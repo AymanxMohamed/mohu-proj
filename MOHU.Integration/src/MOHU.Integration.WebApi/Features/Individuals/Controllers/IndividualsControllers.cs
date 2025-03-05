@@ -9,6 +9,6 @@ public class IndividualsControllers(IIndividualsService service) : ControllerBas
     [HttpPost]
     public async Task<IActionResult> Create()
     {
-        return Ok(await service.SyncWithElm());
+        return Ok(await service.Sync());
     }
 }

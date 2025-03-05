@@ -7,6 +7,7 @@ public class ElmConstants
         public static class SyncKeys
         {
             public const string LastSyncedApplicantDataPage = "ELM_Last_Synced_Applicant_Data_Page";
+            public const string LastSyncedCountriesPage = "ELM_Last_Synced_Countries_Page";
         }
     }
 }

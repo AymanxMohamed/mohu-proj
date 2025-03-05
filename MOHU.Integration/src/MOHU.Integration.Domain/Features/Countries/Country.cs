@@ -6,7 +6,7 @@ using MOHU.Integration.Domain.Features.Countries.Enums;
 
 namespace MOHU.Integration.Domain.Features.Countries;
 
-public partial class Country : CrmElmReferencedEntity
+public partial class Country : CrmElmReferencedEntity, IElmReferenceIdResolver
 {
     private Country(Entity entity)
         : base(entity)
@@ -72,4 +72,6 @@ public partial class Country : CrmElmReferencedEntity
         
         return entity;
     }
+
+    public int? ResolveElmReferenceId() => ElmReferenceId;
 }

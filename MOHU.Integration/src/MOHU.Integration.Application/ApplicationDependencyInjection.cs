@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm;
+using MOHU.Integration.Application.Features.Countries.Services;
 using MOHU.Integration.Application.Features.Individuals.Services;
 using MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Tickets.Services;
 using MOHU.Integration.Application.Features.TicketCategories;
@@ -50,6 +51,7 @@ public static class ApplicationDependencyInjection
         services.AddTransient<IServiceDeskTicketsClient, ServiceDeskTicketsClient>();
         services.AddTransient<ITicketCategoriesService, TicketCategoriesService>();
         services.AddTransient<IIndividualsService, IndividualsService>();
+        services.AddTransient<ICountriesService, CountriesService>();
             
         return services;
     } 

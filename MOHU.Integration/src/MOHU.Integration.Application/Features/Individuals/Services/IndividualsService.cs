@@ -1,10 +1,6 @@
-﻿using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Services;
+using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Features.Individuals.Services;
 
-public interface IIndividualsService
-{
-    List<Individual> GetByElmReferenceIds(List<int>? ids);
-    
-    Task<List<Individual>> SyncWithElm();
-}
+public interface IIndividualsService : IElmSyncService<Individual>;

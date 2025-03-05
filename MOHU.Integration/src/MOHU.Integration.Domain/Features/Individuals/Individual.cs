@@ -1,11 +1,12 @@
 ﻿using Common.Crm.Domain.Common.Factories;
 using MOHU.Integration.Domain.Features.Common.CrmEntities;
+using MOHU.Integration.Domain.Features.Common.ElmReferencedEntities;
 using MOHU.Integration.Domain.Features.Individuals.Constants;
 using MOHU.Integration.Domain.Features.Individuals.Entities;
 
 namespace MOHU.Integration.Domain.Features.Individuals;
 
-public partial class Individual : CrmEntity
+public partial class Individual : CrmEntity, IElmReferenceIdResolver   
 {
     private Individual(Entity entity)
         : this(
@@ -89,4 +90,5 @@ public partial class Individual : CrmEntity
         return entity;
     }
 
+    public int? ResolveElmReferenceId() => IntegrationDetails.ElmReferenceId;
 }

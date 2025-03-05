@@ -1,9 +1,6 @@
-using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
+using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
 
-public interface IElmInformationCenterApplicantDataClient
-{
-    ErrorOr<List<ElmApplicant>> GetAll(ElmFilterRequest? request = null);
-}
+public interface IElmInformationCenterApplicantDataClient : IElmEntityClient<ElmApplicant>;
