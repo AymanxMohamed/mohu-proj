@@ -15,5 +15,6 @@ public class CountriesService(
         crmContext, 
         CountriesConstants.LogicalName,
         Country.Create,
-        x => x.ToCrmEntity()), 
+        x => x.ToCrmEntity(),
+        (x, y) => x == y), 
     ICountriesService;

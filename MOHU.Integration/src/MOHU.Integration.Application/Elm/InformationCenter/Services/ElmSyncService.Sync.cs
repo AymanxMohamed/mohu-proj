@@ -4,7 +4,6 @@ using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Common.CrmEntities;
-using MOHU.Integration.Domain.Features.Common.ElmReferencedEntities;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Services;
 
@@ -14,10 +13,11 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>(
     ICrmContext crmContext,
     string entityLogicalName,
     Func<Entity, TCrmEntity> factory,
-    Func<TCrmEntity, Entity> entityConverter) : IElmSyncService<TCrmEntity>
+    Func<TCrmEntity, Entity> entityConverter,
+    Func<TElmEntity, TCrmEntity, bool> comparisonPredicate) : IElmSyncService<TCrmEntity>
     where TElmClient : IElmEntityClient<TElmEntity>
     where TElmEntity : ElmEntity<TCrmEntity>
-    where TCrmEntity : CrmEntity, IElmReferenceIdResolver
+    where TCrmEntity : CrmEntity
 {
     private TElmClient _client = client;
     private readonly IGenericRepository _genericRepository =
@@ -53,8 +53,7 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>(
         }
         
         var existingCrmEntities = GetCrmEntitiesByElmReferenceIds(
-                elmEntities.Select(x => x.Id).ToList())
-            .ToDictionary(x => (int)x.ResolveElmReferenceId()!);
+                elmEntities.Select(x => x.Id).ToList());
         
         foreach (var elmEntity in elmEntities)
         {
@@ -76,15 +75,17 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>(
         return (NextPage: page + 1, Result: elmEntities.Select(x => x.ToCrmEntity()).ToList());
     }
 
-    private void SyncCrmEntity(TElmEntity elmApplicant, Dictionary<int, TCrmEntity> existingIndividuals)
+    private void SyncCrmEntity(TElmEntity elmEntity, List<TCrmEntity> existingIndividuals)
     {
-        if (existingIndividuals.TryGetValue(elmApplicant.Id, out var existingIndividual))
+        var existingCrmEntity = existingIndividuals.FirstOrDefault(x => comparisonPredicate(elmEntity, x));
+        
+        if (existingCrmEntity is not null)
         {
-            _genericRepository.Update(entityConverter(elmApplicant.ToCrmEntity(existingIndividual.Id)));
+            _genericRepository.Update(entityConverter(elmEntity.ToCrmEntity(existingCrmEntity.Id)));
             return;
         }
 
-        var entity = elmApplicant.ToCrmEntity();
+        var entity = elmEntity.ToCrmEntity();
         
         _genericRepository.Create(entityConverter(entity));
     }

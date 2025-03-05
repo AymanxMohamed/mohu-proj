@@ -2,10 +2,11 @@
 using MOHU.Integration.Domain.Features.Countries;
 using MOHU.Integration.Domain.Features.Countries.Enums;
 using Newtonsoft.Json;
+using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Countries.Dtos.Responses;
 
-public class ElmCountryResponse : ElmEntity<Country>
+public partial class ElmCountryResponse : ElmEntity<Country>
 {
     [JsonProperty("countryNameAr")]
     public string? ArabicName { get; set; }

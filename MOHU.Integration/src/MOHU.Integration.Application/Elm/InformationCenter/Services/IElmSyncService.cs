@@ -5,7 +5,7 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Services;
 
 
 public interface IElmSyncService<TCrmEntity>
-    where TCrmEntity : CrmEntity, IElmReferenceIdResolver
+    where TCrmEntity : CrmEntity
 {
     Task<List<TCrmEntity>> Sync();
 }

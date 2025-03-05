@@ -15,5 +15,6 @@ public partial class IndividualsService(
         crmContext, 
         IndividualConstants.LogicalName,
         Individual.Create,
-        x => x.ToCrmEntity()), 
+        x => x.ToCrmEntity(),
+        (x, y) => x == y), 
     IIndividualsService;
