@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Hootsuite;
 using MOHU.Integration.WebApi.Common.WebHooks;
 using MOHU.Integration.WebApi.Features.Hootsuite.Common;
@@ -12,14 +13,14 @@ public class ConversationResolvedWebHook : AppWebHook
     {
         _hootsuiteService = hootsuiteService;
     }
-    public override IActionResult HandleWebhook(JsonElement jsonElement)
+    public override async Task<ResponseMessage<Guid>> HandleWebhook(JsonElement jsonElement)
     {
         var conversation = jsonElement.ToObject<HootsuiteBaseEvent<ConversationResolvedPayloadEvent>>();
 
 
         if (conversation == null)
         {
-            return BadRequest();
+            throw new BadRequestException("Bad Request");
         }
         var contactProfile = new ConversationResolvedRequest
         {
@@ -29,9 +30,9 @@ public class ConversationResolvedWebHook : AppWebHook
             Categories = conversation.Data.Topics,
             Notes = conversation.Data.Notes
         };
-        var customerid = _hootsuiteService.ConversationResolved(contactProfile);
+        var caseid = await _hootsuiteService.ConversationResolved(contactProfile);
 
 
-        return Ok();
+        return Ok(caseid.GetValueOrDefault());
     }
 }
