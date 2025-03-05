@@ -2,6 +2,7 @@
 using MOHU.Integration.Contracts.Dto.CaseTypes;
 using MOHU.Integration.Contracts.Interface.Cache;
 using MOHU.Integration.Contracts.Logging;
+using MOHU.Integration.Contracts.Services;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
@@ -175,7 +176,67 @@ public partial class TicketService(
             
         return true;
     }
-        
+
+    public async Task<Guid> GetCategoryRequestType(Guid categoryId)
+    {
+
+        var categoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+        {
+            NoLock = true,
+            ColumnSet = new ColumnSet(
+
+                ldv_casecategory.Fields.TicketType,
+                ldv_casecategory.Fields.ldv_arabicname,
+                ldv_casecategory.Fields.ldv_englishname
+            ),
+        };
+        var filter = new FilterExpression(LogicalOperator.And);
+        categoryQuery.Criteria.AddFilter(filter);
+        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.Id,
+            ConditionOperator.Equal,
+            categoryId));
+
+        var result = await crmContext.ServiceClient.RetrieveMultipleAsync(categoryQuery);
+        var category = result.Entities[0];
+        if (category.Contains(ldv_casecategory.Fields.TicketType) && category[ldv_casecategory.Fields.TicketType] is EntityReference parentServiceRef)
+        {
+            Guid parentServiceId = parentServiceRef.Id; 
+            string parentServiceEntity = parentServiceRef.LogicalName;
+            return parentServiceId;
+
+        }
+        return Guid.Empty;
+    }
+    public async Task<Guid> GetParentCategory(Guid categoryId)
+    {
+        var categoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+        {
+            NoLock = true,
+            ColumnSet = new ColumnSet(
+
+               ldv_casecategory.Fields.ldv_casecategoryId,
+               ldv_casecategory.Fields.ldv_arabicname,
+               ldv_casecategory.Fields.ldv_englishname
+           ),
+        };
+        var filter = new FilterExpression(LogicalOperator.And);
+        categoryQuery.Criteria.AddFilter(filter);
+        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.Id,
+            ConditionOperator.Equal,
+            categoryId));
+        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.StateCode,
+          ConditionOperator.Equal,
+          0));
+
+        var result = await crmContext.ServiceClient.RetrieveMultipleAsync(categoryQuery);
+        var category = result.Entities[0];
+        if (category.Contains(ldv_casecategory.Fields.ldv_casecategoryId) && category[ldv_casecategory.Fields.ldv_casecategoryId] is Guid parentCategoryGuid)
+        {
+            return parentCategoryGuid;
+
+        }
+        return Guid.Empty;
+    }
     private async Task<List<TicketTypeResponse>> GetTypesAsync()
     {
         var cacheKey = "CaseTypes";
@@ -226,6 +287,8 @@ public partial class TicketService(
 
         return result;
     }
+
+
     private async Task GetTypesCategoriesAsync(List<TicketTypeResponse> ticketTypes)
     {
         var executeMultipleRequest = new ExecuteMultipleRequest

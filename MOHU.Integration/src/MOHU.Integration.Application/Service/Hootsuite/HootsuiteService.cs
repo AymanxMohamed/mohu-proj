@@ -1,0 +1,41 @@
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using MOHU.Integration.Application.Features.Tickets.Services;
+using MOHU.Integration.Contracts.Dto.CreateProfile;
+using MOHU.Integration.Contracts.Dto.Hootsuite;
+using MOHU.Integration.Contracts.Interface.Customer;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
+
+
+namespace MOHU.Integration.Application.Service.Hootsuite;
+internal class HootsuiteService(ICustomerService customerService,ITicketService ticketService) : IHootsuiteService
+{
+    public async Task<Guid?> ConversationResolved(ConversationResolvedRequest conversationResolvedRequest)
+    {
+        Guid? customerId =  await customerService.FindOrCreateProfileAsync(conversationResolvedRequest);
+        var categoryId = conversationResolvedRequest.Categories.FirstOrDefault()?.Id;
+        Guid? requestType = null;
+        List<TicketCategoryLevel> categoriesWithLevels = [];
+        if (categoryId != null)
+        {
+             requestType = await ticketService.GetCategoryRequestType(categoryId.GetValueOrDefault());
+             categoriesWithLevels = await ticketService.GetCategoriesLevel(conversationResolvedRequest.Categories.Select(cat => cat.Id).ToList());
+            if(!categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.ParentCategory) && categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SubCategory))
+            {
+                var subCategory = categoriesWithLevels.FirstOrDefault(c => c.CategoryLevel != Contracts.Enum.CategoryLevelsEnum.ParentCategory);
+                var parentCategoryId = await ticketService.GetParentCategory(subCategory!.ParentId);
+                categoriesWithLevels.Add(new TicketCategoryLevel { Id = parentCategoryId , CategoryLevel = Contracts.Enum.CategoryLevelsEnum.ParentCategory });
+            }
+
+        }
+        string description = string.Join(", ", conversationResolvedRequest.Notes.Select(n => n.Text));
+        CreateHootsuiteTicketWithCategoryRequest newCase = new CreateHootsuiteTicketWithCategoryRequest
+        {
+            CaseType = requestType.GetValueOrDefault(),
+            Description = description,
+            Categories = categoriesWithLevels
+        };
+
+        await ticketService.SubmitHootSuiteTicketWithCategoryAsync(customerId.GetValueOrDefault(), newCase);
+        return customerId;
+    }
+};
