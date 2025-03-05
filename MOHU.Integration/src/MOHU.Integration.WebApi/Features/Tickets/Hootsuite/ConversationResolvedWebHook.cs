@@ -1,9 +1,10 @@
 ﻿using System.Text.Json;
-using MOHU.Integration.Contracts.Dto.Common;
 using MOHU.Integration.Contracts.Dto.Hootsuite;
-using MOHU.Integration.WebApi.Common.WebHooks;
+using MOHU.Integration.WebApi.Common.Controllers.Webhooks;
 using MOHU.Integration.WebApi.Features.Hootsuite.Common;
 using MOHU.Integration.WebApi.Features.Hootsuite.Webhooks.ConversationResolved;
+
+namespace MOHU.Integration.WebApi.Features.Tickets.Hootsuite;
 
 public class ConversationResolvedWebHook : AppWebHook
 {

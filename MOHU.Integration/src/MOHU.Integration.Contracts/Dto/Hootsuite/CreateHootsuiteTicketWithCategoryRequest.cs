@@ -4,12 +4,7 @@ using MOHU.Integration.Contracts.Enum;
 using MOHU.Integration.Contracts.Services;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Entitiy;
-using MOHU.Integration.Domain.Tickets.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MOHU.Integration.Domain.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Contracts.Dto.Hootsuite;
 public class CreateHootsuiteTicketWithCategoryRequest : CreateTicketRequest

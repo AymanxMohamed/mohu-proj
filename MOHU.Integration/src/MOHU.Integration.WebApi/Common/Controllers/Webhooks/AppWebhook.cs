@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace MOHU.Integration.WebApi.Common.WebHooks;
+namespace MOHU.Integration.WebApi.Common.Controllers.Webhooks;
 
 public abstract class AppWebHook : BaseController
 {
