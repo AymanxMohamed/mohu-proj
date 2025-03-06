@@ -1,11 +1,8 @@
 ﻿using MOHU.Integration.Application.Elm;
-using MOHU.Integration.Application.Features.Countries.Services;
-using MOHU.Integration.Application.Features.Individuals.Services;
-using MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Tickets.Services;
+using MOHU.Integration.Application.Features;
 using MOHU.Integration.Application.Features.TicketCategories;
 using MOHU.Integration.Application.Features.Tickets.Services;
 using MOHU.Integration.Application.Localization;
-using MOHU.Integration.Application.Nusuk.Tickets;
 using MOHU.Integration.Application.Service;
 using MOHU.Integration.Application.Service.Kidana;
 using MOHU.Integration.Application.Service.Sahab;
@@ -25,6 +22,7 @@ public static class ApplicationDependencyInjection
     {
         return services
             .AddElm(configuration)
+            .AddFeatures()
             .AddApplicationServices();
     }
 
@@ -33,7 +31,6 @@ public static class ApplicationDependencyInjection
         services.AddTransient<IIvrService, IvrService>();
         services.AddTransient<IActivityService, ActivityService>();
         services.AddTransient<IFieldService, FieldService>();
-        services.AddTransient<ITicketService, TicketService>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<ICustomerService, CustomerService>();
         services.AddValidatorsFromAssembly(typeof(CreateProfileValidator).Assembly);
@@ -49,11 +46,6 @@ public static class ApplicationDependencyInjection
         services.AddTransient<IKidanaService, KidanaService>();
         services.AddTransient<IServiceDeskService, ServiceDeskService>();
         services.AddTransient<ISahabService, SahabService>();
-        services.AddTransient<INusukTicketsClient, NusukTicketsClient>();
-        services.AddTransient<IServiceDeskTicketsClient, ServiceDeskTicketsClient>();
-        services.AddTransient<ITicketCategoriesService, TicketCategoriesService>();
-        services.AddTransient<IIndividualsService, IndividualsService>();
-        services.AddTransient<ICountriesService, CountriesService>();
 
         return services;
     }

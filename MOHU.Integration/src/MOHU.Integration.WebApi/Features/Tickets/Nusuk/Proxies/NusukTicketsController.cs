@@ -1,6 +1,6 @@
-﻿using MOHU.Integration.Application.Nusuk.Common.Dtos.Responses;
-using MOHU.Integration.Application.Nusuk.Tickets;
-using MOHU.Integration.Application.Nusuk.Tickets.Dtos.Requests;
+﻿using MOHU.Integration.Application.Elm.Nusuk.Common.Dtos.Responses;
+using MOHU.Integration.Application.Elm.Nusuk.Tickets;
+using MOHU.Integration.Application.Elm.Nusuk.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.Nusuk.Proxies;
 

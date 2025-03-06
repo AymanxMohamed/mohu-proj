@@ -1,0 +1,90 @@
+﻿{
+  "response": {
+    "responseCode": "0",
+    "responseDesc": "Success",
+    "requestUUID": "f52914b8-47f3-47c9-8389-9b0628848cf0",
+    "traceError": null,
+    "data": [
+      {
+        "id": 57,
+        "nationalityNameAr": "كولومبيا",
+        "nationalityNameEn": "Colombia",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "COL",
+        "cntryState": 0
+      },
+      {
+        "id": 597,
+        "nationalityNameAr": "سورينام",
+        "nationalityNameEn": "Suriname",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "SUR",
+        "cntryState": 0
+      },
+      {
+        "id": 598,
+        "nationalityNameAr": "الاوروغواي",
+        "nationalityNameEn": "Uruguay",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "URY",
+        "cntryState": 0
+      },
+      {
+        "id": 972,
+        "nationalityNameAr": "فلسطين عرب",
+        "nationalityNameEn": "Philistine (Arab 48)",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "PSE-1",
+        "cntryState": 0
+      },
+      {
+        "id": 686,
+        "nationalityNameAr": "كيريباتي",
+        "nationalityNameEn": "Kiribati",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "KIR",
+        "cntryState": 0
+      },
+      {
+        "id": 6702,
+        "nationalityNameAr": "جزر ماريانا الشمالية",
+        "nationalityNameEn": "Northern Marianas Islands",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "MNP",
+        "cntryState": 0
+      },
+      {
+        "id": 677,
+        "nationalityNameAr": "جزيرة سليمان",
+        "nationalityNameEn": "Solomon Islands",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "SLB",
+        "cntryState": 0
+      },
+      {
+        "id": 501,
+        "nationalityNameAr": "بيليز",
+        "nationalityNameEn": "Belize",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "BLZ",
+        "cntryState": 0
+      },
+      {
+        "id": 27,
+        "nationalityNameAr": "جنوب افريقيا",
+        "nationalityNameEn": "South Africa",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "ZAF",
+        "cntryState": 0
+      },
+      {
+        "id": 291,
+        "nationalityNameAr": "إرتريا",
+        "nationalityNameEn": "Eritrea",
+        "nationalityMoiNumber": null,
+        "nationalityMofaNumber": "ERI",
+        "cntryState": 0
+      }
+    ]
+  }
+}

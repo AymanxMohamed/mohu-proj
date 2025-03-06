@@ -6,9 +6,9 @@ using MOHU.Integration.Domain.Features.Countries;
 using MOHU.Integration.Domain.Features.Countries.Constants;
 using MOHU.Integration.Domain.Features.Countries.Enums;
 
-namespace MOHU.Integration.Application.Features.Countries.Services;
+namespace MOHU.Integration.Application.Features.Nationalities.Services;
 
-public class CountriesService(
+public class NationalitiesService(
     IElmInformationCenterCountriesClient client,
     IConfigurationService configurationService,
     ICrmContext crmContext) : ElmSyncService<IElmInformationCenterCountriesClient, ElmCountryResponse, Country>(
@@ -19,7 +19,7 @@ public class CountriesService(
         Country.Create,
         x => x.ToCrmEntity(),
         (x, y) => x == y),
-    ICountriesService
+    INationalitiesService
 {
     protected override QueryExpression GetCrmEntitiesByElmReferenceIdsQuery(List<int> ids)
     {
@@ -29,7 +29,7 @@ public class CountriesService(
             ConditionExpressionFactory.CreateConditionExpression(
                 columnLogicalName: CountriesConstants.Fields.ElmEntityType,
                 conditionOperator: ConditionOperator.Equal,
-                value: (int)ElmEntityTypeEnum.Country));
+                value: (int)ElmEntityTypeEnum.Nationality));
         
         return query;
     }

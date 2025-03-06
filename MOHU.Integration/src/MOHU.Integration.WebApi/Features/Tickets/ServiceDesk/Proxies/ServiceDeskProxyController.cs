@@ -1,4 +1,4 @@
-﻿using MOHU.Integration.Application.Features.ThirdParties.ServiceDesk.Tickets.Services;
+﻿using MOHU.Integration.Application.Elm.ServiceDesk.Tickets.Services;
 using MOHU.Integration.Contracts.Dto.ServiceDeskProxy;
 using MOHU.Integration.Contracts.ThirdParties.ServiceDesk.Tickets.Dtos.Responses;
 using SDIntegraion;
