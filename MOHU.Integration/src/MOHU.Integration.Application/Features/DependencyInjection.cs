@@ -1,5 +1,6 @@
 ﻿using MOHU.Integration.Application.Features.Countries.Services;
 using MOHU.Integration.Application.Features.Individuals.Services;
+using MOHU.Integration.Application.Features.Nationalities.Services;
 using MOHU.Integration.Application.Features.TicketCategories;
 using MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -29,7 +30,7 @@ public static class DependencyInjection
     
     private static IServiceCollection AddNationalities(this IServiceCollection services)
     {
-        return services.AddTransient<IIndividualsService, IndividualsService>();
+        return services.AddTransient<INationalitiesService, NationalitiesService>();
     }
     
     private static IServiceCollection AddTicketCategories(this IServiceCollection services)

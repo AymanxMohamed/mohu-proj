@@ -1,7 +1,7 @@
 ﻿using Common.Crm.Infrastructure.Factories;
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Services;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Countries.Clients;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Countries.Dtos.Responses;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Nationalities.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Nationalities.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Countries;
 using MOHU.Integration.Domain.Features.Countries.Constants;
 using MOHU.Integration.Domain.Features.Countries.Enums;
@@ -9,9 +9,9 @@ using MOHU.Integration.Domain.Features.Countries.Enums;
 namespace MOHU.Integration.Application.Features.Nationalities.Services;
 
 public class NationalitiesService(
-    IElmInformationCenterCountriesClient client,
+    IElmInformationCenterNationalitiesClient client,
     IConfigurationService configurationService,
-    ICrmContext crmContext) : ElmSyncService<IElmInformationCenterCountriesClient, ElmCountryResponse, Country>(
+    ICrmContext crmContext) : ElmSyncService<IElmInformationCenterNationalitiesClient, ElmNationalityResponse, Country>(
         configurationService,
         client,
         crmContext,

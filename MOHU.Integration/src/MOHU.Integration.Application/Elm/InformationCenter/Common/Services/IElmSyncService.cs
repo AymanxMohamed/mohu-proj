@@ -7,4 +7,6 @@ public interface IElmSyncService<TCrmEntity>
     where TCrmEntity : CrmEntity
 {
     Task<List<TCrmEntity>> Sync();
+
+    List<TCrmEntity> GetCrmEntitiesByElmReferenceIds(List<int>? ids);
 }

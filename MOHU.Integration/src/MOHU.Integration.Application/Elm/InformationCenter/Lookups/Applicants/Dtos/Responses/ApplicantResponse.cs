@@ -1,5 +1,6 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Responses;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
+using MOHU.Integration.Domain.Features.Countries;
 using MOHU.Integration.Domain.Features.Individuals.Enums;
 using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
@@ -135,7 +136,10 @@ public class ApplicantResponse : ElmEntity<Individual>
     
     public DateTime Timestamp { get; set; }
     
-    public override Individual ToCrmEntity(EntityReference? id = null) => ToElmApplicant().ToCrmEntity(id);
+    public override Individual ToCrmEntity(
+        EntityReference? id = null) => ToElmApplicant([], []).ToCrmEntity(id);
     
-    public ElmApplicant ToElmApplicant() => ElmApplicant.Create(this);
+    public ElmApplicant ToElmApplicant(
+        Dictionary<int, Country> countries,
+        Dictionary<int, Country> nationalities) => ElmApplicant.Create(this, countries: countries, nationalities);
 }

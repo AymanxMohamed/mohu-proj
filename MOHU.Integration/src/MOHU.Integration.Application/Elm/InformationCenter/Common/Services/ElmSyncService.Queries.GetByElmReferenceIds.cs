@@ -5,18 +5,7 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Services;
 
 public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>
 {
-    protected virtual QueryExpression GetCrmEntitiesByElmReferenceIdsQuery(List<int> ids)
-    {
-        return QueryExpressionFactory
-            .CreateQueryExpression(
-                entityLogicalName,
-                conditionExpressions: [ConditionExpressionFactory.CreateConditionExpression(
-                    columnLogicalName: CommonConstants.Fields.IntegrationDetails.ElmReferenceId,
-                    conditionOperator: ConditionOperator.In,
-                    values: [..ids])]);
-    }
-    
-    private  List<TCrmEntity> GetCrmEntitiesByElmReferenceIds(List<int>? ids)
+    public List<TCrmEntity> GetCrmEntitiesByElmReferenceIds(List<int>? ids)
     {
         if (ids is null || ids.Count == 0)
         {
@@ -26,5 +15,16 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>
         var query = GetCrmEntitiesByElmReferenceIdsQuery(ids);
 
         return _genericRepository.ListAll(query).Select(factory).ToList();
+    }
+    
+    protected virtual QueryExpression GetCrmEntitiesByElmReferenceIdsQuery(List<int> ids)
+    {
+        return QueryExpressionFactory
+            .CreateQueryExpression(
+                entityLogicalName,
+                conditionExpressions: [ConditionExpressionFactory.CreateConditionExpression(
+                    columnLogicalName: CommonConstants.Fields.IntegrationDetails.ElmReferenceId,
+                    conditionOperator: ConditionOperator.In,
+                    values: [..ids])]);
     }
 }

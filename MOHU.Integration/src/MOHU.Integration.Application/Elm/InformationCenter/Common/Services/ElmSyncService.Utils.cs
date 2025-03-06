@@ -2,5 +2,5 @@
 
 public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>
 {
-    public string GetSyncKey() => $"Last_Synced_{typeof(TElmEntity).Name}_Page";
+    private static string GetSyncKey() => $"Last_Synced_{typeof(TElmEntity).Name}_Page";
 }
