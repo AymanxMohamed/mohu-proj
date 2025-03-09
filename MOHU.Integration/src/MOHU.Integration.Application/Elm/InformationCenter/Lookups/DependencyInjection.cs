@@ -1,5 +1,8 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.IhcCompanies.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.SpcCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Countries.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Nationalities.Clients;
 
@@ -17,6 +20,7 @@ public static class DependencyInjection
         return services
             .AddApplicantData(useFileClients)
             .AddCountries(useFileClients)
+            .AddCompanies(useFileClients)
             .AddNationalities(useFileClients);
     }
     
@@ -33,6 +37,30 @@ public static class DependencyInjection
             ? services.AddScoped<IElmInformationCenterCountriesClient, ElmInformationCenterCountriesFileClient>()
             : services.AddScoped<IElmInformationCenterCountriesClient, ElmInformationCenterCountriesClient>();
     }
+    
+    private static IServiceCollection AddCompanies(this IServiceCollection services, bool useFileClients)
+    {
+        return useFileClients
+            ? services.AddCompaniesFileClients()
+            : services.AddCompaniesRealClients();
+    }
+
+    private static IServiceCollection AddCompaniesRealClients(this IServiceCollection services)
+    {
+        services.AddScoped<IElmInformationCenterSpcCompaniesClient, ElmInformationCenterSpcCompaniesClient>();
+        services.AddScoped<IElmInformationCenterDhcHajCompaniesClient, ElmInformationCenterDhcHajCompaniesClient>();
+        services.AddScoped<IElmInformationCenterIhcCompaniesClient, ElmInformationCenterIhcCompaniesClient>();
+        return services;
+    }
+    
+    private static IServiceCollection AddCompaniesFileClients(this IServiceCollection services)
+    {
+        services.AddScoped<IElmInformationCenterSpcCompaniesClient, ElmInformationCenterSpcCompaniesFileClient>();
+        services.AddScoped<IElmInformationCenterDhcHajCompaniesClient, ElmInformationCenterDhcHajCompaniesFileClient>();
+        services.AddScoped<IElmInformationCenterIhcCompaniesClient, ElmInformationCenterIhcCompaniesFileClient>();
+        return services;
+    }
+
     
     private static IServiceCollection AddNationalities(this IServiceCollection services, bool useFileClients)
     {

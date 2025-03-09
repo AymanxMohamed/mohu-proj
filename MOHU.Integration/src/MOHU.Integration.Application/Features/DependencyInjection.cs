@@ -1,4 +1,7 @@
-﻿using MOHU.Integration.Application.Features.Countries.Services;
+﻿using MOHU.Integration.Application.Features.Companies.DhcHajCompanies.Services;
+using MOHU.Integration.Application.Features.Companies.IhcCompanies.Services;
+using MOHU.Integration.Application.Features.Companies.SpcCompanies.Services;
+using MOHU.Integration.Application.Features.Countries.Services;
 using MOHU.Integration.Application.Features.Individuals.Services;
 using MOHU.Integration.Application.Features.Nationalities.Services;
 using MOHU.Integration.Application.Features.TicketCategories;
@@ -12,6 +15,7 @@ public static class DependencyInjection
     {
         return services
             .AddCountries()
+            .AddCompanies()
             .AddIndividuals()
             .AddNationalities()
             .AddTicketCategories()
@@ -21,6 +25,14 @@ public static class DependencyInjection
     private static IServiceCollection AddCountries(this IServiceCollection services)
     {
         return services.AddTransient<ICountriesService, CountriesService>();
+    }
+    
+    private static IServiceCollection AddCompanies(this IServiceCollection services)
+    {
+        services.AddTransient<ISpcCompaniesService, SpcCompaniesService>();
+        services.AddTransient<IDhcHajCompaniesService, DhcHajCompaniesService>();
+        services.AddTransient<IIhcCompaniesService, IhcCompaniesService>();
+        return services;
     }
     
     private static IServiceCollection AddIndividuals(this IServiceCollection services)

@@ -1,5 +1,8 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.IhcCompanies.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.SpcCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Countries.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Nationalities.Clients;
 
@@ -10,7 +13,10 @@ namespace MOHU.Integration.WebApi.Elm.InformationCenter.ProxiesControllers;
 public class LookupsProxyController(
     IElmInformationCenterApplicantDataClient applicantDataClient,
     IElmInformationCenterCountriesClient countriesClient,
-    IElmInformationCenterNationalitiesClient nationalitiesClient) : ControllerBase
+    IElmInformationCenterNationalitiesClient nationalitiesClient,
+    IElmInformationCenterSpcCompaniesClient spcCompaniesClient,
+    IElmInformationCenterDhcHajCompaniesClient dhcHajCompaniesClient,
+    IElmInformationCenterIhcCompaniesClient ihcCompaniesClient)  : ControllerBase
 {
     [HttpPost("applicants")]
     public IActionResult GetApplicantData(ElmFilterRequest? filterRequest)
@@ -32,6 +38,30 @@ public class LookupsProxyController(
     public IActionResult GetNationalities(ElmFilterRequest? filterRequest)
     {
         var entities = nationalitiesClient.GetAll(filterRequest).ToValueOrException();
+
+        return Ok(entities);
+    }
+    
+    [HttpPost("spc-companies")]
+    public IActionResult GetSpcCompanies(ElmFilterRequest? filterRequest)
+    {
+        var entities = spcCompaniesClient.GetAll(filterRequest).ToValueOrException();
+
+        return Ok(entities);
+    }
+    
+    [HttpPost("dhc-haj-companies")]
+    public IActionResult GetDhcHajCompanies(ElmFilterRequest? filterRequest)
+    {
+        var entities = dhcHajCompaniesClient.GetAll(filterRequest).ToValueOrException();
+
+        return Ok(entities);
+    }
+    
+    [HttpPost("ihc-companies")]
+    public IActionResult GetIhcCompanies(ElmFilterRequest? filterRequest)
+    {
+        var entities = ihcCompaniesClient.GetAll(filterRequest).ToValueOrException();
 
         return Ok(entities);
     }
