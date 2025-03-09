@@ -23,16 +23,79 @@ public class ElmInformationCenterLookupsController(
     [HttpPost("sync")]
     public async Task<IActionResult> Create()
     {
+        var countries = await countriesService.Sync();
+        
+        var nationalities = await nationalitiesService.Sync();
+        
+        var individuals = await individualsService.Sync();
+        
+        var spcCompanies = await spcCompaniesService.Sync();
+        
+        var ihcCompanies = await ihcCompaniesService.Sync();
+        
+        var dhcHajCompanies = await dhcHajCompaniesService.Sync();
+        
+        var hajMissions = await hajMissionCompaniesService.Sync();
+        
+        var houses = await housesService.Sync();
+            
         return Ok(new
         {
-            countries = await countriesService.Sync(),
-            nationalities = await nationalitiesService.Sync(),
-            individuals = await individualsService.Sync(),
-            spcCompanies = await spcCompaniesService.Sync(),
-            ihcCompanies = await ihcCompaniesService.Sync(),
-            dhcHajCompanies = await dhcHajCompaniesService.Sync(),
-            hajMissions = await hajMissionCompaniesService.Sync(),
-            houses = await housesService.Sync(),
+            Total = 
+                countries.Count 
+                + nationalities.Count 
+                + individuals.Count 
+                + spcCompanies.Count 
+                + ihcCompanies.Count
+                + dhcHajCompanies.Count
+                + hajMissions.Count
+                + houses.Count,
+            Items = new
+            {
+                countries = new
+                {
+                    total = countries.Count,
+                    items = countries
+                },
+                nationalities = new
+                {
+                    total = nationalities.Count,
+                    items = nationalities
+                },
+                individuals = new
+                {
+                    total = individuals.Count,
+                    items = individuals
+                },
+                companies = new
+                {
+                    spcCompanies = new
+                    {
+                        total = spcCompanies.Count,
+                        items = spcCompanies
+                    },
+                    ihcCompanies  = new
+                    {
+                        total = ihcCompanies.Count,
+                        items = ihcCompanies
+                    },
+                    dhcHajCompanies  = new
+                    {
+                        total = dhcHajCompanies.Count,
+                        items = dhcHajCompanies
+                    },
+                    hajMissions  = new
+                    {
+                        total = hajMissions.Count,
+                        items = hajMissions
+                    },
+                    houses = new
+                    {
+                        total = houses.Count,
+                        items = houses
+                    },
+                }
+            }
         });
     }
 }
