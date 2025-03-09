@@ -1,0 +1,5 @@
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.HajMissionsCompanies.Dtos.Responses;
+
+namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.HajMissionsCompanies.Clients;
+
+public interface IElmInformationCenterHajMissionCompaniesClient : IElmEntityClient<ElmHajMissionCompanyResponse>;

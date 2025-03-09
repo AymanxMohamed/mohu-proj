@@ -1,0 +1,100 @@
+﻿{
+  "response": {
+    "responseCode": "0",
+    "responseDesc": "Success",
+    "requestUUID": "91d195d8-61ae-411c-90bc-dc3840d856e6",
+    "traceError": null,
+    "data": [
+      {
+        "businessId": 1017575,
+        "houseCommercialNameAr": "فندق الشام الاقليمية",
+        "houseCommercialNameLa": "فندق الشام الاقليمية",
+        "houseCityId": 605,
+        "houseState": 0,
+        "timestamp": "2025-03-04T22:18:25",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1016341,
+        "houseCommercialNameAr": "السدرة العالية",
+        "houseCommercialNameLa": "السدرة العالية",
+        "houseCityId": 605,
+        "houseState": 0,
+        "timestamp": "2025-02-27T15:34:04",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1000417,
+        "houseCommercialNameAr": " رمادا الشبيكة",
+        "houseCommercialNameLa": " رمادا الشبيكة",
+        "houseCityId": 603,
+        "houseState": 0,
+        "timestamp": "2025-02-26T22:20:28",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1012300,
+        "houseCommercialNameAr": " فندق انصار الذهبي",
+        "houseCommercialNameLa": " فندق انصار الذهبي",
+        "houseCityId": 605,
+        "houseState": 0,
+        "timestamp": "2025-02-26T21:40:27",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1000214,
+        "houseCommercialNameAr": "دار ماسة البركة",
+        "houseCommercialNameLa": "دار ماسة البركة",
+        "houseCityId": 605,
+        "houseState": 0,
+        "timestamp": "2025-02-26T13:38:35",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1001417,
+        "houseCommercialNameAr": "ال سرى",
+        "houseCommercialNameLa": "ال سرى",
+        "houseCityId": 603,
+        "houseState": 0,
+        "timestamp": "2025-02-24T22:53:58",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1020731,
+        "houseCommercialNameAr": "فاطمه محمد عجب نور وابناء لطفي حريري",
+        "houseCommercialNameLa": "فاطمه محمد عجب نور وابناء لطفي حريري",
+        "houseCityId": 603,
+        "houseState": 0,
+        "timestamp": "2025-02-24T00:11:12",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1011632,
+        "houseCommercialNameAr": "محمدعمر باوزير",
+        "houseCommercialNameLa": "محمدعمر باوزير",
+        "houseCityId": 603,
+        "houseState": 0,
+        "timestamp": "2025-02-24T00:11:12",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1036341,
+        "houseCommercialNameAr": "فندق ديار البستان",
+        "houseCommercialNameLa": "فندق ديار البستان",
+        "houseCityId": 605,
+        "houseState": 0,
+        "timestamp": "2025-02-24T00:11:12",
+        "timestampHij": 14450529
+      },
+      {
+        "businessId": 1000143,
+        "houseCommercialNameAr": "محمدحسين مابوفان ",
+        "houseCommercialNameLa": "محمدحسين مابوفان",
+        "houseCityId": 603,
+        "houseState": 0,
+        "timestamp": "2025-02-24T00:11:12",
+        "timestampHij": 14450529
+      }
+    ]
+  }
+}

@@ -19,18 +19,4 @@ public class DhcHajCompaniesService(
         Company.Create,
         x => x.ToCrmEntity(),
         (x, y) => x == y),
-    IDhcHajCompaniesService
-{
-    protected override QueryExpression GetCrmEntitiesByElmReferenceIdsQuery(List<int> ids)
-    {
-        var query = base.GetCrmEntitiesByElmReferenceIdsQuery(ids);
-        
-        query.Criteria.AddCondition(
-            ConditionExpressionFactory.CreateConditionExpression(
-                columnLogicalName: CompaniesConstants.Fields.ElmCompanyType,
-                conditionOperator: ConditionOperator.Equal,
-                value: (int)ElmCompanyTypeEnum.DhcHajCompany));
-        
-        return query;
-    }
-}
+    IDhcHajCompaniesService;

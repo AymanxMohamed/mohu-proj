@@ -1,0 +1,90 @@
+﻿{
+  "response": {
+    "responseCode": "0",
+    "responseDesc": "Success",
+    "requestUUID": "cdfc9094-f6e5-4549-85cb-7d0de515f02e",
+    "traceError": null,
+    "data": [
+      {
+        "businessId": 537,
+        "countryId": 375,
+        "hmState": 0,
+        "nameAr": "روسيا البيضاء",
+        "nameEn": "Belarus",
+        "timestamp": "2025-03-05T14:43:10"
+      },
+      {
+        "businessId": 537,
+        "countryId": 375,
+        "hmState": 0,
+        "nameAr": "روسيا البيضاء",
+        "nameEn": "Belarus",
+        "timestamp": "2025-03-05T14:43:10"
+      },
+      {
+        "businessId": 537,
+        "countryId": 375,
+        "hmState": 0,
+        "nameAr": "روسيا البيضاء",
+        "nameEn": "Belarus",
+        "timestamp": "2025-03-05T14:43:10"
+      },
+      {
+        "businessId": 537,
+        "countryId": 375,
+        "hmState": 0,
+        "nameAr": "روسيا البيضاء",
+        "nameEn": "Belarus",
+        "timestamp": "2025-03-05T14:43:10"
+      },
+      {
+        "businessId": 537,
+        "countryId": 375,
+        "hmState": 0,
+        "nameAr": "روسيا البيضاء",
+        "nameEn": "Belarus",
+        "timestamp": "2025-03-05T14:43:10"
+      },
+      {
+        "businessId": 537,
+        "countryId": 375,
+        "hmState": 0,
+        "nameAr": "روسيا البيضاء",
+        "nameEn": "Belarus",
+        "timestamp": "2025-03-05T14:43:10"
+      },
+      {
+        "businessId": 537,
+        "countryId": 375,
+        "hmState": 0,
+        "nameAr": "روسيا البيضاء",
+        "nameEn": "Belarus",
+        "timestamp": "2025-03-05T14:43:10"
+      },
+      {
+        "businessId": 537,
+        "countryId": 375,
+        "hmState": 0,
+        "nameAr": "روسيا البيضاء",
+        "nameEn": "Belarus",
+        "timestamp": "2025-03-05T14:43:10"
+      },
+      {
+        "businessId": 902,
+        "countryId": 20,
+        "hmState": 0,
+        "nameAr": "مصر - الجمعيات",
+        "nameEn": "Egypt - associations",
+        "timestamp": "2025-03-05T14:10:28"
+      },
+      {
+        "businessId": 209,
+        "countryId": 222,
+        "hmState": 0,
+        "nameAr": "موريتانيا",
+        "nameEn": "Mauritania",
+        "timestamp": "2025-02-27T10:51:25"
+      }
+    ]
+  }
+}

@@ -1,6 +1,8 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.HajMissionsCompanies.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.Houses.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.IhcCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.SpcCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Countries.Clients;
@@ -16,7 +18,9 @@ public class LookupsProxyController(
     IElmInformationCenterNationalitiesClient nationalitiesClient,
     IElmInformationCenterSpcCompaniesClient spcCompaniesClient,
     IElmInformationCenterDhcHajCompaniesClient dhcHajCompaniesClient,
-    IElmInformationCenterIhcCompaniesClient ihcCompaniesClient)  : ControllerBase
+    IElmInformationCenterIhcCompaniesClient ihcCompaniesClient,
+    IElmInformationCenterHajMissionCompaniesClient hajMissionsClient,
+    IElmInformationCenterHousesClient housesClient)  : ControllerBase
 {
     [HttpPost("applicants")]
     public IActionResult GetApplicantData(ElmFilterRequest? filterRequest)
@@ -62,6 +66,22 @@ public class LookupsProxyController(
     public IActionResult GetIhcCompanies(ElmFilterRequest? filterRequest)
     {
         var entities = ihcCompaniesClient.GetAll(filterRequest).ToValueOrException();
+
+        return Ok(entities);
+    }
+    
+    [HttpPost("haj-missions")]
+    public IActionResult GetHajMissions(ElmFilterRequest? filterRequest)
+    {
+        var entities = hajMissionsClient.GetAll(filterRequest).ToValueOrException();
+
+        return Ok(entities);
+    }
+    
+    [HttpPost("houses")]
+    public IActionResult GetHouses(ElmFilterRequest? filterRequest)
+    {
+        var entities = housesClient.GetAll(filterRequest).ToValueOrException();
 
         return Ok(entities);
     }

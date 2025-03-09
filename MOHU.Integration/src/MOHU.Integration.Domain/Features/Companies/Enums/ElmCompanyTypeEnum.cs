@@ -6,4 +6,5 @@ public enum ElmCompanyTypeEnum
     IhcHajCompany = 2,
     House = 3,
     DhcHajCompany = 4,
+    HajMissionCompany = 5,
 }
