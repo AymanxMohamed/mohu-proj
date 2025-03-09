@@ -19,4 +19,26 @@
     <ProjectReference Include="..\MOHU.Integration.Shared\MOHU.Integration.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Elm\InformationCenter\Lookups\Companies\Data\dhc-haj-companies.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Elm\InformationCenter\Lookups\Companies\Data\ihc-companies.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Elm\InformationCenter\Lookups\Companies\Data\spc-companies.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Companies\SpcCompanies\" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,80 @@
+﻿{
+  "response": {
+    "responseCode": "0",
+    "responseDesc": "Success",
+    "requestUUID": "7a90d759-7a1e-419d-85b2-defa6ea46b69",
+    "traceError": null,
+    "data": [
+      {
+        "businessId": 199680,
+        "companyNameAr": "شركة مستقلة جدا",
+        "companyNameEn": "Very Independent company",
+        "hcState": 0,
+        "timestamp": "2025-03-06T12:41:14"
+      },
+      {
+        "businessId": 199661,
+        "companyNameAr": "عربي",
+        "companyNameEn": "arabic",
+        "hcState": 0,
+        "timestamp": "2025-03-06T12:40:37"
+      },
+      {
+        "businessId": 199621,
+        "companyNameAr": "اسم المنظم المستقل 9.1",
+        "companyNameEn": "IHC 9.1",
+        "hcState": 256,
+        "timestamp": "2025-02-27T14:07:57"
+      },
+      {
+        "businessId": 199581,
+        "companyNameAr": "منظم حج مستقل هولندا",
+        "companyNameEn": "Independent Hajj Company of Netherlands",
+        "hcState": 256,
+        "timestamp": "2025-02-27T13:34:24"
+      },
+      {
+        "businessId": 199580,
+        "companyNameAr": "منظم حج مستقل الدنمارك",
+        "companyNameEn": "Independent Hajj Company of Denmark",
+        "hcState": 256,
+        "timestamp": "2025-02-21T19:05:09"
+      },
+      {
+        "businessId": 149876,
+        "companyNameAr": "تست",
+        "companyNameEn": "Test",
+        "hcState": 256,
+        "timestamp": "2025-02-16T15:43:34"
+      },
+      {
+        "businessId": 149876,
+        "companyNameAr": "تست",
+        "companyNameEn": "Test",
+        "hcState": 256,
+        "timestamp": "2025-02-16T15:43:34"
+      },
+      {
+        "businessId": 149876,
+        "companyNameAr": "تست",
+        "companyNameEn": "Test",
+        "hcState": 256,
+        "timestamp": "2025-02-16T15:43:34"
+      },
+      {
+        "businessId": 177391,
+        "companyNameAr": "شركة حج مستقل",
+        "companyNameEn": "ihc haj company",
+        "hcState": 0,
+        "timestamp": "2025-02-11T16:38:11"
+      },
+      {
+        "businessId": 199801,
+        "companyNameAr": "مستقلل",
+        "companyNameEn": "Indep",
+        "hcState": 0,
+        "timestamp": "2025-02-11T11:37:06"
+      }
+    ]
+  }
+}

@@ -1,0 +1,100 @@
+﻿{
+  "response": {
+    "responseCode": "0",
+    "responseDesc": "Success",
+    "requestUUID": "b4ce2fa9-5f44-4656-bec3-5f5a6c5ed184",
+    "traceError": null,
+    "data": [
+      {
+        "businessId": 3089,
+        "companyNameAr": "حملة الثريا للحج والعمرة",
+        "dhcTypeId": 5,
+        "companyNameEn": "AL THURAYA HAJ & UMMRAH",
+        "hmId": 85,
+        "hcState": 0,
+        "timestamp": "2025-02-19T11:48:18"
+      },
+      {
+        "businessId": 3090,
+        "companyNameAr": "حملة الركن الخامس للحج والعمرة",
+        "dhcTypeId": 5,
+        "companyNameEn": "HAMLAT ALRKN ALKAMES FOR HAJ AND OMRA",
+        "hmId": 85,
+        "hcState": 0,
+        "timestamp": "2025-02-17T14:53:28"
+      },
+      {
+        "businessId": 2546,
+        "companyNameAr": "ارهن تراين",
+        "dhcTypeId": 1,
+        "companyNameEn": "ERHAN TRANS",
+        "hmId": 83,
+        "hcState": 0,
+        "timestamp": "2025-02-16T15:02:47"
+      },
+      {
+        "businessId": 1898,
+        "companyNameAr": "الفرقان للحج والعمرة",
+        "dhcTypeId": 5,
+        "companyNameEn": "ALFORQAN FOR HAJ",
+        "hmId": 85,
+        "hcState": 0,
+        "timestamp": "2025-02-16T15:02:47"
+      },
+      {
+        "businessId": 2307,
+        "companyNameAr": "وكالة النيجر للحج والعمرة",
+        "dhcTypeId": 1,
+        "companyNameEn": "ANPO",
+        "hmId": 96,
+        "hcState": 0,
+        "timestamp": "2025-02-11T09:58:02"
+      },
+      {
+        "businessId": 53967,
+        "companyNameAr": "العراق منظم تابع",
+        "dhcTypeId": 1,
+        "companyNameEn": "DHC IRQ",
+        "hmId": 116,
+        "hcState": 0,
+        "timestamp": "2025-02-09T16:54:13"
+      },
+      {
+        "businessId": 54525,
+        "companyNameAr": "منظم حج تابع للإمارت 1",
+        "dhcTypeId": 4,
+        "companyNameEn": "First DHC of UAE",
+        "hmId": 85,
+        "hcState": 0,
+        "timestamp": "2025-02-07T17:33:32"
+      },
+      {
+        "businessId": 10406,
+        "companyNameAr": "ألفا ترافل غامبيا",
+        "companyNameEn": "Alpha Travel Gambia",
+        "hcState": 0,
+        "timestamp": "2025-02-06T11:55:18",
+        "dhcTypeId": null,
+        "hmId": 120
+      },
+      {
+        "businessId": 54605,
+        "companyNameAr": "منظم اوزباكستان",
+        "dhcTypeId": 1,
+        "companyNameEn": "COMPANY AUZPAKISTAN",
+        "hmId": 495218,
+        "hcState": 0,
+        "timestamp": "2025-02-05T16:26:05"
+      },
+      {
+        "businessId": 54585,
+        "companyNameAr": "منظم تابع موريتانيا 1",
+        "dhcTypeId": 3,
+        "companyNameEn": "DHC Mauritania 1",
+        "hmId": 145,
+        "hcState": 0,
+        "timestamp": "2025-02-01T15:22:48"
+      }
+    ]
+  }
+}

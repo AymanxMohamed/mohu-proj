@@ -32,7 +32,7 @@ public record UpdateCompanyRequest(
     {
         if (!string.IsNullOrWhiteSpace(NewCompanyName))
         {
-            entity[CompaniesConstants.Fields.Name] = NewCompanyName;
+            entity[CompaniesConstants.Fields.OrganizationArabicName] = NewCompanyName;
         }
         
         entity[CompaniesConstants.Fields.SicCode] = SicCode.ToString();
@@ -48,7 +48,7 @@ public record UpdateCompanyRequest(
     
     
     public static ColumnSet GetColumnSet() => new(
-        CompaniesConstants.Fields.Name, 
+        CompaniesConstants.Fields.OrganizationArabicName, 
         CompaniesConstants.Fields.SicCode, 
         CompaniesConstants.Fields.LicenseNumber);
 
@@ -65,7 +65,7 @@ public record UpdateCompanyRequest(
     
     private string GetKeyLogicalName() => UpdateCompaniesKeyType.CompanyName switch
     {
-        UpdateCompaniesKeyType.CompanyName => CompaniesConstants.Fields.Name,
+        UpdateCompaniesKeyType.CompanyName => CompaniesConstants.Fields.OrganizationArabicName,
         UpdateCompaniesKeyType.Id => CompaniesConstants.Fields.Id,
         _ => throw new ArgumentOutOfRangeException()
     };

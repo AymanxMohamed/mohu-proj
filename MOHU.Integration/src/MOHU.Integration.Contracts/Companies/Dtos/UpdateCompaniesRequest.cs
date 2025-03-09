@@ -12,7 +12,7 @@ public record UpdateCompaniesRequest(List<UpdateCompanyRequest> Requests)
             .SelectMany(request => request.Update(entities))
             .ToList();
 
-    public QueryExpression ToQueryExpression() => new(CompaniesConstants.EntityLogicalName)
+    public QueryExpression ToQueryExpression() => new(CompaniesConstants.LogicalName)
         {   
             ColumnSet = UpdateCompanyRequest.GetColumnSet(),
             Criteria = ToFilterExpression()

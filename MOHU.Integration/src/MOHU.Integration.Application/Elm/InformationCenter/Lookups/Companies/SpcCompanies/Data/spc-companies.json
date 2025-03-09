@@ -1,0 +1,80 @@
+﻿{
+  "response": {
+    "responseCode": "0",
+    "responseDesc": "Success",
+    "requestUUID": "e752a3c4-cf44-4da1-9633-6a1760a712fd",
+    "traceError": null,
+    "data": [
+      {
+        "businessId": 927,
+        "companyNameAr": "شركة التطوير",
+        "companyNameEn": "test spc new asf",
+        "hcState": 0,
+        "timestamp": "2025-02-16T17:15:44"
+      },
+      {
+        "businessId": 907,
+        "companyNameAr": "شركة التقنية",
+        "companyNameEn": "spc asd",
+        "hcState": 0,
+        "timestamp": "2025-02-12T00:30:09"
+      },
+      {
+        "businessId": 888,
+        "companyNameAr": " مؤسسة صلاح ",
+        "companyNameEn": "Salah company",
+        "hcState": 0,
+        "timestamp": "2025-01-28T12:58:25"
+      },
+      {
+        "businessId": 887,
+        "companyNameAr": " مؤسسة فاروق - هاشم",
+        "companyNameEn": "SPC.CD",
+        "hcState": 0,
+        "timestamp": "2025-01-25T20:28:27"
+      },
+      {
+        "businessId": 868,
+        "companyNameAr": " مؤسسة أسامة - أسامة",
+        "companyNameEn": "ahmed eldeeb",
+        "hcState": 0,
+        "timestamp": "2025-01-23T09:51:56"
+      },
+      {
+        "businessId": 867,
+        "companyNameAr": " مؤسسة أمجد, أمجد و بلال",
+        "companyNameEn": "service Provider ",
+        "hcState": 0,
+        "timestamp": "2025-01-22T19:51:45"
+      },
+      {
+        "businessId": 847,
+        "companyNameAr": " مؤسسة جابر‌, فريد و أسامة",
+        "companyNameEn": "Farid and Osama",
+        "hcState": 0,
+        "timestamp": "2025-01-19T15:07:34"
+      },
+      {
+        "businessId": 828,
+        "companyNameAr": " مؤسسة عاشور ",
+        "companyNameEn": "Ashoor Company",
+        "hcState": 0,
+        "timestamp": "2025-01-08T16:03:45"
+      },
+      {
+        "businessId": 827,
+        "companyNameAr": " مؤسسة حسن - حازم",
+        "companyNameEn": "hasan ",
+        "hcState": 0,
+        "timestamp": "2025-01-05T17:52:49"
+      },
+      {
+        "businessId": 768,
+        "companyNameAr": " مؤسسة زيد - أمجد",
+        "companyNameEn": "ttttttttttttt",
+        "hcState": 0,
+        "timestamp": "2024-12-12T11:02:26"
+      }
+    ]
+  }
+}
