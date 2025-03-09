@@ -1,5 +1,4 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
-using Throw;
+﻿using Throw;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Common;
 

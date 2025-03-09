@@ -1,5 +1,4 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.IhcCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.SpcCompanies.Clients;

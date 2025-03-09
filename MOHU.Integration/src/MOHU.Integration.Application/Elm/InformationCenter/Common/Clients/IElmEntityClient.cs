@@ -1,6 +1,4 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
-
-namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
+﻿namespace MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
 
 public interface IElmEntityClient<TElmEntity>
 {

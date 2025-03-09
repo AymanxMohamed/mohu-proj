@@ -1,8 +1,6 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
-using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Common;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Common;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.Common.Dtos.Responses;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Dtos.Responses;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.SpcCompanies.Clients;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Clients;
 
@@ -12,6 +10,12 @@ internal class ElmInformationCenterDhcHajCompaniesClient(IElmInformationCenterCl
             client),
         IElmInformationCenterDhcHajCompaniesClient
 {
-    public ErrorOr<List<ElmDhcHajCompanyResponse>> GetAll(ElmFilterRequest? request = null) =>
-        GetLookups<List<ElmDhcHajCompanyResponse>>(request);
-}
+    public ErrorOr<List<ElmDhcHajCompanyResponse>> GetAll(ElmFilterRequest? request = null)
+    {
+        request ??= ElmFilterRequest.Create();
+
+        request.AddSortColumn(ElmSortItem.CreateDesc(nameof(ElmCompanyResponse.TimeStamp).ToLower()));
+
+        return GetLookups<List<ElmDhcHajCompanyResponse>>(request);
+    }
+ }

@@ -1,6 +1,4 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
-using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Common;
 using MOHU.Integration.Application.Features.Countries.Services;

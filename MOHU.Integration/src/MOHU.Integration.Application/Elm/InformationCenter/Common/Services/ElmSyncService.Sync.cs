@@ -1,7 +1,5 @@
 ﻿using Common.Crm.Infrastructure.Factories;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
-using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
-using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Common.CrmEntities;
 
