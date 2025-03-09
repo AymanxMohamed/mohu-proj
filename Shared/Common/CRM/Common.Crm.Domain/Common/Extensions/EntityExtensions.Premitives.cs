@@ -1,10 +1,17 @@
 ﻿using Common.Crm.Domain.Common.ColumnSets.Constants;
 using Common.Crm.Domain.Common.OptionSets.Constants;
+using Common.Crm.Domain.Common.OptionSets.Extensions;
 
 namespace Common.Crm.Domain.Common.Extensions
 {
     public static partial class EntityExtensions
     {
+        public static TEnum? GetEnumValue<TEnum>(this Entity entity, string optionSetName)
+            where TEnum : struct, Enum
+        {
+            return entity.GetAttributeValue<OptionSetValue>(optionSetName).ToEnum<TEnum>();
+        }
+        
         public static OptionSetValue GetOptionSetValue(this Entity entity, string optionSetName)
         {
             return entity.GetAttributeValue<OptionSetValue>(optionSetName);

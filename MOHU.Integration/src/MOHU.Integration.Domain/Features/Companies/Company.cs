@@ -12,14 +12,14 @@ public partial class Company : CrmElmReferencedEntity, IElmReferenceIdResolver
         : base(entity)
     {
         SicCode = entity.GetAttributeValue<string>(CompaniesConstants.Fields.SicCode);
-        ServiceType = entity.GetAttributeValue<ServiceTypeEnum>(CompaniesConstants.Fields.ServiceType);
+        ServiceType = entity.GetEnumValue<ServiceTypeEnum>(CompaniesConstants.Fields.ServiceType);
         OrganizationArabicName = entity.GetAttributeValue<string>(CompaniesConstants.Fields.OrganizationArabicName);
         OrganizationEnglishName = entity.GetAttributeValue<string>(CompaniesConstants.Fields.OrganizationEnglishName);
         LicenseNumber = entity.GetAttributeValue<string>(CompaniesConstants.Fields.LicenseNumber);
         OrganizationCountryId = entity.GetAttributeValue<EntityReference>(CompaniesConstants.Fields.OrganizationCountryId);
         TeamId = entity.GetAttributeValue<EntityReference>(CompaniesConstants.Fields.TeamId);
         IsRepresentativeCompany = entity.GetAttributeValue<bool>(CompaniesConstants.Fields.IsRepresentativeCompany);
-        ElmCompanyType = entity.GetAttributeValue<ElmCompanyTypeEnum>(CompaniesConstants.Fields.ElmCompanyType);
+        ElmCompanyType = entity.GetEnumValue<ElmCompanyTypeEnum>(CompaniesConstants.Fields.ElmCompanyType);
         Email = entity.GetAttributeValue<string>(CompaniesConstants.Fields.Email);
         Address1Name = entity.GetAttributeValue<string>(CompaniesConstants.Fields.Address1Name);
         Address2Name = entity.GetAttributeValue<string>(CompaniesConstants.Fields.Address2Name);
