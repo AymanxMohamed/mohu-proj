@@ -1,13 +1,12 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Common;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.Common.Dtos.Responses;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.IhcCompanies.Dtos.Responses;
-using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.SpcCompanies.Dtos.Responses;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.IhcCompanies.Clients;
 
 internal class ElmInformationCenterIhcCompaniesClient(IElmInformationCenterClient client)
     : ElmInformationCenterLookupsClient(
-            lookupCollectionName: $"{LookupsConstants.MainCollectionName}/ihc-companies",
+            lookupCollectionName: $"{LookupsConstants.MainCollectionName}/ihc-haj-companies",
             client),
         IElmInformationCenterIhcCompaniesClient
 {

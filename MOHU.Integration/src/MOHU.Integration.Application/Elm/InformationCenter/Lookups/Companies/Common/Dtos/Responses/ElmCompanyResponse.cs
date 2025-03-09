@@ -27,11 +27,11 @@ public partial class ElmCompanyResponse : ElmEntity<Company>
         return Company
             .Create(
                 id: id,
-                elmReferenceId: BusinessId,
+                elmReferenceId: Id,
                 elmCompanyType: ElmCompanyTypeEnum.SpcCompany,
-                serviceType: ServiceTypeEnum.HajAndUmrah,
+                serviceType: ServiceTypeEnum.HajOnly,
                 organizationArabicName: ArabicName,
                 organizationEnglishName: EnglishName,
-                sicCode: BusinessId.ToString());
+                sicCode: Id.ToString());
     }
 }

@@ -70,7 +70,8 @@
         "adGroupNo": 227,
         "adGroupNameAr": "dfsfdsfdsfds 5555",
         "adGroupNameEn": "dfsfdsfdsfds 5555",
-        "adHajVisaPermitStatus": "ISSUED"
+        "adHajVisaPermitStatus": "ISSUED",
+        "adIsExternal": true
       },
       {
         "id": 1209,

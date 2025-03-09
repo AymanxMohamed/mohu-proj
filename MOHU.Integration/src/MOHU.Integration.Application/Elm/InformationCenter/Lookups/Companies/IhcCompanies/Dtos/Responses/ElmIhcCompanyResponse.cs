@@ -10,9 +10,7 @@ public class ElmIhcCompanyResponse : ElmCompanyResponse
     {
         var company = base.ToCrmEntity(id);
 
-        company.SetTypeInformation(
-            companyType: ElmCompanyTypeEnum.IhcHajCompany,
-            serviceType: ServiceTypeEnum.HajAndUmrah);
+        company.SetTypeInformation(companyType: ElmCompanyTypeEnum.IhcHajCompany);
         
         return company;
     }

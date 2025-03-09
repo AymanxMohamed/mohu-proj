@@ -8,18 +8,16 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.D
 public class ElmDhcHajCompanyResponse : ElmCompanyResponse
 {
     [JsonProperty("dhcTypeId")]
-    public int DhcTypeId { get; init; }
+    public int? DhcTypeId { get; init; }
 
     [JsonProperty("hmId")]
-    public int HmId { get; init; }
+    public int? HmId { get; init; }
     
     public override Company ToCrmEntity(EntityReference? id = null)
     {
         var company = base.ToCrmEntity(id);
 
-        company.SetTypeInformation(
-            companyType: ElmCompanyTypeEnum.DhcHajCompany,
-            serviceType: ServiceTypeEnum.HajOnly);
+        company.SetTypeInformation(companyType: ElmCompanyTypeEnum.DhcHajCompany);
         
         return company;
     }
