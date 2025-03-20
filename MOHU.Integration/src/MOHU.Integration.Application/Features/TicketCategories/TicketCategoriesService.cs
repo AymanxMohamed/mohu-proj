@@ -36,11 +36,6 @@ public class TicketCategoriesService(ICrmContext crmContext) : ITicketCategories
             ConditionOperator.Equal, 
             0));
         
-        filter.AddCondition(new ConditionExpression(
-            ldv_casecategory.Fields.ShowOnPortal, 
-            ConditionOperator.Equal,
-            true));
-
         if (origin.HasValue)
         {
             filter.AddCondition(new ConditionExpression(

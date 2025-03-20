@@ -17,7 +17,7 @@
         
         // void CreateMany<T>(IEnumerable<T> types);
         
-        Entity GetById(string entityLogicalName, Guid id, ColumnSet? columnSet = null);
+        Entity? GetById(string entityLogicalName, Guid id, ColumnSet? columnSet = null);
         
         Entity GetByEntityReference(EntityReference entityReference, ColumnSet? columnSet = null);
         

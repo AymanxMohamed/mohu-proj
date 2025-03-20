@@ -4,6 +4,7 @@ using MOHU.Integration.Application.Features.Companies.Houses.Services;
 using MOHU.Integration.Application.Features.Companies.IhcCompanies.Services;
 using MOHU.Integration.Application.Features.Companies.SpcCompanies.Services;
 using MOHU.Integration.Application.Features.Countries.Services;
+using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 using MOHU.Integration.Application.Features.Individuals.Services;
 using MOHU.Integration.Application.Features.Nationalities.Services;
 using MOHU.Integration.Application.Features.TicketCategories;
@@ -56,6 +57,8 @@ public static class DependencyInjection
     
     private static IServiceCollection AddTickets(this IServiceCollection services)
     {
-        return services.AddTransient<ITicketService, TicketService>();
+        return services
+            .AddTransient<ITicketsRepository, TicketsRepository>()
+            .AddTransient<ITicketService, TicketService>();
     }
 }
