@@ -3,10 +3,13 @@ using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Nationalities.D
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Nationalities.Clients;
 
-internal class ElmInformationCenterNationalitiesClient(IElmInformationCenterClient client)
+internal class ElmInformationCenterNationalitiesClient(
+    IElmInformationCenterClient client,
+    ElmInformationCenterApiSettings settings)
     : ElmInformationCenterLookupsClient(
-            lookupCollectionName: $"{LookupsConstants.MainCollectionName}/nationalities",
-            client),
+            lookupCollectionName: "nationalities",
+            client,
+            settings),
         IElmInformationCenterNationalitiesClient
 {
     public ErrorOr<List<ElmNationalityResponse>> GetAll(ElmFilterRequest? request = null) =>

@@ -2,7 +2,7 @@
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
-public interface ITicketsRepository
+public partial interface ITicketsRepository
 {
     Ticket GetById(Guid ticketId);
     

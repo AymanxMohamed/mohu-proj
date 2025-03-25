@@ -4,10 +4,13 @@ using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.IhcCo
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.IhcCompanies.Clients;
 
-internal class ElmInformationCenterIhcCompaniesClient(IElmInformationCenterClient client)
+internal class ElmInformationCenterIhcCompaniesClient(
+    IElmInformationCenterClient client,
+    ElmInformationCenterApiSettings settings)
     : ElmInformationCenterLookupsClient(
-            lookupCollectionName: $"{LookupsConstants.MainCollectionName}/ihc-haj-companies",
-            client),
+            lookupCollectionName: "ihc-haj-companies",
+            client,
+            settings),
         IElmInformationCenterIhcCompaniesClient
 {
     public ErrorOr<List<ElmIhcCompanyResponse>> GetAll(ElmFilterRequest? request = null)

@@ -1,5 +1,4 @@
 ﻿using MOHU.Integration.Contracts.Dto.Ticket;
-using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.Controllers;
@@ -33,8 +32,6 @@ public class TicketsController(ITicketService ticketService) : BaseController
         return Ok(result);
     }
 
-
-
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<TicketListResponse>), StatusCodes.Status200OK)]
@@ -45,7 +42,6 @@ public class TicketsController(ITicketService ticketService) : BaseController
         Guid customerId, 
         [FromQuery] int pageNumber = 1, 
         [FromQuery] int pageSize = 10)
-
     {
         var result = await ticketService.GetAllTicketsAsync(customerId, pageNumber, pageSize);
         return Ok(result);

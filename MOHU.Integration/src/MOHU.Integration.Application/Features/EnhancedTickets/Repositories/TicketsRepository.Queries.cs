@@ -5,7 +5,7 @@ using MOHU.Integration.Domain.Features.Tickets.Constants;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
-internal class TicketsRepository(ICrmContext crmContext) : ITicketsRepository
+internal partial class TicketsRepository(ICrmContext crmContext) : ITicketsRepository
 {
     private readonly IGenericRepository _genericRepository =
         GenericRepositoriesFactory.CreateGenericRepository(crmContext.ServiceClient);

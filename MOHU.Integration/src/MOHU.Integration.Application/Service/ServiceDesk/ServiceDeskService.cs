@@ -1,10 +1,9 @@
-﻿using MOHU.Integration.Application.Validators;
-using MOHU.Integration.Contracts.Dto.ServiceDesk;
-using System.ComponentModel.DataAnnotations;
+﻿using MOHU.Integration.Contracts.Dto.ServiceDesk;
 
 namespace MOHU.Integration.Application.Service.ServiceDesk;
 
-public class ServiceDeskService(ITicketService ticketService, IValidator<UpdateTicketStatusData> validator) : IServiceDeskService
+public class ServiceDeskService(ITicketService ticketService, IValidator<UpdateTicketStatusData> validator) 
+    : IServiceDeskService
 {
     public async Task<bool> UpdateStatusAsync(ServiceDeskUpdateStatusRequest request)
     {
@@ -14,6 +13,7 @@ public class ServiceDeskService(ITicketService ticketService, IValidator<UpdateT
         {
             throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
         }
+        
         var ticketId = await ticketService
             .GetTicketByIntegrationTicketNumberAsync(request.TicketNumber, Incident.Fields.ServiceDeskTicketNumber);
 
@@ -23,7 +23,4 @@ public class ServiceDeskService(ITicketService ticketService, IValidator<UpdateT
 
         return true;
     }
-
-
-    
 }

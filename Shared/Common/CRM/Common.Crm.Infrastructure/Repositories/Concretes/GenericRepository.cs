@@ -93,12 +93,19 @@ public class GenericRepository(IOrganizationService organizationService) : IGene
         return ListAll(query);
     }
         
-    public Entity GetByEntityReference(EntityReference entityReference, ColumnSet? columnSet = null)
+    public Entity? GetByEntityReference(EntityReference entityReference, ColumnSet? columnSet = null)
     {
-        return OrganizationService.Retrieve(
-            entityReference.LogicalName, 
-            entityReference.Id, 
-            columnSet ?? new ColumnSet(true));
+        try
+        {
+            return OrganizationService.Retrieve(
+                entityReference.LogicalName,
+                entityReference.Id,
+                columnSet ?? new ColumnSet(true));
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
         
     // public T GetByEntityReference<T>(EntityReference entityReference, ColumnSet columnSet = null)
@@ -110,7 +117,7 @@ public class GenericRepository(IOrganizationService organizationService) : IGene
     //         ConvertToT<T>();
     // }
     
-    public Entity GetById(string entityLogicalName, Guid id, ColumnSet? columnSet = null)
+    public Entity? GetById(string entityLogicalName, Guid id, ColumnSet? columnSet = null)
     {
         return GetByEntityReference(new EntityReference(entityLogicalName, id), columnSet);
     }
@@ -187,7 +194,7 @@ public class GenericRepository(IOrganizationService organizationService) : IGene
             entity = GetById(
                 entity.LogicalName, 
                 entity.ToEntityReference().Id,
-                ColumnSetConstants.SystemStatusesColumns);
+                ColumnSetConstants.SystemStatusesColumns)!;
         }
 
         if (entity.IsDeactivated()) return;

@@ -1,7 +1,7 @@
-﻿using MOHU.Integration.Application.Elm;
+﻿using Common.Crm.Infrastructure.Factories;
+using Common.Crm.Infrastructure.Repositories.Interfaces;
+using MOHU.Integration.Application.Elm;
 using MOHU.Integration.Application.Features;
-using MOHU.Integration.Application.Features.TicketCategories;
-using MOHU.Integration.Application.Features.Tickets.Services;
 using MOHU.Integration.Application.Localization;
 using MOHU.Integration.Application.Service;
 using MOHU.Integration.Application.Service.Kidana;
@@ -21,6 +21,7 @@ public static class ApplicationDependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         return services
+            .AddGenericRepository()
             .AddElm(configuration)
             .AddFeatures()
             .AddApplicationServices();
@@ -46,6 +47,17 @@ public static class ApplicationDependencyInjection
         services.AddTransient<IKidanaService, KidanaService>();
         services.AddTransient<IServiceDeskService, ServiceDeskService>();
         services.AddTransient<ISahabService, SahabService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddGenericRepository(this IServiceCollection services)
+    {
+        services.AddScoped<IGenericRepository>(provider =>
+        {
+            var crmContext = provider.GetRequiredService<ICrmContext>();
+            return GenericRepositoriesFactory.CreateGenericRepository(crmContext.ServiceClient);
+        });
 
         return services;
     }

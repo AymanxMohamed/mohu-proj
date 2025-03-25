@@ -4,10 +4,13 @@ using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.House
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.Houses.Clients;
 
-internal class ElmInformationCenterHousesClient(IElmInformationCenterClient client)
+internal class ElmInformationCenterHousesClient(
+    IElmInformationCenterClient client,
+    ElmInformationCenterApiSettings settings)
     : ElmInformationCenterLookupsClient(
-            lookupCollectionName: $"{LookupsConstants.MainCollectionName}/houses",
-            client),
+            lookupCollectionName: "houses",
+            client,
+            settings),
         IElmInformationCenterHousesClient
 {
     public ErrorOr<List<ElmHouseResponse>> GetAll(ElmFilterRequest? request = null)

@@ -19,7 +19,7 @@
         
         Entity? GetById(string entityLogicalName, Guid id, ColumnSet? columnSet = null);
         
-        Entity GetByEntityReference(EntityReference entityReference, ColumnSet? columnSet = null);
+        Entity? GetByEntityReference(EntityReference entityReference, ColumnSet? columnSet = null);
         
         // T GetByEntityReference<T>(EntityReference entityReference, ColumnSet? columnSet = null);
         

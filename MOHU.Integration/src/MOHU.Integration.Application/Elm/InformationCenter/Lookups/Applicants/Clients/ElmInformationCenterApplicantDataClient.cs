@@ -10,10 +10,12 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.
 internal class ElmInformationCenterApplicantDataClient(
     IElmInformationCenterClient client,
     ICountriesService countriesService,
-    INationalitiesService nationalitiesService) 
+    INationalitiesService nationalitiesService,
+    ElmInformationCenterApiSettings settings) 
     : ElmInformationCenterLookupsClient(
-            lookupCollectionName: $"{LookupsConstants.MainCollectionName}/applicant-data",
-            client), 
+            lookupCollectionName: "applicant-data",
+            client,
+            settings), 
         IElmInformationCenterApplicantDataClient
 {
     public ErrorOr<List<ElmApplicant>> GetAll(ElmFilterRequest? request = null)

@@ -4,10 +4,13 @@ using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.SpcCo
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.SpcCompanies.Clients;
 
-internal class ElmInformationCenterSpcCompaniesClient(IElmInformationCenterClient client)
+internal class ElmInformationCenterSpcCompaniesClient(
+    IElmInformationCenterClient client,
+    ElmInformationCenterApiSettings settings)
     : ElmInformationCenterLookupsClient(
-            lookupCollectionName: $"{LookupsConstants.MainCollectionName}/spc-companies",
-            client),
+            lookupCollectionName: "spc-companies",
+            client,
+            settings),
         IElmInformationCenterSpcCompaniesClient
 {
     public ErrorOr<List<ElmSpcCompanyResponse>> GetAll(ElmFilterRequest? request = null)

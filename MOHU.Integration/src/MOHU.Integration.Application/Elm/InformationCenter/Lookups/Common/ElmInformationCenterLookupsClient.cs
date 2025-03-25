@@ -8,7 +8,8 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Common;
 
 public abstract class ElmInformationCenterLookupsClient(
     string lookupCollectionName,
-    IElmInformationCenterClient client)
+    IElmInformationCenterClient client,
+    ElmInformationCenterApiSettings settings)
 {
     protected ErrorOr<TLookupData> GetLookups<TLookupData>(
         ElmFilterRequest? request = null)
@@ -19,7 +20,7 @@ public abstract class ElmInformationCenterLookupsClient(
         
         return client
             .PrepareAndExecuteRequest<ElmInformationCenterResponseRoot<TLookupData>>(
-                resourceUrl: $"{lookupCollectionName}",
+                resourceUrl: $"{settings.LookupsMainCollection}/{lookupCollectionName}",
                 method: Method.Post,
                 body: request ?? new object())
             .Then(x => x.EnsureNotNull())
