@@ -13,6 +13,7 @@ using MOHU.Integration.Contracts.Dto;
 using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Infrastructure.Localization;
 using MOHU.Integration.Application.Service.Hootsuite;
+using MOHU.Integration.Application.Service.Almatar;
 
 namespace MOHU.Integration.Application;
 
@@ -47,6 +48,7 @@ public static class ApplicationDependencyInjection
         services.AddTransient<IKidanaService, KidanaService>();
         services.AddTransient<IServiceDeskService, ServiceDeskService>();
         services.AddTransient<ISahabService, SahabService>();
+        services.AddTransient<IAlmatarService, AlmatarService>();
 
         return services;
     }
