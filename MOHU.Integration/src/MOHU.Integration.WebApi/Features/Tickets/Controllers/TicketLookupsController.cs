@@ -26,4 +26,16 @@ public class TicketLookupsController(ITicketService ticketService, ITicketCatego
         await ticketCategoriesService.EnsureValidCategoriesAsync(request.CategoryIds);
         return Ok("Categories are valid");
     }
+
+    [HttpGet(nameof(CategoryIdByName))]
+    [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<string>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ResponseMessage<string>), StatusCodes.Status500InternalServerError)]
+    public async Task<ResponseMessage<Guid>> CategoryIdByName(
+    [FromQuery] string englishName,
+    [FromQuery] Guid ticketTypeId)
+    {
+        var categoryId = await ticketCategoriesService.GetCategoryIdByNameAsync(englishName, ticketTypeId);
+        return Ok(categoryId);
+    }
 }

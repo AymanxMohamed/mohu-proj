@@ -73,4 +73,35 @@ public class CustomersController(IIvrService ivrService, ICustomerService custom
 
         return Ok(result);
     }
+
+
+    [HttpGet(nameof(GetProfile))]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<Guid?>), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ResponseMessage<Guid>>> GetProfile(
+    [FromQuery] string? mobileNumber = null,
+    [FromQuery] string? email = null,
+    [FromQuery] string? idNumber = null,
+    [FromQuery] string? firstName = null,
+    [FromQuery] string? lastName = null)
+    {
+        try
+        {
+            // Convert mobile number format
+            var internationalMobile = !string.IsNullOrEmpty(mobileNumber)
+                ? StringExtensions.ConvertPhoneNumberToInternationalFormat(mobileNumber)
+                : null;
+
+            var customerId = await customerService.FindOrCreateCustomerAsync(internationalMobile,email,idNumber,firstName,lastName);
+
+            return Ok(customerId);
+        }
+        catch (BadRequestException ex)
+        {
+            return BadRequest(new ResponseMessage<Guid?> { StatusCode = StatusCodes.Status400BadRequest, ErrorMessage = ex.Message });
+
+        }
+    }
 }
