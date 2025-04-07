@@ -15,6 +15,7 @@ namespace MOHU.Integration.WebApi.Features.Tickets.Almatar.Controllers
         [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
         [HttpPut]
+        [Route(nameof(UpdateStatus))]
         public async Task<ResponseMessage<bool>> UpdateStatus(AlmatarUpdateStatusRequest request)
         {
             var result = await almatarService.UpdateStatusAsync(request);
