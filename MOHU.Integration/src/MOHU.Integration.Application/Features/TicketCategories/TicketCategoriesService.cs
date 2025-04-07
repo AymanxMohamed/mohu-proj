@@ -53,6 +53,12 @@ public class TicketCategoriesService(ICrmContext crmContext) : ITicketCategories
 
     public async Task<Guid> GetCategoryIdByNameAsync(string englishName, Guid ticketType)
     {
+        if (string.IsNullOrWhiteSpace(englishName))
+            throw new ArgumentException("Category English name cannot be empty", nameof(englishName));
+
+        if (ticketType == Guid.Empty)
+            throw new ArgumentException("Ticket type ID cannot be empty", nameof(ticketType));
+
         var query = new QueryExpression(ldv_casecategory.EntityLogicalName)
         {
             NoLock = true,

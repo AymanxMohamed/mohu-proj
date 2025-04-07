@@ -344,7 +344,7 @@ namespace MOHU.Integration.Application.Service
             return result.Entities.FirstOrDefault()?.Id;
         }
 
-        public async Task<Guid> CreateMinimalProfileAsync(string? mobileNumber, string? email, string? idNumber, string? firstName, string? lastName)
+        public async Task<GetProfileResponse> CreateMinimalProfileAsync(string? mobileNumber, string? email, string? idNumber, string? firstName, string? lastName)
         {
             var entity = new Entity(Individual.EntityLogicalName);
 
@@ -355,7 +355,11 @@ namespace MOHU.Integration.Application.Service
                 entity.Attributes[Individual.Fields.Email] = email;
 
             if (!string.IsNullOrEmpty(idNumber))
+            {
+                entity.Attributes[Individual.Fields.IDType] = IdType.NationalIdentity;
                 entity.Attributes[Individual.Fields.IDNumber] = idNumber;
+
+            }
 
             if (!string.IsNullOrEmpty(firstName))
                 entity.Attributes[Individual.Fields.FirstName] = firstName;
@@ -363,10 +367,10 @@ namespace MOHU.Integration.Application.Service
             if (!string.IsNullOrEmpty(lastName))
                 entity.Attributes[Individual.Fields.LastName] = lastName;
 
-            return await _crmContext.ServiceClient.CreateAsync(entity);
+            return new GetProfileResponse { CustomerId = await _crmContext.ServiceClient.CreateAsync(entity) };
         }
 
-        public async Task<Guid> FindOrCreateCustomerAsync(string? internationalMobile, string? email, string? idNumber, string? firstName, string? lastName)
+        public async Task<GetProfileResponse> FindOrCreateCustomerAsync(string? internationalMobile, string? email, string? idNumber, string? firstName, string? lastName)
         {
 
             // Validate at least one identifier
@@ -377,7 +381,7 @@ namespace MOHU.Integration.Application.Service
             var existingCustomerId = await FindExistingCustomerAsync(internationalMobile,email,idNumber);
 
             if (existingCustomerId.HasValue)
-                return existingCustomerId.Value;
+                return new GetProfileResponse { CustomerId = existingCustomerId.Value };
 
             // Create new profile
             return await CreateMinimalProfileAsync(internationalMobile,email,idNumber,firstName,lastName);

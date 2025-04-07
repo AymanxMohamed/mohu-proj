@@ -179,8 +179,10 @@
             public const string IntegrationComment = "ldv_IntegrationComment";
             
             public const string IntegrationLastActionDate = "ldv_IntegrationLastActionDate";
-            
-            
+
+            public const string ExternalTicketNumber = "ldv_externalticketnumber";
+            public const string ExternalTicketId = "ldv_externalcaseid";
+
 
             public const string IsServiceDeskUpdated = "ldv_isservicedeskupdated";
 
@@ -205,6 +207,11 @@
             // Sahab
             public const string SahabTicketNumber = "ldv_sahabticketnumber";
             public const string SahabTicketId = "ldv_sahabticketid";
+
+            //Al-Matar
+            public const string AlMatarTicketNumber = "ldv_almatarticketnumber";
+            public const string AlMatarTicketId = "ldv_almatarticketid";
+
         }
 
         public const string EntityLogicalName = "incident";

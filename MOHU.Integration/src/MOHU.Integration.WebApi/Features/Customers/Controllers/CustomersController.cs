@@ -80,7 +80,7 @@ public class CustomersController(IIvrService ivrService, ICustomerService custom
     [Produces("application/json")]
     [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseMessage<Guid?>), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ResponseMessage<Guid>>> GetProfile(
+    public async Task<ActionResult<ResponseMessage<GetProfileResponse>>> GetProfile(
     [FromQuery] string? mobileNumber = null,
     [FromQuery] string? email = null,
     [FromQuery] string? idNumber = null,
@@ -89,7 +89,7 @@ public class CustomersController(IIvrService ivrService, ICustomerService custom
     {
         try
         {
-            // Convert mobile number format
+            
             var internationalMobile = !string.IsNullOrEmpty(mobileNumber)
                 ? StringExtensions.ConvertPhoneNumberToInternationalFormat(mobileNumber)
                 : null;

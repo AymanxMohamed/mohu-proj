@@ -31,11 +31,11 @@ public class TicketLookupsController(ITicketService ticketService, ITicketCatego
     [ProducesResponseType(typeof(ResponseMessage<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseMessage<string>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ResponseMessage<string>), StatusCodes.Status500InternalServerError)]
-    public async Task<ResponseMessage<Guid>> CategoryIdByName(
+    public async Task<ResponseMessage<CategoryIdByNameResponse>> CategoryIdByName(
     [FromQuery] string englishName,
     [FromQuery] Guid ticketTypeId)
     {
-        var categoryId = await ticketCategoriesService.GetCategoryIdByNameAsync(englishName, ticketTypeId);
+        var categoryId = new CategoryIdByNameResponse { CategoryId = await ticketCategoriesService.GetCategoryIdByNameAsync(englishName, ticketTypeId) };
         return Ok(categoryId);
     }
 }
