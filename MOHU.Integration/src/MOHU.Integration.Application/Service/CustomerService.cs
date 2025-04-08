@@ -309,6 +309,83 @@ namespace MOHU.Integration.Application.Service
             }
             return customerID.GetValueOrDefault();
         }
+
+        public async Task<Guid?> FindExistingCustomerAsync(string? mobileNumber, string? email, string? idNumber)
+        {
+
+            // Return early if no search criteria provided
+            if (string.IsNullOrEmpty(mobileNumber) && string.IsNullOrEmpty(email) && string.IsNullOrEmpty(idNumber))
+                return null;
+
+
+            var query = new QueryExpression(Individual.EntityLogicalName)
+            {
+                ColumnSet = new ColumnSet(Individual.Fields.PrimaryKey),
+                NoLock = true
+            };
+
+            var filter = new FilterExpression(LogicalOperator.Or);
+
+            if (!string.IsNullOrEmpty(mobileNumber))
+                filter.AddCondition(Individual.Fields.MobileNumber, ConditionOperator.Equal, mobileNumber);
+
+            if (!string.IsNullOrEmpty(email))
+                filter.AddCondition(Individual.Fields.Email, ConditionOperator.Equal, email);
+
+            if (!string.IsNullOrEmpty(idNumber))
+            {
+                filter.AddCondition(Individual.Fields.IDNumber, ConditionOperator.Equal, idNumber);
+                filter.AddCondition(Individual.Fields.PassportNumber, ConditionOperator.Equal, idNumber);
+            }
+
+            query.Criteria.AddFilter(filter);
+            var result = await _crmContext.ServiceClient.RetrieveMultipleAsync(query);
+
+            return result.Entities.FirstOrDefault()?.Id;
+        }
+
+        public async Task<GetProfileResponse> CreateMinimalProfileAsync(string? mobileNumber, string? email, string? idNumber, string? firstName, string? lastName)
+        {
+            var entity = new Entity(Individual.EntityLogicalName);
+
+            if (!string.IsNullOrEmpty(mobileNumber))
+                entity.Attributes[Individual.Fields.MobileNumber] = mobileNumber;
+
+            if (!string.IsNullOrEmpty(email))
+                entity.Attributes[Individual.Fields.Email] = email;
+
+            if (!string.IsNullOrEmpty(idNumber))
+            {
+                entity.Attributes[Individual.Fields.IDType] = IdType.NationalIdentity;
+                entity.Attributes[Individual.Fields.IDNumber] = idNumber;
+
+            }
+
+            if (!string.IsNullOrEmpty(firstName))
+                entity.Attributes[Individual.Fields.FirstName] = firstName;
+
+            if (!string.IsNullOrEmpty(lastName))
+                entity.Attributes[Individual.Fields.LastName] = lastName;
+
+            return new GetProfileResponse { CustomerId = await _crmContext.ServiceClient.CreateAsync(entity) };
+        }
+
+        public async Task<GetProfileResponse> FindOrCreateCustomerAsync(string? internationalMobile, string? email, string? idNumber, string? firstName, string? lastName)
+        {
+
+            // Validate at least one identifier
+            if (string.IsNullOrEmpty(internationalMobile) && string.IsNullOrEmpty(email) && string.IsNullOrEmpty(idNumber))
+                throw new BadRequestException("At least one identifier (mobile, email, or ID) must be provided");
+
+            // Check for existing customer
+            var existingCustomerId = await FindExistingCustomerAsync(internationalMobile,email,idNumber);
+
+            if (existingCustomerId.HasValue)
+                return new GetProfileResponse { CustomerId = existingCustomerId.Value };
+
+            // Create new profile
+            return await CreateMinimalProfileAsync(internationalMobile,email,idNumber,firstName,lastName);
+        }
     }
 }
 

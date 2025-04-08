@@ -13,7 +13,11 @@ public class SubmitTicketRequest : CreateTicketRequest
     public Guid? SubCategoryId1 { get; set; } 
     public int? BeneficiaryType { get; set; }
     public int? Location { get; set; }
-    
+
+    public string? ExternalTicketNumber { get; set; }
+    public string? ExternalId { get; set; }
+
+
     public List<Guid> CategoryIds => 
         new[] { CategoryId, SubCategoryId, SubCategoryId1 }
             .Where(id => id.HasValue && id.Value != Guid.Empty)
@@ -38,6 +42,13 @@ public class SubmitTicketRequest : CreateTicketRequest
 
         if (Location.HasValue)
             entity.Attributes.Add(Incident.Fields.ldv_Locationcode, new OptionSetValue(Location.Value));
+
+        if (!string.IsNullOrWhiteSpace(ExternalTicketNumber))
+            entity.Attributes.Add(Incident.Fields.ExternalTicketNumber, ExternalTicketNumber);
+
+        if (!string.IsNullOrWhiteSpace(ExternalId))
+            entity.Attributes.Add(Incident.Fields.ExternalTicketId, ExternalId);
+
 
         return entity;
     }
