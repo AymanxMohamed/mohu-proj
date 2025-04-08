@@ -9,10 +9,13 @@ public partial class ElmApplicant : IEquatable<Individual>, IEquatable<ElmApplic
     public static bool operator !=(ElmApplicant left, Individual right) => !left.Equals(right);
 
     public bool Equals(Individual? other) => 
-        other is not null && Id == other.IntegrationDetails.ElmReferenceId;
+        other is not null && 
+        (
+            Id == other.IntegrationDetails.ElmReferenceId || 
+            (ContactInformation.Email?.Equals(other.ContactInformation.Email, StringComparison.OrdinalIgnoreCase)?? false)
+        );
     
-    public bool Equals(ElmApplicant? other) => 
-        other is not null && Id == other.Id;
+    public bool Equals(ElmApplicant? other) => other is not null && Id == other.Id;
 
     public override bool Equals(object? obj)
     {

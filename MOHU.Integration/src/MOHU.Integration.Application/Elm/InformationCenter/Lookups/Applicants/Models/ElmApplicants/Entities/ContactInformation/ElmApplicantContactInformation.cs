@@ -3,7 +3,7 @@ using MOHU.Integration.Domain.Features.Individuals.Entities;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Models.ElmApplicants.Entities.ContactInformation;
 
-public class ElmApplicantContactInformation
+public partial class ElmApplicantContactInformation
 {
     private ElmApplicantContactInformation(ApplicantResponse applicant)
     {
