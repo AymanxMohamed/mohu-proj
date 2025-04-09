@@ -1,4 +1,6 @@
-﻿namespace MOHU.Integration.Domain.Entitiy
+﻿using MOHU.Integration.Domain.Features.Tickets;
+
+namespace MOHU.Integration.Domain.Entitiy
 {
     public class Incident
     {
@@ -190,6 +192,7 @@
 
             public const string IsTashirUpdated = "ldv_istashirupdated";
             public const string IsSahabUpdated = "ldv_issendrequesttosahab";
+            public const string IsAlmatarUpdated = "ldv_isalmatarupdated";
 
 
             //Tasheer
