@@ -48,6 +48,7 @@ public static class ApplicationDependencyInjection
         services.AddTransient<IKidanaService, KidanaService>();
         services.AddTransient<IServiceDeskService, ServiceDeskService>();
         services.AddTransient<ISahabService, SahabService>();
+        services.AddTransient<ITicketCategoryService, CategorieServices>();
         services.AddTransient<IAlmatarService, AlmatarService>();
 
         return services;
