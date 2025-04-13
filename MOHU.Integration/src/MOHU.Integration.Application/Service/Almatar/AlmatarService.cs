@@ -24,7 +24,7 @@ namespace MOHU.Integration.Application.Service.Almatar
             }
             var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(
                 request.TicketNumber,
-            Incident.Fields.AlmatarTicketNumber);
+            Incident.Fields.AlMatarTicketNumber);
 
             var ticketStatusRequest = request.ToUpdateRequest(ticketId, Incident.Fields.IsAlmatarUpdated);
 
