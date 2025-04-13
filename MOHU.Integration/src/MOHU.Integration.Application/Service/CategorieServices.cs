@@ -1,4 +1,7 @@
-﻿using MOHU.Integration.Contracts.Dto.CreateProfile;
+﻿using Common.Crm.Domain.Common.Extensions;
+using MOHU.Integration.Contracts.Dto.Category;
+using MOHU.Integration.Contracts.Dto.CreateProfile;
+using MOHU.Integration.Domain.Entitiy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MOHU.Integration.Application.Service
 {
-    public class CategorieServices
+    public class CategorieServices : ITicketCategoryService
     {
         private readonly ICrmContext _crmContext;
 
@@ -25,20 +28,114 @@ namespace MOHU.Integration.Application.Service
 
         }
 
-        public async Task<Guid> UpsertCategories(CreateProfileRequest model)
+        
+
+        public async Task<Guid> UpsertCategories(UpsertCategoryRequest model)
         {
-            var results = await _validator.ValidateAsync(model);
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
 
-            if (results?.IsValid == false)
+            if (string.IsNullOrEmpty(model.CategoryId))
             {
-                throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
+                // Create new category - validate required fields
+                if (string.IsNullOrEmpty(model.ArabicName))
+                    throw new ArgumentException("ArabicName is required");
+                if (string.IsNullOrEmpty(model.EnglishName))
+                    throw new ArgumentException("EnglishName is required");
+                if (model.TicketType == null)
+                    throw new ArgumentException("TicketType is required");
+
+                var entity = new Entity(TicketCategory.EntityName)
+                {
+                    Attributes =
+            {
+                { TicketCategory.Fields.ArabicName, model.ArabicName },
+                { TicketCategory.Fields.EnglishName, model.EnglishName },
+                { TicketCategory.Fields.TicketType, new EntityReference("ldv_service",new Guid(model.TicketType)) } 
             }
+                };
 
-            var entity = new Entity(TicketCategory.EntityName);
+                // Handle Status (OptionSet)
+                if (model.Status.HasValue)
+                {
+                    entity.Attributes.Add(TicketCategory.Fields.Status, new OptionSetValue((int)model.Status.Value));
+                }
 
+
+                // Handle optional fields
+                if (model.ParentCategory != null)
+                    entity.Attributes.Add(TicketCategory.Fields.ParentCategory, new EntityReference(TicketCategory.EntityName, new Guid(model.ParentCategory)));
+
+                if (model.SubCategory != null)
+                    entity.Attributes.Add(TicketCategory.Fields.SubCategory, new EntityReference(TicketCategory.EntityName, new Guid(model.SubCategory)));
+
+                if (model.Priority != null)
+                    entity.Attributes.Add(TicketCategory.Fields.Priority,new OptionSetValue((int)model.Priority.Value));
+
+                if (model.ComplainType != null)
+                    entity.Attributes.Add(TicketCategory.Fields.ComplainType, new OptionSetValue((int)model.ComplainType.Value));
+
+                if (model.Season != null)
+                    entity.Attributes.Add(TicketCategory.Fields.Season, new OptionSetValue((int)model.Season.Value));
+
+               
+
+                return await _crmContext.ServiceClient.CreateAsync(entity);
+            }
+            else
+            {
+                // Update existing category
+                var existingCategory = await IsCategoryExists(model.TicketType, model.CategoryId);
+                if (existingCategory == null)
+                    throw new NotFoundException("Category not found");
+
+                var categoryToUpdate = new Entity(TicketCategory.EntityName, Guid.Parse(model.CategoryId));
+
+                // Update only non-null fields
+                if (model.ArabicName != null)
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.ArabicName, model.ArabicName);
+
+                if (model.EnglishName != null)
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.EnglishName, model.EnglishName);
+
+                if (model.ParentCategory != null)
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.ParentCategory,
+                        new EntityReference(TicketCategory.EntityName, new Guid(model.ParentCategory)));
+
+                if (model.SubCategory != null)
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.SubCategory,
+                        new EntityReference(TicketCategory.EntityName, new Guid(model.SubCategory)));
+
+                // Handle Status (OptionSet)
+                if (model.Status.HasValue)
+                {
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.Status, new OptionSetValue((int)model.Status.Value));
+                }
+
+                if (model.TicketType != null)
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.TicketType,
+                        new EntityReference("ldv_service", new Guid(model.TicketType)));
+
+                if (model.Priority != null)
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.Priority, new OptionSetValue((int)model.Priority.Value));
+
+                if (model.ComplainType != null)
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.ComplainType,  new OptionSetValue((int)model.ComplainType.Value));
+
+                if (model.Season != null)
+                    categoryToUpdate.Attributes.Add(TicketCategory.Fields.Season, new OptionSetValue((int)model.Season.Value));
+
+               
+
+                if (categoryToUpdate.Attributes.Any())
+                {
+                    await _crmContext.ServiceClient.UpdateAsync(categoryToUpdate);
+                }
+
+                return Guid.Parse(model.CategoryId);
+            }
         }
-
-        private async Task<Guid?> IsCategoryExists(string TicketType, string CategoryId , int statecode)
+        private async Task<Guid?> IsCategoryExists(string TicketType, string CategoryId )
         {
             // var query_statecode = 0;
             var CategoryQuery = new QueryExpression
@@ -46,9 +143,10 @@ namespace MOHU.Integration.Application.Service
                 EntityName = TicketCategory.EntityName,
                 NoLock = true
             };
-            CategoryQuery.Criteria.AddCondition("statecode", ConditionOperator.Equal, statecode);
             CategoryQuery.Criteria.AddCondition("ldv_tickettypeid", ConditionOperator.Equal, TicketType);
             CategoryQuery.Criteria.AddCondition("ldv_casecategoryid", ConditionOperator.Equal, CategoryId);
+
+
 
             var response = await _crmContext.ServiceClient.RetrieveMultipleAsync(CategoryQuery);
             return response.Entities.Count > 0 ? response?.Entities?.FirstOrDefault()?.Id : null;
