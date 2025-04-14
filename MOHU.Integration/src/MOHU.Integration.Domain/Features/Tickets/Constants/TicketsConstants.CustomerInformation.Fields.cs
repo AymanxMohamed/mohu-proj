@@ -1,6 +1,6 @@
 ﻿namespace MOHU.Integration.Domain.Features.Tickets.Constants;
 
-public partial class TicketsConstants
+public static partial class TicketsConstants
 {
     public static class CustomerInformation
     {

@@ -1,5 +1,4 @@
-﻿using Common.Crm.Domain.Common.Factories;
-using Common.Crm.Infrastructure.Factories;
+﻿using Common.Crm.Infrastructure.Factories;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 
