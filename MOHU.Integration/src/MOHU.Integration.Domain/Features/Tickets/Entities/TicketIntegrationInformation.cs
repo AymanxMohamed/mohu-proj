@@ -11,6 +11,9 @@ public class TicketIntegrationInformation
         entity.EnsureCanCreateFrom(objectToCreate: nameof(TicketIntegrationInformation), TicketsConstants.LogicalName);
         
         ClosureReason = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureReason);
+        DepartmentClosureReasons = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.DepartmentClosureReasonsComment);
+        DepartmentDecision = entity.GetEnumValue<DepartmentDecision>(TicketsConstants.IntegrationInformation.Fields.DepartmentDecision);
+        NeedMoreDetailsComment = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.NeedMoreDetailsComment);
         UpdatedBy = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.IntegrationUpdatedBy);
         ClosureDate = entity.GetAttributeValue<DateTime>(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureDate);
         LastActionDate = entity.GetAttributeValue<DateTime>(TicketsConstants.IntegrationInformation.Fields.IntegrationLastActionDate);
@@ -29,12 +32,17 @@ public class TicketIntegrationInformation
         ClosureReason = closureReason;
         ClosureDate = closureDate;
         IntegrationStatus = integrationStatus;
+        DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
         Comment = comment;
         UpdatedBy = updatedBy;
         LastActionDate = lastActionDate;
     }
 
     public string? ClosureReason { get; private set; }
+    
+    public string? NeedMoreDetailsComment { get; private set; }
+    public string? DepartmentClosureReasons { get; private set; }
+    public DepartmentDecision? DepartmentDecision { get; private set; }
 
     public DateTime? ClosureDate { get; private set; }
 
@@ -49,11 +57,14 @@ public class TicketIntegrationInformation
     public void Update(string comment, string updatedBy, IntegrationStatus integrationStatus)
     {
         ClosureReason = comment;
+        NeedMoreDetailsComment = comment;
+        DepartmentClosureReasons = comment;
         ClosureDate = DateTime.UtcNow;
         LastActionDate = DateTime.UtcNow;
         Comment = comment;
         UpdatedBy = updatedBy;
         IntegrationStatus = integrationStatus;
+        DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
     }
 
     public static TicketIntegrationInformation Create(Entity entity) => new(entity);
@@ -62,7 +73,12 @@ public class TicketIntegrationInformation
         string comment, 
         string updatedBy,
         IntegrationStatus integrationStatus) => 
-        new(comment, DateTime.UtcNow, integrationStatus, comment, updatedBy, DateTime.UtcNow);
+        new(
+            comment, 
+            DateTime.UtcNow, 
+            integrationStatus, 
+            comment, updatedBy,
+            DateTime.UtcNow);
 
     public static TicketIntegrationInformation Create(
         string? closureReason,
@@ -77,6 +93,10 @@ public class TicketIntegrationInformation
     {
         entity.EnsureCanCreateFrom(objectToCreate: nameof(TicketIntegrationInformation), TicketsConstants.LogicalName);
         
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.NeedMoreDetailsComment, ClosureReason);
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.DepartmentClosureReasonsComment, ClosureReason);
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.DepartmentDecision, DepartmentDecision.ToOptionSetValue());
+
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureReason, ClosureReason);
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureDate, ClosureDate);
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationComment, Comment);

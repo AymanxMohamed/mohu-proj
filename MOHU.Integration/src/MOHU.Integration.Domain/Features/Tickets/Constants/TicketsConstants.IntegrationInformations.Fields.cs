@@ -6,6 +6,9 @@ public static partial class TicketsConstants
     {
         public static class Fields
         {
+            public const string DepartmentDecision = "ldv_departmentdecisioncode";
+            public const string DepartmentClosureReasonsComment = "ldv_closurereasons";
+            public const string NeedMoreDetailsComment = "ldv_needsmoredetails";
             public const string IntegrationClosureReason = "ldv_integrationclosurereason";
             public const string IntegrationClosureDate = "ldv_integrationclosuredate";
             public const string IntegrationUpdatedBy = "ldv_integrationupdatedby";
