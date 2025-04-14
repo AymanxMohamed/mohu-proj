@@ -2,6 +2,7 @@
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 using MOHU.Integration.Contracts.Companies.Dtos;
 using MOHU.Integration.Contracts.Companies.Services;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Features.Companies;
 using MOHU.Integration.Domain.Features.Tickets;
 
@@ -30,8 +31,20 @@ public class CompaniesControllers(ICompaniesService service, ITicketsRepository 
     [ProducesResponseType(typeof(ResponseMessage<Ticket>),StatusCodes.Status200OK)]
     public ResponseMessage<List<Ticket>> GetTickets(Guid id)
     {
-        var tickets = ticketsRepository.GetCompanyTicketsAsync(id);
+        var tickets = ticketsRepository.GetCompanyTickets(id);
         return Ok(tickets);
+    }
+    
+    [HttpPatch("{companyId:guid}/tickets/{id:guid}")]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public NoContentResult GetTickets(Guid companyId, Guid id, UpdateTicketRequest ticket)
+    {
+        ticketsRepository.UpdateCompanyTicket(companyId, id, ticket);
+        return NoContent();
     }
     
     [HttpPatch]

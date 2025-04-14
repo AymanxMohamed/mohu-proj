@@ -6,7 +6,7 @@ using MOHU.Integration.Domain.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Domain.Features.Tickets;
 
-public class Ticket : CrmEntity
+public partial class Ticket : CrmEntity
 {
     private Ticket(Entity entity)
         : base(entity)

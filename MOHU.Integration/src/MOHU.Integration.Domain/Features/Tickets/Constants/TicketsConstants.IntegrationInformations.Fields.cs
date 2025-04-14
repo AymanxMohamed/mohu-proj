@@ -8,9 +8,9 @@ public static partial class TicketsConstants
         {
             public const string IntegrationClosureReason = "ldv_integrationclosurereason";
             public const string IntegrationClosureDate = "ldv_integrationclosuredate";
-            public const string IntegrationUpdatedBy = "ldv_IntegrationUpdatedBy";
-            public const string IntegrationComment = "ldv_IntegrationComment";
-            public const string IntegrationLastActionDate = "IntegrationLastActionDate";
+            public const string IntegrationUpdatedBy = "ldv_integrationupdatedby";
+            public const string IntegrationComment = "ldv_integrationcomment";
+            public const string IntegrationLastActionDate = "ldv_integrationlastactiondate";
             public const string IntegrationStatus = "ldv_integrationstatuscode";
         }
     }

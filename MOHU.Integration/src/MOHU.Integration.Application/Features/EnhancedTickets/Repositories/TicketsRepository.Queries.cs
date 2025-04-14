@@ -21,7 +21,7 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
 
     public Ticket GetByTitle(string ticketNumber)
     {
-        var entity = GetAsync(GetQuery(
+        var entity = Get(GetQuery(
             conditionExpressions: [ConditionExpressionFactory
                 .CreateConditionExpression(
                     columnLogicalName: TicketsConstants.BasicInformation.Fields.Title,
@@ -37,7 +37,7 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
         return Ticket.Create(entity);
     }
 
-    public IEnumerable<Entity> GetAsync(QueryBase queryExpression) => 
+    public IEnumerable<Entity> Get(QueryBase queryExpression) => 
         genericRepository.ListAll(queryExpression);
 
     public QueryBase GetQuery(

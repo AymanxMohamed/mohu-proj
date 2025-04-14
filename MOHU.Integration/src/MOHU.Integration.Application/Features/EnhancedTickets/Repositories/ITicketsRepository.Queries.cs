@@ -8,7 +8,9 @@ public partial interface ITicketsRepository
     
     Ticket GetByTitle(string ticketNumber);
     
-    List<Ticket> GetCompanyTicketsAsync(Guid companyId);
+    List<Ticket> GetCompanyTickets(Guid companyId);
+    
+    Ticket GetCompanyTicket(Guid companyId, Guid ticketId);
 
     QueryBase GetQuery(
         ColumnSet? columnSet = null,
