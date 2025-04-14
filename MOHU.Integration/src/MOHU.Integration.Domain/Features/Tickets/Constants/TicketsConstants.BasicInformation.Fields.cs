@@ -12,6 +12,8 @@ public partial class TicketsConstants
             public const string Priority = "ldv_prioritycode";
             public const string Origin = "caseorigincode";
             public const string SubOrigin = "ldv_subsourceid";
+            public const string Company = "ldv_company";
+            public const string StatusReason = "ldv_substatusid";
         }
     }
 }

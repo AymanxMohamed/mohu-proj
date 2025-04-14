@@ -5,14 +5,11 @@ using MOHU.Integration.Domain.Features.Tickets.Constants;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
-internal partial class TicketsRepository(ICrmContext crmContext) : ITicketsRepository
+internal partial class TicketsRepository(IGenericRepository genericRepository) : ITicketsRepository
 {
-    private readonly IGenericRepository _genericRepository =
-        GenericRepositoriesFactory.CreateGenericRepository(crmContext.ServiceClient);
-    
     public Ticket GetById(Guid ticketId)
     {
-        var entity = _genericRepository.GetById(TicketsConstants.LogicalName, ticketId);
+        var entity = genericRepository.GetById(TicketsConstants.LogicalName, ticketId);
 
         if (entity is null)
         {
@@ -24,7 +21,7 @@ internal partial class TicketsRepository(ICrmContext crmContext) : ITicketsRepos
 
     public Ticket GetByTitle(string ticketNumber)
     {
-        var entity = _genericRepository.ListAll(GetQuery(
+        var entity = GetAsync(GetQuery(
             conditionExpressions: [ConditionExpressionFactory
                 .CreateConditionExpression(
                     columnLogicalName: TicketsConstants.BasicInformation.Fields.Title,
@@ -39,6 +36,9 @@ internal partial class TicketsRepository(ICrmContext crmContext) : ITicketsRepos
         
         return Ticket.Create(entity);
     }
+
+    public IEnumerable<Entity> GetAsync(QueryBase queryExpression) => 
+        genericRepository.ListAll(queryExpression);
 
     public QueryBase GetQuery(
         ColumnSet? columnSet = null,

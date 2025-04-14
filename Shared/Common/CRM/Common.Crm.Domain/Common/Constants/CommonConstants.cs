@@ -14,7 +14,7 @@ public static class CommonConstants
     public static readonly List<string> StatusFields =
     [
         Fields.Status,
-        Fields.StatusReason
+        Fields.StatusReasonOop
     ];
         
     public static class Fields
@@ -24,6 +24,6 @@ public static class CommonConstants
         public const string TraversedPath = "traversedpath";
         public const string LinkProcessStage = "ldv_processstageid";
         public const string Status = "statecode";
-        public const string StatusReason = "statuscode";
+        public const string StatusReasonOop = "statuscode";
     }
 }

@@ -8,8 +8,6 @@ namespace MOHU.Integration.Application.Features.Companies.Companies.Services;
 
 public partial class CompaniesService
 {
-    private readonly IGenericRepository _genericRepository = GenericRepositoriesFactory.CreateGenericRepository(crmContext.ServiceClient);
-    
     public Task MapDeactivatedCompaniesToNewCompanies()
     {
         var sourceCompanies  = GetDeactivatedCompaniesWithTeams();
@@ -18,9 +16,9 @@ public partial class CompaniesService
         
         MapCompanies(sourceCompanies, allCompanies);
         
-        _genericRepository.UpdateMany(allCompanies);
+        genericRepository.UpdateMany(allCompanies);
         
-        _genericRepository.Commit();
+        genericRepository.Commit();
         
         return Task.CompletedTask;
     }
@@ -32,18 +30,18 @@ public partial class CompaniesService
             conditionExpressions:
             [
                 ConditionExpressionFactory.CreateStatusCondition(StatusEnum.InActive),
-                ConditionExpressionFactory.CreateConditionExpression(CompaniesConstants.Fields.Team,
+                ConditionExpressionFactory.CreateConditionExpression(CompaniesConstants.Fields.TeamId,
                     ConditionOperator.NotNull),
                 ConditionExpressionFactory.CreateConditionExpression(CompaniesConstants.Fields.SicCode,
                     ConditionOperator.NotNull)
             ]);
         
-       return _genericRepository.ListAll(query).ToList();
+       return genericRepository.ListAll(query).ToList();
     }
 
     public List<Entity> GetAllSystemCompaniesThatContainsSicCode()
     {
-        return _genericRepository.ListAll(
+        return genericRepository.ListAll(
                 QueryExpressionFactory.CreateQueryExpression(
                     CompaniesConstants.LogicalName,
                     conditionExpressions: [ConditionExpressionFactory.CreateConditionExpression(CompaniesConstants.Fields.SicCode, ConditionOperator.NotNull)]))
@@ -62,9 +60,9 @@ public partial class CompaniesService
     public static void ForceMap(Entity source, Entity destination)
     {
         if (source.Attributes.Contains(CompaniesConstants.Fields.SicCode) &&
-            destination.Attributes.Contains(CompaniesConstants.Fields.Team))
+            destination.Attributes.Contains(CompaniesConstants.Fields.TeamId))
         {
-            destination[CompaniesConstants.Fields.Team] = source[CompaniesConstants.Fields.Team];
+            destination[CompaniesConstants.Fields.TeamId] = source[CompaniesConstants.Fields.TeamId];
         }
     }
 }
