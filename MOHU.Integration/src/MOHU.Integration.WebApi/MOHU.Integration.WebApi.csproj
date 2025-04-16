@@ -24,6 +24,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="Files\Kidana\Data\Kidana.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Features\Cases\Controllrs\" />
   </ItemGroup>
 </Project>

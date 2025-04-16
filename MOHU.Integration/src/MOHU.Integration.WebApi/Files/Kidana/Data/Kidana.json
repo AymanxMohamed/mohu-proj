@@ -1,0 +1,9 @@
+﻿{
+  "status": "success",
+  "message": "Test data loaded",
+  "data": {
+    "status": "Active",
+    "ticketNumber": "KID-12345",
+    "issueDate": "2024-03-15"
+  }
+}

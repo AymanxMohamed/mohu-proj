@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CaseManagement\Case\CaseMainForm_R2.js" />
+    <Content Include="CaseManagement\Case\CaseRibbon.js" />
     <Content Include="caseTest - Copy.js" />
     <Content Include="caseTest.js" />
     <Content Include="CaseManagement\Case\ldv_Case_CopyOfMainForm.js" />
