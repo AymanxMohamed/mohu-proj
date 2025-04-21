@@ -5,6 +5,7 @@ using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 using MOHU.Integration.Contracts.Companies.Dtos;
 using MOHU.Integration.Contracts.Companies.Services;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
+using MOHU.Integration.Contracts.Tickets.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Companies;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.WebApi.Common.Dtos.Requests;
@@ -31,8 +32,8 @@ public class CompaniesControllers(ICompaniesService service, ITicketsRepository 
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ResponseMessage<Ticket>),StatusCodes.Status200OK)]
-    public ResponseMessage<PaginationResponse<Ticket>> GetTickets(
+    [ProducesResponseType(typeof(ResponseMessage<PaginationResponse<NusukMasarTicketResponse>>),StatusCodes.Status200OK)]
+    public ResponseMessage<PaginationResponse<NusukMasarTicketResponse>> GetTickets(
         Guid id, 
         [FromQuery] CrmPaginationParameters? paginationParameters = null,
         [FromBody] CreateFilterRequest? filter = null)

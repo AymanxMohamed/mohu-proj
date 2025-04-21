@@ -1,5 +1,6 @@
 ﻿using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
+using MOHU.Integration.Contracts.Tickets.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 
@@ -7,7 +8,7 @@ namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
 internal partial class TicketsRepository
 {
-    public PaginationResponse<Ticket> GetCompanyTickets(
+    public PaginationResponse<NusukMasarTicketResponse> GetCompanyTickets(
         Guid companyId, 
         FilterExpression? filterExpression, 
         CrmPaginationParameters? paginationParameters)
@@ -20,7 +21,7 @@ internal partial class TicketsRepository
                         columnLogicalName: TicketsConstants.BasicInformation.Fields.Company,
                         conditionOperator: ConditionOperator.Equal,
                         value: companyId)]))
-            .Convert(Ticket.Create);
+            .Convert(x => NusukMasarTicketResponse.Create(Ticket.Create(x)));
     }
 
     public Ticket GetCompanyTicket(Guid companyId, Guid ticketId)
