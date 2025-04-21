@@ -1,4 +1,6 @@
-﻿namespace Common.Crm.Infrastructure.Repositories.Interfaces
+﻿using Common.Crm.Infrastructure.Common.Extensions;
+
+namespace Common.Crm.Infrastructure.Repositories.Interfaces
 {
     public interface IGenericRepository
     {
@@ -26,6 +28,10 @@
         // T GetById<T>(string entityLogicalName, Guid id, ColumnSet? columnSet = null);
         
         IEnumerable<Entity> ListAll(QueryBase query);
+        
+        PaginationResponse<Entity> ListAllPaginated(QueryBase query);
+        
+        PaginationResponse<TItem> ListAllPaginated<TItem>(QueryBase query, Func<Entity, TItem> converter);
         
         // IEnumerable<T> ListAll<T>(QueryBase query);
 

@@ -11,8 +11,11 @@ public static class QueryExpressionFactory
         FilterExpression? filterExpression = null,
         List<FilterExpression>? childFilters = null,
         IEnumerable<LinkEntity>? linkEntities = null,
+        CrmPaginationParameters? paginationParameters = null,
         params  ConditionExpression[] conditionExpressions)
     {
+        paginationParameters ??= CrmPaginationParameters.Create();
+        
         columnSet ??= ColumnSetConstants.AllColumns;
 
         filterExpression = FilterExpressionFactory.CreateFilterExpression(
@@ -25,6 +28,12 @@ public static class QueryExpressionFactory
         {
             ColumnSet = columnSet,
             Criteria = filterExpression,
+            PageInfo = new PagingInfo
+            {
+                PageNumber = paginationParameters.Page,
+                Count = paginationParameters.PageSize,
+                ReturnTotalRecordCount = true
+            }
         };
             
         queryExpression.LinkEntities.AddRange(linkEntities);

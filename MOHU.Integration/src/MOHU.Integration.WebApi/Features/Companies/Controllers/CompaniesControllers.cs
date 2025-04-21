@@ -1,10 +1,13 @@
 ﻿using System.Net;
+using Common.Crm.Infrastructure.Common.Extensions;
+using Common.Crm.Infrastructure.Factories;
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 using MOHU.Integration.Contracts.Companies.Dtos;
 using MOHU.Integration.Contracts.Companies.Services;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Features.Companies;
 using MOHU.Integration.Domain.Features.Tickets;
+using MOHU.Integration.WebApi.Common.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.Features.Companies.Controllers;
 
@@ -29,9 +32,12 @@ public class CompaniesControllers(ICompaniesService service, ITicketsRepository 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ResponseMessage<Ticket>),StatusCodes.Status200OK)]
-    public ResponseMessage<List<Ticket>> GetTickets(Guid id)
+    public ResponseMessage<PaginationResponse<Ticket>> GetTickets(
+        Guid id, 
+        [FromQuery] CrmPaginationParameters? paginationParameters = null,
+        [FromBody] CreateFilterRequest? filter = null)
     {
-        var tickets = ticketsRepository.GetCompanyTickets(id);
+        var tickets = ticketsRepository.GetCompanyTickets(id, filter?.ToExpression(), paginationParameters);
         return Ok(tickets);
     }
     
@@ -41,7 +47,7 @@ public class CompaniesControllers(ICompaniesService service, ITicketsRepository 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public NoContentResult GetTickets(Guid companyId, Guid id, UpdateTicketRequest ticket)
+    public NoContentResult UpdateTicket(Guid companyId, Guid id, UpdateTicketRequest ticket)
     {
         ticketsRepository.UpdateCompanyTicket(companyId, id, ticket);
         return NoContent();

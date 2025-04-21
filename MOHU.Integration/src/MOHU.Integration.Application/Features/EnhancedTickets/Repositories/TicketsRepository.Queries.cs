@@ -1,4 +1,5 @@
-﻿using Common.Crm.Infrastructure.Factories;
+﻿using Common.Crm.Infrastructure.Common.Extensions;
+using Common.Crm.Infrastructure.Factories;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
@@ -39,6 +40,9 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
 
     public IEnumerable<Entity> Get(QueryBase queryExpression) => 
         genericRepository.ListAll(queryExpression);
+    
+    public PaginationResponse<Entity> GetPaginated(QueryBase queryExpression) => 
+        genericRepository.ListAllPaginated(queryExpression);
 
     public QueryBase GetQuery(
         ColumnSet? columnSet = null,
@@ -46,6 +50,7 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
         FilterExpression? filterExpression = null,
         List<FilterExpression>? childFilters = null,
         IEnumerable<LinkEntity>? linkEntities = null,
+        CrmPaginationParameters? paginationParameters = null,
         params ConditionExpression[] conditionExpressions)
     {
         return QueryExpressionFactory
@@ -56,6 +61,7 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
                 filterExpression,
                 childFilters, 
                 linkEntities, 
-                conditionExpressions);
+                paginationParameters,
+                conditionExpressions: conditionExpressions);
     }
 }

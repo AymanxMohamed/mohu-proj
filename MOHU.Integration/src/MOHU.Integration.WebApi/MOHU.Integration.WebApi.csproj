@@ -24,6 +24,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Common\Dtos\" />
     <Folder Include="Features\Cases\Controllrs\" />
   </ItemGroup>
 </Project>

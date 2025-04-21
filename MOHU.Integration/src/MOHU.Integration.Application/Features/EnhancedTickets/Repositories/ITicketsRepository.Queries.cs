@@ -1,4 +1,6 @@
-﻿using MOHU.Integration.Domain.Features.Tickets;
+﻿using Common.Crm.Infrastructure.Common.Extensions;
+using Common.Crm.Infrastructure.Factories;
+using MOHU.Integration.Domain.Features.Tickets;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
@@ -8,7 +10,7 @@ public partial interface ITicketsRepository
     
     Ticket GetByTitle(string ticketNumber);
     
-    List<Ticket> GetCompanyTickets(Guid companyId);
+    PaginationResponse<Ticket> GetCompanyTickets(Guid companyId, FilterExpression? filterExpression, CrmPaginationParameters? paginationParameters);
     
     Ticket GetCompanyTicket(Guid companyId, Guid ticketId);
 
@@ -18,5 +20,6 @@ public partial interface ITicketsRepository
         FilterExpression? filterExpression = null,
         List<FilterExpression>? childFilters = null,
         IEnumerable<LinkEntity>? linkEntities = null,
+        CrmPaginationParameters? paginationParameters = null,
         params ConditionExpression[] conditionExpressions);
 }
