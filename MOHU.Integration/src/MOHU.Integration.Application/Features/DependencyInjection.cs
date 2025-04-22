@@ -9,8 +9,10 @@ using MOHU.Integration.Application.Features.Customers.Repositories;
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 using MOHU.Integration.Application.Features.Individuals.Services;
 using MOHU.Integration.Application.Features.Nationalities.Services;
+using MOHU.Integration.Application.Features.ServiceDefinitions.Repositories;
 using MOHU.Integration.Application.Features.TicketCategories;
 using MOHU.Integration.Application.Features.Tickets.Services;
+using MOHU.Integration.Application.Features.TicketStatuses.Repositories;
 using MOHU.Integration.Contracts.Companies.Services;
 
 namespace MOHU.Integration.Application.Features;
@@ -26,7 +28,9 @@ public static class DependencyInjection
             .AddCustomers()
             .AddNationalities()
             .AddTicketCategories()
-            .AddTickets();
+            .AddTickets()
+            .AddServiceDefinitions()
+            .AddTicketStatues();
     }
     
     private static IServiceCollection AddCountries(this IServiceCollection services)
@@ -70,5 +74,17 @@ public static class DependencyInjection
         return services
             .AddTransient<ITicketsRepository, TicketsRepository>()
             .AddTransient<ITicketService, TicketService>();
+    }
+    
+    private static IServiceCollection AddServiceDefinitions(this IServiceCollection services)
+    {
+        return services
+            .AddTransient<IServiceDefinitionRepository, ServiceDefinitionRepository>();
+    }
+    
+   private static IServiceCollection AddTicketStatues(this IServiceCollection services)
+    {
+        return services
+            .AddTransient<ITicketStatusesRepository, TicketStatusesRepository>();
     }
 }

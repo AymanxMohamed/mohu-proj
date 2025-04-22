@@ -10,12 +10,14 @@ internal partial class TicketsRepository
 {
     public PaginationResponse<NusukMasarTicketResponse> GetCompanyTickets(
         Guid companyId, 
-        FilterExpression? filterExpression, 
-        CrmPaginationParameters? paginationParameters)
+        FilterExpression? filterExpression = null, 
+        CrmPaginationParameters? paginationParameters = null,
+        List<OrderExpression>? orderExpressions = null)
     {
         return GetPaginated(GetQuery(
                 filterExpression: filterExpression,
                 paginationParameters: paginationParameters,
+                orderExpressions: orderExpressions,
                 conditionExpressions: [ConditionExpressionFactory
                     .CreateConditionExpression(
                         columnLogicalName: TicketsConstants.BasicInformation.Fields.Company,

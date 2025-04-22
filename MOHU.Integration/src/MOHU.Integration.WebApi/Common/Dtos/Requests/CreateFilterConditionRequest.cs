@@ -11,7 +11,7 @@ public class CreateFilterConditionRequest
 
     public string Operator { get; init; } = ConditionOperator.Equal.ToString();
 
-    public required JsonElement Value { get; init; }
+    public JsonElement? Value { get; init; }
 
     public ConditionExpression ToExpression()
     {
@@ -20,7 +20,7 @@ public class CreateFilterConditionRequest
             throw new InvalidOperationException($"Invalid condition operator: {Operator}");
         }
 
-        var value = Value.ToObject<object>();
+        var value = Value?.ToObject<object>();
         
         return ConditionExpressionFactory
             .CreateConditionExpression(ColumnName, conditionOperator, value: value);

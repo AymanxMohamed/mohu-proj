@@ -1,5 +1,6 @@
 ﻿using Common.Crm.Domain.Common.Constants;
 using Common.Crm.Domain.Common.OptionSets.Extensions;
+using ErrorOr;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 using MOHU.Integration.Domain.Features.Tickets.Enums;
 
@@ -22,6 +23,8 @@ public class TicketBasicInformation
         Company = entity.GetAttributeValue<EntityReference>(TicketsConstants.BasicInformation.Fields.Company);
         Origin = entity.GetEnumValue<CaseOriginEnum>(TicketsConstants.BasicInformation.Fields.Origin);
         Priority = entity.GetEnumValue<TicketPriorityEnum>(TicketsConstants.BasicInformation.Fields.Priority);
+        CreatedOn = entity.GetAttributeValue<DateTime>(CommonConstants.Fields.CreatedOn);
+        ModifiedOn = entity.GetAttributeValue<DateTime>(CommonConstants.Fields.ModifiedOn);
     }
     
     private TicketBasicInformation(
@@ -59,6 +62,10 @@ public class TicketBasicInformation
     public EntityReference? StatusReason { get; private set; }
 
     public TicketPriorityEnum? Priority { get; init; }
+
+    public DateTime CreatedOn { get; init; }
+
+    public DateTime ModifiedOn { get; init; }
 
     public static TicketBasicInformation Create(Entity entity) => new(entity);
 

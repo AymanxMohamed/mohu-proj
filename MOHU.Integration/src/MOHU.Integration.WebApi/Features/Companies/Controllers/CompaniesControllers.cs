@@ -27,7 +27,7 @@ public class CompaniesControllers(ICompaniesService service, ITicketsRepository 
         return Ok(company);
     }
     
-    [HttpGet("{id:guid}/tickets")]
+    [HttpPost("{id:guid}/tickets")]
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -35,10 +35,15 @@ public class CompaniesControllers(ICompaniesService service, ITicketsRepository 
     [ProducesResponseType(typeof(ResponseMessage<PaginationResponse<NusukMasarTicketResponse>>),StatusCodes.Status200OK)]
     public ResponseMessage<PaginationResponse<NusukMasarTicketResponse>> GetTickets(
         Guid id, 
-        [FromQuery] CrmPaginationParameters? paginationParameters = null,
-        [FromBody] CreateFilterRequest? filter = null)
+        [FromBody] PaginationWithFilterRequest? request = null)
     {
-        var tickets = ticketsRepository.GetCompanyTickets(id, filter?.ToExpression(), paginationParameters);
+        var tickets = ticketsRepository
+            .GetCompanyTickets(
+                id,
+                request?.Filter?.ToExpression(), 
+                request?.PaginationParameters,
+                request?.OrderExpressions);
+        
         return Ok(tickets);
     }
     

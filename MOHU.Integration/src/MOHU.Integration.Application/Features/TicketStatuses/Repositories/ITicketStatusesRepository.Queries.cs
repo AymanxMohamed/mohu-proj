@@ -1,24 +1,16 @@
 ﻿using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
-using MOHU.Integration.Contracts.Tickets.Dtos.Responses;
-using MOHU.Integration.Domain.Features.Tickets;
+using MOHU.Integration.Domain.Features.TicketStatuses;
 
-namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
+namespace MOHU.Integration.Application.Features.TicketStatuses.Repositories;
 
-public partial interface ITicketsRepository
+public interface ITicketStatusesRepository
 {
-    Ticket GetById(Guid ticketId);
-    
-    Ticket GetByTitle(string ticketNumber);
-    
-    PaginationResponse<NusukMasarTicketResponse> GetCompanyTickets(
-        Guid companyId, 
-        FilterExpression? filterExpression = null,
+    PaginationResponse<TicketStatus> GetAll(
+        FilterExpression? filterExpression = null, 
         CrmPaginationParameters? paginationParameters = null,
         List<OrderExpression>? orderExpressions = null);
     
-    Ticket GetCompanyTicket(Guid companyId, Guid ticketId);
-
     QueryBase GetQuery(
         ColumnSet? columnSet = null,
         bool? isOrFilter = null,

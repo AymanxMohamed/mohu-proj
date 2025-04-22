@@ -21,6 +21,10 @@ public class NusukMasarTicketResponse
         Priority = ticket.BasicInformation.Priority?.ToString();
 
         CustomerName = ticket.CustomerInformation?.CustomerReference?.Name;
+        
+        CreatedOn = ticket.BasicInformation.CreatedOn;
+        
+        ModifiedOn = ticket.BasicInformation.ModifiedOn;
     }
 
     public Guid Id { get; init; }
@@ -38,6 +42,10 @@ public class NusukMasarTicketResponse
     public string? Priority { get; init; }
 
     public string? CustomerName { get; set; }
+    
+    public DateTime? CreatedOn { get; set; }
+    
+    public DateTime? ModifiedOn { get; set; }
     
     public static implicit operator NusukMasarTicketResponse(Ticket ticket) => new(ticket);
 

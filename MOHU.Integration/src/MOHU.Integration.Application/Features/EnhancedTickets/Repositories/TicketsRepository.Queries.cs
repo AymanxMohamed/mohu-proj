@@ -51,6 +51,7 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
         List<FilterExpression>? childFilters = null,
         IEnumerable<LinkEntity>? linkEntities = null,
         CrmPaginationParameters? paginationParameters = null,
+        List<OrderExpression>? orderExpressions = null,
         params ConditionExpression[] conditionExpressions)
     {
         return QueryExpressionFactory
@@ -62,6 +63,7 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
                 childFilters, 
                 linkEntities, 
                 paginationParameters,
+                orderExpressions: orderExpressions,
                 conditionExpressions: conditionExpressions);
     }
 }

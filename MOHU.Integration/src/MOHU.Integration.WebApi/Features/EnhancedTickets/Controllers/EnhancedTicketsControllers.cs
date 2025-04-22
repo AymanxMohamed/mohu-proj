@@ -14,7 +14,7 @@ public class EnhancedTicketsControllers(
         return Ok(ticketsRepository.GetById(id));
     }
     
-    [HttpGet("{title}")]
+    [HttpGet("by-title/{title}")]
     public IActionResult GetByTitle(string title)
     {
         return Ok(ticketsRepository.GetByTitle(title));
