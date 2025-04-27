@@ -1,4 +1,7 @@
-﻿using MOHU.Integration.Domain.Features.Tickets;
+﻿using Common.Crm.Domain.Common.OptionSets.Constants;
+using Microsoft.Xrm.Sdk;
+using MOHU.Integration.Domain.Features.Tickets;
+using MOHU.Integration.Domain.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Contracts.Tickets.Dtos.Responses;
 
@@ -10,15 +13,17 @@ public class NusukMasarTicketResponse
         
         TicketNumber = ticket.BasicInformation.Title;
         
+        RequestType = ticket.Classification.RequestType;
+        
         StatusReason = ticket.BasicInformation.StatusReason?.Name;
         
-        State = ticket.BasicInformation.Status?.ToString();
+        State = ticket.BasicInformation.Status;
 
-        Status = ticket.BasicInformation.StatusReasonOop?.ToString();
+        Status = ticket.BasicInformation.StatusReasonOop;
+
+        Origin = ticket.BasicInformation.Origin;
         
-        Origin = ticket.BasicInformation.Origin?.ToString();
-        
-        Priority = ticket.BasicInformation.Priority?.ToString();
+        Priority = ticket.BasicInformation.Priority;
 
         CustomerName = ticket.CustomerInformation?.CustomerReference?.Name;
         
@@ -28,18 +33,20 @@ public class NusukMasarTicketResponse
     }
 
     public Guid Id { get; init; }
+
+    public EntityReference? RequestType { get; init; }
     
     public string? TicketNumber { get; init; }
     
     public string? StatusReason { get; init; }
     
-    public string? State { get; init; }
+    public TicketStatusEnum? State { get; init; }
     
-    public string? Status { get; init; }
+    public TicketStatusReasonEnum? Status { get; init; }
 
-    public string? Origin { get; init; }
+    public CaseOriginEnum? Origin { get; init; }
 
-    public string? Priority { get; init; }
+    public TicketPriorityEnum? Priority { get; init; }
 
     public string? CustomerName { get; set; }
     

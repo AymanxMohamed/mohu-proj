@@ -1,13 +1,11 @@
 ﻿using System.Net;
 using Common.Crm.Infrastructure.Common.Extensions;
-using Common.Crm.Infrastructure.Factories;
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 using MOHU.Integration.Contracts.Companies.Dtos;
 using MOHU.Integration.Contracts.Companies.Services;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Contracts.Tickets.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Companies;
-using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.WebApi.Common.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.Features.Companies.Controllers;

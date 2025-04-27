@@ -15,6 +15,10 @@ public static partial class TicketsConstants
             public const string IntegrationComment = "ldv_integrationcomment";
             public const string IntegrationLastActionDate = "ldv_integrationlastactiondate";
             public const string IntegrationStatus = "ldv_integrationstatuscode";
+            public const string IsCompanyPortalUpdated = "ldv_iscompanyportalupdated";
+            public const string IsNusukPortalUpdated = "ldv_isnusukportalupdated";
+            public const string CompanyServiceNeedMoreInformation = "ldv_companiesserviceneededinformatio";
+            public const string CompanyServiceDecisionCode = "ldv_companiesservicedecisioncode";
         }
     }
 }

@@ -19,6 +19,10 @@ public class TicketIntegrationInformation
         LastActionDate = entity.GetAttributeValue<DateTime>(TicketsConstants.IntegrationInformation.Fields.IntegrationLastActionDate);
         Comment = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.IntegrationComment);
         IntegrationStatus = entity.GetEnumValue<IntegrationStatus>(TicketsConstants.IntegrationInformation.Fields.IntegrationStatus);
+        CompanyPortalUpdated = entity.GetAttributeValue<bool>(TicketsConstants.IntegrationInformation.Fields.IsCompanyPortalUpdated);
+        IsNusukPortalUpdated = entity.GetAttributeValue<bool>(TicketsConstants.IntegrationInformation.Fields.IsNusukPortalUpdated);
+        CompanyServiceNeedMoreInformation = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.CompanyServiceNeedMoreInformation);
+        CompanyServiceDecisionCode = entity.GetEnumValue<CompanyServiceDecisionEnum>(TicketsConstants.IntegrationInformation.Fields.CompanyServiceDecisionCode);
     }
 
     private TicketIntegrationInformation(
@@ -37,6 +41,12 @@ public class TicketIntegrationInformation
         UpdatedBy = updatedBy;
         LastActionDate = lastActionDate;
     }
+    
+    public bool? IsNusukPortalUpdated { get; private set; }
+
+    public string? CompanyServiceNeedMoreInformation { get; private set; }
+
+    public CompanyServiceDecisionEnum? CompanyServiceDecisionCode { get; private set; }
 
     public string? ClosureReason { get; private set; }
     
@@ -51,6 +61,8 @@ public class TicketIntegrationInformation
     public string? Comment { get; private set; }
 
     public string? UpdatedBy { get; private set; }
+    
+    public bool? CompanyPortalUpdated { get; private set; }
 
     public DateTime? LastActionDate { get; private set; }
 
@@ -65,6 +77,10 @@ public class TicketIntegrationInformation
         UpdatedBy = updatedBy;
         IntegrationStatus = integrationStatus;
         DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
+        CompanyServiceDecisionCode = integrationStatus.ToEnum<IntegrationStatus, CompanyServiceDecisionEnum>();
+        CompanyPortalUpdated = true;
+        IsNusukPortalUpdated = true;
+        CompanyServiceNeedMoreInformation = comment;
     }
 
     public static TicketIntegrationInformation Create(Entity entity) => new(entity);
@@ -102,6 +118,11 @@ public class TicketIntegrationInformation
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationComment, Comment);
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationLastActionDate, LastActionDate);
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationUpdatedBy, UpdatedBy);
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IsCompanyPortalUpdated, CompanyPortalUpdated);
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IsNusukPortalUpdated, IsNusukPortalUpdated);
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.CompanyServiceNeedMoreInformation, CompanyServiceNeedMoreInformation);
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationStatus, IntegrationStatus.ToOptionSetValue());
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.CompanyServiceDecisionCode, CompanyServiceDecisionCode.ToOptionSetValue());
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.CompanyServiceDecisionCode, CompanyServiceDecisionCode.ToOptionSetValue());
     }
 }
