@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using Microsoft.AspNetCore.Http.HttpResults;
 using MOHU.Integration.Application.Features.Tickets.Services;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Dto.Hootsuite;
@@ -19,12 +20,26 @@ internal class HootsuiteService(ICustomerService customerService,ITicketService 
         {
              requestType = await ticketService.GetCategoryRequestType(categoryId.GetValueOrDefault());
              categoriesWithLevels = await ticketService.GetCategoriesLevel(conversationResolvedRequest.Categories.Select(cat => cat.Id).ToList());
-            if(!categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.ParentCategory) && categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SubCategory))
+            try
+            {
+
+            if (!categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SubCategory) && categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SecondryCategory))
+            {
+                var secondryCategory = categoriesWithLevels.FirstOrDefault(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SecondryCategory);
+                var subCategoryId = await ticketService.GetParentCategory(secondryCategory!.ParentId);
+                categoriesWithLevels.Add(new TicketCategoryLevel { Id = subCategoryId, CategoryLevel = Contracts.Enum.CategoryLevelsEnum.SubCategory });
+            }
+            if (!categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.ParentCategory) && categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SubCategory))
             {
                 var subCategory = categoriesWithLevels.FirstOrDefault(c => c.CategoryLevel != Contracts.Enum.CategoryLevelsEnum.ParentCategory);
                 var parentCategoryId = await ticketService.GetParentCategory(subCategory!.ParentId);
                 categoriesWithLevels.Add(new TicketCategoryLevel { Id = parentCategoryId , CategoryLevel = Contracts.Enum.CategoryLevelsEnum.ParentCategory });
             }
+            }catch(Exception ex)
+            {
+                throw new NotFoundException("Something went wrong while fetching parent categories");
+            }
+            
 
         }
         string description = string.Join(", ", conversationResolvedRequest.Notes.Select(n => n.Text));
