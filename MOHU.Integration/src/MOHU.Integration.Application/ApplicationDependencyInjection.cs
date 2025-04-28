@@ -14,6 +14,7 @@ using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Infrastructure.Localization;
 using MOHU.Integration.Application.Service.Hootsuite;
 using MOHU.Integration.Application.Service.Almatar;
+using MOHU.Integration.Application.T2SmsProvider;
 
 namespace MOHU.Integration.Application;
 
@@ -24,6 +25,7 @@ public static class ApplicationDependencyInjection
         return services
             .AddGenericRepository()
             .AddElm(configuration)
+            .AddT2SmsProvider(configuration)
             .AddFeatures()
             .AddApplicationServices();
     }
