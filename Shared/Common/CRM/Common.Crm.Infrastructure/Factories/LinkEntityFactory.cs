@@ -1,4 +1,6 @@
-﻿namespace Common.Crm.Infrastructure.Factories
+﻿using Common.Crm.Domain.Common.ColumnSets.Constants;
+
+namespace Common.Crm.Infrastructure.Factories
 {
     public static class LinkEntityFactory
     {
@@ -8,8 +10,8 @@
             string foreignKeyName,
             string primaryKeyName,
             JoinOperator joinOperator = JoinOperator.LeftOuter,
-            string entityAlias = null,
-            ColumnSet columns = null)
+            string? entityAlias = null,
+            ColumnSet? columns = null)
         {
             var linkEntity = new LinkEntity(
                 linkFromEntityName: childEntityName, 
@@ -21,8 +23,7 @@
             if (entityAlias != null)
                 linkEntity.EntityAlias = entityAlias;
 
-            if (columns != null)
-                linkEntity.Columns = columns;
+            linkEntity.Columns = columns ?? ColumnSetConstants.AllColumns;
 
             return linkEntity;
         }
@@ -33,8 +34,8 @@
             string parentEntityName, 
             string foreignKeyName,
             JoinOperator joinOperator = JoinOperator.LeftOuter,
-            string entityAlias = null,
-            ColumnSet columns = null)
+            string? entityAlias = null,
+            ColumnSet? columns = null)
         {
            return Create(
                 childEntityName, 

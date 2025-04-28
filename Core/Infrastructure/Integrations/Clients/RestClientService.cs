@@ -77,8 +77,7 @@ public abstract class RestClientService : IRestClientService
         return request;
     }
     
-    public virtual ErrorOr<TEntity?> ExecuteRequest<TEntity>(
-        RestRequest request)
+    public virtual ErrorOr<TEntity?> ExecuteRequest<TEntity>(RestRequest request)
     {
         _logger.LogInformation(
             "Executing request for {RequestMethod} {RequestResource} {@RequestParameters}", 

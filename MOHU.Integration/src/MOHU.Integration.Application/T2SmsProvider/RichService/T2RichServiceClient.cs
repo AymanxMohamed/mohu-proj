@@ -2,11 +2,14 @@
 using MOHU.Integration.Application.T2SmsProvider.Common.Clients;
 using MOHU.Integration.Application.T2SmsProvider.RichService.Dtos.Requests;
 using MOHU.Integration.Application.T2SmsProvider.RichService.Dtos.Response;
+
 using RestSharp;
 
 namespace MOHU.Integration.Application.T2SmsProvider.RichService;
 
-internal class T2RichServiceClient(IT2Client t2Client, T2ApiSettings t2ApiSettings) : IT2RichServiceClient
+internal class T2RichServiceClient(
+    IT2Client t2Client, 
+    T2ApiSettings t2ApiSettings) : IT2RichServiceClient
 {
     public ErrorOr<Success> SendSmsConfirmation(SendSmsConfirmationRequest request)
     {

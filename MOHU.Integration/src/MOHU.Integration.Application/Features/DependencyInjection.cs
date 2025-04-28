@@ -10,6 +10,7 @@ using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 using MOHU.Integration.Application.Features.Individuals.Services;
 using MOHU.Integration.Application.Features.Nationalities.Services;
 using MOHU.Integration.Application.Features.ServiceDefinitions.Repositories;
+using MOHU.Integration.Application.Features.Tasks.Repositories;
 using MOHU.Integration.Application.Features.TicketCategories;
 using MOHU.Integration.Application.Features.Tickets.Services;
 using MOHU.Integration.Application.Features.TicketStatuses.Repositories;
@@ -30,7 +31,8 @@ public static class DependencyInjection
             .AddTicketCategories()
             .AddTickets()
             .AddServiceDefinitions()
-            .AddTicketStatues();
+            .AddTicketStatues()
+            .AddCrmTasks();
     }
     
     private static IServiceCollection AddCountries(this IServiceCollection services)
@@ -82,9 +84,15 @@ public static class DependencyInjection
             .AddTransient<IServiceDefinitionRepository, ServiceDefinitionRepository>();
     }
     
-   private static IServiceCollection AddTicketStatues(this IServiceCollection services)
+    private static IServiceCollection AddTicketStatues(this IServiceCollection services)
     {
         return services
             .AddTransient<ITicketStatusesRepository, TicketStatusesRepository>();
+    }
+
+    private static IServiceCollection AddCrmTasks(this IServiceCollection services)
+    {
+        return services
+            .AddTransient<ITasksRepository, TasksRepository>();
     }
 }

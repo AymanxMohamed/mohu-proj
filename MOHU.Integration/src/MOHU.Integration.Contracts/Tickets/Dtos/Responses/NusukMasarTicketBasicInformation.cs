@@ -9,15 +9,22 @@ public class NusukMasarTicketBasicInformation
     private NusukMasarTicketBasicInformation(TicketBasicInformation ticketBasicInformation)
     {
         Title = ticketBasicInformation.Title;
+        TicketNumber = ticketBasicInformation.TicketNumber;
         Description = ticketBasicInformation.Description;
         Origin = ticketBasicInformation.Origin;
         Company = ticketBasicInformation.Company;
         PortalStatus = ticketBasicInformation.PortalStatus;
+        SubOrigin = ticketBasicInformation.SubOrigin;
         Priority = ticketBasicInformation.Priority;
         CreatedOn = ticketBasicInformation.CreatedOn;
         ModifiedOn = ticketBasicInformation.ModifiedOn;
+        Status = ticketBasicInformation.Status;
+        StatusReason = ticketBasicInformation.StatusReason;
+        StatusReasonOop = ticketBasicInformation.StatusReasonOop;
     }
 
+    public string? TicketNumber { get; init; }
+    
     public string? Title { get; init; }
     
     public string? Description { get; init; }
@@ -29,6 +36,14 @@ public class NusukMasarTicketBasicInformation
     public EntityReference? Company { get; init; }
 
     public EntityReference? PortalStatus { get; init; }
+    
+    public EntityReference? SubOrigin { get; init; }
+    
+    public TicketStatusEnum? Status { get; init; }
+    
+    public TicketStatusReasonEnum? StatusReasonOop { get; init; }
+    
+    public EntityReference? StatusReason { get; private set; }
     
     public DateTime CreatedOn { get; init; }
 

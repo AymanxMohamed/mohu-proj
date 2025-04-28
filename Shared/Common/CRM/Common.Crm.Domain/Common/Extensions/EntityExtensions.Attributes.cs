@@ -18,6 +18,34 @@
         {
             return entity.GetAttributeValue<AliasedValue>($"{alias}.{logicalName}");
         }
+        
+        public static Entity? GetAliasedEntity(this Entity entity, string alias, string logicalName)
+        {
+            var linkedEntityAttributes = entity.Attributes
+                .Where(kv => kv.Key.StartsWith(alias + "."))
+                .ToDictionary(
+                    kv => kv.Key[(alias.Length + 1)..],
+                    kv => ((AliasedValue)kv.Value).Value
+                );
+
+            if (linkedEntityAttributes.Count == 0)
+            {
+                return null;
+            }
+            
+            var linkedEntity = new Entity
+            {
+                LogicalName = logicalName,
+                Id = (Guid)linkedEntityAttributes[$"{logicalName}id"]
+            };
+
+            foreach (var attribute in linkedEntityAttributes)
+            {
+                linkedEntity.Attributes.Add(attribute.Key, attribute.Value);
+            }
+
+            return linkedEntity;
+        }
 
         public static void AssignIfNotNull<TValue>(this Entity entity, string attributeLogicalName, TValue? value)
         {
