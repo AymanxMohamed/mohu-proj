@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Common.Crm.Domain.Common.Constants;
 using Common.Crm.Infrastructure.Factories;
 using Microsoft.Xrm.Sdk.Query;
 using Newtonsoft.Json;
@@ -20,6 +21,14 @@ public class CreateFilterConditionRequest
             throw new InvalidOperationException($"Invalid condition operator: {Operator}");
         }
 
+        if (ColumnName == CommonConstants.Fields.Status)
+        {
+            var intValue = int.TryParse(Value?.ToObject<object>()?.ToString() ?? "-1", out var x);
+            return ConditionExpressionFactory
+                .CreateConditionExpression(ColumnName, conditionOperator, value: x);
+        }
+        
+        
         var value = Value?.ToObject<object>();
         
         return ConditionExpressionFactory

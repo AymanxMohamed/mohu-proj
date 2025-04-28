@@ -15,6 +15,7 @@ public static partial class TicketsConstants
             public const string SubOrigin = "ldv_subsourceid";
             public const string Company = "ldv_company";
             public const string StatusReason = "ldv_substatusid";
+            public const string PortalStatus = "ldv_portalstatusid";
         }
     }
 }

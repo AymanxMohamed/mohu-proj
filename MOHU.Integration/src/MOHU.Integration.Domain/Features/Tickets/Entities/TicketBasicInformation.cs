@@ -16,6 +16,7 @@ public class TicketBasicInformation
         Title = entity.GetAttributeValue<string>(TicketsConstants.BasicInformation.Fields.Title);
         Description = entity.GetAttributeValue<string>(TicketsConstants.BasicInformation.Fields.Description);
         StatusReason = entity.GetAttributeValue<EntityReference>(TicketsConstants.BasicInformation.Fields.StatusReason);
+        PortalStatus = entity.GetAttributeValue<EntityReference>(TicketsConstants.BasicInformation.Fields.PortalStatus);
         StatusReasonOop = entity.GetEnumValue<TicketStatusReasonEnum>(CommonConstants.Fields.StatusReasonOop);
         Status = entity.GetEnumValue<TicketStatusEnum>(CommonConstants.Fields.Status);
         Origin = entity.GetEnumValue<CaseOriginEnum>(TicketsConstants.BasicInformation.Fields.Origin);
@@ -50,6 +51,8 @@ public class TicketBasicInformation
     public string? Description { get; init; }
 
     public CaseOriginEnum? Origin { get; init; }
+    
+    public EntityReference? PortalStatus { get; init; }
     
     public EntityReference? SubOrigin { get; init; }
     
@@ -104,10 +107,15 @@ public class TicketBasicInformation
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.TicketNumber, TicketNumber);
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Title, Title);
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Description, Description);
+        entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Origin, Origin.ToOptionSetValue());
+        entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.PortalStatus, PortalStatus);
+        entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.SubOrigin, SubOrigin);
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Company, Company);
         entity.AssignIfNotNull(CommonConstants.Fields.Status, Status.ToOptionSetValue());
         entity.AssignIfNotNull(CommonConstants.Fields.StatusReasonOop, StatusReasonOop.ToOptionSetValue());
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.StatusReason, StatusReason);
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Priority, Priority.ToOptionSetValue());
+        entity.AssignIfNotNull(CommonConstants.Fields.CreatedOn, CreatedOn);
+        entity.AssignIfNotNull(CommonConstants.Fields.ModifiedOn, ModifiedOn);
     }
 }

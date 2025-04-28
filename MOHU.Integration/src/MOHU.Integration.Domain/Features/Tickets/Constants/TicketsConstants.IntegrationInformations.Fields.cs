@@ -17,7 +17,7 @@ public static partial class TicketsConstants
             public const string IntegrationStatus = "ldv_integrationstatuscode";
             public const string IsCompanyPortalUpdated = "ldv_iscompanyportalupdated";
             public const string IsNusukPortalUpdated = "ldv_isnusukportalupdated";
-            public const string CompanyServiceNeedMoreInformation = "ldv_companiesserviceneededinformatio";
+            public const string CompanyServiceNeedMoreInformation = "ldv_companiesserviceneededinformation";
             public const string CompanyServiceDecisionCode = "ldv_companiesservicedecisioncode";
         }
     }
