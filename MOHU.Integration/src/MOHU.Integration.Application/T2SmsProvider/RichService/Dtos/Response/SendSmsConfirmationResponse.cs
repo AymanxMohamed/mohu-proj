@@ -18,6 +18,6 @@ public class SendSmsConfirmationResponse
         return Error
             .Validation(
                 "SmsRichServiceError", 
-                $"Sms Rich Service Error with Code {Code}, Description: {Description}");
+                $"Sms Rich Service Error with Code: `{Code}`, Description: `{Description}`");
     }
 }
