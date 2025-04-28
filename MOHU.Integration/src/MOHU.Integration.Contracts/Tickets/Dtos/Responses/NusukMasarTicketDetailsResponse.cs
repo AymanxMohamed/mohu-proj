@@ -7,14 +7,14 @@ public class NusukMasarTicketDetailsResponse
 {
     private NusukMasarTicketDetailsResponse(Ticket ticket)
     {
-        Id = ticket.Id;
+        Id = ticket.Id.Id;
         BasicInformation = ticket.BasicInformation;
         IntegrationInformation = ticket.IntegrationInformation;
         CustomerInformation = ticket.CustomerInformation;
         Classification = ticket.Classification;
     }
 
-    public EntityReference Id { get; init; }
+    public Guid Id { get; init; }
 
     public NusukMasarTicketBasicInformation BasicInformation { get; init; }
 

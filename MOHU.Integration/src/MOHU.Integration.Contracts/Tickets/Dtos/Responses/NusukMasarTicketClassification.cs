@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Common.Crm.Application.Common.Dtos.Responses;
+using Microsoft.Xrm.Sdk;
 using MOHU.Integration.Domain.Features.Tickets.Entities;
 
 namespace MOHU.Integration.Contracts.Tickets.Dtos.Responses;
@@ -7,22 +8,22 @@ public class NusukMasarTicketClassification
 {
     private NusukMasarTicketClassification(TicketClassification ticketClassification)
     {
-        RequestType = ticketClassification.RequestType;
-        Service = ticketClassification.RequestType;
-        MainCategory = ticketClassification.RequestType;
-        SubCategory = ticketClassification.RequestType;
-        SecondarySubCategory = ticketClassification.RequestType;
+        RequestType = ticketClassification.RequestType.ToLookup();
+        Service = ticketClassification.Service.ToLookup();
+        MainCategory = ticketClassification.MainCategory.ToLookup();
+        SubCategory = ticketClassification.SubCategory.ToLookup();
+        SecondarySubCategory = ticketClassification.SecondarySubCategory.ToLookup();
     }
     
-    public EntityReference? RequestType { get; init; }
+    public LookupResponse<Guid>? RequestType { get; init; }
     
-    public EntityReference? Service { get; init; }
+    public LookupResponse<Guid>? Service { get; init; }
     
-    public EntityReference? MainCategory { get; init; }
+    public LookupResponse<Guid>? MainCategory { get; init; }
     
-    public EntityReference? SubCategory { get; init; }
+    public LookupResponse<Guid>? SubCategory { get; init; }
     
-    public EntityReference? SecondarySubCategory { get; init; }
+    public LookupResponse<Guid>? SecondarySubCategory { get; init; }
 
     public static implicit operator NusukMasarTicketClassification(TicketClassification ticketClassification)
         => new(ticketClassification);

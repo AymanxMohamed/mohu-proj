@@ -1,4 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Common.Crm.Application.Common.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Tickets.Entities;
 
 namespace MOHU.Integration.Contracts.Tickets.Dtos.Responses;
@@ -7,10 +7,10 @@ public class NusukMasarTicketCustomerInformation
 {
     private NusukMasarTicketCustomerInformation(TicketCustomerInformation customerInformation)
     {
-        CustomerReference = customerInformation.CustomerReference;
+        CustomerReference = customerInformation.CustomerReference.ToLookup();
     }
 
-    public EntityReference? CustomerReference { get; init; }
+    public LookupResponse<Guid>? CustomerReference { get; init; }
 
     public static implicit operator NusukMasarTicketCustomerInformation(TicketCustomerInformation customerInformation)
         => new(customerInformation);

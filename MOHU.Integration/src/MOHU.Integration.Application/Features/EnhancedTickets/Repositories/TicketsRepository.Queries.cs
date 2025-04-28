@@ -1,6 +1,7 @@
 ﻿using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
+using MOHU.Integration.Contracts.Tickets.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 
@@ -9,6 +10,18 @@ namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 internal partial class TicketsRepository(IGenericRepository genericRepository) : ITicketsRepository
 {
     public Ticket GetById(Guid ticketId)
+    {
+        var entity = genericRepository.GetById(TicketsConstants.LogicalName, ticketId);
+
+        if (entity is null)
+        {
+            throw new NotFoundException($"Their is no ticket found with this id {ticketId}");
+        }
+        
+        return Ticket.Create(entity);
+    }
+    
+    public NusukMasarTicketDetailsResponse GetByIdV2(Guid ticketId)
     {
         var entity = genericRepository.GetById(TicketsConstants.LogicalName, ticketId);
 
