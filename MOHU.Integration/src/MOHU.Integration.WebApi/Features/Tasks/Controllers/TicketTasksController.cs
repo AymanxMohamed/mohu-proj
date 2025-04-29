@@ -16,7 +16,7 @@ public class TicketTasksController(ITasksRepository repository) : ControllerBase
                 request?.Filter?.ToExpression(),
                 request?.PaginationParameters,
                 request?.OrderExpressions)
-            .Convert(NusukMasarCrmTaskResponse.Create));
+            .Convert(NusukMasarCompanyTaskResponse.Create));
     }
 }
 

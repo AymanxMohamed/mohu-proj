@@ -48,6 +48,10 @@ public partial class Ticket : CrmEntity
     [JsonIgnore]
     public CrmTask? LastCrmUserTask => Tasks
         .FirstOrDefault(x => x.TaskType == TaskTypeEnum.BusinessUser);
+    
+    [JsonIgnore]
+    public CrmTask? LastOpenCompanyTask => Tasks
+        .FirstOrDefault(x => x is { TaskType: TaskTypeEnum.Company, Status: TaskStatusEnum.Open });
 
     public static Ticket Create(Entity entity) => new(entity);
 

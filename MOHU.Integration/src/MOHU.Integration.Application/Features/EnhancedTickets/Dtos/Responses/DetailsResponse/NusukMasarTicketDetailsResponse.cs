@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Features.Tasks.Dtos.Responses;
+using MOHU.Integration.Domain.Features.Tasks.Enums;
 using MOHU.Integration.Domain.Features.Tickets;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses.DetailsResponse;
@@ -13,7 +14,11 @@ public class NusukMasarTicketDetailsResponse
         CustomerInformation = ticket.CustomerInformation;
         Classification = ticket.Classification;
         LastCrmUserAction = ticket.LastCrmUserTask;
-        HistoryLog = ticket.Tasks.Select(NusukMasarCrmTaskResponse.Create).ToList();
+        OpenCompanyTask = ticket.LastOpenCompanyTask;
+        HistoryLog = ticket.Tasks
+            .Where(x => x.Status == TaskStatusEnum.Completed)
+            .Select(NusukMasarTaskResponse.Create)
+            .ToList();
     }
 
     public Guid Id { get; init; }
@@ -22,13 +27,15 @@ public class NusukMasarTicketDetailsResponse
 
     public NusukMasarTicketIntegrationInformation IntegrationInformation { get; init; }
     
-    public NusukMasarCrmUserTaskResponse? LastCrmUserAction { get; init; }
+    public NusukMasarTaskResponse? LastCrmUserAction { get; init; }
+
+    public NusukMasarCompanyTaskResponse? OpenCompanyTask { get; init; }
     
     public NusukMasarTicketCustomerInformation CustomerInformation { get; init; }
     
     public NusukMasarTicketClassification Classification { get; init; }
     
-    public List<NusukMasarCrmTaskResponse> HistoryLog { get; init; }
+    public List<NusukMasarTaskResponse> HistoryLog { get; init; }
 
     public static implicit operator NusukMasarTicketDetailsResponse(Ticket ticket)
         => new(ticket);
