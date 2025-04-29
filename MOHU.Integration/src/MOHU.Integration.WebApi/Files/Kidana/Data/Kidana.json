@@ -3,15 +3,19 @@
   "message": "Test data loaded",
   "data": {
     "source": "Test Source",
-    "ticketNumber": "KID-12345",
-    "partySource": "Test Party",
+    "ticketId": "KID-12345",
+    "zzpartySource": "Test Party",
     "siteId": "SITE-001",
-    "kidanaDescription": "Test Description",
-    "categoryDetails": "Test Category",
-    "externalStatus": "Closed",
-    "externalReportDate": "2024-03-15",
-    "externalStatusDate": "2024-03-15",
-    "kidanaExternalTicketId": "EXT-123",
-    "externalParty": "External Party"
+    "description": "Test Description",
+    "classStructureId": "Test Category",
+    "status": "Closed",
+    "reportDate": "2024-03-15",
+    "statusDate": "2024-03-15",
+    "zzTicketId": "EXT-123",
+    "zzExtParty": "External Party",
+    "zzRequestor": "John Doe",
+    "zzRequestorNo": "123456789",
+    "assetNum": "ASSET-001",
+    "location": "Test Location"
   }
 }

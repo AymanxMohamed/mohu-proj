@@ -27,6 +27,11 @@ namespace MOHU.Integration.Domain.Entitiy
             public const string ExternalStatusDate = "ldv_externalstatusdate";
             public const string KidanaExternalTicketId = "ldv_kidanaexternalticketid";
             public const string ExternalParty = "ldv_externalparty";
+            public const string ApplicantName = "ldv_applicantname";
+            public const string ApplicantPhoneNumber = "ldv_applicantphonenumber";
+            public const string AssetNumber = "ldv_assetnumber";
+            public const string Location = "ldv_location";
+
 
             public const string CreatedBy = "createdby";
             public const string CreatedOn = "createdon";
@@ -46,7 +51,47 @@ namespace MOHU.Integration.Domain.Entitiy
             REJECTED = 3,
             OOS = 4,
             OOSC = 5,
-            RESOLVED = 6
+            RESOLVED = 6,
+            CONTWORK = 7,
+            INPROG = 8,
+            NEW = 9,
+            WCONT1 = 10,
+            WMALIKCENT = 11,
+            PENDING = 12,
+            WASSMROOSC = 13,
+            WCONSOOSC = 14,
+            EXTRETURN = 15,
+            QUEUED = 16,
+            RETURNCONT = 17,
+            WCONT = 18,
+            WEXTPARTY = 19,
+            WMC = 20
+        }
+
+        public static class ClosedStatuses
+        {
+            public static HashSet<string> Values { get; } = new HashSet<string>(
+                new[]
+                {
+                    nameof(ExternalStatus_OptionSet.CANCELLED),
+                    nameof(ExternalStatus_OptionSet.CLOSED),
+                    nameof(ExternalStatus_OptionSet.REJECTED),
+                    nameof(ExternalStatus_OptionSet.OOS),
+                    nameof(ExternalStatus_OptionSet.OOSC),
+                    nameof(ExternalStatus_OptionSet.RESOLVED)
+                },
+                StringComparer.OrdinalIgnoreCase
+            );
+
+            public static HashSet<int> Codes { get; } = new HashSet<int>
+            {
+                (int)ExternalStatus_OptionSet.CANCELLED,
+                (int)ExternalStatus_OptionSet.CLOSED,
+                (int)ExternalStatus_OptionSet.REJECTED,
+                (int)ExternalStatus_OptionSet.OOS,
+                (int)ExternalStatus_OptionSet.OOSC,
+                (int)ExternalStatus_OptionSet.RESOLVED
+            };
         }
 
 

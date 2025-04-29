@@ -43,7 +43,6 @@ public class KidanaDetailsController(
             success => Ok(success),
             errors =>
             {
-                // Fix: Check if there are errors before accessing the first one
                 var firstError = errors.Any() ? errors[0] : Error.Unexpected();
                 logger.LogError("Validation failed: {Code} - {Message}",
                     firstError.Code, firstError.Description);

@@ -8,6 +8,7 @@ using MOHU.Integration.Application.Kidana.Common.Dtos.Requests;
 using MOHU.Integration.Application.Kidana.Common.Dtos.Responses;
 using MOHU.Integration.Application.Kidana.Common.Services;
 using MOHU.Integration.Domain.Features.Tickets;
+using MOHU.Integration.Infrastructure.Persistence;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -22,14 +23,14 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
 
     internal class KidanaClient(
      KidanaApiSettings settings,
-     ILogger<RestClientService> logger, IntegrationLogsService logService,
-    IGenericRepository repository) : RestClientService(settings, logger), IKidanaClient
+     ILogger<RestClientService> logger,
+     IntegrationLogsService logService) : RestClientService(settings, logger), IKidanaClient
     {
-        public ErrorOr<KidanaResponseBase<KidanaDetailsResponse>> ValidateTicket(string kidanaNumber)
+        public ErrorOr<(KidanaResponseBase<KidanaDetailsResponse> Result, Guid LogId)> ValidateTicket(string kidanaNumber)
         {
             try
             {
-                // Create initial log
+                
                 var request = new KidanaDetailsRequest { TicketId = kidanaNumber.ToUpper() };
                 ErrorOr<KidanaResponseBase<KidanaDetailsResponse>> result;
 
@@ -55,17 +56,14 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
                 }
 
                 // Create log after getting the result
-                var log = logService.CreateCompleteLog(
+                var logId = logService.CreateCompleteLog(
                     kidanaNumber,
                     request,
                     result,
                     ldv_integrationlogs.IntegrationTypeCode_OptionSet.Kidana,
-                    ldv_integrationlogs.IntegrationOperationCode_OptionSet.Create);
+                    ldv_integrationlogs.IntegrationOperationCode_OptionSet.Validate);
 
-                repository.Create(log);
-                repository.Commit();
-
-                return result;
+                return (result.Value, logId);
             }
             catch (Exception ex)
             {
