@@ -2,8 +2,16 @@
   "status": "success",
   "message": "Test data loaded",
   "data": {
-    "status": "Active",
+    "source": "Test Source",
     "ticketNumber": "KID-12345",
-    "issueDate": "2024-03-15"
+    "partySource": "Test Party",
+    "siteId": "SITE-001",
+    "kidanaDescription": "Test Description",
+    "categoryDetails": "Test Category",
+    "externalStatus": "Closed",
+    "externalReportDate": "2024-03-15",
+    "externalStatusDate": "2024-03-15",
+    "kidanaExternalTicketId": "EXT-123",
+    "externalParty": "External Party"
   }
 }

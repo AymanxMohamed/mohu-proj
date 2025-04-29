@@ -54,6 +54,10 @@ public static class ApplicationDependencyInjection
         services.AddTransient<ITicketCategoryService, CategorieServices>();
         services.AddTransient<IAlmatarService, AlmatarService>();
         services.AddTransient<IKidanaDetailsService, KidanaDetailsService>();
+        services.AddScoped<CaseRelatedFieldsService>();
+        services.AddTransient<IntegrationLogsService>();
+
+
 
         return services;
     }

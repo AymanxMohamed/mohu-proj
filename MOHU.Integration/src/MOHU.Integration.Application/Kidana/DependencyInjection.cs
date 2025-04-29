@@ -24,7 +24,7 @@ namespace MOHU.Integration.Application.Kidana
 
             services.AddSingleton(apiClientSettings);
 
-            services.AddSingleton<IKidanaClient, KidanaClient>();
+            services.AddTransient<IKidanaClient, KidanaClient>();
             return services;
         }
 

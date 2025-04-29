@@ -14,9 +14,11 @@ namespace MOHU.Integration.Application.Kidana.Common.Dtos.Responses
         public string Message { get; init; } = null!;
         public TData? Data { get; init; }
 
-        public ErrorOr<TData> EnsureSuccess() =>
-            Status.Equals("success", StringComparison.OrdinalIgnoreCase) && Data != null
-                ? Data
-                : Error.Validation("KIDANA_ERROR", Message);
+        public ErrorOr<KidanaResponseBase<TData>> EnsureSuccessResult()
+        {
+            return Status.Equals("success", StringComparison.OrdinalIgnoreCase)
+                ? this
+                : Error.Validation(code: "KIDANA_ERROR", description: Message);
+        }
     }
 }

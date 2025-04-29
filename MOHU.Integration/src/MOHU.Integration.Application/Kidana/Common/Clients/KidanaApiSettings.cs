@@ -9,8 +9,11 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
 {
     public class KidanaApiSettings : RestClientSettings
     {
+
         public const string SectionName = nameof(KidanaApiSettings);
-        public bool UseFileClients { get; init; }
-        public string TestDataPath { get; init; } = "D:/Git Mapping/MOHU.Integration/src/MOHU.Integration.WebApi/Files/Kidana/Data/Kidana.json";
+
+        public string ValidateTicketEndpoint { get; init; } = null!;
+        public Dictionary<string, string> DefaultParams { get; init; } = new();
+
     }
 }

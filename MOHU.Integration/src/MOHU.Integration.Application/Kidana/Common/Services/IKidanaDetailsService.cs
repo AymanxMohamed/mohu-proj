@@ -9,6 +9,6 @@ namespace MOHU.Integration.Application.Kidana.Common.Services
 {
     public interface IKidanaDetailsService
     {
-        ErrorOr<KidanaDetailsResponse> GetDetails(string kidanaNumber);
+         Task<ErrorOr<TicketValidationResult>> ValidateTicketWithCrmCheck(string ticketId);
     }
 }
