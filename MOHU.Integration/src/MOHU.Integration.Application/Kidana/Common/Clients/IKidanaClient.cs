@@ -10,6 +10,6 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
 {
     public interface IKidanaClient : IRestClientService
     {
-        ErrorOr<KidanaResponseBase<KidanaDetailsResponse>> ValidateTicket(string kidanaNumber);
+        ErrorOr<(KidanaResponseBase<KidanaDetailsResponse> Result, Guid LogId)> ValidateTicket(string kidanaNumber);
     }
 }

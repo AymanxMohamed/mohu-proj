@@ -18,6 +18,7 @@ namespace MOHU.Integration.Domain.Entitiy
             public const string Name = "ldv_name";
 
             public const string CaseId = "ldv_caseid";
+            public const string CaseRelatedFieldsId = "ldv_caserelatedfieldsid";
             public const string IntegrationTypeCode = "ldv_integrationtypecode";
             public const string IntegrationOperationCode = "ldv_integrationoperationcode";
             public const string Trace = "ldv_trace";
@@ -55,7 +56,8 @@ namespace MOHU.Integration.Domain.Entitiy
         public enum IntegrationOperationCode_OptionSet
         {
             Create = 1,
-            Update = 2
+            Update = 2,
+            Validate = 3
         }
 
         public enum NusukStatusCode_OptionSet
