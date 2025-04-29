@@ -1,9 +1,7 @@
-﻿using Common.Crm.Domain.Common.OptionSets.Constants;
-using Microsoft.Xrm.Sdk;
-using MOHU.Integration.Domain.Features.Tickets;
+﻿using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Enums;
 
-namespace MOHU.Integration.Contracts.Tickets.Dtos.Responses;
+namespace MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses;
 
 public class NusukMasarTicketResponse
 {

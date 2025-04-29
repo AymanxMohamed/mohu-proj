@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using Common.Crm.Infrastructure.Common.Extensions;
+using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses;
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 using MOHU.Integration.Contracts.Companies.Dtos;
 using MOHU.Integration.Contracts.Companies.Services;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
-using MOHU.Integration.Contracts.Tickets.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Companies;
 using MOHU.Integration.WebApi.Common.Dtos.Requests;
 
@@ -45,7 +45,27 @@ public class CompaniesControllers(ICompaniesService service, ITicketsRepository 
         return Ok(tickets);
     }
     
-    [HttpPatch("{companyId:guid}/tickets/{id:guid}")]
+    [HttpPost("/api/v2/companies/{id:guid}/tickets")]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ResponseMessage<PaginationResponse<NusukMasarTicketListResponse>>),StatusCodes.Status200OK)]
+    public ResponseMessage<PaginationResponse<NusukMasarTicketListResponse>> GetTicketsV2(
+        Guid id, 
+        [FromBody] PaginationWithFilterRequest? request = null)
+    {
+        var tickets = ticketsRepository
+            .GetCompanyTicketsV2(
+                id,
+                request?.Filter?.ToExpression(), 
+                request?.PaginationParameters,
+                request?.OrderExpressions);
+        
+        return Ok(tickets);
+    }
+    
+    [HttpPut("{companyId:guid}/tickets/{id:guid}")]
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

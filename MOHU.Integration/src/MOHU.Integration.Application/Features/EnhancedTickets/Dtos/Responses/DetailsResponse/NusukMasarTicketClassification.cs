@@ -1,8 +1,7 @@
 ﻿using Common.Crm.Application.Common.Dtos.Responses;
-using Microsoft.Xrm.Sdk;
 using MOHU.Integration.Domain.Features.Tickets.Entities;
 
-namespace MOHU.Integration.Contracts.Tickets.Dtos.Responses;
+namespace MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses.DetailsResponse;
 
 public class NusukMasarTicketClassification
 {

@@ -1,13 +1,16 @@
 ﻿using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
-using MOHU.Integration.Contracts.Tickets.Dtos.Responses;
+using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses.DetailsResponse;
+using MOHU.Integration.Application.Features.Tasks.Repositories;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
-internal partial class TicketsRepository(IGenericRepository genericRepository) : ITicketsRepository
+internal partial class TicketsRepository(
+    IGenericRepository genericRepository,
+    ITasksRepository tasksRepository) : ITicketsRepository
 {
     public Ticket GetById(Guid ticketId)
     {
@@ -17,22 +20,14 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
         {
             throw new NotFoundException($"Their is no ticket found with this id {ticketId}");
         }
+
+        var ticket = Ticket.Create(entity);
         
-        return Ticket.Create(entity);
+        ticket.SetCrmTasks(tasksRepository.GetTicketTasks(ticket.Id.Id).Items);
+
+        return ticket;
     }
     
-    public NusukMasarTicketDetailsResponse GetByIdV2(Guid ticketId)
-    {
-        var entity = genericRepository.GetById(TicketsConstants.LogicalName, ticketId);
-
-        if (entity is null)
-        {
-            throw new NotFoundException($"Their is no ticket found with this id {ticketId}");
-        }
-        
-        return Ticket.Create(entity);
-    }
-
     public Ticket GetByTitle(string ticketNumber)
     {
         var entity = Get(GetQuery(

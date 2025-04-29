@@ -1,8 +1,11 @@
 ﻿using Common.Crm.Domain.Common.Factories;
 using MOHU.Integration.Domain.Features.Common.CrmEntities;
+using MOHU.Integration.Domain.Features.Tasks;
+using MOHU.Integration.Domain.Features.Tasks.Enums;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 using MOHU.Integration.Domain.Features.Tickets.Entities;
 using MOHU.Integration.Domain.Features.Tickets.Enums;
+using Newtonsoft.Json;
 
 namespace MOHU.Integration.Domain.Features.Tickets;
 
@@ -34,15 +37,17 @@ public partial class Ticket : CrmEntity
     public TicketBasicInformation BasicInformation { get; init; }
     
     public TicketIntegrationInformation IntegrationInformation { get; init; }
-    
+
     public TicketClassification Classification { get; init; }
     
     public TicketCustomerInformation CustomerInformation { get; init; }
 
-    public void UpdateIntegrationInformation(string comment, string updatedBy, IntegrationStatus integrationStatus)
-    {
-        IntegrationInformation.Update(comment, updatedBy, integrationStatus);
-    }
+    [JsonIgnore]
+    public List<CrmTask> Tasks { get; private set; } = [];
+
+    [JsonIgnore]
+    public CrmTask? LastCrmUserTask => Tasks
+        .FirstOrDefault(x => x.TaskType == TaskTypeEnum.BusinessUser);
 
     public static Ticket Create(Entity entity) => new(entity);
 
@@ -55,6 +60,11 @@ public partial class Ticket : CrmEntity
         new (id, basicInformation, integrationInformation, classification, customerInformation);
 
 
+    public void UpdateIntegrationInformation(string comment, string updatedBy, IntegrationStatus integrationStatus)
+    {
+        IntegrationInformation.Update(comment, updatedBy, integrationStatus);
+    }
+    
     public void Activate(TicketActiveStatusReasonEnum statusReason = TicketActiveStatusReasonEnum.InProgress)
         => BasicInformation.Activate(statusReason);
     
@@ -63,6 +73,12 @@ public partial class Ticket : CrmEntity
     
     public void Resolve(TicketResolvedStatusReasonEnum statusReason = TicketResolvedStatusReasonEnum.TicketResolved)
         => BasicInformation.Resolve(statusReason);
+
+    public Ticket SetCrmTasks(List<CrmTask> tasks)
+    {
+        Tasks = tasks;
+        return this;
+    }
 
     public new Entity ToCrmEntity()
     {
