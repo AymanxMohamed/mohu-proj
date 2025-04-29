@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Features.Customers.Repositories;
+using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses.DetailsResponse;
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
 namespace MOHU.Integration.WebApi.Features.EnhancedTickets.Controllers;
@@ -14,10 +15,18 @@ public class EnhancedTicketsControllers(
         return Ok(ticketsRepository.GetById(id));
     }
     
-    [HttpGet("{title}")]
+    [HttpGet("/api/v2/tickets/{id:guid}")]
+    public IActionResult GetByIdV2(Guid id)
+    {
+        NusukMasarTicketDetailsResponse ticket = ticketsRepository.GetById(id);
+        return Ok(ticket);
+    }
+    
+    [HttpGet("by-title/{title}")]
     public IActionResult GetByTitle(string title)
     {
-        return Ok(ticketsRepository.GetByTitle(title));
+        NusukMasarTicketDetailsResponse ticket = ticketsRepository.GetByTitle(title);
+        return Ok(ticket);
     }
     
     [HttpGet("customers/{customerId:guid}")]

@@ -62,6 +62,18 @@ public class GenericRepository(IOrganizationService organizationService) : IGene
         var entityCollection = OrganizationService.RetrieveMultiple(query);
         return entityCollection.Entities;
     }
+    
+    public PaginationResponse<Entity> ListAllPaginated(QueryBase query)
+    {
+        var entityCollection = OrganizationService.RetrieveMultiple(query);
+        return entityCollection.ToPaginationResponse();
+    }
+    
+    public PaginationResponse<TItem> ListAllPaginated<TItem>(QueryBase query, Func<Entity, TItem> converter)
+    {
+        var entityCollection = OrganizationService.RetrieveMultiple(query);
+        return entityCollection.ToPaginationResponse(converter);
+    }
         
     public IEnumerable<Entity> ListAll(QueryExpression query)
     {

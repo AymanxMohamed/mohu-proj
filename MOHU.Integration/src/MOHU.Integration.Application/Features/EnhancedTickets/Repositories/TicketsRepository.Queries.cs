@@ -1,11 +1,16 @@
-﻿using Common.Crm.Infrastructure.Factories;
+﻿using Common.Crm.Infrastructure.Common.Extensions;
+using Common.Crm.Infrastructure.Factories;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
+using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses.DetailsResponse;
+using MOHU.Integration.Application.Features.Tasks.Repositories;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
-internal partial class TicketsRepository(IGenericRepository genericRepository) : ITicketsRepository
+internal partial class TicketsRepository(
+    IGenericRepository genericRepository,
+    ITasksRepository tasksRepository) : ITicketsRepository
 {
     public Ticket GetById(Guid ticketId)
     {
@@ -15,10 +20,14 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
         {
             throw new NotFoundException($"Their is no ticket found with this id {ticketId}");
         }
-        
-        return Ticket.Create(entity);
-    }
 
+        var ticket = Ticket.Create(entity);
+        
+        ticket.SetCrmTasks(tasksRepository.GetTicketTasks(ticket.Id.Id).Items);
+
+        return ticket;
+    }
+    
     public Ticket GetByTitle(string ticketNumber)
     {
         var entity = Get(GetQuery(
@@ -39,6 +48,9 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
 
     public IEnumerable<Entity> Get(QueryBase queryExpression) => 
         genericRepository.ListAll(queryExpression);
+    
+    public PaginationResponse<Entity> GetPaginated(QueryBase queryExpression) => 
+        genericRepository.ListAllPaginated(queryExpression);
 
     public QueryBase GetQuery(
         ColumnSet? columnSet = null,
@@ -46,6 +58,8 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
         FilterExpression? filterExpression = null,
         List<FilterExpression>? childFilters = null,
         IEnumerable<LinkEntity>? linkEntities = null,
+        CrmPaginationParameters? paginationParameters = null,
+        List<OrderExpression>? orderExpressions = null,
         params ConditionExpression[] conditionExpressions)
     {
         return QueryExpressionFactory
@@ -56,6 +70,8 @@ internal partial class TicketsRepository(IGenericRepository genericRepository) :
                 filterExpression,
                 childFilters, 
                 linkEntities, 
-                conditionExpressions);
+                paginationParameters,
+                orderExpressions: orderExpressions,
+                conditionExpressions: conditionExpressions);
     }
 }

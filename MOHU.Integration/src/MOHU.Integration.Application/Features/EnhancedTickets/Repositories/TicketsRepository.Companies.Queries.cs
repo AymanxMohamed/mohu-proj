@@ -1,4 +1,6 @@
-﻿using Common.Crm.Infrastructure.Factories;
+﻿using Common.Crm.Infrastructure.Common.Extensions;
+using Common.Crm.Infrastructure.Factories;
+using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 
@@ -6,16 +8,40 @@ namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
 internal partial class TicketsRepository
 {
-    public List<Ticket> GetCompanyTickets(Guid companyId)
+    public PaginationResponse<NusukMasarTicketResponse> GetCompanyTickets(
+        Guid companyId, 
+        FilterExpression? filterExpression = null, 
+        CrmPaginationParameters? paginationParameters = null,
+        List<OrderExpression>? orderExpressions = null)
     {
-        return Get(GetQuery(
+        return GetPaginated(GetQuery(
+                filterExpression: filterExpression,
+                paginationParameters: paginationParameters,
+                orderExpressions: orderExpressions,
                 conditionExpressions: [ConditionExpressionFactory
                     .CreateConditionExpression(
                         columnLogicalName: TicketsConstants.BasicInformation.Fields.Company,
                         conditionOperator: ConditionOperator.Equal,
                         value: companyId)]))
-            .Select(Ticket.Create)
-            .ToList();
+            .Convert(x => NusukMasarTicketResponse.Create(Ticket.Create(x)));
+    }
+    
+    public PaginationResponse<NusukMasarTicketListResponse> GetCompanyTicketsV2(
+        Guid companyId, 
+        FilterExpression? filterExpression = null, 
+        CrmPaginationParameters? paginationParameters = null,
+        List<OrderExpression>? orderExpressions = null)
+    {
+        return GetPaginated(GetQuery(
+                filterExpression: filterExpression,
+                paginationParameters: paginationParameters,
+                orderExpressions: orderExpressions,
+                conditionExpressions: [ConditionExpressionFactory
+                    .CreateConditionExpression(
+                        columnLogicalName: TicketsConstants.BasicInformation.Fields.Company,
+                        conditionOperator: ConditionOperator.Equal,
+                        value: companyId)]))
+            .Convert(x => NusukMasarTicketListResponse.Create(Ticket.Create(x)));
     }
 
     public Ticket GetCompanyTicket(Guid companyId, Guid ticketId)

@@ -25,5 +25,7 @@ public static class CommonConstants
         public const string LinkProcessStage = "ldv_processstageid";
         public const string Status = "statecode";
         public const string StatusReasonOop = "statuscode";
+        public const string CreatedOn = "createdon";
+        public const string ModifiedOn = "modifiedon";
     }
 }

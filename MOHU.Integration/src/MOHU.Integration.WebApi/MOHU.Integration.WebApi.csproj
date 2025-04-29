@@ -27,6 +27,7 @@
     <Content Remove="Files\Kidana\Data\Kidana.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Common\Dtos\" />
     <Folder Include="Features\Cases\Controllrs\" />
   </ItemGroup>
 </Project>

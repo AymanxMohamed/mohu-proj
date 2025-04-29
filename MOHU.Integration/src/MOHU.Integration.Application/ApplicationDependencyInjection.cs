@@ -16,6 +16,7 @@ using MOHU.Integration.Application.Service.Hootsuite;
 using MOHU.Integration.Application.Service.Almatar;
 using MOHU.Integration.Application.Kidana;
 using MOHU.Integration.Application.Kidana.Common.Services;
+using MOHU.Integration.Application.T2SmsProvider;
 
 namespace MOHU.Integration.Application;
 
@@ -27,6 +28,7 @@ public static class ApplicationDependencyInjection
             .AddGenericRepository()
             .AddElm(configuration)
             .AddKidana(configuration)
+            .AddT2SmsProvider(configuration)
             .AddFeatures()
             .AddApplicationServices();
     }

@@ -18,8 +18,6 @@ namespace MOHU.Integration.WebApi.Features.TicketCategories.Controllers
        
              public async Task<ActionResult<ResponseMessage<Guid>>> UpsertCategories(UpsertCategoryRequest model)
         {
-           
-
             try
             {
                 var result = await ticketCategoryService.UpsertCategories(model);

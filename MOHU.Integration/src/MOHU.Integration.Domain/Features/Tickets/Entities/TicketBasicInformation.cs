@@ -1,5 +1,6 @@
 ﻿using Common.Crm.Domain.Common.Constants;
 using Common.Crm.Domain.Common.OptionSets.Extensions;
+using ErrorOr;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 using MOHU.Integration.Domain.Features.Tickets.Enums;
 
@@ -15,6 +16,7 @@ public class TicketBasicInformation
         Title = entity.GetAttributeValue<string>(TicketsConstants.BasicInformation.Fields.Title);
         Description = entity.GetAttributeValue<string>(TicketsConstants.BasicInformation.Fields.Description);
         StatusReason = entity.GetAttributeValue<EntityReference>(TicketsConstants.BasicInformation.Fields.StatusReason);
+        PortalStatus = entity.GetAttributeValue<EntityReference>(TicketsConstants.BasicInformation.Fields.PortalStatus);
         StatusReasonOop = entity.GetEnumValue<TicketStatusReasonEnum>(CommonConstants.Fields.StatusReasonOop);
         Status = entity.GetEnumValue<TicketStatusEnum>(CommonConstants.Fields.Status);
         Origin = entity.GetEnumValue<CaseOriginEnum>(TicketsConstants.BasicInformation.Fields.Origin);
@@ -22,6 +24,8 @@ public class TicketBasicInformation
         Company = entity.GetAttributeValue<EntityReference>(TicketsConstants.BasicInformation.Fields.Company);
         Origin = entity.GetEnumValue<CaseOriginEnum>(TicketsConstants.BasicInformation.Fields.Origin);
         Priority = entity.GetEnumValue<TicketPriorityEnum>(TicketsConstants.BasicInformation.Fields.Priority);
+        CreatedOn = entity.GetAttributeValue<DateTime>(CommonConstants.Fields.CreatedOn);
+        ModifiedOn = entity.GetAttributeValue<DateTime>(CommonConstants.Fields.ModifiedOn);
     }
     
     private TicketBasicInformation(
@@ -48,6 +52,8 @@ public class TicketBasicInformation
 
     public CaseOriginEnum? Origin { get; init; }
     
+    public EntityReference? PortalStatus { get; init; }
+    
     public EntityReference? SubOrigin { get; init; }
     
     public EntityReference? Company { get; init; }
@@ -59,6 +65,10 @@ public class TicketBasicInformation
     public EntityReference? StatusReason { get; private set; }
 
     public TicketPriorityEnum? Priority { get; init; }
+
+    public DateTime CreatedOn { get; init; }
+
+    public DateTime ModifiedOn { get; init; }
 
     public static TicketBasicInformation Create(Entity entity) => new(entity);
 
@@ -97,10 +107,15 @@ public class TicketBasicInformation
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.TicketNumber, TicketNumber);
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Title, Title);
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Description, Description);
+        entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Origin, Origin.ToOptionSetValue());
+        entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.PortalStatus, PortalStatus);
+        entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.SubOrigin, SubOrigin);
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Company, Company);
         entity.AssignIfNotNull(CommonConstants.Fields.Status, Status.ToOptionSetValue());
         entity.AssignIfNotNull(CommonConstants.Fields.StatusReasonOop, StatusReasonOop.ToOptionSetValue());
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.StatusReason, StatusReason);
         entity.AssignIfNotNull(TicketsConstants.BasicInformation.Fields.Priority, Priority.ToOptionSetValue());
+        entity.AssignIfNotNull(CommonConstants.Fields.CreatedOn, CreatedOn);
+        entity.AssignIfNotNull(CommonConstants.Fields.ModifiedOn, ModifiedOn);
     }
 }
