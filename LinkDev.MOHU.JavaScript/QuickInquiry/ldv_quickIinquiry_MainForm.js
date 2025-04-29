@@ -17,11 +17,11 @@ function OnLoad(executionContext) {
     });
 
 
-    var tessttttt = CommonGeneric.GetFieldValue(
-        formContext,
-        Applicant.firstName
-    );
-    console.log(tessttttt);
+    //var tessttttt = CommonGeneric.GetFieldValue(
+    //    formContext,
+    //    Applicant.firstName
+    //);
+    //console.log(tessttttt);
 
 }
 

@@ -6,12 +6,13 @@ using MOHU.Integration.Domain.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Domain.Features.Tickets;
 
-public class Ticket : CrmEntity
+public partial class Ticket : CrmEntity
 {
     private Ticket(Entity entity)
         : base(entity)
     {
         BasicInformation = TicketBasicInformation.Create(entity);
+        IntegrationInformation = TicketIntegrationInformation.Create(entity);
         Classification = TicketClassification.Create(entity);
         CustomerInformation = TicketCustomerInformation.Create(entity);
     }
@@ -19,29 +20,39 @@ public class Ticket : CrmEntity
     private Ticket(
         EntityReference? id, 
         TicketBasicInformation basicInformation,
+        TicketIntegrationInformation integrationInformation,
         TicketClassification classification,
         TicketCustomerInformation customerInformation)
         : base(id ?? EntityReferenceFactory.Create(TicketsConstants.LogicalName))
     {
         BasicInformation = basicInformation;
+        IntegrationInformation = integrationInformation;
         Classification = classification;
         CustomerInformation = customerInformation;
     }
 
     public TicketBasicInformation BasicInformation { get; init; }
     
+    public TicketIntegrationInformation IntegrationInformation { get; init; }
+    
     public TicketClassification Classification { get; init; }
     
     public TicketCustomerInformation CustomerInformation { get; init; }
+
+    public void UpdateIntegrationInformation(string comment, string updatedBy, IntegrationStatus integrationStatus)
+    {
+        IntegrationInformation.Update(comment, updatedBy, integrationStatus);
+    }
 
     public static Ticket Create(Entity entity) => new(entity);
 
     public static Ticket Create(
         EntityReference? id,
         TicketBasicInformation basicInformation,
+        TicketIntegrationInformation integrationInformation,
         TicketClassification classification,
         TicketCustomerInformation customerInformation) => 
-        new (id, basicInformation, classification, customerInformation);
+        new (id, basicInformation, integrationInformation, classification, customerInformation);
 
 
     public void Activate(TicketActiveStatusReasonEnum statusReason = TicketActiveStatusReasonEnum.InProgress)
@@ -58,6 +69,7 @@ public class Ticket : CrmEntity
         var entity = base.ToCrmEntity();
         
         BasicInformation.UpdateEntity(entity);
+        IntegrationInformation.UpdateEntity(entity);
         Classification.UpdateEntity(entity);
         CustomerInformation.UpdateEntity(entity);
         

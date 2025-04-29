@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MOHU.Integration.Contracts.Dto;
+namespace MOHU.Integration.Domain.Features.Tickets.Enums;
 
 public enum IntegrationStatus
 {

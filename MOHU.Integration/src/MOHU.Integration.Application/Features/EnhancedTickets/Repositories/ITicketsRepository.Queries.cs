@@ -7,6 +7,10 @@ public partial interface ITicketsRepository
     Ticket GetById(Guid ticketId);
     
     Ticket GetByTitle(string ticketNumber);
+    
+    List<Ticket> GetCompanyTickets(Guid companyId);
+    
+    Ticket GetCompanyTicket(Guid companyId, Guid ticketId);
 
     QueryBase GetQuery(
         ColumnSet? columnSet = null,

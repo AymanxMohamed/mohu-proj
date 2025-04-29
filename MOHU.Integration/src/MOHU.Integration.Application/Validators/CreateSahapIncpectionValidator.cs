@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MOHU.Integration.Domain.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Application.Validators;
 public class CreateSahapIncpectionValidator : AbstractValidator<SahabCreateInspectionDetailsRequest>

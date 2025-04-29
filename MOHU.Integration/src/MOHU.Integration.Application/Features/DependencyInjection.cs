@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Application.Features.Companies.DhcHajCompanies.Services;
+﻿using MOHU.Integration.Application.Features.Companies.Companies.Services;
+using MOHU.Integration.Application.Features.Companies.DhcHajCompanies.Services;
 using MOHU.Integration.Application.Features.Companies.HajMissions.Services;
 using MOHU.Integration.Application.Features.Companies.Houses.Services;
 using MOHU.Integration.Application.Features.Companies.IhcCompanies.Services;
@@ -10,6 +11,7 @@ using MOHU.Integration.Application.Features.Individuals.Services;
 using MOHU.Integration.Application.Features.Nationalities.Services;
 using MOHU.Integration.Application.Features.TicketCategories;
 using MOHU.Integration.Application.Features.Tickets.Services;
+using MOHU.Integration.Contracts.Companies.Services;
 
 namespace MOHU.Integration.Application.Features;
 
@@ -39,6 +41,7 @@ public static class DependencyInjection
         services.AddTransient<IIhcCompaniesService, IhcCompaniesService>();
         services.AddTransient<IHajMissionCompaniesService, HajMissionCompaniesService>();
         services.AddTransient<IHousesService, HousesService>();
+        services.AddTransient<ICompaniesService, CompaniesService>();
         return services;
     }
     

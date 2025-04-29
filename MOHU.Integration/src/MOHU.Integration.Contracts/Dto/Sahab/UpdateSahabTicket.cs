@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MOHU.Integration.Domain.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Contracts.Dto.Sahab;
 public class UpdateSahabTicket
