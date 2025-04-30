@@ -1,10 +1,12 @@
 ﻿using LinDev.MOHU.Utilites.Model;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace LinkDev.MOHU.Plugin.Utilites
@@ -14,6 +16,13 @@ namespace LinkDev.MOHU.Plugin.Utilites
         ITracingService tracingService;
         IOrganizationService service;
         OrganizationResponse customizedTimeCalculationResponse;
+
+        private readonly string _unsecureConfiguration;
+
+        public CustomPluginTimeCalculation(string unsecureConfig, string secureConfig)
+        {
+            _unsecureConfiguration = unsecureConfig;
+        }
         public void Execute(IServiceProvider serviceProvider)
         {
 
@@ -24,26 +33,46 @@ namespace LinkDev.MOHU.Plugin.Utilites
             service = serviceFactory.CreateOrganizationService(context.UserId);
             tracingService.Trace($"in Execute ");
 
-            int slaLevel = -1;
-            // Ensure this plugin is for the correct action
-            if (context.MessageName == ActionNames.ActionLevel1)
+                int slaLevel = -1;
+
+            if (!string.IsNullOrEmpty(_unsecureConfiguration))
             {
-                slaLevel = 1;
-                tracingService.Trace($"Sla Level = 1 ");
-            }
-            else if (context.MessageName == ActionNames.ActionLevel2)
-            {
-                slaLevel = 2;
-                tracingService.Trace($"Sla Level = 2 ");
-            }
-            else if (context.MessageName == ActionNames.ActionLevel3)
-            {
-                slaLevel = 3;
-                tracingService.Trace($"Sla Level = 3 ");
+                var actionMappings = JsonConvert.DeserializeObject<Dictionary<string, string>>(_unsecureConfiguration);
+
+                tracingService.Trace("Parsing the unsecure configuration");
+
+                // Serialize the dictionary to a JSON string for debugging
+                string serializedMappings = JsonConvert.SerializeObject(actionMappings, Formatting.Indented);
+                tracingService.Trace($"Unsecure Configuration as JSON: {serializedMappings}");
+
+
+                if (actionMappings.TryGetValue(ActionNames.ActionLevel1, out string actionLevel1) && context.MessageName == actionLevel1)
+                {
+                    slaLevel = 1;
+                    tracingService.Trace($"Sla Level = 1 ");
+                    tracingService.Trace($"the action name: {actionLevel1}");
+
+                }
+                else if (actionMappings.TryGetValue(ActionNames.ActionLevel2, out string actionLevel2) && context.MessageName == actionLevel2)
+                {
+                    slaLevel = 2;
+                    tracingService.Trace($"Sla Level = 2 ");
+                    tracingService.Trace($"the action name: {actionLevel2}");
+
+                }
+                else if (actionMappings.TryGetValue(ActionNames.ActionLevel3, out string actionLevel3) && context.MessageName == actionLevel3)
+                {
+                    slaLevel = 3;
+                    tracingService.Trace($"Sla Level = 3 ");
+                    tracingService.Trace($"the action name: {actionLevel3}");
+
+                }
             }
             else
             {
-                 throw new InvalidPluginExecutionException("This plugin is registered for a different action. ");
+                tracingService.Trace("No Unsecure Configuration found.");
+                throw new InvalidPluginExecutionException("This plugin is registered for a different action. ");
+
             }
             // The InputParameters collection contains all the data passed in the message request.
             string regardingId = context.InputParameters["regardingId"].ToString();
@@ -226,48 +255,7 @@ namespace LinkDev.MOHU.Plugin.Utilites
             Entity caseRecord = new Entity();
             return caseRecord;
         }
-      
-        //Entity FetchRequestRecord(string entitySchemaName, string regardingId, string slaLookupName)
-        //{
-        //    var query = new QueryExpression();
-
-        //    if (entitySchemaName == "task")
-        //    {
-        //        query = ExecuteRequestQuery("activityid", regardingId, slaLookupName);
-
-        //    }
-        //    else if (entitySchemaName == "incident")
-        //    {
-        //        query = ExecuteRequestQuery("incidentid", regardingId, slaLookupName);
-
-        //    }
-        //    var result = service.RetrieveMultiple(query)[0];
-
-        //    return result;
-        //}
-        //QueryExpression ExecuteRequestQuery(string entitySchemaName, string regardingId, string slaLookupName)
-        //{
-
-        //    // Instantiate QueryExpression query
-        //    var query = new QueryExpression("ldv_slahours");
-        //    query.Distinct = true;
-        //    // Add columns to query.ColumnSet
-        //    query.ColumnSet.AddColumns("ldv_name", "createdon", "ldv_code", "ldv_slahoursid", "ldv_warningdurationminutes", "ldv_warningdurationhours", "ldv_failuredurationminutes", "ldv_failuredurationhours");
-        //    query.AddOrder("createdon", OrderType.Descending);
-        //    var query_statecode = 0;
-        //    // Define filter query.Criteria
-        //    query.Criteria.AddCondition("statecode", ConditionOperator.Equal, query_statecode);
-        //    // Add link-entity aa
-        //    var aa = query.AddLink("ldv_casecategory", "ldv_slahoursid", slaLookupName);
-        //    aa.EntityAlias = "aa";
-        //    // Add link-entity ad
-        //    var ad = aa.AddLink(entitySchemaName, "ldv_casecategoryid", "ldv_subcategoryid");
-        //    ad.EntityAlias = "ad";
-        //    // Define filter ad.LinkCriteria
-        //    ad.LinkCriteria.AddCondition("activityid", ConditionOperator.Equal, regardingId);
-        //    //add execute query
-        //    return query;
-        //}
+     
 
         public string GetSLAConfigurationCriteria()
         {
@@ -296,40 +284,6 @@ namespace LinkDev.MOHU.Plugin.Utilites
             }
         }
 
-        //Entity FetchCaseCategory(string entitySchemaName, string regardingId)
-        //{
-        //    tracingService.Trace($"in FetchCaseCategory");
-
-        //    // Create a query expression for ldv_casecategory
-        //    var query = new QueryExpression(CategoryEntity.EntityLogicalName)
-        //    {
-        //        ColumnSet = new ColumnSet(CategoryEntity.SlaHourLevel1, CategoryEntity.SlaHourLevel2, CategoryEntity.SlaHourLevel3)
-        //    };
-
-        //    // Create a link entity to join with the task entity
-        //    var taskLink = new LinkEntity(CategoryEntity.EntityLogicalName, TaskEntity.EntityLogicalName, CategoryEntity.IDLogicalName, TaskEntity.SubCategory, JoinOperator.Inner);
-        //    taskLink.Columns.AddColumns(TaskEntity.IDLogicalName);
-
-        //    // Filter the link entity to include only the task with the specific activityid
-        //    taskLink.LinkCriteria.AddCondition(TaskEntity.IDLogicalName, ConditionOperator.Equal, new Guid(regardingId));
-
-        //    // Add the link entity to the main query
-        //    query.LinkEntities.Add(taskLink);
-
-        //    // Retrieve the ldv_casecategory entity
-        //    var result = service.RetrieveMultiple(query);
-
-        //    // Check if the result contains any entities
-        //    if (result.Entities.Count == 0)
-        //    {
-        //        //throw new InvalidPluginExecutionException($"No ldv_casecategory found for task with ID {regardingId}.");
-        //        tracingService.Trace($"No ldv_casecategory found for task with ID {regardingId}.");
-        //        return null;
-        //    }
-
-        //    // Return the first ldv_casecategory entity found (assuming there should be only one)
-        //    return result.Entities[0];
-        //}
 
         public Entity FetchEntityWithTaskLink(
                                 string entitySchemaName,
@@ -412,67 +366,6 @@ namespace LinkDev.MOHU.Plugin.Utilites
             return slaHoursEntities.ToDictionary(e => e.Id, e => e);
         }
 
-
-        //SLAHoursResult RetrieveSLAHours(string entityName, string regardingId)
-        //{
-        //    var result = new SLAHoursResult();
-
-        //    tracingService.Trace($"in RetrieveSLAHours");
-
-        //    // Fetch the case category
-        //    Entity caseCategoryEntity = FetchEntityWithTaskLink(
-        //                                        CategoryEntity.EntityLogicalName,
-        //                                        CategoryEntity.IDLogicalName,regardingId,
-        //                                        new ColumnSet(CategoryEntity.SlaHourLevel1, CategoryEntity.SlaHourLevel2, CategoryEntity.SlaHourLevel3)
-        //                                        );
-
-        //    if (caseCategoryEntity == null)
-        //    {
-        //        tracingService.Trace($"No case category found for entity {entityName} with regarding ID {regardingId}.");
-        //        return result;
-        //    }
-
-        //    // Retrieve SLA Hour Level IDs from the case category entity
-        //    if (caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel1) &&
-        //        caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel2) &&
-        //        caseCategoryEntity.Contains(CategoryEntity.SlaHourLevel3))
-        //    {
-        //        Guid level1Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel1).Id;
-        //        Guid level2Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel2).Id;
-        //        Guid level3Id = caseCategoryEntity.GetAttributeValue<EntityReference>(CategoryEntity.SlaHourLevel3).Id;
-
-        //        var slaHoursIds = new List<Guid> { level1Id, level2Id, level3Id };
-
-        //        // Fetch the SLA hours for all three levels in one call
-        //        var slaHoursEntities = FetchSLAHours(slaHoursIds);
-
-        //        // Process each SLA Hours entity separately
-        //        if (slaHoursEntities.TryGetValue(level1Id, out Entity slaHoursLevel1))
-        //        {
-        //            result.Level1WarningTime = GetDurationMinutes(slaHoursLevel1, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
-        //            result.Level1FailureTime = GetDurationMinutes(slaHoursLevel1, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
-        //        }
-
-        //        if (slaHoursEntities.TryGetValue(level2Id, out Entity slaHoursLevel2))
-        //        {
-        //            result.Level2WarningTime = GetDurationMinutes(slaHoursLevel2, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
-        //            result.Level2FailureTime = GetDurationMinutes(slaHoursLevel2, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
-        //        }
-
-        //        if (slaHoursEntities.TryGetValue(level3Id, out Entity slaHoursLevel3))
-        //        {
-        //            result.Level3WarningTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.WarningDurationHours, SlaHoursEntity.WarningDurationMinutes);
-        //            result.Level3FailureTime = GetDurationMinutes(slaHoursLevel3, SlaHoursEntity.FailureDurationHours, SlaHoursEntity.FailureDurationMinutes);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        tracingService.Trace($"One or more SLA Hour Level fields missing in case category entity for entity {entityName} with regarding ID {regardingId}.");
-
-        //    }
-
-        //    return result;
-        //}
 
         SLAHoursResult RetrieveSLAHours(string entityName, string regardingId)
         {

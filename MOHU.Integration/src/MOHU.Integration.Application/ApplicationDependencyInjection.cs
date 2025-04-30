@@ -14,6 +14,8 @@ using MOHU.Integration.Contracts.Interface.Customer;
 using MOHU.Integration.Infrastructure.Localization;
 using MOHU.Integration.Application.Service.Hootsuite;
 using MOHU.Integration.Application.Service.Almatar;
+using MOHU.Integration.Application.Kidana;
+using MOHU.Integration.Application.Kidana.Common.Services;
 using MOHU.Integration.Application.T2SmsProvider;
 
 namespace MOHU.Integration.Application;
@@ -25,6 +27,7 @@ public static class ApplicationDependencyInjection
         return services
             .AddGenericRepository()
             .AddElm(configuration)
+            .AddKidana(configuration)
             .AddT2SmsProvider(configuration)
             .AddFeatures()
             .AddApplicationServices();
@@ -52,6 +55,11 @@ public static class ApplicationDependencyInjection
         services.AddTransient<ISahabService, SahabService>();
         services.AddTransient<ITicketCategoryService, CategorieServices>();
         services.AddTransient<IAlmatarService, AlmatarService>();
+        services.AddTransient<IKidanaDetailsService, KidanaDetailsService>();
+        services.AddScoped<CaseRelatedFieldsService>();
+        services.AddTransient<IntegrationLogsService>();
+
+
 
         return services;
     }

@@ -52,10 +52,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CaseManagement\Case\CaseMainForm_R2.js" />
+    <Content Include="CaseManagement\Case\CaseRibbon.js" />
     <Content Include="caseTest - Copy.js" />
     <Content Include="caseTest.js" />
     <Content Include="CaseManagement\Case\ldv_Case_CopyOfMainForm.js" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Common\ldv_CommonStaticConfig.js" />
     <Content Include="QuickInquiry\ldv_quickIinquiry_MainForm.js" />
     <Content Include="SurveyManagement\Survey\ldv_survey_mainform.js" />
   </ItemGroup>
