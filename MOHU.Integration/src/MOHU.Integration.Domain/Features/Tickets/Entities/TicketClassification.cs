@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Domain.Features.Tickets.Constants;
+﻿using MOHU.Integration.Domain.Features.ServiceDefinitions.Constants;
+using MOHU.Integration.Domain.Features.Tickets.Constants;
 
 namespace MOHU.Integration.Domain.Features.Tickets.Entities;
 
@@ -49,6 +50,10 @@ public class TicketClassification
         EntityReference? subCategory, 
         EntityReference? secondarySubCategory) => 
         new (requestType, service, mainCategory, subCategory, secondarySubCategory);
+    
+    
+    public bool IsErshadOrMafkoden() => Service?.Id == ServiceDefinitionConstants.Services.MafkodenService 
+                                        || Service?.Id == ServiceDefinitionConstants.Services.ErshadService;
 
     internal void UpdateEntity(Entity entity)
     {

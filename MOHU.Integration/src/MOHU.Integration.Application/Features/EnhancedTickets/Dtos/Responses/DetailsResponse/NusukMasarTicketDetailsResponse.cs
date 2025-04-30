@@ -15,9 +15,15 @@ public class NusukMasarTicketDetailsResponse
         Classification = ticket.Classification;
         LastCrmUserAction = ticket.LastCrmUserTask;
         OpenCompanyTask = ticket.LastOpenCompanyTask;
+        
         HistoryLog = ticket.Tasks
             .Where(x => x.Status == TaskStatusEnum.Completed)
             .Select(NusukMasarTaskResponse.Create)
+            .ToList();
+        
+        CompanyHistoryLog = ticket.Tasks
+            .Where(x => x is { Status: TaskStatusEnum.Completed, TaskType: TaskTypeEnum.Company })
+            .Select(NusukMasarCompanyTaskResponse.Create)
             .ToList();
     }
 
@@ -36,6 +42,8 @@ public class NusukMasarTicketDetailsResponse
     public NusukMasarTicketClassification Classification { get; init; }
     
     public List<NusukMasarTaskResponse> HistoryLog { get; init; }
+    
+    public List<NusukMasarCompanyTaskResponse> CompanyHistoryLog { get; init; }
 
     public static implicit operator NusukMasarTicketDetailsResponse(Ticket ticket)
         => new(ticket);

@@ -66,7 +66,11 @@ public partial class Ticket : CrmEntity
 
     public void UpdateIntegrationInformation(string comment, string updatedBy, IntegrationStatus integrationStatus)
     {
-        IntegrationInformation.Update(comment, updatedBy, integrationStatus);
+        var status = Classification.IsErshadOrMafkoden() 
+            ? IntegrationStatus.CloseTheTicket 
+            : integrationStatus; 
+        
+        IntegrationInformation.Update(comment, updatedBy, status);
     }
     
     public void Activate(TicketActiveStatusReasonEnum statusReason = TicketActiveStatusReasonEnum.InProgress)
