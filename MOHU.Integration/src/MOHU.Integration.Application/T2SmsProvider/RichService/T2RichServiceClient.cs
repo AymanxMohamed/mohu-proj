@@ -19,6 +19,6 @@ internal class T2RichServiceClient(
                 body: request.ToRequest(t2ApiSettings),
                 resourceUrl: nameof(SendSmsConfirmation))
             .Then(x => x.EnsureNotNull())
-            .Then(x => x.ToErrorOrSuccess());
+            .Then(x => x.ToErrorOrSuccess(request.NormalizedMessage));
     }
 }

@@ -8,7 +8,7 @@ public class SendSmsConfirmationResponse
 
     public bool HasError { get; init; }
 
-    public ErrorOr<Success> ToErrorOrSuccess()
+    public ErrorOr<Success> ToErrorOrSuccess(string? message = null)
     {
         if (!HasError)
         {
@@ -18,6 +18,6 @@ public class SendSmsConfirmationResponse
         return Error
             .Validation(
                 "SmsRichServiceError", 
-                $"Sms Rich Service Error with Code: `{Code}`, Description: `{Description}`");
+                $"Sms Rich Service Error with Code: `{Code}`, Description: `{Description}` for this message {message}");
     }
 }
