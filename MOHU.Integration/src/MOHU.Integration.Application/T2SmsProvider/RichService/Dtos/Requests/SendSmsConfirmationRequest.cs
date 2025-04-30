@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Application.T2SmsProvider.Common.Clients;
+﻿using System.Text.RegularExpressions;
+using MOHU.Integration.Application.T2SmsProvider.Common.Clients;
 
 namespace MOHU.Integration.Application.T2SmsProvider.RichService.Dtos.Requests;
 
@@ -21,16 +22,10 @@ public class SendSmsConfirmationRequest
             Sender = sender ?? t2ApiSettings.Sender
         };
     }
-    
+
     private static string NormalizeMessage(string rawMessage)
     {
-        if (string.IsNullOrWhiteSpace(rawMessage))
-            return string.Empty;
-
-        var lines = rawMessage
-            .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-            .Select(line => line.Trim());
-
-        return string.Join("\n", lines);
+        return string.IsNullOrWhiteSpace(rawMessage) ? string.Empty :
+            Regex.Replace(rawMessage, @" ?\n ?", "\n");
     }
 }
