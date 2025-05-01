@@ -11,6 +11,8 @@ public class GenericRepository(IOrganizationService organizationService) : IGene
 {
     public readonly IOrganizationService OrganizationService = organizationService;
 
+    public IOrganizationService GetOrganizationService() => OrganizationService;
+
     public void Create(Entity entity)
     {
         UnitOfWork.Requests.Add(RequestsFactory.CreateCreateRequest(entity));

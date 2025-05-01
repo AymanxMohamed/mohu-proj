@@ -23,7 +23,7 @@ public partial interface ITicketsRepository
         CrmPaginationParameters? paginationParameters = null,
         List<OrderExpression>? orderExpressions = null);
     
-    Ticket GetCompanyTicket(Guid companyId, Guid ticketId);
+    Ticket GetCompanyTicket(Guid companyId, Guid ticketId, ColumnSet? columnSet = null);
 
     QueryBase GetQuery(
         ColumnSet? columnSet = null,

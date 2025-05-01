@@ -17,5 +17,11 @@ public static partial class TicketsConstants
             public const string StatusReason = "ldv_substatusid";
             public const string PortalStatus = "ldv_portalstatusid";
         }
+
+        public static class CompanyCheckFields
+        {
+            public const string StatusReason = "ldv_substatusid";
+            public const string Company = "ldv_company";
+        }
     }
 }

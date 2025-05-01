@@ -1,4 +1,7 @@
-﻿using MOHU.Integration.Domain.Features.Tickets;
+﻿using Common.Crm.Domain.Common.Utilities.ReflectionUtils;
+using MOHU.Integration.Domain.Features.Tickets;
+using MOHU.Integration.Domain.Features.Tickets.Constants;
+using MOHU.Integration.Domain.Features.Tickets.Entities;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
@@ -6,11 +9,21 @@ internal partial class TicketsRepository
 {
     public Ticket UpdateCompanyTicket(Guid companyId, Guid ticketId, UpdateTicketRequest request)
     {
-        var ticket = GetCompanyTicket(companyId, ticketId);
+        var ticket = GetCompanyTicket(companyId, ticketId, columnSet: TicketIntegrationInformation.TicketUpdateColumnSet);
         ticket.EnsureCanUpdateAsCompany(companyId);
         request.Update(ticket);
         genericRepository.Update(ticket.ToCrmEntity());
-        genericRepository.Commit();
+        Task.Run(() =>
+        {
+            try
+            {
+                genericRepository.Commit();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during async commit: {ex.Message}");
+            }
+        });
         return ticket;
     }
 }

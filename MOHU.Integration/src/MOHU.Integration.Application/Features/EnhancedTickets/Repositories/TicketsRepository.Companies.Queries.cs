@@ -1,5 +1,6 @@
 ﻿using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
+using DocumentFormat.OpenXml.Wordprocessing;
 using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
@@ -44,9 +45,10 @@ internal partial class TicketsRepository
             .Convert(x => NusukMasarTicketListResponse.Create(Ticket.Create(x)));
     }
 
-    public Ticket GetCompanyTicket(Guid companyId, Guid ticketId)
+    public Ticket GetCompanyTicket(Guid companyId, Guid ticketId, ColumnSet? columnSet = null)
     {
         var ticket = Get(GetQuery(
+                columnSet: columnSet,
                 conditionExpressions: [
                     ConditionExpressionFactory.CreateConditionExpression(
                         columnLogicalName: TicketsConstants.BasicInformation.Fields.Company,

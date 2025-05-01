@@ -44,8 +44,7 @@ public partial class Ticket : CrmEntity
 
     [JsonIgnore]
     public List<CrmTask> Tasks { get; private set; } = [];
-
-    [JsonIgnore]
+    
     public CrmTask? LastCrmUserTask => Tasks
         .FirstOrDefault(x => x.TaskType == TaskTypeEnum.BusinessUser);
     

@@ -1,4 +1,5 @@
-﻿using Common.Crm.Infrastructure.Common.Extensions;
+﻿using Common.Crm.Domain.Common.Constants;
+using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
 using MOHU.Integration.Domain.Features.SlaKpiInstances.Constants;
@@ -15,6 +16,8 @@ internal partial class TasksRepository(IGenericRepository genericRepository) : I
         CrmPaginationParameters? paginationParameters = null,
         List<OrderExpression>? orderExpressions = null)
     {
+        orderExpressions ??= [new OrderExpression(CommonConstants.Fields.CreatedOn, OrderType.Descending)];
+        
         return genericRepository
             .ListAllPaginated(GetQuery(
                 filterExpression: filterExpression,

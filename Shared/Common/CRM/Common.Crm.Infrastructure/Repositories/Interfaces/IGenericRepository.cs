@@ -6,6 +6,8 @@ namespace Common.Crm.Infrastructure.Repositories.Interfaces
     {
         // void Create<T>(T type);
         
+        IOrganizationService GetOrganizationService();
+        
         void Create(Entity entity);
 
         void CreateMany(

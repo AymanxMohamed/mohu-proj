@@ -1,4 +1,6 @@
 ﻿using Common.Crm.Domain.Common.OptionSets.Extensions;
+using Common.Crm.Domain.Common.Utilities.ReflectionUtils;
+using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 using MOHU.Integration.Domain.Features.Tickets.Enums;
 
@@ -6,6 +8,16 @@ namespace MOHU.Integration.Domain.Features.Tickets.Entities;
 
 public class TicketIntegrationInformation
 {
+    private static ColumnSet _ticketUpdateColumnSet;
+
+    static TicketIntegrationInformation()
+    {
+       var columnSet = typeof(TicketsConstants.IntegrationInformation.Fields).GetColumnSet();
+       columnSet.AddColumns(typeof(TicketsConstants.BasicInformation.CompanyCheckFields).GetColumnSet().Columns.ToArray());
+       columnSet.AddColumn(TicketsConstants.Classification.Fields.Service);
+       _ticketUpdateColumnSet = columnSet;
+    }
+    
     private TicketIntegrationInformation(Entity entity)
     {
         entity.EnsureCanCreateFrom(objectToCreate: nameof(TicketIntegrationInformation), TicketsConstants.LogicalName);
@@ -41,6 +53,8 @@ public class TicketIntegrationInformation
         UpdatedBy = updatedBy;
         LastActionDate = lastActionDate;
     }
+    
+    public static ColumnSet TicketUpdateColumnSet => _ticketUpdateColumnSet;
     
     public bool? IsNusukPortalUpdated { get; private set; }
 
