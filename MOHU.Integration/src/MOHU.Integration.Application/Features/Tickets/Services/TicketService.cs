@@ -644,4 +644,36 @@ public partial class TicketService(
 
         return result;
     }
+
+    public async Task<Guid> GetSubCategory(Guid categoryId)
+    {
+        var categoryQuery = new QueryExpression(ldv_casecategory.EntityLogicalName)
+        {
+            NoLock = true,
+            ColumnSet = new ColumnSet(
+
+             ldv_casecategory.Fields.ldv_casecategoryId,
+             ldv_casecategory.Fields.ldv_arabicname,
+             ldv_casecategory.Fields.ldv_englishname,
+             ldv_casecategory.Fields.SubCategory
+         ),
+        };
+        var filter = new FilterExpression(LogicalOperator.And);
+        categoryQuery.Criteria.AddFilter(filter);
+        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.Id,
+            ConditionOperator.Equal,
+            categoryId));
+        filter.AddCondition(new ConditionExpression(ldv_casecategory.Fields.StateCode,
+          ConditionOperator.Equal,
+          0));
+
+        var result = await crmContext.ServiceClient.RetrieveMultipleAsync(categoryQuery);
+        var category = result.Entities[0];
+        if (category.Contains(ldv_casecategory.Fields.SubCategory) && category[ldv_casecategory.Fields.SubCategory] is EntityReference subCategory)
+        {
+            return subCategory.Id;
+
+        }
+        return Guid.Empty;
+    }
 }

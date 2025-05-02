@@ -31,6 +31,7 @@ namespace MOHU.Integration.Contracts.Interface.Ticket
 
         Task<Guid> GetCategoryRequestType(Guid categoryId);
         Task<Guid> GetParentCategory(Guid categoryId);
+        Task<Guid> GetSubCategory(Guid categoryId);
         Task<List<TicketCategoryLevel>> GetCategoriesLevel(List<Guid> categoriesIds);
     }
 }

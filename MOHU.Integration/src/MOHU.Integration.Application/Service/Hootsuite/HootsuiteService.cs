@@ -26,8 +26,8 @@ internal class HootsuiteService(ICustomerService customerService,ITicketService 
             if (!categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SubCategory) && categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SecondryCategory))
             {
                 var secondryCategory = categoriesWithLevels.FirstOrDefault(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SecondryCategory);
-                var subCategoryId = await ticketService.GetParentCategory(secondryCategory!.ParentId);
-                categoriesWithLevels.Add(new TicketCategoryLevel { Id = subCategoryId, CategoryLevel = Contracts.Enum.CategoryLevelsEnum.SubCategory });
+                var subCategoryId = await ticketService.GetSubCategory(secondryCategory!.Id);
+                categoriesWithLevels.Add(new TicketCategoryLevel { Id = subCategoryId, CategoryLevel = Contracts.Enum.CategoryLevelsEnum.SubCategory , ParentId = secondryCategory.ParentId});
             }
             if (!categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.ParentCategory) && categoriesWithLevels.Any(c => c.CategoryLevel == Contracts.Enum.CategoryLevelsEnum.SubCategory))
             {
