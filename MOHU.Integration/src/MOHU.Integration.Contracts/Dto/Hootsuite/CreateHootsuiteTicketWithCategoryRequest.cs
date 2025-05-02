@@ -13,7 +13,7 @@ public class CreateHootsuiteTicketWithCategoryRequest : CreateTicketRequest
     public Entity ToTicket(Guid customerId, Service service)
     {
       
-        var entity = base.ToTicket(service, (int)CaseOriginEnum.SocialMedia);
+        var entity = base.ToTicket(service, (int)CaseOriginEnum.SocialMedia,false);
 
         entity.Attributes.Add(Incident.Fields.CustomerId, new EntityReference(Contact.EntityLogicalName, customerId));
         foreach(var category in Categories)
