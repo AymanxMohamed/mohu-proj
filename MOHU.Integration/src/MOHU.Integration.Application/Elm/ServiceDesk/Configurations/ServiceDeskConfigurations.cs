@@ -71,6 +71,7 @@ public class ServiceDeskConfigurations
     {
         var crmNumber = title.Replace("-", string.Empty);
         return new HttpRequestMessage(HttpMethod.Get, new Uri($"{MohuCrmUrl}?query=huic.crm.number%3D%22{crmNumber}%22"));
+        // http://10.1.73.87:13083/SM/9/rest/mohcrm/crmNumber
     }
 
     public static async Task<ServiceDeskConfigurations> Create(IConfigurationService configurationService)

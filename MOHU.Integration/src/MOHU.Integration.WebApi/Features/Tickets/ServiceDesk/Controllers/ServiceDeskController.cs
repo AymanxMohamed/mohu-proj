@@ -1,7 +1,4 @@
-﻿using Microsoft.Graph;
-using MOHU.Integration.Contracts.Dto.ServiceDesk;
-using MOHU.Integration.Contracts.Enum;
-using System.Net;
+﻿using MOHU.Integration.Contracts.Dto.ServiceDesk;
 
 namespace MOHU.Integration.WebApi.Features.Tickets.ServiceDesk.Controllers;
 
@@ -18,7 +15,6 @@ public class ServiceDeskController(IServiceDeskService serviceDeskService) : Bas
     [Route(nameof(UpdateStatus))]
     public async Task<ResponseMessage<bool>> UpdateStatus(ServiceDeskUpdateStatusRequest request)
     {
-
         var result = await serviceDeskService.UpdateStatusAsync(request);
         return Ok(result);
     }

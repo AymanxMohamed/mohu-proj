@@ -5,6 +5,5 @@ namespace MOHU.Integration.Contracts.Interface
     public interface IServiceDeskService
     {
         Task<bool> UpdateStatusAsync(ServiceDeskUpdateStatusRequest request);
-
     }
 }
