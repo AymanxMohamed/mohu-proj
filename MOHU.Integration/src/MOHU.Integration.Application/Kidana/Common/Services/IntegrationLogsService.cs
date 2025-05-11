@@ -18,7 +18,7 @@ namespace MOHU.Integration.Application.Kidana.Common.Services
         public Guid CreateCompleteLog(
          string ticketId,
          object request,
-         ErrorOr<KidanaResponseBase<KidanaDetailsResponse>> result,
+         ErrorOr<KidanaDetailsResponse> result,
          ldv_integrationlogs.IntegrationTypeCode_OptionSet integrationType,
          ldv_integrationlogs.IntegrationOperationCode_OptionSet operation)
         {
