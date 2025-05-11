@@ -48,8 +48,11 @@ namespace MOHU.Integration.Application.Service
                     continue;
                 }
                 var uploadResult = await UploadAsync(document, ticketId);
+                
                 if (uploadResult.isUploaded)
                     result.UploadedDocuments.Add(new DocumentDto { Id = uploadResult.filePathOrErrorMessage, Name = document.Name });
+                else 
+                    result.FailedDocuments.Add(new FailedDocumentUploadDto { Name = document.Name, Error = uploadResult.filePathOrErrorMessage });
             }
             return result;
         }

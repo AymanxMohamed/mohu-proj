@@ -44,7 +44,9 @@ namespace MOHU.Integration.WebApi.Features.Documents.Controllers
                     });
                 }
             }
+            
             var result = await documentService.UploadDocumentAsync(documentsToUpload, ticketId);
+            
             return Ok(result);
         }
 
