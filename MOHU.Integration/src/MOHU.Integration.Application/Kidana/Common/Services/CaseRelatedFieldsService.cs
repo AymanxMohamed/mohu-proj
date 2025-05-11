@@ -129,18 +129,19 @@ namespace MOHU.Integration.Application.Kidana.Common.Services
         private static void MapOptionalFields(Entity entity, KidanaDetailsResponse data)
         {
             MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.Source, data.Source);
-            //MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.PartySource, data.ZzpartySource);
             MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.ExternalStatusDate, data.StatusDate);
             MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.ExternalReportDate, data.ReportDate);
             MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.SiteId, data.SiteId);
             MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.KidanaDescription, data.Description);
             MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.CategoryDetails, data.ClassStructureId);
-            //MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.KidanaExternalTicketId, data.ZzTicketId);
-            //MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.ExternalParty, data.ZzExtParty);
-            //MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.ApplicantName, data.ZzRequestor);
-            //MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.ApplicantPhoneNumber, data.ApplicantPhoneNumber);
             MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.AssetNumber, data.AssetNumber);
-            //MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.Location, data.Location);
+
+            MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.KidanaExternalTicketId, data.ZzTicketId);
+            MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.ExternalParty, data.ZzExtParty);
+            MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.ApplicantName, data.ZzRequestor);
+            MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.ApplicantPhoneNumber, data.ApplicantPhoneNumber);
+            MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.PartySource, data.ZzpartySource);
+            MapIfNotEmpty(entity, ldv_caserelatedfields.Fields.Location, data.Location);
 
         }
 

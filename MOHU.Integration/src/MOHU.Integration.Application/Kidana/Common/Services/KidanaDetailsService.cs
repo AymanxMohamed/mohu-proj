@@ -67,6 +67,8 @@ namespace MOHU.Integration.Application.Kidana.Common.Services
             if (response.Status != null &&
                 ldv_caserelatedfields.ClosedStatuses.Values.Contains(response.Status))
             {
+                result.IsClosed = true;
+
                 var crmResult = await caseRelatedFieldsService.CreateCrmRecord(response, ticketId);
 
                 if (crmResult.IsError)

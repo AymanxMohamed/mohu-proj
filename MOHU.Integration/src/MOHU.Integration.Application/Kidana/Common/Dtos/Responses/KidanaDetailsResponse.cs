@@ -19,8 +19,6 @@ namespace MOHU.Integration.Application.Kidana.Common.Dtos.Responses
         [JsonProperty("TICKETID")]
         public string TicketId { get; init; } = null!;
 
-        //public string ZzpartySource { get; init; } = null!;
-
         [JsonProperty("SITEID")]
         public string SiteId { get; init; } = null!;
 
@@ -38,13 +36,16 @@ namespace MOHU.Integration.Application.Kidana.Common.Dtos.Responses
 
         [JsonProperty("STATUSDATE")]
         public string StatusDate { get; init; } = null!; //ExternalStatusDate
-        //public string ZzTicketId { get; init; } = null!; //KidanaExternalTicketId
-        //public string ZzExtParty { get; init; } = null!; //ExternalParty
-        //public string ZzRequestor { get; init; } = null!; //ApplicantName
-        //public string ApplicantPhoneNumber { get; init; } = null!; //ApplicantPhoneNumber
 
         [JsonProperty("ASSETNUM")]
         public string AssetNumber { get; init; } = null!;
-        //public string Location { get; init; } = null!;
+
+
+        public string ZzTicketId { get; init; } = null!; //KidanaExternalTicketId
+        public string ZzExtParty { get; init; } = null!; //ExternalParty
+        public string ZzRequestor { get; init; } = null!; //ApplicantName
+        public string ApplicantPhoneNumber { get; init; } = null!; //ApplicantPhoneNumber
+        public string ZzpartySource { get; init; } = null!;
+        public string Location { get; init; } = null!;
     }
 }
