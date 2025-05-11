@@ -26,13 +26,13 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
      ILogger<RestClientService> logger,
      IntegrationLogsService logService) : RestClientService(settings, logger), IKidanaClient
     {
-        public ErrorOr<(KidanaResponseBase<KidanaDetailsResponse> Result, Guid LogId)> ValidateTicket(string kidanaNumber)
+        public ErrorOr<(KidanaDetailsResponse Result, Guid LogId)> ValidateTicket(string kidanaNumber)
         {
             try
             {
-                
+
                 var request = new KidanaDetailsRequest { TicketId = kidanaNumber.ToUpper() };
-                ErrorOr<KidanaResponseBase<KidanaDetailsResponse>> result;
+                ErrorOr<KidanaDetailsResponse> result;
 
                 if (settings.UseTestData)
                 {
@@ -40,18 +40,27 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
                 }
                 else
                 {
-                    result = PrepareAndExecuteRequest<KidanaResponseBase<KidanaDetailsResponse>>(
+                    result = PrepareAndExecuteRequest<KidanaDetailsResponse>(
                         resourceUrl: settings.ValidateTicketEndpoint,
                         method: Method.Post,
                         body: request,
                         resourceParameters: settings.DefaultParams?
                             .Select(kvp => ResourceParameter.Create(
                                 kvp.Key,
-                                kvp.Value,
+                                kvp.Value.Value,
                                 ParameterType.QueryString)).ToList() ?? new List<ResourceParameter>()
-                    ).Match(
-                        response => response.EnsureSuccessResult(),
-                        error => error
+                    ).Match<ErrorOr<KidanaDetailsResponse>>(
+                        response =>
+                        {
+                            if (response.Msg == "Ticket not Found")
+                            {
+                                return Error.Validation("TICKET_NOT_FOUND", "Ticket not found");
+                            }
+                            return string.IsNullOrEmpty(response.Status)
+                                ? Error.Validation("INVALID_RESPONSE", "Missing status")
+                                : response;
+                        },
+                        errors => errors
                     );
                 }
 
@@ -63,7 +72,11 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
                     ldv_integrationlogs.IntegrationTypeCode_OptionSet.Kidana,
                     ldv_integrationlogs.IntegrationOperationCode_OptionSet.Validate);
 
-                return (result.Value, logId);
+                return result.Match<ErrorOr<(KidanaDetailsResponse, Guid)>>(
+                    success => (success, logId),
+                    errors => errors
+                );
+
             }
             catch (Exception ex)
             {
@@ -73,15 +86,13 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
 
         }
 
-
-        private ErrorOr<KidanaResponseBase<KidanaDetailsResponse>> LoadTestData()
+        private ErrorOr<KidanaDetailsResponse> LoadTestData()
         {
             try
             {
                 var json = File.ReadAllText(settings.TestDataPath);
-                var response = JsonConvert.DeserializeObject<KidanaResponseBase<KidanaDetailsResponse>>(json);
-
-                return response?.EnsureSuccessResult() ?? Error.NotFound();
+                // Assume valid response
+                return JsonConvert.DeserializeObject<KidanaDetailsResponse>(json)!;
             }
             catch (Exception ex)
             {
@@ -89,5 +100,7 @@ namespace MOHU.Integration.Application.Kidana.Common.Clients
                 return Error.Unexpected("TEST_DATA_ERROR", ex.Message);
             }
         }
+
     }
+
 }
