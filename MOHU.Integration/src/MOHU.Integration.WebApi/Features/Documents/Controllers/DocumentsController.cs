@@ -18,6 +18,7 @@ namespace MOHU.Integration.WebApi.Features.Documents.Controllers
             var result = await documentService.DownloadAttachmentAsync(documentId, ticketId);
             return Ok(result);
         }
+        
         [ProducesResponseType(typeof(ResponseMessage<UploadDocumentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseMessage<UploadDocumentResponse>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ResponseMessage<UploadDocumentResponse>), StatusCodes.Status404NotFound)]

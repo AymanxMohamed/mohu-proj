@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Application.Features.Customers.Repositories;
+﻿using AngleSharp.Dom;
+using MOHU.Integration.Application.Features.Customers.Repositories;
 using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses.DetailsResponse;
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
@@ -7,12 +8,20 @@ namespace MOHU.Integration.WebApi.Features.EnhancedTickets.Controllers;
 [Route("api/tickets")]
 public class EnhancedTicketsControllers(
     ITicketsRepository ticketsRepository,
-    ICustomersRepository customersRepository) : ControllerBase
+    ICustomersRepository customersRepository,
+    IDocumentService documentService) : ControllerBase
 {
     [HttpGet("{id:guid}")]
     public IActionResult GetById(Guid id)
     {
         return Ok(ticketsRepository.GetById(id));
+    }
+    
+    [HttpGet("{id:guid}/documents")]
+    public async Task<IActionResult> GetTicketDocuments(Guid id)
+    {
+        var documentResult = await documentService.GetFilesInFolderAsync(id.ToString());
+        return Ok(documentResult);
     }
     
     [HttpGet("/api/v2/tickets/{id:guid}")]
