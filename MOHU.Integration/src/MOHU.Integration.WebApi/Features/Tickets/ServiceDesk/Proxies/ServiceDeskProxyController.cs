@@ -26,9 +26,10 @@ public class ServiceDeskProxyController(IServiceDeskTicketsClient serviceDeskTic
     [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseMessage<object?>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResponseMessage<object>), StatusCodes.Status500InternalServerError)]
-    [HttpPost("{crmNumber}")]
-    public async Task<object> PostUpdate(ServiceDeskRequestUpdate request, string crmNumber)
+    [HttpPost("{title}")]
+    public async Task<object> PostUpdate(ServiceDeskRequestUpdate request, string title)
     {
+        var crmNumber = title.Replace("-", string.Empty);
         return await serviceDeskTicketsClient.UpdateTicket(request, crmNumber);
     }
 }
