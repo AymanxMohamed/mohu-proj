@@ -17,7 +17,7 @@ public partial class ServiceDeskTicketsClient
 
         var getInteractionResponse = await GetServiceDeskTicketAsync(request, sdConfigurations);
 
-        if (getInteractionResponse.Content?.FirstOrDefault() != null)
+        if (getInteractionResponse != null)
         {
             return getInteractionResponse.ToTicketResponse();
         }
@@ -33,12 +33,12 @@ public partial class ServiceDeskTicketsClient
             .DeserializeSendAsync<TicketResponse>(request: sdConfigurations.GetCreateMessage(request));
     }
     
-    private async Task<GetInteractionCallIdResponse> GetServiceDeskTicketAsync(
+    private async Task<InteractionSingleResponse?> GetServiceDeskTicketAsync(
         ServiceDeskRequest request,
         ServiceDeskConfigurations sdConfigurations)
     {
        return await sdConfigurations.HttpClient
-           .DeserializeSendAsync<GetInteractionCallIdResponse>(
+           .DeserializeSendAsync<InteractionSingleResponse?>(
                request: sdConfigurations.GetGetMessage(request.Interaction.Title));
     }
 
