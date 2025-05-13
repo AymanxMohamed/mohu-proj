@@ -8,5 +8,5 @@ public interface IServiceDeskTicketsClient
 {
     public Task<TicketResponse> GetOrCreateServiceDeskTicket(ServiceDeskRequest request);
     
-    public Task<TicketResponse> UpdateTicket(ServiceDeskRequestUpdate request, string callId);
+    public Task<TicketResponse> UpdateTicket(ServiceDeskRequestUpdate request, string crmNumber);
 }

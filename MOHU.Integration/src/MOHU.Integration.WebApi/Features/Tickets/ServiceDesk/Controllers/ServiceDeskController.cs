@@ -18,4 +18,16 @@ public class ServiceDeskController(IServiceDeskService serviceDeskService) : Bas
         var result = await serviceDeskService.UpdateStatusAsync(request);
         return Ok(result);
     }
+    
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
+    [HttpGet("GetTicketBySdNumber/{sdNumber}")]
+    public async Task<ResponseMessage<Guid>> GetTicketBySdNumber(string sdNumber)
+    {
+        var result = await serviceDeskService.GetTicketBySdNumber(sdNumber);
+        return Ok(result);
+    }
 }

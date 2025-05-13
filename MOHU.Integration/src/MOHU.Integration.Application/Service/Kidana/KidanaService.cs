@@ -12,7 +12,7 @@ public class KidanaService(ITicketService ticketService , IValidator<UpdateTicke
         {
             throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
         }
-        var ticketId = await ticketService.GetTicketByIntegrationTicketNumberAsync(
+        var ticketId = await ticketService.GetTicketIdByIntegrationTicketNumberAsync(
             request.TicketId.ToString(), 
             Incident.Fields.KidanaTicketNumber);
             

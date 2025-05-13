@@ -9,12 +9,12 @@ namespace MOHU.Integration.Application.Elm.ServiceDesk.Tickets.Services;
 
 public partial class ServiceDeskTicketsClient
 {
-    public async Task<TicketResponse> UpdateTicket(ServiceDeskRequestUpdate request, string callId)
+    public async Task<TicketResponse> UpdateTicket(ServiceDeskRequestUpdate request, string crmNumber)
     {
         var sdConfigurations = await ServiceDeskConfigurations.Create(configurationService);
 
         return await sdConfigurations.HttpClient
-            .DeserializeSendAsync<TicketResponse>(request: sdConfigurations.GetUpdateMessage(request, callId));
+            .DeserializeSendAsync<TicketResponse>(request: sdConfigurations.GetUpdateMessage(request, crmNumber));
     }
     
     private async Task<object> OldVersion(ServiceDeskRequestUpdate request, string callId)

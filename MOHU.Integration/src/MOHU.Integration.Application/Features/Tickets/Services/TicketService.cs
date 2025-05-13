@@ -592,7 +592,7 @@ public partial class TicketService(
         return result.Entities.Any();
     }
 
-    public async Task<Guid> GetTicketByIntegrationTicketNumberAsync(string integrationTicketNumber, string ticketNumberSchemaName)
+    public async Task<Guid> GetTicketIdByIntegrationTicketNumberAsync(string integrationTicketNumber, string ticketNumberSchemaName)
     {
         var query = new QueryExpression(Incident.EntityLogicalName)
         {
@@ -610,6 +610,7 @@ public partial class TicketService(
             ? throw new NotFoundException($"Ticket with #{integrationTicketNumber} was not found")
             : entities.FirstOrDefault().Id;
     }
+    
 
     public async Task<TicketDetailsResponse> GetTicketDetailByNumberAsync(string ticketNumber)
     {

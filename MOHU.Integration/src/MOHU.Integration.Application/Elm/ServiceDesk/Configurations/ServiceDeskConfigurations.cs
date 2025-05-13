@@ -54,9 +54,9 @@ public class ServiceDeskConfigurations
         };
     }
     
-    public HttpRequestMessage GetUpdateMessage(ServiceDeskRequestUpdate request, string callId)
+    public HttpRequestMessage GetUpdateMessage(ServiceDeskRequestUpdate request, string crmNumber)
     {
-        return new HttpRequestMessage(HttpMethod.Post, new Uri($"{MohuCrmUrl}/{callId}"))
+        return new HttpRequestMessage(HttpMethod.Post, new Uri($"{MohuCrmUrl}/{crmNumber}"))
         {
             Content = JsonContent.Create(
                 request,
@@ -70,8 +70,8 @@ public class ServiceDeskConfigurations
     public HttpRequestMessage GetGetMessage(string title)
     {
         var crmNumber = title.Replace("-", string.Empty);
-        return new HttpRequestMessage(HttpMethod.Get, new Uri($"{MohuCrmUrl}?query=huic.crm.number%3D%22{crmNumber}%22"));
-        // http://10.1.73.87:13083/SM/9/rest/mohcrm/crmNumber
+        // return new HttpRequestMessage(HttpMethod.Get, new Uri($"{MohuCrmUrl}?query=huic.crm.number%3D%22{crmNumber}%22"));
+        return new HttpRequestMessage(HttpMethod.Get, new Uri($"{MohuCrmUrl}/{crmNumber}"));
     }
 
     public static async Task<ServiceDeskConfigurations> Create(IConfigurationService configurationService)

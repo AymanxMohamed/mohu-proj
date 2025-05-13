@@ -27,7 +27,7 @@ namespace MOHU.Integration.Contracts.Interface.Ticket
         Task<bool> UpdateSahabTicket(UpdateSahabTicket ticket);
 
 
-        Task<Guid> GetTicketByIntegrationTicketNumberAsync(string integrationTicketNumber, string ticketNumberSchemaName);
+        Task<Guid> GetTicketIdByIntegrationTicketNumberAsync(string integrationTicketNumber, string ticketNumberSchemaName);
 
         Task<Guid> GetCategoryRequestType(Guid categoryId);
         Task<Guid> GetParentCategory(Guid categoryId);

@@ -15,12 +15,20 @@ public class ServiceDeskService(ITicketService ticketService, IValidator<UpdateT
         }
         
         var ticketId = await ticketService
-            .GetTicketByIntegrationTicketNumberAsync(request.TicketNumber, Incident.Fields.ServiceDeskTicketNumber);
+            .GetTicketIdByIntegrationTicketNumberAsync(request.Title, Incident.Fields.Title);
 
         var ticketStatusRequest = request.ToUpdateRequest(ticketId, Incident.Fields.IsServiceDeskUpdated);
 
         await ticketService.UpdateStatusAsync(ticketStatusRequest);
 
         return true;
+    }
+    
+    public async Task<Guid> GetTicketBySdNumber(string sdNumber)
+    {
+        var ticketId = await ticketService
+            .GetTicketIdByIntegrationTicketNumberAsync(sdNumber, Incident.Fields.ServiceDeskTicketNumber);
+
+        return ticketId;
     }
 }

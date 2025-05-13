@@ -14,7 +14,7 @@ public class TaasherService(ITicketService ticketService, IValidator<UpdateTicke
         {
             throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
         }
-        var ticketId = await ticketService.GetTicketByIntegrationTicketNumberAsync(
+        var ticketId = await ticketService.GetTicketIdByIntegrationTicketNumberAsync(
             request.TicketNumber, 
             Incident.Fields.TaasherTicketNumber);
             

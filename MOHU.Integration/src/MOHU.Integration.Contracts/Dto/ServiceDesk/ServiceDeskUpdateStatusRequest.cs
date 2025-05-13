@@ -8,4 +8,9 @@ public class ServiceDeskUpdateStatusRequest : UpdateTicketStatusData
 {
     [Required]
     public string TicketNumber { get; init; } = null!;
+    
+    public string Title => 
+        TicketNumber.Length > 4 
+            ? $"{TicketNumber[..4]}-{TicketNumber[4..]}" 
+            : TicketNumber;
 }

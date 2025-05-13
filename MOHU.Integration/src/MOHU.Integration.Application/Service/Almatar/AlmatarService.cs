@@ -22,7 +22,7 @@ namespace MOHU.Integration.Application.Service.Almatar
             {
                 throw new BadRequestException(results.Errors?.FirstOrDefault()?.ErrorMessage ?? string.Empty);
             }
-            var ticketId = await _ticketService.GetTicketByIntegrationTicketNumberAsync(
+            var ticketId = await _ticketService.GetTicketIdByIntegrationTicketNumberAsync(
                 request.TicketNumber,
             Incident.Fields.AlMatarTicketNumber);
 
