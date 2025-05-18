@@ -2,6 +2,7 @@
 using MOHU.Integration.Application.Features.Customers.Repositories;
 using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses.DetailsResponse;
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
+using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.Features.EnhancedTickets.Controllers;
 
@@ -44,5 +45,18 @@ public class EnhancedTicketsControllers(
         var customer = customersRepository.EnsureExistenceById(customerId);
 
         return customer.IsIndividual ? Ok(customer.ToIndividual()) : Ok(customer.ToCompany());
+    }
+
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
+    [HttpPost]
+    [Route(nameof(ResolveTicket))]
+    public async Task<ActionResult> ResolveTicket(ResolveTicketRequest request)
+    {
+        var result = await ticketsRepository.ResolveTicketAsync(request);
+        return Ok(result);
     }
 }

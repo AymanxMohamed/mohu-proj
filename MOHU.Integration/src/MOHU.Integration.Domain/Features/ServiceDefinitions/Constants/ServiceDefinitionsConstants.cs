@@ -12,6 +12,7 @@ public class ServiceDefinitionConstants
         public const string EnglishName = "ldv_name_en";
         public const string ArabicName = "ldv_name_ar";
         public const string ParentService = "ldv_serviceparentid";
+        public const string AutomaticResolveForApi = "ldv_automaticresolvebyapi";
     }
 
     public static class Services

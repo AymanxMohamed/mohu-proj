@@ -1,4 +1,7 @@
 ﻿using Common.Crm.Domain.Common.Factories;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Crm.Sdk.Messages;
+using MOHU.Integration.Domain.Entitiy;
 using MOHU.Integration.Domain.Features.Common.CrmEntities;
 using MOHU.Integration.Domain.Features.Tasks;
 using MOHU.Integration.Domain.Features.Tasks.Enums;
@@ -97,5 +100,22 @@ public partial class Ticket : CrmEntity
         CustomerInformation.UpdateEntity(entity);
         
         return entity;
+    }
+    public static CloseIncidentRequest CreateIncidentResolutionActivity(Guid ticketId, int statusReason)
+    {
+        // Create the resolution activity
+        Entity incidentResolution = new Entity(IncidentResolution.EntityLogicalName);
+        incidentResolution[IncidentResolution.Subject] = "Case resolved by API";
+        incidentResolution[IncidentResolution.IncidentId] = new EntityReference(TicketsConstants.LogicalName, ticketId);
+
+        // Create the request
+        CloseIncidentRequest closeRequest = new CloseIncidentRequest
+        {
+            IncidentResolution = incidentResolution,
+            Status = new OptionSetValue(statusReason) // e.g. 5 = Ticket Resolved
+        };
+
+        // Execute the request
+        return closeRequest;
     }
 }
