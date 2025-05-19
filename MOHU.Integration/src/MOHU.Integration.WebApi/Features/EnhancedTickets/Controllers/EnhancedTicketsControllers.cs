@@ -54,7 +54,7 @@ public class EnhancedTicketsControllers(
     [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     [Route(nameof(ResolveTicket))]
-    public async Task<ActionResult> ResolveTicket(ResolveTicketRequest request)
+    public async Task<IActionResult> ResolveTicket(ResolveTicketRequest request)
     {
         var result = await ticketsRepository.ResolveTicketAsync(request);
         return Ok(result);
