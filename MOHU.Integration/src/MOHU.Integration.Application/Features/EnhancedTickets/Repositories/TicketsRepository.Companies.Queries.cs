@@ -9,6 +9,8 @@ namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
 internal partial class TicketsRepository
 {
+    public static readonly Guid SahabReportingService = new("5654f43c-5b8c-ef11-ac21-6045bd9ec6ef");
+    
     public PaginationResponse<NusukMasarTicketResponse> GetCompanyTickets(
         Guid companyId, 
         FilterExpression? filterExpression = null, 
@@ -23,7 +25,12 @@ internal partial class TicketsRepository
                     .CreateConditionExpression(
                         columnLogicalName: TicketsConstants.BasicInformation.Fields.Company,
                         conditionOperator: ConditionOperator.Equal,
-                        value: companyId)]))
+                        value: companyId),
+                    ConditionExpressionFactory
+                        .CreateConditionExpression(
+                            columnLogicalName: TicketsConstants.Classification.Fields.Service,
+                            conditionOperator: ConditionOperator.NotEqual,
+                            value: SahabReportingService)]))
             .Convert(x => NusukMasarTicketResponse.Create(Ticket.Create(x)));
     }
     
