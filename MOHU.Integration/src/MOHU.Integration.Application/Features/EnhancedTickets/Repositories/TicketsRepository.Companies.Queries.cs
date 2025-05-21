@@ -48,7 +48,12 @@ internal partial class TicketsRepository
                     .CreateConditionExpression(
                         columnLogicalName: TicketsConstants.BasicInformation.Fields.Company,
                         conditionOperator: ConditionOperator.Equal,
-                        value: companyId)]))
+                        value: companyId),
+                    ConditionExpressionFactory
+                        .CreateConditionExpression(
+                            columnLogicalName: TicketsConstants.Classification.Fields.Service,
+                            conditionOperator: ConditionOperator.NotEqual,
+                            value: SahabReportingService)]))
             .Convert(x => NusukMasarTicketListResponse.Create(Ticket.Create(x)));
     }
 
