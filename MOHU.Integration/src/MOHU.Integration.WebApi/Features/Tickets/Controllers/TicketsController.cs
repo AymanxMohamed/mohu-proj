@@ -73,5 +73,4 @@ public class TicketsController(ITicketService ticketService) : BaseController
         var result = await ticketService.SubmitHootSuiteTicketAsync(customerId, request);
         return Ok(result);
     }
-
 }

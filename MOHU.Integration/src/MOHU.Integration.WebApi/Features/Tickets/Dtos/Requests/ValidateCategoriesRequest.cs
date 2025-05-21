@@ -1,4 +1,3 @@
 ﻿namespace MOHU.Integration.WebApi.Features.Tickets.Dtos.Requests;
 
-public record ValidateCategoriesRequest(
-    List<Guid> CategoryIds);
+public record ValidateCategoriesRequest(List<Guid> CategoryIds);
