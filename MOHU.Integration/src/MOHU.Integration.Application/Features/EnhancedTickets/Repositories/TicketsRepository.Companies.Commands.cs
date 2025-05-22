@@ -27,17 +27,6 @@ internal partial class TicketsRepository
             return Task.CompletedTask;
         });
         
-        // Task.Run(() =>
-        // {
-        //     try
-        //     {
-        //         genericRepository.Commit();
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine($"Error during async commit: {ex.Message}");
-        //     }
-        // });
         return ticket;
     }
 }
