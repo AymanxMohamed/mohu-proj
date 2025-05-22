@@ -12,7 +12,6 @@ internal partial class TicketsRepository
         ticket.EnsureCanUpdateAsCompany(companyId);
         request.Update(ticket);
         genericRepository.Update(ticket.ToCrmEntity());
-        
         backgroundTaskQueue.Enqueue(_ =>
         {
             try
@@ -26,7 +25,6 @@ internal partial class TicketsRepository
             
             return Task.CompletedTask;
         });
-        
         return ticket;
     }
 }
