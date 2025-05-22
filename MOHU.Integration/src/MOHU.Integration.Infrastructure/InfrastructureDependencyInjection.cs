@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Common.Crm.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MOHU.Integration.Contracts.Interface;
@@ -23,6 +24,7 @@ namespace MOHU.Integration.Infrastructure
                 .WriteTo.Console()
                 .CreateLogger();
             services.AddSerilog();
+            services.AddCommonInfrastructure();
             services.AddSingleton<Contracts.Logging.IAppLogger, SerilogLogger>();
             services.AddSingleton<ICrmContext, CrmContext>();
             services.AddSingleton<ICorrelationIdService, CorrelationIdService>();
