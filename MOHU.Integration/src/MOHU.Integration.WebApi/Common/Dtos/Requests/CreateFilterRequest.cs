@@ -25,7 +25,7 @@ public class CreateFilterRequest
     {
         return FilterExpressionFactory
             .CreateFilterExpression(
-                isOrFilter: IsOrFilter,
+                isOrFilter: false,
                 childFilters: ChildFilters.Select(x => x.ToExpression()).ToList(),
                 conditionExpressions: FilterConditions.Select(x => x.ToExpression()).ToArray());
     }
