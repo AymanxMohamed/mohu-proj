@@ -12,19 +12,20 @@ internal partial class TicketsRepository
         ticket.EnsureCanUpdateAsCompany(companyId);
         request.Update(ticket);
         genericRepository.Update(ticket.ToCrmEntity());
-        backgroundTaskQueue.Enqueue(_ =>
-        {
-            try
-            {
-                genericRepository.Commit();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error during async commit.");
-            }
-            
-            return Task.CompletedTask;
-        });
+        genericRepository.Commit();
+        //backgroundTaskQueue.Enqueue(_ =>
+        //{
+        //    try
+        //    {
+        //        genericRepository.Commit();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.LogError(ex, "Error during async commit.");
+        //    }
+
+        //    return Task.CompletedTask;
+        //});
         return ticket;
     }
 }
