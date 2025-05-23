@@ -81,6 +81,8 @@ namespace MOHU.Integration.Domain.Entitiy
             public const string ldv_istashirupdated = "ldv_istashirupdated";
             public const string ldv_IsThereclassificationforInquirycode = "ldv_isthereclassificationforinquirycode";
             public const string ldv_Locationcode = "ldv_locationcode";
+            public const string ldv_nusukanayalocationcode = "ldv_nusukanayalocationcode";
+
             public const string ldv_MainCategoryid = "ldv_maincategoryid";
             public const string ldv_MinistrysHajjAgencyDecisisoncode = "ldv_ministryshajjagencydecisisoncode";
             public const string ldv_MinistrysHajjAgencyNeededInformation = "ldv_ministryshajjagencyneededinformation";
