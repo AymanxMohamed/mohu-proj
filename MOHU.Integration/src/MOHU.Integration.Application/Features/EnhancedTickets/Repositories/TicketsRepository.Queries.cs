@@ -14,8 +14,7 @@ namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
 internal partial class TicketsRepository(
     IGenericRepository genericRepository,
-    ITasksRepository tasksRepository,
-    ICrmContext crmContext) : ITicketsRepository
+    ITasksRepository tasksRepository) : ITicketsRepository
 {
     public Ticket GetById(Guid ticketId)
     {
@@ -102,97 +101,5 @@ internal partial class TicketsRepository(
 
         return entity;
     }
-
-    public async Task<ResolveTicketResponse> ResolveTicketAsync(ResolveTicketRequest request)
-    {
-        // 1. Retrieve ticket AND linked ServiceDefinition's flag in one query
-        var ticket = GetTicketWithServiceDefinitionFlag(request.CRMTicketNumber);
-
-        // 2. Validate the flag
-        var canAutoResolve = ticket.GetAttributeValue<AliasedValue>(
-            "sd." + ServiceDefinitionConstants.Fields.AutomaticResolveForApi
-        )?.Value as bool? ?? false;
-
-        if (!canAutoResolve)
-        {
-            throw new InvalidOperationException("This service cannot be resolved via the API.");
-        }
-
-        // 3. Resolve the ticket
-        ResolveTicket(ticket);
-
-        return new ResolveTicketResponse { Success = "Ticket resolved successfully." };
-    }
-
-    #region Helpers
-    private Entity GetTicketWithServiceDefinitionFlag(string ticketNumber)
-    {
-        // Build the LinkEntity to ServiceDefinition
-        var serviceLink = new LinkEntity(
-            linkFromEntityName: TicketsConstants.LogicalName,
-            linkToEntityName: ServiceDefinitionConstants.LogicalName,
-            linkFromAttributeName: TicketsConstants.BasicInformation.Fields.Service, // Ticket's lookup field
-            linkToAttributeName: ServiceDefinitionConstants.Fields.Id, // ServiceDefinition's ID
-            joinOperator: JoinOperator.Inner
-        );
-        serviceLink.Columns.AddColumn(ServiceDefinitionConstants.Fields.AutomaticResolveForApi);
-        serviceLink.EntityAlias = "sd"; // Alias for ServiceDefinition fields
-
-        // Build the query using your existing GetQuery method
-        var query = GetQuery(
-            columnSet: new ColumnSet(
-                TicketsConstants.BasicInformation.Fields.Id,
-                TicketsConstants.BasicInformation.Fields.Service // Include the lookup field
-            ),
-            linkEntities: new[] { serviceLink }, // Inject the LinkEntity
-            conditionExpressions: new ConditionExpression(
-                TicketsConstants.BasicInformation.Fields.Title,
-                ConditionOperator.Equal,
-                ticketNumber
-            )
-        );
-
-        // Execute the query
-        var result = crmContext.ServiceClient.RetrieveMultiple(query);
-        var ticket = result.Entities.FirstOrDefault();
-
-        if (ticket == null)
-        {
-            throw new NotFoundException($"Ticket {ticketNumber} not found.");
-        }
-
-        // Validate ServiceDefinition link exists
-        if (ticket.GetAttributeValue<EntityReference>(
-                TicketsConstants.BasicInformation.Fields.Service) == null)
-        {
-            throw new InvalidOperationException("Ticket has no linked Service Definition.");
-        }
-
-        return ticket;
-    }
-
-    private void ResolveTicket(Entity ticket)
-    {
-        // Get the resolved status reference
-        var resolvedStatusRef = new EntityReference(
-            TicketStatusesConstants.LogicalName,
-            TicketStatusesConstants.Statuses.Resolved
-        );
-
-        // Update the ticket's PortalStatus and StatusReason fields
-        var ticketUpdate = new Entity(TicketsConstants.LogicalName, ticket.Id)
-        {
-            [TicketsConstants.BasicInformation.Fields.PortalStatus] = resolvedStatusRef,
-            [TicketsConstants.BasicInformation.Fields.StatusReason] = resolvedStatusRef
-        };
-        crmContext.ServiceClient.Update(ticketUpdate);
-
-        var resolveRequest = Ticket.CreateIncidentResolutionActivity(
-            ticket.Id,
-            (int)TicketResolvedStatusReasonEnum.TicketResolved
-        );
-        crmContext.ServiceClient.Execute(resolveRequest);
-    }
-    #endregion
 
 }

@@ -13,9 +13,4 @@ namespace MOHU.Integration.Contracts.Tickets.Dtos.Requests
         public string CRMTicketNumber { get; init; } = null!;
     }
 
-    public class ResolveTicketResponse
-    {
-        public string Success { get; init; } 
-
-    }
 }
