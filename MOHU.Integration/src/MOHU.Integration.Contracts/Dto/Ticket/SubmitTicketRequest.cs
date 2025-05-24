@@ -17,6 +17,9 @@ public class SubmitTicketRequest : CreateTicketRequest
     public string? ExternalTicketNumber { get; set; }
     public string? ExternalId { get; set; }
 
+    public int? NusukEnayaLocation { get; set; }
+
+
 
     public List<Guid> CategoryIds => 
         new[] { CategoryId, SubCategoryId, SubCategoryId1 }
@@ -48,7 +51,9 @@ public class SubmitTicketRequest : CreateTicketRequest
 
         if (!string.IsNullOrWhiteSpace(ExternalId))
             entity.Attributes.Add(Incident.Fields.ExternalTicketId, ExternalId);
-
+      
+        if (NusukEnayaLocation.HasValue)
+            entity.Attributes.Add(Incident.Fields.ldv_nusukanayalocationcode, new OptionSetValue(NusukEnayaLocation.Value));
 
         return entity;
     }

@@ -59,6 +59,7 @@
             public const string TimeZoneRuleVersionNumber = "timezoneruleversionnumber";
             public const string UTCConversionTimeZoneCode = "utcconversiontimezonecode";
             public const string VersionNumber = "versionnumber";
+            public const string ldv_automaticresolvebyapi = "ldv_automaticresolvebyapi";
         }
 
 

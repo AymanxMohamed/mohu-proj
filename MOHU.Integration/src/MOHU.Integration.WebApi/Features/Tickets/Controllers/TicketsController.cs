@@ -73,4 +73,18 @@ public class TicketsController(ITicketService ticketService) : BaseController
         var result = await ticketService.SubmitHootSuiteTicketAsync(customerId, request);
         return Ok(result);
     }
+
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseMessage<bool?>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseMessage<bool>), StatusCodes.Status500InternalServerError)]
+    [HttpPost]
+    [Route(nameof(Resolve))]
+    public async Task<ResponseMessage<bool>> Resolve(Guid customerId, ResolveTicketRequest request)
+    {
+        var result = await ticketService.ResolveTicketAsync(request);
+        return Ok(result);
+    }
+
 }

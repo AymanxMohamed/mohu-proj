@@ -12,4 +12,10 @@ public class TicketStatusesConstants
         public const string EnglishName = "ldv_name_en";
         public const string ArabicName = "ldv_name_ar";
     }
+
+    public static class Statuses
+    {
+        public static readonly Guid Resolved = new("e1384045-65aa-ef11-b8e9-6045bd9ec6ef");
+
+    }
 }

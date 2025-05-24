@@ -15,6 +15,7 @@ public class ServiceDefinition : CrmEntity
         EnglishName = entity.GetAttributeValue<string>(ServiceDefinitionConstants.Fields.EnglishName);
         ArabicName = entity.GetAttributeValue<string>(ServiceDefinitionConstants.Fields.ArabicName);
         ParentService = entity.GetAttributeValue<EntityReference>(ServiceDefinitionConstants.Fields.ParentService);
+        AutomaticResolveForApi = entity.GetAttributeValue<bool?>(ServiceDefinitionConstants.Fields.AutomaticResolveForApi);
     }
     
     public string? Name { get; init; }
@@ -24,6 +25,7 @@ public class ServiceDefinition : CrmEntity
     public string? EnglishName { get; init; }
 
     public string? ArabicName { get; init; }
+    public bool? AutomaticResolveForApi { get; init; } 
 
     public EntityReference? ParentService { get; init; }
 
