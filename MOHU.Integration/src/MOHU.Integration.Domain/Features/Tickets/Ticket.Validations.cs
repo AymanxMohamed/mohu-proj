@@ -13,11 +13,26 @@ public partial class Ticket
         {
             throw new InvalidOperationException($"Company with this Id: {companyId} can't access this ticket.");
         }
+        
+        if (!IsEligibleForUpdate())
+        {
+            throw new InvalidOperationException($"Ticket: {BasicInformation.Title} Already updated.");
+        }
 
         if (BasicInformation.StatusReason?.Id != CompaniesStatusId &&
             BasicInformation.StatusReason?.Name != CompaniesStatusName)
         {
-            throw new InvalidOperationException($"Company with this Id: {companyId} can't access this ticket.");
+            throw new InvalidOperationException($"Ticket can only be updated if the status is: {CompaniesStatusName}");
         }
+    }
+
+    private bool IsEligibleForUpdate()
+    {
+        return IntegrationInformation.CompanyPortalUpdated is null 
+               || !IntegrationInformation.CompanyPortalUpdated.Value || 
+               ((IntegrationInformation.DepartmentDecision is null 
+                 || IntegrationInformation.CompanyServiceDecisionCode is null) 
+                && IntegrationInformation.CompanyPortalUpdated is not null 
+                && IntegrationInformation.CompanyPortalUpdated.Value);
     }
 }

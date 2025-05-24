@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using MOHU.Integration.Domain.Features.Tickets;
+﻿using MOHU.Integration.Domain.Features.Tickets;
 using MOHU.Integration.Domain.Features.Tickets.Entities;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
@@ -13,19 +12,6 @@ internal partial class TicketsRepository
         request.Update(ticket);
         genericRepository.Update(ticket.ToCrmEntity());
         genericRepository.Commit();
-        //backgroundTaskQueue.Enqueue(_ =>
-        //{
-        //    try
-        //    {
-        //        genericRepository.Commit();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.LogError(ex, "Error during async commit.");
-        //    }
-
-        //    return Task.CompletedTask;
-        //});
         return ticket;
     }
 }
