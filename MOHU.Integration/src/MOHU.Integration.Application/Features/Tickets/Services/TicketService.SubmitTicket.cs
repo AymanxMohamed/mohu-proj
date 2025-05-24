@@ -163,14 +163,18 @@ public partial class TicketService
         // 1. Retrieve ticket AND linked ServiceDefinition's flag in one query
         var ticket = GetTicketWithServiceDefinitionFlag(request.CRMTicketNumber);
 
-        // 2. Validate the flag
+        // 2. Get the linked Service ID (from ticket's lookup field)
+        var serviceRef = ticket.GetAttributeValue<EntityReference>(
+            TicketsConstants.BasicInformation.Fields.Service // e.g., "ldv_serviceid"
+        );
+        // 3. Validate the flag
         var canAutoResolve = ticket.GetAttributeValue<AliasedValue>(
             "sd." + ServiceDefinitionConstants.Fields.AutomaticResolveForApi
         )?.Value as bool? ?? false;
 
         if (!canAutoResolve)
         {
-            throw new InvalidOperationException("This service cannot be resolved via the API.");
+            throw new InvalidOperationException($"Service '{serviceRef?.Id}' (Name: {serviceRef?.Name}) cannot be Auto Resolved via the API.");
         }
 
         // 3. Resolve the ticket
@@ -191,6 +195,8 @@ public partial class TicketService
             joinOperator: JoinOperator.Inner
         );
         serviceLink.Columns.AddColumn(ServiceDefinitionConstants.Fields.AutomaticResolveForApi);
+        serviceLink.Columns.AddColumn(ServiceDefinitionConstants.Fields.Id);
+
         serviceLink.EntityAlias = "sd"; // Alias for ServiceDefinition fields
 
         // Build the query using your existing GetQuery method
