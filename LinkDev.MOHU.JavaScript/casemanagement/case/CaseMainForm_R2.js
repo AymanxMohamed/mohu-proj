@@ -654,13 +654,29 @@ var BPFs = {
                 name: "Nusuk",
                 id: "06fadf0f-1552-4586-a857-6ba8f02f3ae2",
             },
+            company2: {
+                name: "Company 2",
+                id: "61e11751-c0d1-4c28-9ca9-19e8bcc840b8"
+            },
             customerApproval: {
                 name: "Customer Approval",
-                id: "2b539a21-2720-47c4-a3bc-e22e8c3853e4",
+                id: "e6156128-3dfc-4bd4-8e64-27da25a1abf5"
+            },
+            quality: {
+                name: "Quality",
+                id: "05af8344-1c30-4093-9168-acd00da09ed6",
             },
             close: {
                 name: "Close",
-                id: "af4ae1f2-7cfb-4f97-afc7-bcefc802df57",
+                id: "6d97164e-d5c7-4f39-902eac352ee11f46",
+            },
+            close2: {
+                name: "Closed",
+                id: "1db16fb1-f575-45c9-8cb2-754bde70e861"
+            },
+            closed1: {
+                name: "Closed1",
+                id:"51b33df6-eea6-4526-83de-1bcf3097523c"
             },
             nusuk2: {
                 name: "Nusuk2",
@@ -729,8 +745,9 @@ function OnLoad(executionContext) {
 
     ChangeTicketRequestLabel(formContext);
     //RemoveCaseOriginOptionsInCreate(formContext);
-    /*    handleOrigin(formContext);*/
     handleOriginAndServiceFilterBasedOnNusukTeamRole(formContext);
+
+    /*    handleOrigin(formContext);*/
 
     ShowAndHideIntegrationSection(formContext);
     ShowAndHide_Sahab_Tasheer_SD_Kidana_Section(formContext);
@@ -780,9 +797,10 @@ function OnLoad(executionContext) {
     disableCompanyStageFields(executionContext);
 
     /*    handleOrigindepend on login user team*/
+
     SetOrginWithAlmoasemCenterMembers(formContext);
 
-
+    hideCustomerApprovalStage_MissingPersonsServiceNUSUKEnaya(formContext);
 }
 
 function addOnChangeHandlerEvents(executionContext) {
@@ -1266,7 +1284,7 @@ function RemoveTransferOptionFromInquirySocialMediaDecision(formContext) {
 
 /////////////////////
 
-function RemoveTransferOptionFromCompanyDecision(formContext) {
+function RemoveTransferOptionFromCompanyDecisionNusukServices(formContext) {
     // debugger;
     var service = formContext.getAttribute(caseFields.ldv_serviceid).getValue();
     if (!service) {
@@ -1281,9 +1299,10 @@ function RemoveTransferOptionFromCompanyDecision(formContext) {
     var removedValues = [caseFields.Enums.companyDecision.NeedMoreInformation];
     if (
         serviceId ===
-        ServiceType.MissingPersonsServiceNUSUKEnaya.serviceDefinitionId.toLowerCase() ||
-        serviceId ===
-        ServiceType.MentoringServiceNUSUKEnaya.serviceDefinitionId.toLowerCase()
+        ServiceType.MissingPersonsServiceNUSUKEnaya.serviceDefinitionId.toLowerCase()
+        // ||
+        // serviceId ===
+        // ServiceType.MentoringServiceNUSUKEnaya.serviceDefinitionId.toLowerCase()
     ) {
         RemoveOptionSetValues(
             formContext,
@@ -3016,7 +3035,7 @@ function RemoveCaseOriginOptionsInCreate(formContext) {
     var removedValues = [
         caseFields.Enums.CaseOrigin.Nusuk,
         caseFields.Enums.CaseOrigin.NusukCare,
-       // caseFields.Enums.CaseOrigin.AlmoasemCenter,
+        caseFields.Enums.CaseOrigin.AlmoasemCenter,
         caseFields.Enums.CaseOrigin.ExternalGate,
         caseFields.Enums.CaseOrigin.Email,
         //caseFields.Enums.CaseOrigin.SocialMedia,
@@ -3034,11 +3053,15 @@ function RemoveCaseOriginOptionsInCreate(formContext) {
         var caseOriginField = formContext.getAttribute(caseFields.caseorigincode);
 
         if (caseOriginField !== null && caseOriginField !== undefined) {
-            RemoveOptionSetValues(
-                formContext,
-                caseFields.caseorigincode,
-                removedValues
-            );
+            var originValue = CommonGeneric.GetFieldValue(formContext, caseFields.caseorigincode);
+            if (originValue !== caseFields.Enums.CaseOrigin.AlmoasemCenter || originValue !== caseFields.Enums.CaseOrigin.NusukCare) {
+                RemoveOptionSetValues(
+                    formContext,
+                    caseFields.caseorigincode,
+                    removedValues
+                );
+            }
+
 
             // Remove options if they exist
             var options = caseOriginField.getOptions();
@@ -3878,6 +3901,12 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
             var nusukStage2Id =
                 BPFs.NusukCareServicesRequest.stages.nusuk2.id.toLowerCase();
 
+            var company2StageId =
+                BPFs.NusukCareServicesRequest.stages.company2.id.toLowerCase();
+
+            var qualityStageId =
+                BPFs.NusukCareServicesRequest.stages.quality.id.toLowerCase();
+
             if (currentStageId === Nusuk1StageId || currentStageId === nusukStage2Id) {
                 NusukSubmitDecision_MentoringService_OnChange(executionContext);
                 formContext
@@ -3893,6 +3922,13 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                     .addOnChange(function () {
                         NusukMonitoring_CompanyDecision_OnChange(executionContext);
                     });
+            } if (currentStageId === company2StageId) {
+                Company2StageDecision_OnChange(executionContext);
+                formContext
+                    .getAttribute(caseFields.ldv_companiesservicedecisioncode)
+                    .addOnChange(function () {
+                        Company2StageDecision_OnChange(executionContext);
+                    });
             }
             if (currentStageId === nusukStageId) {
                 NusukMonitoring_NusukResolveDecision_OnChange(executionContext);
@@ -3900,6 +3936,14 @@ function GetActiveStageDecisionsBasedOnService(executionContext) {
                     .getAttribute(caseFields.ldv_nusukclosedecisioncode)
                     .addOnChange(function () {
                         NusukMonitoring_NusukResolveDecision_OnChange(executionContext);
+                    });
+            }
+            if (currentStageId === qualityStageId) {
+                GeneralQualityStageDecisionR2_OnChange(executionContext);
+                formContext
+                    .getAttribute(caseFields.ldv_qualitydecisioncode)
+                    .addOnChange(function () {
+                        GeneralQualityStageDecisionR2_OnChange(executionContext);
                     });
             }
             break;
@@ -3993,7 +4037,7 @@ function GetDecisionsBasedOnService_OnLoad(formContext) {
             HideOriginOnSubmitStage(formContext);
             NusukMonitoring__OnLoad(formContext);
             HideFieldsOnCompanyStageNusukServices(formContext);
-            RemoveTransferOptionFromCompanyDecision(formContext);
+            RemoveTransferOptionFromCompanyDecisionNusukServices(formContext);
             HideFieldsOnSubmitStageNusukService(formContext);
             break;
     }
@@ -7664,9 +7708,10 @@ function handleBeneificiaryTypeChange(isManuallyTriggered) {
     // debugger;
     var serviceId = getIdWithoutCurlyBraces(getLookupFieldValue(serviceControl));
     var beneficiaryTypeValue = getControlValue(globalBeneficiaryTypeControl);
-    var originValue = getControlValue(globalBeneficiaryTypeControl);
+    var originValue = getControlValue(originControl);
+    //var originValue = CommonGeneric.GetFieldValue(formContext, caseFields.caseorigincode);
 
-    if ( IsAlmoasem(originValue)) return;
+    if (IsAlmoasem(originValue)) return;
 
     if (!IsHajj(serviceId)) return;
 
@@ -8170,9 +8215,9 @@ function OnChangeModifiedOnReloadPageForEmailOrigin(formContext) {
     }
 }
 
-function IsAlmoasem(originControl) {
+function IsAlmoasem(originControlValue) {
     debugger;
-    if (originControl == caseFields.Enums.CaseOrigin.AlmoasemCenter) {
+    if (originControlValue == caseFields.Enums.CaseOrigin.AlmoasemCenter) {
         return true;
     }
     return false;
@@ -8192,7 +8237,7 @@ function SetOrginWithAlmoasemCenterMembers(formContext) {
 
                 CommonGeneric.SetFieldValue(formContext, caseFields.caseorigincode, caseFields.Enums.CaseOrigin.AlmoasemCenter) //AlmoasemCenterTeam 
                 CommonGeneric.DisableField(formContext, caseFields.caseorigincode, true); // Lock the Origin Field
-                originControl = caseFields.Enums.CaseOrigin.AlmoasemCenter;
+                //originControl = caseFields.Enums.CaseOrigin.AlmoasemCenter;
                 CommonGeneric.SetFieldValue(formContext, caseFields.ldv_beneficiarytypecode, caseFields.Enums.beneficiaryType.Visitor) //AlmoasemCenterTeam 
 
 
@@ -8202,6 +8247,7 @@ function SetOrginWithAlmoasemCenterMembers(formContext) {
                     entityType: "ldv_service"
                 }];
                 formContext.getAttribute(caseFields.ldv_requesttypeid).setValue(RequestTypeValue);
+
                 var ServiceValue = [{
                     id: "7b80a868-2dcc-ee11-907a-6045bd8c92a2",
                     name: "شكاوى فنية - لحظية حج",
@@ -8209,12 +8255,15 @@ function SetOrginWithAlmoasemCenterMembers(formContext) {
                 }];
                 CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_serviceid, true, true);
                 formContext.getAttribute(caseFields.ldv_serviceid).setValue(ServiceValue);
+                formContext.getAttribute(caseFields.ldv_serviceid).fireOnChange();
+
                 var CategoryValue = [{
                     id: "26172dc8-f7d0-ee11-9078-6045bd895c76",
                     name: "الحالات الصحية - Health conditions ",
                     entityType: "ldv_casecategory"
                 }];
                 CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_maincategoryid, true, true);
+
 
                 formContext.getAttribute(caseFields.ldv_maincategoryid).setValue(CategoryValue);
                 var SubCategoryValue = [{
@@ -8224,6 +8273,9 @@ function SetOrginWithAlmoasemCenterMembers(formContext) {
                 }];
                 CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_subcategoryid, true, true);
                 formContext.getAttribute(caseFields.ldv_subcategoryid).setValue(SubCategoryValue);
+                formContext.getAttribute(caseFields.ldv_subcategoryid).fireOnChange();
+
+
 
                 CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_locationcode, true, true);
                 CommonGeneric.ShowAndReuiredField(formContext, caseFields.ldv_company, true, true);
@@ -8350,17 +8402,17 @@ function handleOriginAndServiceFilterBasedOnNusukTeamRole(formContext) {
 
 function applyRoleBasedLogic(formContext, isMember) {
     var isAdmin = isUserAdmin();
-
     // Remove unwanted case origin options for both admins & non-Nusuk users
-    if (isAdmin || !isMember) {
+    if (isAdmin || (!isMember && !(IsAlmoasem(CommonGeneric.GetFieldValue(formContext, caseFields.caseorigincode))))) {
         RemoveCaseOriginOptionsInCreate(formContext);
     }
-
     // Apply Nusuk-specific logic only if user is in Nusuk team & NOT admin
     if (isMember && !isAdmin && formContext.ui.getFormType() === 1) {
-        CommonGeneric.SetFieldValue(formContext, caseFields.caseorigincode, 8);
+        CommonGeneric.SetFieldValue(formContext, caseFields.caseorigincode, caseFields.Enums.CaseOrigin.NusukCare);
         CommonGeneric.DisableField(formContext, caseFields.caseorigincode, true);
     }
+
+
 
     // Handle the lookup filtering logic
     handleServiceLookupFilter(formContext, isMember, isAdmin);
@@ -8547,6 +8599,7 @@ function ValidateBeneficiaryTypeMismatch(formContext) {
                 customerBeneficiaryType
             );
 
+
             // Clear previous messages
             customerControl.clearNotification("beneficiaryTypeMismatch");
             formContext.ui.clearFormNotification("beneficiaryTypeChangeWarning");
@@ -8564,6 +8617,10 @@ function ValidateBeneficiaryTypeMismatch(formContext) {
                 const warningAr = `تحذير: تغيير نوع المستفيد سيؤدي إلى إعادة تعيين نوع الخدمة والتصنيفات المحددة.`;
 
                 customerControl.setNotification(isArabic ? messageAr : messageEn, "beneficiaryTypeMismatch");
+
+                var originValue = CommonGeneric.GetFieldValue(formContext, caseFields.caseorigincode);
+
+                if (IsAlmoasem(originValue)) return;
 
                 formContext.ui.setFormNotification(
                     isArabic ? warningAr : warningEn,
@@ -8585,7 +8642,8 @@ function filterByBeneficiaryType(formContext) {
     //var formContext = executionContext.getFormContext();
     console.log("Filtering services by beneficiary type...");
 
-    var originValue = getControlValue(globalBeneficiaryTypeControl);
+    //var originValue = getControlValue(globalBeneficiaryTypeControl);
+    var originValue = CommonGeneric.GetFieldValue(formContext, caseFields.caseorigincode);
 
     if (IsAlmoasem(originValue)) return;
 
@@ -8823,3 +8881,133 @@ function HideFieldsOnSubmitStageNusukService(formContext) {
     var nusukAnayLocation = "header_process_" + caseFields.ldv_nusukanayalocationcode;
     CommonGeneric.ShowAndReuiredField(formContext, nusukAnayLocation, false, false);
 }
+
+
+
+
+// Company  2 show next and previos buttons
+function Company2StageDecision_OnChange(
+    executionContext
+) {
+    var formContext = executionContext.getFormContext();
+    var companyNeedInfoOnBpf =
+        "header_process_" + caseFields.ldv_companiesserviceneededinformation + "_1";
+    // var departmentClosureReasonOnBpf =
+    //     "header_process_" + caseFields.ldv_departmentclosurereason + "_1";
+
+    Company2Decision_OnChange(
+        executionContext,
+        caseFields.ldv_companiesservicedecisioncode,
+        companyNeedInfoOnBpf,
+
+    );
+}
+
+
+
+//SHOW next and previos button based on Company decision for Company stage
+function Company2Decision_OnChange(
+    executionContext,
+    decisionSchemaName,
+    needInformationSchemaNameOnBpf,
+
+) {
+    debugger;
+    var formContext = executionContext.getFormContext();
+
+    if (
+        !decisionSchemaName ||
+        !needInformationSchemaNameOnBpf
+
+    ) {
+        console.error("One or more parameters are null or undefined.");
+        return;
+    }
+
+    var decision = CommonGeneric.GetFieldValue(formContext, decisionSchemaName);
+
+
+    if (decision === null || decision === undefined) {
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            needInformationSchemaNameOnBpf,
+            false,
+            false
+        );
+
+
+    }
+
+    if (decision === caseFields.Enums.companyDecision.Resolved) {
+        //Close
+
+        //In Stage
+
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            needInformationSchemaNameOnBpf,
+            true,
+            true
+        );
+
+        ShowNextStage(executionContext);
+    } else if (decision === caseFields.Enums.companyDecision.NeedMoreInformation) {
+        //more Information
+
+        //In Stage
+        CommonGeneric.ShowAndReuiredField(
+            formContext,
+            needInformationSchemaNameOnBpf,
+            true,
+            true
+        );
+
+
+        ShowPreviousStage(executionContext);
+    }
+}
+
+
+function hideBpfStageById(stageId, maxAttempts = 10) {
+    let attempt = 0;
+
+    function tryHide() {
+        const stageButtonId = `MscrmControls.Containers.ProcessBreadCrumb-processHeaderStageButton_${stageId}`;
+        const el = parent.document.getElementById(stageButtonId);
+
+        if (el) {
+            el.style.display = "none";
+            console.log(`✅ Stage ${stageId} hidden successfully.`);
+        } else if (attempt < maxAttempts) {
+            attempt++;
+            console.log(`⏳ Waiting for stage ${stageId} to load... (Attempt ${attempt})`);
+            setTimeout(tryHide, 500); // Retry every 500ms
+        } else {
+            console.warn(`❌ Failed to find stage ${stageId} after ${maxAttempts} attempts.`);
+        }
+    }
+
+    tryHide();
+}
+
+function hideCustomerApprovalStage_MissingPersonsServiceNUSUKEnaya(formContext) {
+
+    var serviceRecord = CommonGeneric.GetLookUpRecord(
+        formContext,
+        caseFields.ldv_serviceid
+    );
+    if (serviceRecord && serviceRecord.id) {
+        var serviceId = serviceRecord.id
+            .replace("{", "")
+            .replace("}", "")
+            .toLowerCase();
+
+        if (serviceId === ServiceType.MissingPersonsServiceNUSUKEnaya.serviceDefinitionId.toLowerCase()) {
+            hideBpfStageById(BPFs.NusukCareServicesRequest.stages.customerApproval.id);
+            hideBpfStageById(BPFs.NusukCareServicesRequest.stages.closed1.id);
+
+        }
+    }
+}
+
+

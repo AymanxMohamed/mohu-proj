@@ -174,7 +174,7 @@ public partial class TicketService
 
         if (!canAutoResolve)
         {
-            throw new InvalidOperationException($"Service '{serviceRef?.Id}' (Name: {serviceRef?.Name}) cannot be Auto Resolved via the API.");
+            throw new BadRequestException($"Service '{serviceRef?.Id}' (Name: {serviceRef?.Name}) cannot be Auto Resolved via the API.");
         }
 
         // 3. Resolve the ticket
@@ -226,7 +226,7 @@ public partial class TicketService
         if (ticket.GetAttributeValue<EntityReference>(
                 TicketsConstants.BasicInformation.Fields.Service) == null)
         {
-            throw new InvalidOperationException("Ticket has no linked Service Definition.");
+            throw new BadRequestException("Ticket has no linked Service Definition.");
         }
 
         return ticket;
