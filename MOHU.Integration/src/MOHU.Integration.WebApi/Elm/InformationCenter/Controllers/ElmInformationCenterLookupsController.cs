@@ -11,8 +11,8 @@ namespace MOHU.Integration.WebApi.Elm.InformationCenter.Controllers;
 
 [Route("api/elm/information-center/lookups")]
 public class ElmInformationCenterLookupsController(
-    ICountriesService countriesService,
     INationalitiesService nationalitiesService,
+    ICountriesService countriesService,
     IIndividualsService individualsService,
     ISpcCompaniesService spcCompaniesService,
     IIhcCompaniesService ihcCompaniesService,
