@@ -1,3 +1,4 @@
+using Core.Domain.ErrorHandling.Exceptions;
 using Microsoft.Xrm.Sdk.Messages;
 using MOHU.Integration.Application.Common.Extensions;
 using MOHU.Integration.Contracts.Dto.Hootsuite;
