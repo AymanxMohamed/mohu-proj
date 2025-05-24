@@ -1,7 +1,7 @@
-﻿using Common.Crm.Application.Common.BackgroundJobs;
-using Common.Crm.Infrastructure.Common.Extensions;
+﻿using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
+using Core.Domain.ErrorHandling.Exceptions;
 using Microsoft.Extensions.Logging;
 using MOHU.Integration.Application.Features.Tasks.Repositories;
 using MOHU.Integration.Domain.Features.Tickets;
@@ -10,7 +10,6 @@ using MOHU.Integration.Domain.Features.Tickets.Constants;
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
 internal partial class TicketsRepository(
-    IBackgroundTaskQueue backgroundTaskQueue,
     ILogger<TicketsRepository> logger,
     IGenericRepository genericRepository,
     ITasksRepository tasksRepository) : ITicketsRepository

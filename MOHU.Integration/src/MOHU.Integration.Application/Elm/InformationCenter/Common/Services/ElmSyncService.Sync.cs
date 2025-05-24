@@ -1,5 +1,6 @@
 ﻿using Common.Crm.Infrastructure.Factories;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Common.CrmEntities;
 

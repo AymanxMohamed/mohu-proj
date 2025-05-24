@@ -8,6 +8,7 @@ using MOHU.Integration.Contracts.Services;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Enum;
 using System.Net.Sockets;
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Application.Features.TicketCategories;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;

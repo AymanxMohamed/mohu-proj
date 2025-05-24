@@ -1,5 +1,6 @@
 ﻿using MOHU.Integration.Contracts.Dto.Taasher;
 using System.ComponentModel.DataAnnotations;
+using Core.Domain.ErrorHandling.Exceptions;
 
 namespace MOHU.Integration.Application.Service.Taasher;
 

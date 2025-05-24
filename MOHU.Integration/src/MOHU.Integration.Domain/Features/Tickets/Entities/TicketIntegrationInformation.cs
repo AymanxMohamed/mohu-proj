@@ -15,6 +15,7 @@ public class TicketIntegrationInformation
        var columnSet = typeof(TicketsConstants.IntegrationInformation.Fields).GetColumnSet();
        columnSet.AddColumns(typeof(TicketsConstants.BasicInformation.CompanyCheckFields).GetColumnSet().Columns.ToArray());
        columnSet.AddColumn(TicketsConstants.Classification.Fields.Service);
+       columnSet.AddColumn(TicketsConstants.BasicInformation.Fields.Title);
        _ticketUpdateColumnSet = columnSet;
     }
     

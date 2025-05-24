@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Contracts.Dto.Hootsuite;
 using MOHU.Integration.WebApi.Common.Controllers.Webhooks;
 using MOHU.Integration.WebApi.Features.Hootsuite.Common;

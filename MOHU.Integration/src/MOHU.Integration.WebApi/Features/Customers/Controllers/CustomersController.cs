@@ -1,3 +1,4 @@
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Application.Features.Tickets.Services;
 using MOHU.Integration.Contracts.Dto.CreateProfile;
 using MOHU.Integration.Contracts.Dto.Ivr;

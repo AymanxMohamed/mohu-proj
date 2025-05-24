@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Contracts.Logging;
 
 namespace MOHU.Integration.WebApi.Common.Middlewares;

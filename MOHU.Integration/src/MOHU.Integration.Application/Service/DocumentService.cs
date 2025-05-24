@@ -4,6 +4,7 @@ using MOHU.Integration.Contracts.Dto.Document.List;
 using MOHU.Integration.Contracts.Dto.Document.Upload;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Core.Domain.ErrorHandling.Exceptions;
 
 namespace MOHU.Integration.Application.Service
 {

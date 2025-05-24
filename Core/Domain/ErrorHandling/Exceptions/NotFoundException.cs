@@ -1,4 +1,4 @@
-﻿namespace MOHU.Integration.Application.Exceptions
+﻿namespace Core.Domain.ErrorHandling.Exceptions
 {
     public class NotFoundException : Exception
     {

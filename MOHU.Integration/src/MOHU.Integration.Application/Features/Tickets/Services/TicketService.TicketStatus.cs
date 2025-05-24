@@ -1,4 +1,6 @@
-﻿namespace MOHU.Integration.Application.Features.Tickets.Services;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+
+namespace MOHU.Integration.Application.Features.Tickets.Services;
 
 public partial class TicketService
 {

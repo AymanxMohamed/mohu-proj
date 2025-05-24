@@ -1,4 +1,5 @@
-﻿using Microsoft.BusinessData.MetadataModel;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using Microsoft.BusinessData.MetadataModel;
 using MOHU.Integration.Contracts.Dto.Activity;
 using MOHU.Integration.Contracts.Dto.Ivr;
 using MOHU.Integration.Contracts.Interface.Customer;

@@ -1,4 +1,6 @@
-﻿namespace MOHU.Integration.Application.Features.TicketCategories;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+
+namespace MOHU.Integration.Application.Features.TicketCategories;
 
 public class TicketCategoriesService(ICrmContext crmContext) : ITicketCategoriesService
 {

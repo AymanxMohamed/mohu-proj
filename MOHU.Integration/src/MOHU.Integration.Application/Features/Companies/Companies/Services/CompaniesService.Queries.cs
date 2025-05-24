@@ -1,5 +1,6 @@
 ﻿using Common.Crm.Domain.Common.Enums;
 using Common.Crm.Infrastructure.Factories;
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Domain.Features.Common.Constants;
 using MOHU.Integration.Domain.Features.Companies;
 using MOHU.Integration.Domain.Features.Companies.Constants;

@@ -6,6 +6,7 @@ using MOHU.Integration.Contracts.Dto.Sahab;
 using MOHU.Integration.Contracts.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Domain.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Application.Service.Sahab;

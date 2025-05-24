@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk.Query;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using Microsoft.Xrm.Sdk.Query;
 
 namespace MOHU.Integration.WebApi.Common.Dtos.Requests;
 
