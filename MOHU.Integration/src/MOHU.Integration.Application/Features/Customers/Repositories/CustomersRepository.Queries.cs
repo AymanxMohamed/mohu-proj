@@ -1,5 +1,6 @@
 ﻿using MOHU.Integration.Domain.Features.Customers;
 using Common.Crm.Infrastructure.Repositories.Interfaces;
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Domain.Features.Companies.Constants;
 using MOHU.Integration.Domain.Features.Individuals.Constants;
 

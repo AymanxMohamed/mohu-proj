@@ -1,4 +1,5 @@
-﻿using FluentValidation.Results;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using FluentValidation.Results;
 
 namespace MOHU.Integration.Application.Common.Extensions;
 

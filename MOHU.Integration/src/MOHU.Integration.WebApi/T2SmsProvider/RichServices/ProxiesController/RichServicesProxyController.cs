@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Application.T2SmsProvider.RichService;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using MOHU.Integration.Application.T2SmsProvider.RichService;
 using MOHU.Integration.Application.T2SmsProvider.RichService.Dtos.Requests;
 
 namespace MOHU.Integration.WebApi.T2SmsProvider.RichServices.ProxiesController;

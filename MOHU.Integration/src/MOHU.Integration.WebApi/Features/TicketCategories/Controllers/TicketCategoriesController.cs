@@ -1,4 +1,5 @@
 ﻿
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Contracts.Dto.Category;
 
 

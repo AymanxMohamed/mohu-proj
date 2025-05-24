@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Contracts.Dto.Kidana;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using MOHU.Integration.Contracts.Dto.Kidana;
 
 namespace MOHU.Integration.Application.Service.Kidana;
 

@@ -1,5 +1,6 @@
 ﻿using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
+using Core.Domain.ErrorHandling.Exceptions;
 using DocumentFormat.OpenXml.Wordprocessing;
 using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses;
 using MOHU.Integration.Domain.Features.Tickets;

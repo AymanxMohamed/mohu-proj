@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.HajMissionsCompanies.Clients;

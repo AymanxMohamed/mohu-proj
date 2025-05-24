@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Contracts.Dto.ServiceDesk;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using MOHU.Integration.Contracts.Dto.ServiceDesk;
 
 namespace MOHU.Integration.Application.Service.ServiceDesk;
 

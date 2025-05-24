@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.ExtendedProperties;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using Microsoft.AspNetCore.Http.HttpResults;
 using MOHU.Integration.Application.Features.Tickets.Services;
 using MOHU.Integration.Contracts.Dto.CreateProfile;

@@ -10,7 +10,6 @@ global using Microsoft.Xrm.Sdk;
 global using Microsoft.Xrm.Sdk.Query;
 global using MOHU.Integration.Application.Elm.InformationCenter.Common.Clients;
 global using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
-global using MOHU.Integration.Application.Exceptions;
 global using MOHU.Integration.Contracts.Dto.Common;
 global using MOHU.Integration.Contracts.Dto.Ticket;
 global using MOHU.Integration.Contracts.Interface;

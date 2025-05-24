@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 
-namespace MOHU.Integration.Application.Exceptions;
+namespace Core.Domain.ErrorHandling.Exceptions;
 
 public static class ErrorOrExtensions
 {

@@ -1,4 +1,5 @@
 ﻿using Common.Crm.Infrastructure.Repositories.Interfaces;
+using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Contracts.Companies.Dtos;
 using MOHU.Integration.Contracts.Companies.Services;
 

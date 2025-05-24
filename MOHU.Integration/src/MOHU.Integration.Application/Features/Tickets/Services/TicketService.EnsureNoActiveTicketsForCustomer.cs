@@ -1,4 +1,5 @@
-﻿using MOHU.Integration.Application.Features.Tickets.Enums;
+﻿using Core.Domain.ErrorHandling.Exceptions;
+using MOHU.Integration.Application.Features.Tickets.Enums;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 

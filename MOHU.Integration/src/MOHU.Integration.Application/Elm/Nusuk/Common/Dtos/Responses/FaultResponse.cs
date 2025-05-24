@@ -1,3 +1,5 @@
+using Core.Domain.ErrorHandling.Exceptions;
+
 namespace MOHU.Integration.Application.Elm.Nusuk.Common.Dtos.Responses;
 
 public record FaultResponse(int Code, string Type, string Message, string Description)

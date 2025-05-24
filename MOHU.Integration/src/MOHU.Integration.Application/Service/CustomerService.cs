@@ -3,6 +3,7 @@ using MOHU.Integration.Contracts.Dto.Hootsuite;
 using MOHU.Integration.Contracts.Enum;
 using MOHU.Integration.Contracts.Interface.Customer;
 using System.Globalization;
+using Core.Domain.ErrorHandling.Exceptions;
 
 namespace MOHU.Integration.Application.Service
 {
