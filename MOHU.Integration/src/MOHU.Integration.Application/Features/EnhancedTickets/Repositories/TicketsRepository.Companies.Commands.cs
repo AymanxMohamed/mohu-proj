@@ -11,8 +11,6 @@ internal partial class TicketsRepository
         ticket.EnsureCanUpdateAsCompany(companyId);
         request.Update(ticket);
         genericRepository.GetOrganizationService().Update(ticket.ToCrmEntity());
-        // genericRepository.Update(ticket.ToCrmEntity());
-        // genericRepository.Commit();
         return ticket;
     }
 }
