@@ -10,6 +10,7 @@ using MOHU.Integration.Domain.Enum;
 using System.Net.Sockets;
 using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Application.Features.TicketCategories;
+using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
 
 namespace MOHU.Integration.Application.Features.Tickets.Services;
 
@@ -23,7 +24,8 @@ public partial class TicketService(
     IStringLocalizer stringLocalizer,
     IRequestInfo requestInfo,
     IValidator<CreateHootSuiteTicketRequest> createHootSuiteTicketValidator,
-    ITicketCategoriesService ticketCategoriesService)
+    ITicketCategoriesService ticketCategoriesService,
+    ITicketsRepository ticketsRepository)
     : ITicketService
 {
     public async Task<TicketListResponse> GetAllTicketsAsync(Guid customerId, int pageNumber = 1, int pageSize = 10)
