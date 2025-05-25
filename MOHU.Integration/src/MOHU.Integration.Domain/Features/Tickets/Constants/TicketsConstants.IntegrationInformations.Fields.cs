@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.Xrm.Sdk.Query;
-
-namespace MOHU.Integration.Domain.Features.Tickets.Constants;
+﻿namespace MOHU.Integration.Domain.Features.Tickets.Constants;
 
 public static partial class TicketsConstants
 {

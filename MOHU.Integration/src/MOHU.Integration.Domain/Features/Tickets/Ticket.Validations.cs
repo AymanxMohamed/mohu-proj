@@ -26,14 +26,31 @@ public partial class Ticket
             throw new BadRequestException($"Ticket can only be updated if the status is: {CompaniesStatusName}");
         }
     }
-
+    
+    
     private bool IsEligibleForUpdate()
     {
+        return IsEligibleForUpdateNusukEnaya() 
+               || IsEligibleForUpdateNusukTheRest();
+    }
+
+    private bool IsEligibleForUpdateNusukEnaya()
+    {
+        return Classification.IsNusukEnayaServices() 
+               && (
+                   IntegrationInformation.IsNusukPortalUpdated is null 
+                   || !IntegrationInformation.IsNusukPortalUpdated.Value
+                   || (IntegrationInformation.CompanyServiceDecisionCode is null 
+                       && IntegrationInformation.IsNusukPortalUpdated is not null 
+                       && IntegrationInformation.IsNusukPortalUpdated.Value));
+    }
+    
+    private bool IsEligibleForUpdateNusukTheRest()
+    {
         return IntegrationInformation.CompanyPortalUpdated is null 
-               || !IntegrationInformation.CompanyPortalUpdated.Value || 
-               ((IntegrationInformation.DepartmentDecision is null 
-                 || IntegrationInformation.CompanyServiceDecisionCode is null) 
-                && IntegrationInformation.CompanyPortalUpdated is not null 
-                && IntegrationInformation.CompanyPortalUpdated.Value);
+               || !IntegrationInformation.CompanyPortalUpdated.Value
+               || (IntegrationInformation.DepartmentDecision is null 
+                   && IntegrationInformation.CompanyPortalUpdated is not null 
+                   && IntegrationInformation.CompanyPortalUpdated.Value);
     }
 }

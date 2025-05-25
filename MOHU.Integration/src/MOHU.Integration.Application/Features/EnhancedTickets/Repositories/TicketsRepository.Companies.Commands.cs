@@ -10,8 +10,9 @@ internal partial class TicketsRepository
         var ticket = GetCompanyTicket(companyId, ticketId, columnSet: TicketIntegrationInformation.TicketUpdateColumnSet);
         ticket.EnsureCanUpdateAsCompany(companyId);
         request.Update(ticket);
-        genericRepository.Update(ticket.ToCrmEntity());
-        genericRepository.Commit();
+        genericRepository.GetOrganizationService().Update(ticket.ToCrmEntity());
+        // genericRepository.Update(ticket.ToCrmEntity());
+        // genericRepository.Commit();
         return ticket;
     }
 }

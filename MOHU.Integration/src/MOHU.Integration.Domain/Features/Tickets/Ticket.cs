@@ -6,7 +6,6 @@ using MOHU.Integration.Domain.Features.Tickets.Constants;
 using MOHU.Integration.Domain.Features.Tickets.Entities;
 using MOHU.Integration.Domain.Features.Tickets.Enums;
 using Newtonsoft.Json;
-using static MOHU.Integration.Domain.Features.ServiceDefinitions.Constants.ServiceDefinitionConstants;
 
 namespace MOHU.Integration.Domain.Features.Tickets;
 
@@ -64,13 +63,15 @@ public partial class Ticket : CrmEntity
     new (id, basicInformation, integrationInformation, classification, customerInformation);
 
 
-    public void UpdateIntegrationInformation(string comment, string updatedBy, IntegrationStatus integrationStatus ,Guid serviceId)
+    public void UpdateIntegrationInformation(string comment, string updatedBy, IntegrationStatus integrationStatus)
     {
-        var status = Classification.IsErshadOrMafkoden() 
-            ? IntegrationStatus.CloseTheTicket 
-            : integrationStatus; 
-        
-        IntegrationInformation.Update(comment, updatedBy, status, serviceId);
+        if (Classification.IsNusukEnayaServices())
+        {
+            IntegrationInformation.UpdateNusukEnaya(comment, updatedBy, integrationStatus);
+            return;
+        }
+
+        IntegrationInformation.UpdateLa7ZyaHijOrUmrah(comment, updatedBy, integrationStatus);
     }
     
     public void Activate(TicketActiveStatusReasonEnum statusReason = TicketActiveStatusReasonEnum.InProgress)

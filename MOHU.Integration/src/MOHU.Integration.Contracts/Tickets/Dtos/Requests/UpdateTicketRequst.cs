@@ -13,14 +13,7 @@ public class UpdateTicketRequest
 
     public Ticket Update(Ticket ticket)
     {
-        ticket.UpdateIntegrationInformation(Comment, UpdatedBy, IntegrationStatus,ticket.BasicInformation.ServiceId);
+        ticket.UpdateIntegrationInformation(Comment, UpdatedBy, IntegrationStatus);
         return ticket;
     }
-}
-
-public class UpdateStatusForPortalCompanyRequest
-{
-    public string Comment { get; init; } = null!;
-    public string UpdatedBy { get; init; } = null!;
-    public IntegrationStatus IntegrationStatus { get; init; }
 }

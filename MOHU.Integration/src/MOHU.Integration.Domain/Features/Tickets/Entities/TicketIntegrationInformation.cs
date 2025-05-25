@@ -1,17 +1,14 @@
 ﻿using Common.Crm.Domain.Common.OptionSets.Extensions;
 using Common.Crm.Domain.Common.Utilities.ReflectionUtils;
-using ErrorOr;
 using Microsoft.Xrm.Sdk.Query;
 using MOHU.Integration.Domain.Features.Tickets.Constants;
 using MOHU.Integration.Domain.Features.Tickets.Enums;
-using System.Diagnostics.Eventing.Reader;
-using System.Xml.Linq;
 
 namespace MOHU.Integration.Domain.Features.Tickets.Entities;
 
 public class TicketIntegrationInformation
 {
-    private static ColumnSet _ticketUpdateColumnSet;
+    private static readonly ColumnSet _ticketUpdateColumnSet;
 
     static TicketIntegrationInformation()
     {
@@ -31,7 +28,7 @@ public class TicketIntegrationInformation
         DepartmentDecision = entity.GetEnumValue<DepartmentDecision>(TicketsConstants.IntegrationInformation.Fields.DepartmentDecision);
         NeedMoreDetailsComment = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.NeedMoreDetailsComment);
         UpdatedBy = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.IntegrationUpdatedBy);
-        //ClosureDate = entity.GetAttributeValue<DateTime>(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureDate);
+        ClosureDate = entity.GetAttributeValue<DateTime>(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureDate);
         LastActionDate = entity.GetAttributeValue<DateTime>(TicketsConstants.IntegrationInformation.Fields.IntegrationLastActionDate);
         Comment = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.IntegrationComment);
         IntegrationStatus = entity.GetEnumValue<IntegrationStatus>(TicketsConstants.IntegrationInformation.Fields.IntegrationStatus);
@@ -50,7 +47,7 @@ public class TicketIntegrationInformation
         DateTime? lastActionDate)
     {
         ClosureReason = closureReason;
-        //ClosureDate = closureDate;
+        ClosureDate = closureDate;
         IntegrationStatus = integrationStatus;
         DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
         Comment = comment;
@@ -71,8 +68,7 @@ public class TicketIntegrationInformation
     public string? NeedMoreDetailsComment { get; private set; }
     public string? DepartmentClosureReasons { get; private set; }
     public DepartmentDecision? DepartmentDecision { get; private set; }
-
-  //  public DateTime? ClosureDate { get; private set; }
+    public DateTime? ClosureDate { get; private set; }
 
     public IntegrationStatus? IntegrationStatus { get; private set; }
 
@@ -84,77 +80,28 @@ public class TicketIntegrationInformation
 
     public DateTime? LastActionDate { get; private set; }
 
-    private void xxxxxxxxxxxxxxxxxxxxx(Entity entity)
+    public void UpdateNusukEnaya(string comment, string updatedBy, IntegrationStatus integrationStatus)
     {
-        entity.EnsureCanCreateFrom(objectToCreate: nameof(TicketIntegrationInformation), TicketsConstants.LogicalName);
-
-        ClosureReason = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureReason);
-        DepartmentClosureReasons = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.DepartmentClosureReasonsComment);
-        DepartmentDecision = entity.GetEnumValue<DepartmentDecision>(TicketsConstants.IntegrationInformation.Fields.DepartmentDecision);
-        NeedMoreDetailsComment = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.NeedMoreDetailsComment);
-        UpdatedBy = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.IntegrationUpdatedBy);
-        //ClosureDate = entity.GetAttributeValue<DateTime>(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureDate);
-        LastActionDate = entity.GetAttributeValue<DateTime>(TicketsConstants.IntegrationInformation.Fields.IntegrationLastActionDate);
-        Comment = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.IntegrationComment);
-        IntegrationStatus = entity.GetEnumValue<IntegrationStatus>(TicketsConstants.IntegrationInformation.Fields.IntegrationStatus);
-        CompanyPortalUpdated = entity.GetAttributeValue<bool>(TicketsConstants.IntegrationInformation.Fields.IsCompanyPortalUpdated);
-        IsNusukPortalUpdated = entity.GetAttributeValue<bool>(TicketsConstants.IntegrationInformation.Fields.IsNusukPortalUpdated);
-        CompanyServiceNeedMoreInformation = entity.GetAttributeValue<string>(TicketsConstants.IntegrationInformation.Fields.CompanyServiceNeedMoreInformation);
-        CompanyServiceDecisionCode = entity.GetEnumValue<CompanyServiceDecisionEnum>(TicketsConstants.IntegrationInformation.Fields.CompanyServiceDecisionCode);
-    }
-
-    public void Update(string comment, string updatedBy, IntegrationStatus integrationStatus,Guid serviceId)
-    {
-        IntegrationStatus = integrationStatus;
-        //External ticketNumber ??
-
-        if (serviceId == new Guid("7a8c2cbc-8f8c-ef11-ac20-6045bd8fae55") // Mentoring // lost 
-               || serviceId == new Guid("f1cc8dda-8f8c-ef11-ac20-6045bd8fae55") // missing
-               || serviceId == new Guid("f8921d0b-4233-f011-8c4d-7c1e522940f7") // sos
-               )//nusuk
-        {
-            IsNusukPortalUpdated = true;
-            CompanyServiceDecisionCode = integrationStatus.ToEnum<IntegrationStatus, CompanyServiceDecisionEnum>();
-            CompanyServiceNeedMoreInformation = comment;
-
-        }
-        else if (serviceId == new Guid("7b80a868-2dcc-ee11-907a-6045bd8c92a2") //haj
-            || serviceId == new Guid("7980a868-2dcc-ee11-907a-6045bd8c92a2") //umrah
-            )
-        {
-            CompanyPortalUpdated = true;
-            DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
-            DepartmentClosureReasons = comment;
-            ClosureReason = comment;
-            NeedMoreDetailsComment = comment;
-
-        }
-
-         ///// if (integrationStatus == Enums.IntegrationStatus.NeedMoreDetails)
-        {
-            LastActionDate = DateTime.UtcNow;
-            UpdatedBy = updatedBy;
-            //ClosureDate = DateTime.UtcNow;
-            //NeedMoreDetailsComment = comment;
-
-        }
-    }
-
-
-    private void Update(string comment, string updatedBy, IntegrationStatus integrationStatus)
-    {
-        LastActionDate = DateTime.UtcNow;
-        UpdatedBy = updatedBy;
-        NeedMoreDetailsComment = comment;
-
-        // if (service= nusuk 3naya)
+        UpdateCommonFields(updatedBy, integrationStatus);
         IsNusukPortalUpdated = true;
-        DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
-
-        //else if(service= company)
-        CompanyPortalUpdated = true;
         CompanyServiceDecisionCode = integrationStatus.ToEnum<IntegrationStatus, CompanyServiceDecisionEnum>();
         CompanyServiceNeedMoreInformation = comment;
+    }
+
+    public void UpdateLa7ZyaHijOrUmrah(string comment, string updatedBy, IntegrationStatus integrationStatus)
+    {
+        UpdateCommonFields(updatedBy, integrationStatus);
+        CompanyPortalUpdated = true;
+        DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
+        DepartmentClosureReasons = comment;
+        NeedMoreDetailsComment = comment;
+    }
+    
+    private void UpdateCommonFields(string updatedBy, IntegrationStatus integrationStatus)
+    {
+        IntegrationStatus = integrationStatus;
+        LastActionDate = DateTime.UtcNow;
+        UpdatedBy = updatedBy;
     }
 
     public static TicketIntegrationInformation Create(Entity entity) => new(entity);
@@ -188,7 +135,7 @@ public class TicketIntegrationInformation
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.DepartmentDecision, DepartmentDecision.ToOptionSetValue());
 
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureReason, ClosureReason);
-        //entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureDate, ClosureDate);
+        entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationClosureDate, ClosureDate);
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationComment, Comment);
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationLastActionDate, LastActionDate);
         entity.AssignIfNotNull(TicketsConstants.IntegrationInformation.Fields.IntegrationUpdatedBy, UpdatedBy);
