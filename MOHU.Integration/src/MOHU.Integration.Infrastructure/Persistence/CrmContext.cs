@@ -9,13 +9,10 @@ namespace MOHU.Integration.Infrastructure.Persistence
     {
         private ServiceClient? _serviceClient;
         public ServiceClient ServiceClient => GetServiceClient();
-        
         private ServiceClient GetServiceClient()
         {
             if (_serviceClient != null) return _serviceClient;
-            
             _serviceClient = new ServiceClient(crmContextSettings.Value.GetConnectionString());
-            
             return _serviceClient;
         }
     }

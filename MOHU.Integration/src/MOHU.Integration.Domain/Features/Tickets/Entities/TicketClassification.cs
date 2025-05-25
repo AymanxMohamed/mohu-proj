@@ -52,9 +52,13 @@ public class TicketClassification
         new (requestType, service, mainCategory, subCategory, secondarySubCategory);
     
     
-    public bool IsErshadOrMafkoden() => Service?.Id == ServiceDefinitionConstants.Services.MafkodenService 
-                                        || Service?.Id == ServiceDefinitionConstants.Services.ErshadService;
+    public bool IsNusukEnayaServices() => Service?.Id == ServiceDefinitionConstants.Services.MafkodenService 
+                                        || Service?.Id == ServiceDefinitionConstants.Services.ErshadService 
+                                        || Service?.Id == ServiceDefinitionConstants.Services.SosService;
 
+    public bool IsLa7ZyaHigOrUmrah() => Service?.Id == ServiceDefinitionConstants.Services.La7zyaHig 
+                                        || Service?.Id == ServiceDefinitionConstants.Services.La7zyaUmrah;    
+    
     internal void UpdateEntity(Entity entity)
     {
         entity.EnsureCanCreateFrom(objectToCreate: nameof(TicketClassification), TicketsConstants.LogicalName);

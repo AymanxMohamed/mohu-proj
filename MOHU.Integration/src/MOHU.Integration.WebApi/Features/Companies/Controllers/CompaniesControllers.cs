@@ -2,8 +2,10 @@
 using Common.Crm.Infrastructure.Common.Extensions;
 using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses;
 using MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
+using MOHU.Integration.Application.Service.Taasher;
 using MOHU.Integration.Contracts.Companies.Dtos;
 using MOHU.Integration.Contracts.Companies.Services;
+using MOHU.Integration.Contracts.Dto.Taasher;
 using MOHU.Integration.Contracts.Tickets.Dtos.Requests;
 using MOHU.Integration.Domain.Features.Companies;
 using MOHU.Integration.WebApi.Common.Dtos.Requests;
@@ -76,7 +78,14 @@ public class CompaniesControllers(ICompaniesService service, ITicketsRepository 
         ticketsRepository.UpdateCompanyTicket(companyId, id, ticket);
         return NoContent();
     }
-    
+
+
+    //public async Task<ResponseMessage<bool>> UpdateTicketV2(Guid companyId, Guid id, UpdateTicketRequest ticket)
+    //{
+    //    var result = await ticketsRepository.UpdateStatusAsync(  companyId,   id,   ticket);
+    //    return Ok(result);
+    //}
+
     [HttpPatch]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

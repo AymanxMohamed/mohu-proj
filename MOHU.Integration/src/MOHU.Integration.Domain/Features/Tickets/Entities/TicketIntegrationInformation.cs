@@ -8,7 +8,7 @@ namespace MOHU.Integration.Domain.Features.Tickets.Entities;
 
 public class TicketIntegrationInformation
 {
-    private static ColumnSet _ticketUpdateColumnSet;
+    private static readonly ColumnSet _ticketUpdateColumnSet;
 
     static TicketIntegrationInformation()
     {
@@ -68,7 +68,6 @@ public class TicketIntegrationInformation
     public string? NeedMoreDetailsComment { get; private set; }
     public string? DepartmentClosureReasons { get; private set; }
     public DepartmentDecision? DepartmentDecision { get; private set; }
-
     public DateTime? ClosureDate { get; private set; }
 
     public IntegrationStatus? IntegrationStatus { get; private set; }
@@ -81,21 +80,28 @@ public class TicketIntegrationInformation
 
     public DateTime? LastActionDate { get; private set; }
 
-    public void Update(string comment, string updatedBy, IntegrationStatus integrationStatus)
+    public void UpdateNusukEnaya(string comment, string updatedBy, IntegrationStatus integrationStatus)
     {
-        ClosureReason = comment;
-        NeedMoreDetailsComment = comment;
-        DepartmentClosureReasons = comment;
-        ClosureDate = DateTime.UtcNow;
-        LastActionDate = DateTime.UtcNow;
-        Comment = comment;
-        UpdatedBy = updatedBy;
-        IntegrationStatus = integrationStatus;
-        DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
-        CompanyServiceDecisionCode = integrationStatus.ToEnum<IntegrationStatus, CompanyServiceDecisionEnum>();
-        CompanyPortalUpdated = true;
+        UpdateCommonFields(updatedBy, integrationStatus);
         IsNusukPortalUpdated = true;
+        CompanyServiceDecisionCode = integrationStatus.ToEnum<IntegrationStatus, CompanyServiceDecisionEnum>();
         CompanyServiceNeedMoreInformation = comment;
+    }
+
+    public void UpdateLa7ZyaHijOrUmrah(string comment, string updatedBy, IntegrationStatus integrationStatus)
+    {
+        UpdateCommonFields(updatedBy, integrationStatus);
+        CompanyPortalUpdated = true;
+        DepartmentDecision = integrationStatus.ToEnum<IntegrationStatus, DepartmentDecision>();
+        DepartmentClosureReasons = comment;
+        NeedMoreDetailsComment = comment;
+    }
+    
+    private void UpdateCommonFields(string updatedBy, IntegrationStatus integrationStatus)
+    {
+        IntegrationStatus = integrationStatus;
+        LastActionDate = DateTime.UtcNow;
+        UpdatedBy = updatedBy;
     }
 
     public static TicketIntegrationInformation Create(Entity entity) => new(entity);

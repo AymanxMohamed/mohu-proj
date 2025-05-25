@@ -59,17 +59,19 @@ public partial class Ticket : CrmEntity
         TicketBasicInformation basicInformation,
         TicketIntegrationInformation integrationInformation,
         TicketClassification classification,
-        TicketCustomerInformation customerInformation) => 
-        new (id, basicInformation, integrationInformation, classification, customerInformation);
+        TicketCustomerInformation customerInformation) =>
+    new (id, basicInformation, integrationInformation, classification, customerInformation);
 
 
     public void UpdateIntegrationInformation(string comment, string updatedBy, IntegrationStatus integrationStatus)
     {
-        var status = Classification.IsErshadOrMafkoden() 
-            ? IntegrationStatus.CloseTheTicket 
-            : integrationStatus; 
-        
-        IntegrationInformation.Update(comment, updatedBy, status);
+        if (Classification.IsNusukEnayaServices())
+        {
+            IntegrationInformation.UpdateNusukEnaya(comment, updatedBy, integrationStatus);
+            return;
+        }
+
+        IntegrationInformation.UpdateLa7ZyaHijOrUmrah(comment, updatedBy, integrationStatus);
     }
     
     public void Activate(TicketActiveStatusReasonEnum statusReason = TicketActiveStatusReasonEnum.InProgress)
