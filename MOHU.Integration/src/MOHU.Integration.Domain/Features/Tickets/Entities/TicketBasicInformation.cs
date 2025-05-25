@@ -26,8 +26,10 @@ public class TicketBasicInformation
         Priority = entity.GetEnumValue<TicketPriorityEnum>(TicketsConstants.BasicInformation.Fields.Priority);
         CreatedOn = entity.GetAttributeValue<DateTime>(CommonConstants.Fields.CreatedOn);
         ModifiedOn = entity.GetAttributeValue<DateTime>(CommonConstants.Fields.ModifiedOn);
+        ServiceId =  entity.GetAttributeValue<EntityReference>(CommonConstants.Fields.ServiceId).Id  ;
+
     }
-    
+
     private TicketBasicInformation(
         string? ticketNumber,
         string? title,
@@ -69,6 +71,8 @@ public class TicketBasicInformation
     public DateTime CreatedOn { get; init; }
 
     public DateTime ModifiedOn { get; init; }
+    public Guid ServiceId { get; init; }
+
 
     public static TicketBasicInformation Create(Entity entity) => new(entity);
 

@@ -1,6 +1,7 @@
 ﻿using Common.Crm.Infrastructure.Common.Extensions;
 using Common.Crm.Infrastructure.Factories;
 using MOHU.Integration.Application.Features.EnhancedTickets.Dtos.Responses;
+using MOHU.Integration.Contracts.Dto.Taasher;
 using MOHU.Integration.Domain.Features.Tickets;
 
 namespace MOHU.Integration.Application.Features.EnhancedTickets.Repositories;
@@ -34,4 +35,7 @@ public partial interface ITicketsRepository
         CrmPaginationParameters? paginationParameters = null,
         List<OrderExpression>? orderExpressions = null,
         params ConditionExpression[] conditionExpressions);
+
+     
+
 }
