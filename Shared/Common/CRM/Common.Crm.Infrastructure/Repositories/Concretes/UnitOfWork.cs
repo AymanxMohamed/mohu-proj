@@ -15,9 +15,15 @@ public static class UnitOfWork
 
     public static ExecuteTransactionResponse ExecuteRequests(IOrganizationService organizationService)
     {
-        var response = (ExecuteTransactionResponse) organizationService.Execute(ExecuteTransactionRequest);
-        ResetUnitOfWork();
-        return response;
+        try
+        {
+            var response = (ExecuteTransactionResponse) organizationService.Execute(ExecuteTransactionRequest);
+            return response;
+        }
+        finally
+        {
+            ResetUnitOfWork();
+        }
     }
         
     private static void ResetUnitOfWork()
