@@ -1,0 +1,36 @@
+{
+  "profiles": {
+    "MOHU.Integration.WebApi": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5002;https://localhost:5001;"
+    },
+    "Local": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Local"
+      },
+      "applicationUrl": "http://localhost:5002;"
+    },
+    "LocalProduction": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "LocalProduction"
+      },
+      "applicationUrl": "http://localhost:5002;"
+    },
+    "LocalStaging": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "LocalStaging"
+      },
+      "applicationUrl": "http://localhost:5002;"
+    }
+  }
+}

@@ -53,6 +53,11 @@
             {
                 return;
             }
+            
+            if (value is DateTime dateTimeValue && dateTimeValue < new DateTime(1753, 1, 1))
+            {
+                return;
+            }
 
             entity[attributeLogicalName] = value;
         }
