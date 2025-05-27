@@ -21,38 +21,55 @@ namespace MOHU.Integration.Application.Kidana.Common.Services
 
         public async Task<ErrorOr<TicketValidationResult>> ValidateTicketWithCrmCheck(string ticketId)
         {
-            var kidanaResponse =  client.ValidateTicket(ticketId);
+            var kidanaResponse = client.ValidateTicket(ticketId);
 
             return await kidanaResponse.MatchAsync(
             async response => await ProcessValidResponse(response.Result, ticketId, response.LogId),
-            error => Task.FromResult<ErrorOr<TicketValidationResult>>(error)
+            errors => HandleErrorResponse(errors)
         );
         }
 
+        private Task<ErrorOr<TicketValidationResult>> HandleErrorResponse(List<Error> errors)
+        {
+            var notFoundError = errors.FirstOrDefault(e => e.Code == "TICKET_NOT_FOUND");
+
+            if (notFoundError != null)
+            {
+                return Task.FromResult<ErrorOr<TicketValidationResult>>(
+                    new TicketValidationResult
+                    {
+                        TicketExists = false,
+                        Status = "Not Found"
+                    }
+                );
+            }
+
+            // For other errors, return the first error or combine them
+            return Task.FromResult<ErrorOr<TicketValidationResult>>(
+                errors.Count > 0
+                    ? errors[0]
+                    : Error.Unexpected("UNKNOWN_ERROR", "Unknown error occurred")
+            );
+        }
+
         private async Task<ErrorOr<TicketValidationResult>> ProcessValidResponse(
-            KidanaResponseBase<KidanaDetailsResponse> response,
+            KidanaDetailsResponse response,
             string ticketId,
             Guid logId)
         {
-            if (response.Data == null)
-            {
-                return new TicketValidationResult
-                {
-                    TicketExists = false,
-                    Status = "Not Found"
-                };
-            }
 
             var result = new TicketValidationResult
             {
                 TicketExists = true,
-                Status = response.Data.Status
+                Status = response.Status
             };
 
-            if (response.Data.Status != null &&
-                ldv_caserelatedfields.ClosedStatuses.Values.Contains(response.Data.Status))
+            if (response.Status != null &&
+                ldv_caserelatedfields.ClosedStatuses.Values.Contains(response.Status))
             {
-                var crmResult = await caseRelatedFieldsService.CreateCrmRecord(response.Data, ticketId);
+                result.IsClosed = true;
+
+                var crmResult = await caseRelatedFieldsService.CreateCrmRecord(response, ticketId);
 
                 if (crmResult.IsError)
                 {
