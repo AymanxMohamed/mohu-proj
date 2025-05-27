@@ -21,7 +21,7 @@ namespace MOHU.Integration.Application.Kidana.Common.Services
 
         public async Task<ErrorOr<TicketValidationResult>> ValidateTicketWithCrmCheck(string ticketId)
         {
-            var kidanaResponse =  client.ValidateTicket(ticketId);
+            var kidanaResponse = client.ValidateTicket(ticketId);
 
             return await kidanaResponse.MatchAsync(
             async response => await ProcessValidResponse(response.Result, ticketId, response.LogId),
