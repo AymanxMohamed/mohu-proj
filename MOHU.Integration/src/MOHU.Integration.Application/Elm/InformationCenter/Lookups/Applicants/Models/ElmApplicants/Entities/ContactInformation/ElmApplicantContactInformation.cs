@@ -20,9 +20,8 @@ public partial class ElmApplicantContactInformation
     public static ElmApplicantContactInformation Create(ApplicantResponse applicant)
         => new(applicant);
     
-    
     internal IndividualContactInformation ToIndividualInformation() => IndividualContactInformation
         .Create(
-            email: string.Equals(Email, ElmEmailPlaceholder, StringComparison.OrdinalIgnoreCase) ? null : Email,
+            email: null,
             mobileNumber: PhoneNumber.FullNumber);
 }
