@@ -1,4 +1,5 @@
 ﻿using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Common;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.HajMissionsCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.Houses.Clients;
@@ -19,10 +20,16 @@ public static class DependencyInjection
             ?.UseFileClients ?? false;
         
         return services
+            .AddLookups()
             .AddApplicantData(useFileClients)
             .AddCountries(useFileClients)
             .AddCompanies(useFileClients)
             .AddNationalities(useFileClients);
+    }
+    
+    private static IServiceCollection AddLookups(this IServiceCollection services)
+    {
+        return services.AddScoped<IElmLookupsClient, ElmLookupsClient>();
     }
     
     private static IServiceCollection AddApplicantData(this IServiceCollection services, bool useFileClients)

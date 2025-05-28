@@ -7,7 +7,7 @@ public static partial class IndividualConstants
         public static class ContactInformation
         {
             public const string Email = "emailaddress1";
-            public const string MobileNumber = "ldv_mobilenumber";
+            public const string MobileNumber = "mobilephone";
         }
     }
 }

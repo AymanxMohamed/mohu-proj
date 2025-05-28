@@ -14,9 +14,15 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>
 
         var query = GetCrmEntitiesByElmReferenceIdsQuery(ids);
 
-        return _genericRepository.ListAll(query).Select(factory).ToList();
+        return GetCrmEntitiesByQuery(query);
     }
     
+    public List<TCrmEntity> GetCrmEntitiesByQuery(QueryExpression query) => 
+        _genericRepository
+            .ListAll(query)
+            .Select(factory)
+            .ToList();
+
     protected virtual QueryExpression GetCrmEntitiesByElmReferenceIdsQuery(List<int> ids)
     {
         return QueryExpressionFactory

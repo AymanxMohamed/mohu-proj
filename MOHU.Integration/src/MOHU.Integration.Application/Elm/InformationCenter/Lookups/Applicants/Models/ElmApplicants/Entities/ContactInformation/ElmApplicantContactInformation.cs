@@ -5,6 +5,8 @@ namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.
 
 public partial class ElmApplicantContactInformation
 {
+    private const string ElmEmailPlaceholder = "dokumenvisa01@gmail.com";
+    
     private ElmApplicantContactInformation(ApplicantResponse applicant)
     {
         Email = applicant.AdEmail;
@@ -21,6 +23,6 @@ public partial class ElmApplicantContactInformation
     
     internal IndividualContactInformation ToIndividualInformation() => IndividualContactInformation
         .Create(
-            email: Email,
+            email: string.Equals(Email, ElmEmailPlaceholder, StringComparison.OrdinalIgnoreCase) ? null : Email,
             mobileNumber: PhoneNumber.FullNumber);
 }

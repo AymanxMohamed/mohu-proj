@@ -1,6 +1,8 @@
 ﻿using Core.Domain.ErrorHandling.Exceptions;
 using MOHU.Integration.Application.Elm.InformationCenter.Common.Dtos.Requests;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Clients;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
+using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Common;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.DhcHajCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.HajMissionsCompanies.Clients;
 using MOHU.Integration.Application.Elm.InformationCenter.Lookups.Companies.Houses.Clients;
@@ -14,6 +16,7 @@ namespace MOHU.Integration.WebApi.Elm.InformationCenter.ProxiesControllers;
 [Route("api/elm/information-center/proxies/lookups")]
 [ApiController]
 public class LookupsProxyController(
+    IElmLookupsClient lookupsClient,
     IElmInformationCenterApplicantDataClient applicantDataClient,
     IElmInformationCenterCountriesClient countriesClient,
     IElmInformationCenterNationalitiesClient nationalitiesClient,
@@ -23,6 +26,16 @@ public class LookupsProxyController(
     IElmInformationCenterHajMissionCompaniesClient hajMissionsClient,
     IElmInformationCenterHousesClient housesClient)  : ControllerBase
 {
+    
+    [HttpPost("exact/applicants")]
+    public IActionResult GetExactApplicantData(ElmFilterRequest? filterRequest)
+    {
+        var entities = lookupsClient
+            .GetLookups<ApplicantResponse>("applicant-data", filterRequest).ToValueOrException();
+
+        return Ok(entities);
+    }
+    
     [HttpPost("applicants")]
     public IActionResult GetApplicantData(ElmFilterRequest? filterRequest)
     {

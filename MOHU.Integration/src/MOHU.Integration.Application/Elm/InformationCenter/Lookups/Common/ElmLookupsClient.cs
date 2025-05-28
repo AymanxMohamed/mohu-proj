@@ -4,12 +4,12 @@ using RestSharp;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Common;
 
-public abstract class ElmInformationCenterLookupsClient(
-    string lookupCollectionName,
+public class ElmLookupsClient(
     IElmInformationCenterClient client,
-    ElmInformationCenterApiSettings settings)
+    ElmInformationCenterApiSettings settings) : IElmLookupsClient
 {
-    protected ErrorOr<TLookupData> GetLookups<TLookupData>(
+    public ErrorOr<TLookupData> GetLookups<TLookupData>(
+        string lookupCollectionName,
         ElmFilterRequest? request = null)
     {
         request ??= ElmFilterRequest.Create();

@@ -13,7 +13,8 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>(
     string entityLogicalName,
     Func<Entity, TCrmEntity> factory,
     Func<TCrmEntity, Entity> entityConverter,
-    Func<TElmEntity, TCrmEntity, bool> comparisonPredicate) : IElmSyncService<TCrmEntity>
+    Func<TElmEntity, TCrmEntity, bool> comparisonPredicate,
+    Func<List<TElmEntity>, QueryExpression>? queryFactory = null) : IElmSyncService<TCrmEntity>
     where TElmClient : IElmEntityClient<TElmEntity>
     where TElmEntity : ElmEntity<TCrmEntity>
     where TCrmEntity : CrmEntity
@@ -46,13 +47,14 @@ public partial class ElmSyncService<TElmClient, TElmEntity, TCrmEntity>(
             .GetAll(ElmFilterRequest.Create(page: page))
             .ToValueOrException();
         
-        if (elmEntities.Count == 0)
+        if ( elmEntities.Count == 0)
         {
             return (NextPage: 0, Result: []);
         }
         
-        var existingCrmEntities = GetCrmEntitiesByElmReferenceIds(
-                elmEntities.Select(x => x.Id).ToList());
+        var existingCrmEntities = queryFactory is null 
+            ? GetCrmEntitiesByElmReferenceIds(elmEntities.Select(x => x.Id).ToList()) 
+            : GetCrmEntitiesByQuery(queryFactory.Invoke(elmEntities));
         
         foreach (var elmEntity in elmEntities)
         {

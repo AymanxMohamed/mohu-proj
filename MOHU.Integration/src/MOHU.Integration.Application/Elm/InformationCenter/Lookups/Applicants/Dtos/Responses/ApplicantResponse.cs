@@ -6,7 +6,7 @@ using Individual = MOHU.Integration.Domain.Features.Individuals.Individual;
 
 namespace MOHU.Integration.Application.Elm.InformationCenter.Lookups.Applicants.Dtos.Responses;
 
-public class ApplicantResponse : ElmEntity<Individual>
+public partial class ApplicantResponse : ElmEntity<Individual>
 {
     public int AdApplicationNo { get; set; }
     
